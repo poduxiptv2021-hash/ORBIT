@@ -9,6 +9,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://alcdn.msauth.net/browser/2.38.0/js/msal-browser.min.js"></script>
 <style>
 :root{
   --bg:#F4F4EC;
@@ -2055,61 +2056,88 @@ function editTicketStatus(id){
 function openTicket(){ openNewTicket(); }
 
 /* =====================================================================
-   AD SSO MOCK SYSTEM
+   ENTRA ID (MICROSOFT SSO) CONFIGURATION
    ===================================================================== */
-const AD_USERS = [
-  {id:'u1', name:'Eliza Yazmin', email:'elizayazmin@phb.com.my', dept:'Information Technology', role:'hod',   title:'Head of IT (HOD)',        color:'#8C8B1E', initials:'EY'},
-  {id:'u2', name:'Muhammad Haq',   email:'Haq@phb.com.my',   dept:'IT – Infrastructure',   role:'it',    title:'Infrastructure Lead',      color:'#2a6496', initials:'MH'},
-  {id:'u3', name:'Fahmi',email:'fahmi@phb.com.my',dept:'IT – Cybersecurity',    role:'it',    title:'Cybersecurity Lead',       color:'#7d3c98', initials:'MF'},
-  {id:'u4', name:'Noor Azlin',  email:'noor.azlin@phb.com.my',  dept:'Finance',               role:'user',  title:'Finance Manager',          color:'#27ae60', initials:'NA'},
-  {id:'u5', name:'Kumar Nair',  email:'kumar.nair@phb.com.my',  dept:'Investment',             role:'user',  title:'Investment Analyst',       color:'#e67e22', initials:'KN'},
-  {id:'u6', name:'Mei Ling',    email:'mei.ling@phb.com.my',    dept:'IT – Applications',     role:'it',    title:'Applications Lead',        color:'#c0392b', initials:'ML'},
-];
+const ENTRA_CONFIG = {
+  clientId: '86a53736-4355-4cb2-98dd-0466f0426e2e',
+  tenantId: 'cc9afa77-5900-4c38-8262-c226c4c2e27d',
+  redirectUri: 'https://poduxiptv2021-hash.github.io/ORBIT/'
+};
 
-let currentUser = null;
+// Map PHB staff emails to roles: 'hod' | 'it' (everyone else defaults to 'user')
+const ROLE_BY_EMAIL = {
+  'elizayazmin@phb.com.my': 'hod',
+  'haq@phb.com.my': 'it',
+  'fahmi@phb.com.my': 'it',
+  'nurhaliza@phb.com.my': 'hod'
+};
 
-function renderLoginAccounts(){
-  const badgeMap = {hod:'HOD',it:'IT Staff',user:'User'};
-  const badgeCls = {hod:'badge-hod',it:'badge-it',user:'badge-user'};
-  document.getElementById('quickAccounts').innerHTML = AD_USERS.map(u=>`
-    <div class="acc-item" onclick="selectAccount('${u.id}')">
-      <div class="acc-avatar" style="background:${u.color};">${u.initials}</div>
-      <div class="acc-info">
-        <div class="acc-name">${u.name}</div>
-        <div class="acc-role">${u.email}</div>
-      </div>
-      <span class="acc-badge ${badgeCls[u.role]}">${badgeMap[u.role]}</span>
-    </div>`).join('');
+let msalInstance = null;
+
+async function getMsalInstance() {
+  if (!ENTRA_CONFIG.clientId || ENTRA_CONFIG.clientId.startsWith('PASTE_')) {
+    return null;
+  }
+  if (!msalInstance) {
+    msalInstance = new msal.PublicClientApplication({
+      auth: {
+        clientId: ENTRA_CONFIG.clientId,
+        authority: `https://login.microsoftonline.com/${ENTRA_CONFIG.tenantId}`,
+        redirectUri: ENTRA_CONFIG.redirectUri
+      },
+      cache: {
+        cacheLocation: 'sessionStorage',
+        storeAuthStateInCookie: false
+      }
+    });
+    await msalInstance.initialize();
+  }
+  return msalInstance;
 }
 
-function startSSO(){
-  document.getElementById('ssoStep1').style.display='none';
+async function startSSO() {
+  const pca = await getMsalInstance();
+  if (!pca) {
+    alert('Please paste your Entra ID clientId and tenantId in ENTRA_CONFIG first.');
+    return;
+  }
+
+  document.getElementById('ssoStep1').style.display = 'none';
   document.getElementById('authLoading').classList.add('show');
-  document.getElementById('authUser').textContent='Connecting to Azure AD…';
-  const steps=[
-    {text:'Redirecting to Microsoft Identity Platform…',delay:400},
-    {text:'Authenticating with Azure Active Directory…',delay:900},
-    {text:'Verifying PHB domain credentials…',delay:1500},
-  ];
-  const stepsEl=document.getElementById('authSteps');
-  stepsEl.innerHTML='';
-  steps.forEach((s,i)=>{
-    setTimeout(()=>{
-      const div=document.createElement('div');
-      div.className='auth-step';
-      div.innerHTML=`<div class="auth-step-icon" style="background:var(--teal-tint);">
-        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--teal-dark)" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>
-      </div><span>${s.text}</span>`;
-      stepsEl.appendChild(div);
-    },s.delay);
-  });
-  setTimeout(()=>{
+  document.getElementById('authUser').textContent = 'Signing in with Microsoft…';
+
+  try {
+    const res = await pca.loginPopup({
+      scopes: ['User.Read'],
+      prompt: 'select_account'
+    });
+
+    const account = res.account;
+    const email = (account.username || '').toLowerCase();
+    const role = ROLE_BY_EMAIL[email] || 'user';
+    const name = account.name || email.split('@')[0];
+    const initials = name.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
+
+    const userObj = {
+      id: account.localAccountId || email,
+      name,
+      email,
+      dept: role === 'user' ? 'PHB Staff' : 'Information Technology',
+      role,
+      title: role === 'hod' ? 'Head of IT (HOD)' : (role === 'it' ? 'IT Staff' : 'Employee'),
+      color: role === 'hod' ? '#8C8B1E' : (role === 'it' ? '#2a6496' : '#27ae60'),
+      initials
+    };
+
     document.getElementById('authLoading').classList.remove('show');
-    document.getElementById('authUser').textContent='';
-    document.getElementById('ssoStep1').style.display='block';
-    stepsEl.innerHTML='';
-    document.querySelector('.login-title').textContent='Choose an account';
-  },2200);
+    document.getElementById('ssoStep1').style.display = 'block';
+    completeLogin(userObj);
+  } catch (err) {
+    console.error('Entra SSO error:', err);
+    document.getElementById('authLoading').classList.remove('show');
+    document.getElementById('ssoStep1').style.display = 'block';
+    alert('Sign-in failed: ' + (err.message || err));
+  }
 }
 
 function selectAccount(id){
@@ -2231,22 +2259,30 @@ function showITSections(show){
   });
 }
 
-function logout(){
+async function logout() {
   stopSharePointPolling();
-  currentUser=null;
-  try{sessionStorage.removeItem('phb_user');}catch(e){}
-  document.body.classList.remove('role-hod','role-it','role-user');
-  document.getElementById('userChip').style.display='none';
-  document.getElementById('topCta').style.display='none';
+  currentUser = null;
+  try { sessionStorage.removeItem('phb_user'); } catch (e) {}
+
+  const pca = await getMsalInstance();
+  if (pca) {
+    const accounts = pca.getAllAccounts();
+    if (accounts.length > 0) {
+      await pca.logoutPopup({ account: accounts[0] }).catch(() => {});
+    }
+  }
+
+  document.body.classList.remove('role-hod', 'role-it', 'role-user');
+  document.getElementById('userChip').style.display = 'none';
+  document.getElementById('topCta').style.display = 'none';
   document.getElementById('loginScreen').classList.remove('hidden');
-  document.getElementById('ssoStep1').style.display='block';
+  document.getElementById('ssoStep1').style.display = 'block';
   document.getElementById('authLoading').classList.remove('show');
-  document.querySelector('.login-title').textContent='IT HelpDesk Portal';
-  document.getElementById('itAdminSection').style.display='none';
-  document.getElementById('userPortalSection').style.display='none';
+  document.querySelector('.login-title').textContent = 'IT HelpDesk Portal';
+  document.getElementById('itAdminSection').style.display = 'none';
+  document.getElementById('userPortalSection').style.display = 'none';
   document.getElementById('userDropdown').classList.remove('open');
 }
-
 function showProfile(){
   if(!currentUser) return;
   const u=currentUser;

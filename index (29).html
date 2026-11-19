@@ -1,0 +1,1678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HelpDesk // IT Knowledge Base</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F4EC;
+  --panel:#FFFFFF;
+  --ink:#16161A;
+  --ink-soft:#5C5C52;
+  --line:#E1E1D4;
+  --teal:#C3CE1E;
+  --teal-dark:#8C8B1E;
+  --amber:#F5A623;
+  --coral:#E2574C;
+  --teal-tint:#F6F8D9;
+  --amber-tint:#FDF1DD;
+  --coral-tint:#FBE7E5;
+  --gold-grad: linear-gradient(160deg, #CBD62A 0%, #8C8B1E 100%);
+  --shadow: 0 1px 2px rgba(22,22,26,.05), 0 8px 24px rgba(22,22,26,.07);
+  --radius: 14px;
+  --pattern-opacity: .5;
+}
+[data-theme="dark"]{
+  --bg:#121210;
+  --panel:#1B1B17;
+  --ink:#F3F3EC;
+  --ink-soft:#A8A89C;
+  --line:#33332C;
+  --teal-tint:#23260F;
+  --amber-tint:#2B2310;
+  --coral-tint:#2B1816;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 30px rgba(0,0,0,.45);
+  --pattern-opacity: .14;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Inter',sans-serif;
+  -webkit-font-smoothing:antialiased;
+  transition:background .35s ease, color .35s ease;
+  position:relative;
+}
+/* stylish diamond-pattern background, echoing the logo motif */
+body::before{
+  content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:
+    linear-gradient(135deg, transparent 47%, rgba(140,139,30,var(--pattern-opacity)) 47%, rgba(140,139,30,var(--pattern-opacity)) 50%, transparent 50%),
+    linear-gradient(45deg, transparent 47%, rgba(195,206,30,var(--pattern-opacity)) 47%, rgba(195,206,30,var(--pattern-opacity)) 50%, transparent 50%);
+  background-size:64px 64px;
+  background-position:0 0, 0 0;
+  mask-image:radial-gradient(ellipse 80% 60% at 50% 0%, #000 0%, transparent 70%);
+  opacity:.06;
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.01ms !important; transition-duration:.01ms !important; scroll-behavior:auto !important;}
+}
+h1,h2,h3,.display{font-family:'Space Grotesk',sans-serif;}
+.mono{font-family:'JetBrains Mono',monospace;}
+a{color:inherit;}
+button{font-family:inherit;}
+
+/* ---------- status dot system (signature element) ---------- */
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;flex:none;}
+.dot-op{background:var(--gold-grad); box-shadow:0 0 0 3px var(--teal-tint);}
+.dot-warn{background:var(--amber); box-shadow:0 0 0 3px var(--amber-tint);}
+.dot-crit{background:var(--coral); box-shadow:0 0 0 3px var(--coral-tint);}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+.dot-live{animation:pulse 2s ease-in-out infinite;}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;
+  background:var(--bg);
+  opacity:.97;
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.topbar-inner{
+  max-width:1180px;margin:0 auto;padding:14px 24px;
+  display:flex;align-items:center;gap:18px;justify-content:space-between;
+}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;letter-spacing:-.01em;}
+.brand-mark{
+  height:30px;width:auto;flex:none;
+}
+.status-pill{
+  display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink-soft);
+  background:var(--panel);border:1px solid var(--line);padding:6px 12px;border-radius:999px;
+}
+nav.topnav{display:flex;gap:22px;font-size:14px;font-weight:500;color:var(--ink-soft);}
+nav.topnav a{text-decoration:none;transition:color .15s;}
+nav.topnav a:hover{color:var(--ink);}
+.topbar-cta{
+  background:var(--ink);color:#fff;border:none;padding:9px 16px;border-radius:9px;
+  font-size:13.5px;font-weight:600;cursor:pointer;transition:transform .15s, background .15s;
+}
+.topbar-cta:hover{background:var(--gold-grad); color:var(--ink);}
+.theme-toggle{
+  width:36px;height:36px;border-radius:9px;border:1px solid var(--line);background:var(--panel);
+  color:var(--ink-soft);display:flex;align-items:center;justify-content:center;cursor:pointer;
+  flex:none;transition:.15s;
+}
+.theme-toggle:hover{border-color:var(--teal);color:var(--teal-dark);transform:rotate(12deg);}
+.topbar-cta:active{transform:scale(.97);}
+
+/* ---------- hero / console ---------- */
+.hero{max-width:1180px;margin:0 auto;padding:56px 24px 28px;position:relative;overflow:hidden;}
+.hero > *{position:relative;z-index:1;}
+.hero-eyebrow{
+  font-family:'JetBrains Mono';font-size:12px;color:var(--teal-dark);
+  display:flex;align-items:center;gap:8px;margin-bottom:14px;letter-spacing:.02em;
+}
+.hero h1{font-size:clamp(30px,4.2vw,46px);line-height:1.08;margin:0 0 12px;letter-spacing:-.02em;}
+.hero h1 span{
+  background:var(--gold-grad);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero p.lede{color:var(--ink-soft);font-size:16.5px;max-width:560px;margin:0 0 28px;line-height:1.55;}
+
+/* console search */
+.console{
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:6px;
+}
+.console-bar{display:flex;align-items:center;gap:10px;padding:14px 16px;}
+.console-bar svg{flex:none;color:var(--ink-soft);}
+.console-bar input{
+  border:none;outline:none;flex:1;font-size:16px;background:transparent;color:var(--ink);font-family:'Inter';
+}
+.console-bar input::placeholder{color:#9AA7B5;}
+.console-kbd{
+  font-family:'JetBrains Mono';font-size:11px;color:var(--ink-soft);
+  border:1px solid var(--line);border-radius:6px;padding:3px 7px;background:var(--bg);
+}
+.console-suggest{display:flex;flex-wrap:wrap;gap:8px;padding:0 10px 12px;}
+.chip{
+  font-size:12.5px;border:1px solid var(--line);background:var(--bg);color:var(--ink-soft);
+  padding:6px 12px;border-radius:999px;cursor:pointer;transition:.15s;font-weight:500;
+}
+.chip:hover{border-color:var(--teal);color:var(--teal-dark);background:var(--teal-tint);}
+
+/* search results dropdown */
+.results-panel{
+  max-width:1180px;margin:0 auto;padding:0 24px;
+}
+#resultsBox{
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);margin-top:10px;overflow:hidden;display:none;
+}
+#resultsBox.show{display:block;}
+.result-row{
+  display:flex;align-items:flex-start;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line);
+  cursor:pointer;transition:background .12s;
+}
+.result-row:last-child{border-bottom:none;}
+.result-row:hover{background:var(--teal-tint);}
+.result-id{font-family:'JetBrains Mono';font-size:11px;color:var(--ink-soft);margin-top:3px;flex:none;width:64px;}
+.result-meta{flex:1;}
+.result-title{font-weight:600;font-size:14.5px;margin-bottom:3px;}
+.result-snip{font-size:13px;color:var(--ink-soft);line-height:1.4;}
+.result-tag{
+  font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--teal-dark);font-weight:700;flex:none;
+}
+.no-results{padding:28px 18px;text-align:center;color:var(--ink-soft);font-size:14px;}
+
+/* ---------- stats strip ---------- */
+.stats{max-width:1180px;margin:34px auto 0;padding:0 24px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.stat{
+  background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+}
+.stat-num{font-family:'Space Grotesk';font-size:24px;font-weight:700;}
+.stat-label{font-size:12.5px;color:var(--ink-soft);margin-top:2px;}
+
+/* ---------- section shell ---------- */
+.section{max-width:1180px;margin:0 auto;padding:64px 24px 0;}
+.section-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:24px;gap:16px;flex-wrap:wrap;}
+.section-head h2{font-size:25px;margin:0;letter-spacing:-.01em;}
+.section-head .sub{color:var(--ink-soft);font-size:14px;}
+
+/* ---------- categories grid ---------- */
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.cat-card{
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px;
+  cursor:pointer;transition:transform .15s, box-shadow .15s, border-color .15s;
+}
+.cat-card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--teal);}
+.cat-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.cat-icon{
+  width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+}
+.cat-card h3{font-size:16.5px;margin:0 0 6px;}
+.cat-card p{font-size:13px;color:var(--ink-soft);margin:0 0 14px;line-height:1.5;}
+.cat-count{font-family:'JetBrains Mono';font-size:11.5px;color:var(--ink-soft);display:flex;align-items:center;gap:6px;}
+
+/* ---------- articles ---------- */
+.article-list{display:flex;flex-direction:column;gap:10px;}
+.article-card{
+  background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  display:flex;align-items:center;gap:16px;cursor:pointer;transition:.15s;
+}
+.article-card:hover{border-color:var(--teal);box-shadow:var(--shadow);}
+.article-id{
+  font-family:'JetBrains Mono';font-size:11px;color:var(--teal-dark);background:var(--teal-tint);
+  padding:4px 8px;border-radius:6px;flex:none;
+}
+.article-icon{
+  flex:none;width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+}
+.article-body{flex:1;min-width:0;}
+.article-title{font-weight:600;font-size:14.5px;margin-bottom:3px;}
+.article-desc{font-size:13px;color:var(--ink-soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.article-cat{
+  font-size:11px;font-weight:600;color:var(--ink-soft);border:1px solid var(--line);padding:4px 9px;border-radius:999px;flex:none;
+}
+.severity{flex:none;display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ink-soft);}
+.chevron{flex:none;color:var(--ink-soft);transition:transform .15s;}
+
+.hidden{display:none !important;}
+
+/* ---------- infographic ---------- */
+.infographic{
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:32px 28px 28px;box-shadow:var(--shadow);
+}
+.info-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative;}
+.info-step{position:relative;padding:0 18px;text-align:left;}
+.info-step:not(:last-child)::after{
+  content:'';position:absolute;top:27px;left:calc(50% + 46px);width:calc(100% - 46px);height:2px;
+  background:repeating-linear-gradient(90deg, var(--line) 0 6px, transparent 6px 11px);
+}
+.info-num{
+  width:54px;height:54px;border-radius:14px;background:var(--teal-tint);border:1px solid var(--teal);
+  display:flex;align-items:center;justify-content:center;margin-bottom:16px;position:relative;z-index:1;
+}
+.info-num svg{display:block;}
+.info-step h4{font-family:'Space Grotesk';font-size:15px;margin:0 0 6px;}
+.info-step p{font-size:12.5px;color:var(--ink-soft);line-height:1.5;margin:0;}
+.info-tag{
+  font-family:'JetBrains Mono';font-size:10.5px;color:var(--teal-dark);letter-spacing:.04em;
+  text-transform:uppercase;margin-bottom:6px;display:block;
+}
+@media (max-width:820px){
+  .info-steps{grid-template-columns:1fr 1fr;row-gap:28px;}
+  .info-step:not(:last-child)::after{display:none;}
+}
+@media (max-width:520px){
+  .info-steps{grid-template-columns:1fr;}
+}
+.faq-list{display:flex;flex-direction:column;gap:10px;}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
+.faq-q{
+  padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  cursor:pointer;font-weight:600;font-size:14.5px;
+}
+.faq-plus{flex:none;width:22px;height:22px;border-radius:6px;background:var(--bg);display:flex;align-items:center;justify-content:center;transition:transform .2s;color:var(--ink-soft);font-size:16px;}
+.faq-item.open .faq-plus{transform:rotate(45deg);background:var(--teal-tint);color:var(--teal-dark);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .25s ease;}
+.faq-a-inner{padding:0 18px 18px;color:var(--ink-soft);font-size:13.5px;line-height:1.65;}
+
+/* ---------- resources ---------- */
+.res-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.res-card{
+  background:#16161A;color:#fff;border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:10px;
+  text-decoration:none;transition:transform .15s;
+}
+.res-card:hover{transform:translateY(-3px);}
+.res-card.alt{background:var(--panel);color:var(--ink);border:1px solid var(--line);}
+.res-icon{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;}
+.res-card.alt .res-icon{background:var(--teal-tint);}
+.res-card h4{margin:0;font-size:15px;font-family:'Space Grotesk';}
+.res-card p{margin:0;font-size:12.5px;opacity:.75;line-height:1.45;}
+.res-arrow{margin-top:auto;font-size:12px;font-family:'JetBrains Mono';opacity:.8;}
+
+/* ---------- footer ---------- */
+footer{margin-top:80px;border-top:1px solid var(--line);padding:32px 24px 40px;}
+.footer-inner{max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+.footer-inner p{font-size:12.5px;color:var(--ink-soft);margin:0;}
+
+/* ---------- article modal ---------- */
+.overlay{
+  position:fixed;inset:0;background:rgba(20,26,33,.55);backdrop-filter:blur(2px);
+  display:none;align-items:flex-start;justify-content:center;z-index:100;padding:48px 18px;overflow-y:auto;
+}
+.overlay.show{display:flex;}
+.modal{
+  background:var(--panel);border-radius:18px;max-width:680px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.25);
+  animation:modalIn .2s ease;
+}
+@keyframes modalIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.modal-head{padding:24px 28px 16px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;justify-content:space-between;gap:14px;}
+.modal-icon{flex:none;width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;}
+.modal-head-left{flex:1;min-width:0;}
+.modal-head-left .article-id{margin-bottom:10px;display:inline-block;}
+.modal-head h2{margin:0;font-size:21px;line-height:1.3;}
+.modal-close{
+  flex:none;width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:var(--bg);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink-soft);
+}
+.modal-close:hover{background:var(--coral-tint);color:var(--coral);border-color:var(--coral);}
+.modal-body{padding:22px 28px 28px;font-size:14.5px;line-height:1.75;color:var(--ink);}
+.article-hero{
+  margin:0 -28px 20px;padding:26px 28px;
+  display:flex;align-items:center;justify-content:center;
+}
+.article-hero svg{max-width:100%;height:auto;}
+.modal-body h4{font-family:'Space Grotesk';font-size:14px;margin:18px 0 10px;color:var(--teal-dark);}
+.step-list{list-style:none;margin:0 0 16px;padding:0;counter-reset:step;}
+.step-list li{
+  counter-increment:step;position:relative;padding:0 0 18px 40px;margin:0;
+}
+.step-list li:last-child{padding-bottom:2px;}
+.step-list li::before{
+  content:counter(step);font-family:'JetBrains Mono';font-weight:600;font-size:12.5px;
+  position:absolute;left:0;top:0;width:26px;height:26px;border-radius:50%;
+  background:var(--teal-tint);color:var(--teal-dark);border:1px solid var(--teal);
+  display:flex;align-items:center;justify-content:center;z-index:1;
+}
+.step-list li::after{
+  content:'';position:absolute;left:13px;top:26px;bottom:0;width:1px;background:var(--line);
+}
+.step-list li:last-child::after{display:none;}
+.modal-body ul{margin:0 0 12px;padding-left:20px;}
+.modal-body li{margin-bottom:6px;}
+.modal-body code{font-family:'JetBrains Mono';background:var(--bg);padding:2px 6px;border-radius:5px;font-size:12.5px;}
+.modal-tags{display:flex;gap:8px;padding:0 28px 22px;flex-wrap:wrap;}
+.modal-tags span{font-size:11px;background:var(--bg);border:1px solid var(--line);padding:4px 10px;border-radius:999px;color:var(--ink-soft);}
+.modal-foot{padding:16px 28px 26px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.helpful{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--ink-soft);}
+.helpful button{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:13px;}
+.helpful button:hover{border-color:var(--teal);color:var(--teal-dark);}
+
+/* scroll-fade-in */
+.fade-up{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease;}
+.fade-up.in{opacity:1;transform:translateY(0);}
+
+/* ---------- focus ---------- */
+a:focus-visible, button:focus-visible, .cat-card:focus-visible, .article-card:focus-visible, .faq-q:focus-visible, input:focus-visible{
+  outline:2px solid var(--teal); outline-offset:2px;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width:900px){
+  .cat-grid{grid-template-columns:repeat(2,1fr);}
+  .stats{grid-template-columns:repeat(2,1fr);}
+  .res-grid{grid-template-columns:repeat(2,1fr);}
+  nav.topnav{display:none;}
+}
+@media (max-width:560px){
+  .cat-grid{grid-template-columns:1fr;}
+  .res-grid{grid-template-columns:1fr;}
+  .article-cat{display:none;}
+  .severity{display:none;}
+}
+
+/* ===================== DASHBOARD ===================== */
+#dashboard,#reports{background:transparent;}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
+.kpi{
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;
+  position:relative;overflow:hidden;
+}
+.kpi::after{
+  content:'';position:absolute;right:-14px;top:-14px;width:72px;height:72px;border-radius:50%;
+  background:var(--kpi-color,var(--teal-tint));opacity:.35;
+}
+.kpi-label{font-size:12px;color:var(--ink-soft);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;}
+.kpi-val{font-family:'Space Grotesk';font-size:32px;font-weight:700;line-height:1;}
+.kpi-delta{font-size:12px;margin-top:6px;font-weight:600;}
+.kpi-delta.up{color:#4CAF50;} .kpi-delta.down{color:var(--coral);}
+.dash-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;align-items:start;}
+.dash-panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
+.dash-panel-head{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.dash-panel-head h3{font-size:14px;margin:0;font-family:'Space Grotesk';}
+.dash-panel-head .badge{font-size:11px;background:var(--teal-tint);color:var(--teal-dark);padding:3px 8px;border-radius:999px;font-weight:600;}
+.ticket-table{width:100%;border-collapse:collapse;font-size:13px;}
+.ticket-table th{text-align:left;padding:10px 18px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);border-bottom:1px solid var(--line);font-weight:600;background:var(--bg);}
+.ticket-table td{padding:11px 18px;border-bottom:1px solid var(--line);vertical-align:middle;}
+.ticket-table tr:last-child td{border-bottom:none;}
+.ticket-table tr:hover td{background:var(--teal-tint);}
+.t-status{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:999px;}
+.t-open{background:var(--amber-tint);color:#996600;}
+.t-resolved{background:var(--teal-tint);color:var(--teal-dark);}
+.t-pending{background:var(--coral-tint);color:var(--coral);}
+.act-list{padding:0 0 4px;}
+.act-row{display:flex;align-items:flex-start;gap:11px;padding:11px 18px;border-bottom:1px solid var(--line);}
+.act-row:last-child{border-bottom:none;}
+.act-dot{width:8px;height:8px;border-radius:50%;flex:none;margin-top:5px;}
+.act-text{font-size:13px;flex:1;line-height:1.4;}
+.act-time{font-size:11px;color:var(--ink-soft);font-family:'JetBrains Mono';flex:none;margin-top:2px;}
+/* category bar mini chart */
+.cat-bars{padding:14px 18px;display:flex;flex-direction:column;gap:10px;}
+.cat-bar-row{display:flex;align-items:center;gap:10px;font-size:12.5px;}
+.cat-bar-label{width:110px;color:var(--ink-soft);flex:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.cat-bar-track{flex:1;height:10px;background:var(--line);border-radius:999px;overflow:hidden;}
+.cat-bar-fill{height:100%;border-radius:999px;background:var(--gold-grad);transition:width .7s cubic-bezier(.4,0,.2,1);}
+.cat-bar-count{width:22px;text-align:right;color:var(--ink-soft);flex:none;font-family:'JetBrains Mono';font-size:11.5px;}
+
+/* ===================== REPORTS ===================== */
+.report-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.chart-box{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
+.chart-box-head{padding:14px 18px 10px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;}
+.chart-box-head h3{font-size:14px;margin:0;font-family:'Space Grotesk';}
+.chart-box-head select{font-size:12px;border:1px solid var(--line);border-radius:7px;padding:4px 8px;background:var(--bg);color:var(--ink);cursor:pointer;}
+.chart-area{padding:18px;}
+.bar-chart{display:flex;align-items:flex-end;gap:10px;height:160px;}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.bar-seg{width:100%;border-radius:6px 6px 0 0;transition:height .6s cubic-bezier(.4,0,.2,1);}
+.bar-xlbl{font-size:10.5px;color:var(--ink-soft);font-family:'JetBrains Mono';text-align:center;}
+.bar-val{font-size:11px;color:var(--ink-soft);font-family:'JetBrains Mono';}
+/* donut chart */
+.donut-wrap{display:flex;align-items:center;gap:22px;padding:18px;}
+.donut-legend{display:flex;flex-direction:column;gap:10px;flex:1;}
+.legend-row{display:flex;align-items:center;gap:8px;font-size:12.5px;}
+.legend-dot{width:10px;height:10px;border-radius:3px;flex:none;}
+/* line sparkline */
+.sparkline-svg{display:block;width:100%;height:100px;}
+/* report table */
+.report-full{grid-column:span 2;}
+.report-table{width:100%;border-collapse:collapse;font-size:12.5px;}
+.report-table th{text-align:left;padding:9px 16px;background:var(--bg);border-bottom:1px solid var(--line);font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft);}
+.report-table td{padding:10px 16px;border-bottom:1px solid var(--line);}
+.report-table tr:last-child td{border-bottom:none;}
+.report-table tr:hover td{background:var(--teal-tint);}
+.progress-bar{height:7px;background:var(--line);border-radius:999px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:999px;background:var(--gold-grad);}
+
+/* ===================== NEW TICKET MODAL ===================== */
+.ticket-modal{
+  background:var(--panel);border-radius:18px;max-width:520px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.25);
+  animation:modalIn .2s ease;
+}
+.tm-head{padding:22px 26px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;}
+.tm-head h3{margin:0;font-size:18px;font-family:'Space Grotesk';}
+.tm-body{padding:20px 26px 24px;display:flex;flex-direction:column;gap:14px;}
+.tm-field label{display:block;font-size:12px;font-weight:600;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px;}
+.tm-field input,.tm-field select,.tm-field textarea{
+  width:100%;border:1px solid var(--line);border-radius:9px;padding:10px 13px;font-size:14px;
+  background:var(--bg);color:var(--ink);font-family:'Inter';outline:none;transition:.15s;
+}
+.tm-field input:focus,.tm-field select:focus,.tm-field textarea:focus{border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-tint);}
+.tm-field textarea{min-height:90px;resize:vertical;}
+.tm-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.tm-foot{padding:0 26px 24px;display:flex;gap:10px;justify-content:flex-end;}
+.btn-primary{background:var(--ink);color:#fff;border:none;padding:10px 20px;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;transition:.15s;}
+.btn-primary:hover{background:var(--gold-grad);color:var(--ink);}
+.btn-ghost{background:transparent;border:1px solid var(--line);color:var(--ink-soft);padding:10px 18px;border-radius:9px;font-size:14px;cursor:pointer;}
+.btn-ghost:hover{border-color:var(--ink);}
+.toast{
+  position:fixed;bottom:28px;right:28px;z-index:200;background:var(--ink);color:#fff;
+  padding:13px 18px;border-radius:12px;font-size:13.5px;font-weight:500;display:flex;align-items:center;gap:10px;
+  box-shadow:0 8px 24px rgba(0,0,0,.3);transform:translateY(80px);opacity:0;transition:all .3s ease;
+}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast-icon{width:22px;height:22px;border-radius:6px;background:var(--teal-tint);display:flex;align-items:center;justify-content:center;}
+@media(max-width:900px){.dash-grid,.report-grid{grid-template-columns:1fr;}.kpi-grid{grid-template-columns:repeat(2,1fr);}.report-full{grid-column:span 1;}}
+</style>
+</head>
+<body>
+
+<!-- ============ TOP BAR ============ -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand"><img class="brand-mark" src="phb-logo.png" alt="PHB - Pelaburan Hartanah Berhad"> <span style="margin-left:2px;">ORBIT <i>One Repository for IT</i></span></div>
+    <nav class="topnav">
+      <a href="#categories">Categories</a>
+      <a href="#articles">Articles</a>
+      <a href="#faq">FAQ</a>
+      <a href="#resources">Resources</a>
+      <a href="#dashboard" style="color:var(--teal-dark);font-weight:600;">Dashboard</a>
+      <a href="#reports" style="color:var(--teal-dark);font-weight:600;">Reports</a>
+    </nav>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="status-pill"><span class="dot dot-op dot-live"></span>All systems operational</div>
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle dark mode" title="Toggle dark mode">
+        <svg id="themeIconSun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        <svg id="themeIconMoon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+      </button>
+      <button class="topbar-cta" onclick="openTicket()">Submit a ticket</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ HERO / SEARCH CONSOLE ============ -->
+<div class="hero">
+  <div class="hero-eyebrow">&gt; diagnostic console ready</div>
+  <h1>Fix it yourself in <span>under 5 minutes.</span></h1>
+  <p class="lede">Search 24 verified guides covering hardware, software, network, accounts, email and security — written by the IT team, kept current, no jargon.</p>
+
+  <div class="console">
+    <div class="console-bar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="searchInput" type="text" placeholder="Describe your issue — e.g. “wifi keeps disconnecting”" autocomplete="off">
+      <span class="console-kbd">/</span>
+    </div>
+    <div class="console-suggest">
+      <button class="chip" data-q="vpn">VPN won't connect</button>
+      <button class="chip" data-q="password reset">Reset password</button>
+      <button class="chip" data-q="printer">Printer offline</button>
+      <button class="chip" data-q="slow">Computer running slow</button>
+      <button class="chip" data-q="email">Email not syncing</button>
+      <button class="chip" data-q="mfa">MFA / 2FA setup</button>
+    </div>
+  </div>
+</div>
+
+<div class="results-panel">
+  <div id="resultsBox"></div>
+</div>
+
+<!-- ============ STATS ============ -->
+<div class="stats">
+  <div class="stat"><div class="stat-num mono">24</div><div class="stat-label">Self-service guides</div></div>
+  <div class="stat"><div class="stat-num mono">6</div><div class="stat-label">Categories</div></div>
+  <div class="stat"><div class="stat-num mono">~4 min</div><div class="stat-label">Avg. read time</div></div>
+  <div class="stat"><div class="stat-num mono">92%</div><div class="stat-label">Resolved without a ticket</div></div>
+</div>
+
+<!-- ============ CATEGORIES ============ -->
+<div class="section" id="howitworks">
+  <div class="section-head fade-up">
+    <h2>How to use this knowledge base</h2>
+    <div class="sub">Four steps from "something's broken" to "fixed"</div>
+  </div>
+  <div class="infographic fade-up" id="infographic"></div>
+</div>
+
+<div class="section" id="categories">
+  <div class="section-head fade-up">
+    <h2>Browse by category</h2>
+    <div class="sub">Jump straight to the area you're troubleshooting</div>
+  </div>
+  <div class="cat-grid" id="catGrid"></div>
+</div>
+
+<!-- ============ ARTICLES ============ -->
+<div class="section" id="articles">
+  <div class="section-head fade-up">
+    <h2>All articles</h2>
+    <div class="sub" id="articleCount">24 guides</div>
+  </div>
+  <div class="article-list fade-up" id="articleList"></div>
+</div>
+
+<!-- ============ FAQ ============ -->
+<div class="section" id="faq">
+  <div class="section-head fade-up">
+    <h2>Frequently asked questions</h2>
+    <div class="sub">Quick answers to the most common questions</div>
+  </div>
+  <div class="faq-list fade-up" id="faqList"></div>
+</div>
+
+<!-- ============ RESOURCES ============ -->
+<div class="section" id="resources" style="padding-bottom:20px;">
+  <div class="section-head fade-up">
+    <h2>Need a human instead?</h2>
+    <div class="sub">Direct lines to the IT support team</div>
+  </div>
+  <div class="res-grid fade-up">
+    <a class="res-card" href="#" onclick="openTicket();return false;">
+      <div class="res-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg></div>
+      <h4>Submit a ticket</h4>
+      <p>For issues a guide can't solve. Avg. first response: 22 min.</p>
+      <div class="res-arrow">helpdesk@company.com →</div>
+    </a>
+    <a class="res-card alt" href="tel:+10000000000">
+      <div class="res-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#8C8B1E" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92Z"/></svg></div>
+      <h4>Call the help desk</h4>
+      <p>Mon–Fri, 7am–7pm. Critical outages answered 24/7.</p>
+      <div class="res-arrow">ext. 4357 (HELP) →</div>
+    </a>
+    <a class="res-card alt" href="#" onclick="alert('This would link to your live status page.');return false;">
+      <div class="res-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#8C8B1E" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></div>
+      <h4>System status</h4>
+      <p>Live uptime for email, VPN, intranet and core apps.</p>
+      <div class="res-arrow">view status →</div>
+    </a>
+    <a class="res-card" href="#" onclick="alert('This would open your IT asset / equipment request form.');return false;">
+      <div class="res-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+      <h4>Request equipment</h4>
+      <p>New laptop, monitor, headset or peripheral requests.</p>
+      <div class="res-arrow">open form →</div>
+    </a>
+  </div>
+</div>
+
+<!-- ============ DASHBOARD ============ -->
+<div class="section" id="dashboard" style="padding-bottom:0;">
+  <div class="section-head fade-up">
+    <h2>IT Dashboard</h2>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <div class="sub" id="dashLastUpdate"></div>
+      <button class="btn-primary" style="font-size:12.5px;padding:7px 14px;" onclick="openNewTicket()">+ New Ticket</button>
+    </div>
+  </div>
+  <!-- KPI cards -->
+  <div class="kpi-grid fade-up" id="kpiGrid"></div>
+  <!-- lower grid -->
+  <div class="dash-grid fade-up">
+    <div class="dash-panel">
+      <div class="dash-panel-head"><h3>Recent Tickets</h3><span class="badge" id="openCount">—</span></div>
+      <div style="overflow-x:auto;"><table class="ticket-table" id="ticketTableBody"></table></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div class="dash-panel">
+        <div class="dash-panel-head"><h3>Tickets by Category</h3></div>
+        <div class="cat-bars" id="catBars"></div>
+      </div>
+      <div class="dash-panel">
+        <div class="dash-panel-head"><h3>Recent Activity</h3></div>
+        <div class="act-list" id="activityLog"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ REPORTS ============ -->
+<div class="section" id="reports" style="padding-bottom:20px;">
+  <div class="section-head fade-up">
+    <h2>Reports & Analytics</h2>
+    <div class="sub">Based on ticket data this month</div>
+  </div>
+  <div class="report-grid fade-up">
+    <!-- Bar chart: tickets per month -->
+    <div class="chart-box">
+      <div class="chart-box-head">
+        <h3>Ticket Volume — Last 6 Months</h3>
+        <select onchange="renderBarChart(this.value)">
+          <option value="all">All categories</option>
+          <option value="network">Network</option>
+          <option value="hardware">Hardware</option>
+          <option value="software">Software</option>
+          <option value="account">Account</option>
+          <option value="email">Email</option>
+          <option value="security">Security</option>
+        </select>
+      </div>
+      <div class="chart-area"><div class="bar-chart" id="barChart"></div></div>
+    </div>
+    <!-- Donut: by category -->
+    <div class="chart-box">
+      <div class="chart-box-head"><h3>Distribution by Category</h3></div>
+      <div class="donut-wrap">
+        <svg id="donutSvg" width="130" height="130" viewBox="0 0 130 130"></svg>
+        <div class="donut-legend" id="donutLegend"></div>
+      </div>
+    </div>
+    <!-- Sparkline: resolution trend -->
+    <div class="chart-box">
+      <div class="chart-box-head"><h3>Avg. Resolution Time (hrs)</h3></div>
+      <div class="chart-area">
+        <svg id="sparklineSvg" class="sparkline-svg"></svg>
+      </div>
+    </div>
+    <!-- Satisfaction -->
+    <div class="chart-box">
+      <div class="chart-box-head"><h3>Satisfaction Score</h3></div>
+      <div class="chart-area" style="padding:16px 22px;">
+        <div style="font-family:'Space Grotesk';font-size:42px;font-weight:700;" id="satScore">—</div>
+        <div style="font-size:12.5px;color:var(--ink-soft);margin-top:4px;">out of 5.0 · <span id="satCount">—</span> responses</div>
+        <div style="margin-top:18px;display:flex;flex-direction:column;gap:8px;" id="satBars"></div>
+      </div>
+    </div>
+    <!-- Full table -->
+    <div class="chart-box report-full">
+      <div class="chart-box-head"><h3>Ticket Log</h3>
+        <input type="text" id="tableSearch" placeholder="Filter tickets…" style="font-size:12.5px;border:1px solid var(--line);border-radius:7px;padding:5px 10px;background:var(--bg);color:var(--ink);width:180px;" oninput="renderReportTable(this.value)">
+      </div>
+      <div style="overflow-x:auto;"><table class="report-table" id="reportTable"></table></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <p>HelpDesk Knowledge Base — maintained by the IT Support team. Content reviewed quarterly.</p>
+    <p class="mono">last sync: 2026-06-30</p>
+  </div>
+</footer>
+
+<!-- ============ NEW TICKET MODAL ============ -->
+<div class="overlay" id="ticketOverlay" onclick="if(event.target===this)closeTicketModal()">
+  <div class="ticket-modal">
+    <div class="tm-head">
+      <h3>Submit a Support Ticket</h3>
+      <button class="modal-close" onclick="closeTicketModal()">✕</button>
+    </div>
+    <div class="tm-body">
+      <div class="tm-row">
+        <div class="tm-field"><label>Your Name</label><input id="tf-name" placeholder="Jane Smith"></div>
+        <div class="tm-field"><label>Email</label><input id="tf-email" type="email" placeholder="jane@company.com"></div>
+      </div>
+      <div class="tm-row">
+        <div class="tm-field"><label>Category</label>
+          <select id="tf-cat">
+            <option value="hardware">Hardware</option>
+            <option value="software">Software</option>
+            <option value="network">Network & VPN</option>
+            <option value="account">Account & Access</option>
+            <option value="email">Email & Calendar</option>
+            <option value="security">Security</option>
+          </select>
+        </div>
+        <div class="tm-field"><label>Priority</label>
+          <select id="tf-priority">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+            <option value="critical">Critical</option>
+          </select>
+        </div>
+      </div>
+      <div class="tm-field"><label>Subject</label><input id="tf-subject" placeholder="Brief description of the issue"></div>
+      <div class="tm-field"><label>Details</label><textarea id="tf-detail" placeholder="Steps to reproduce, error messages, what you've already tried…"></textarea></div>
+    </div>
+    <div class="tm-foot">
+      <button class="btn-ghost" onclick="closeTicketModal()">Cancel</button>
+      <button class="btn-primary" onclick="submitTicket()">Submit Ticket</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div class="toast" id="toast">
+  <div class="toast-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8C8B1E" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div>
+  <span id="toastMsg">Ticket submitted!</span>
+</div>
+
+
+<!-- ============ ARTICLE MODAL ============ -->
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<script>
+/* ===================== DATA ===================== */
+const categories = [
+  {key:'hardware', name:'Hardware', desc:'Laptops, monitors, peripherals & docking stations.', color:'#8C8B1E', tint:'#F6F8D9'},
+  {key:'software', name:'Software', desc:'Installs, updates, crashes and licensing.', color:'#5B6878', tint:'#E9EDF1'},
+  {key:'network', name:'Network & VPN', desc:'Wi‑Fi, VPN, remote access and connectivity.', color:'#F5A623', tint:'#FDF1DD'},
+  {key:'account', name:'Account & Access', desc:'Passwords, MFA, permissions and lockouts.', color:'#E2574C', tint:'#FBE7E5'},
+  {key:'email', name:'Email & Calendar', desc:'Outlook, sync issues, shared mailboxes.', color:'#8C8B1E', tint:'#F6F8D9'},
+  {key:'security', name:'Security', desc:'Phishing, malware, device encryption.', color:'#E2574C', tint:'#FBE7E5'},
+];
+
+const iconFor = {
+  hardware:'<path d="M4 5h16v10H4z"/><path d="M2 19h20"/>',
+  software:'<rect x="3" y="3" width="18" height="14" rx="2"/><path d="M8 21h8"/>',
+  network:'<path d="M5 12.5a8 8 0 0 1 14 0"/><path d="M8.5 16a4 4 0 0 1 7 0"/><circle cx="12" cy="19" r="1"/>',
+  account:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',
+  email:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
+  security:'<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3Z"/>'
+};
+
+const articles = [
+{id:'KB-0101',cat:'network',sev:'crit',title:"VPN won't connect or keeps dropping",
+ desc:'Fix the most common VPN client errors and dropped tunnels.',
+ tags:['vpn','remote access','connection'],
+ body:`<h4>Quick checks</h4><ol>
+ <li>Confirm you have an active internet connection (try loading any website).</li>
+ <li>Fully quit the VPN client — not just close the window — then reopen it.</li>
+ <li>Restart your computer if the client was open before your last update.</li></ol>
+ <h4>If it still won't connect</h4><ol>
+ <li>Open the client and check the server region selected. Switch to the nearest region.</li>
+ <li>Forget the saved network in Wi‑Fi settings and reconnect with the password.</li>
+ <li>Run <code>ipconfig /flushdns</code> (Windows) or <code>sudo dscacheutil -flushcache</code> (Mac) in a terminal.</li>
+ <li>Reset your VPN credentials from the Account &gt; Security portal if login fails repeatedly.</li></ol>
+ <h4>Still stuck?</h4><p>Submit a ticket with the exact error code shown in the client — this cuts resolution time roughly in half.</p>`},
+
+{id:'KB-0102',cat:'network',sev:'warn',title:'Wi‑Fi keeps disconnecting',
+ desc:'Stabilize a flaky office or home Wi‑Fi connection.',
+ tags:['wifi','wireless','connectivity'],
+ body:`<h4>Steps</h4><ol>
+ <li>Move closer to the access point — office Wi‑Fi range drops sharply past 2 walls.</li>
+ <li>Forget the network and rejoin, entering the password fresh.</li>
+ <li>Toggle Wi‑Fi off and back on; on laptops, toggle Airplane mode for 5 seconds.</li>
+ <li>Update your network adapter driver via Device Manager (Windows) or System Update (Mac).</li>
+ <li>If on home Wi‑Fi, restart your router and confirm no firmware update is pending.</li></ol>
+ <p>If disconnects happen only on the office network and persist after these steps, it may be an access point issue — submit a ticket with your desk location.</p>`},
+
+{id:'KB-0103',cat:'network',sev:'ok',title:'How to set up VPN on a new device',
+ desc:'First-time VPN client install and configuration.',
+ tags:['vpn','setup','onboarding'],
+ body:`<h4>Setup</h4><ol>
+ <li>Download the approved client from the Software Center / Company Portal — never a third-party site.</li>
+ <li>Install and launch the client, then sign in with your company email and password.</li>
+ <li>Complete MFA approval on your phone when prompted.</li>
+ <li>Select the server region closest to your physical location.</li>
+ <li>Click Connect — a green status indicator confirms an active tunnel.</li></ol>`},
+
+{id:'KB-0104',cat:'network',sev:'warn',title:'Slow internet on company network',
+ desc:'Diagnose and resolve sluggish browsing or downloads.',
+ tags:['speed','bandwidth','wifi'],
+ body:`<h4>Diagnose</h4><ol>
+ <li>Run a speed test and note the result — compare against the posted office baseline.</li>
+ <li>Close bandwidth-heavy apps (video calls, large uploads, sync clients) running in the background.</li>
+ <li>Disconnect from VPN briefly to see if speed improves — some sites are intentionally routed slower over VPN.</li>
+ <li>Switch from Wi‑Fi to a wired connection if available, to rule out wireless interference.</li></ol>
+ <p>If slow speed affects a whole floor or team, this is likely an infrastructure issue — check System Status before filing a ticket.</p>`},
+
+{id:'KB-0201',cat:'hardware',sev:'crit',title:'Laptop won\'t turn on',
+ desc:'Troubleshoot a completely unresponsive laptop.',
+ tags:['laptop','power','boot'],
+ body:`<h4>Try in order</h4><ol>
+ <li>Plug directly into a wall outlet (not a power strip) and confirm the charging light is on.</li>
+ <li>Hold the power button for 15 seconds to force a hard reset, then try powering on again.</li>
+ <li>Try a different charging cable or adapter if one is available nearby.</li>
+ <li>Remove the battery (if removable), wait 30 seconds, reinsert, and try again.</li></ol>
+ <p>If there is no charging light at all with a known-good outlet and cable, this is a hardware fault — request a loaner via the Equipment Request form and submit a ticket.</p>`},
+
+{id:'KB-0202',cat:'hardware',sev:'warn',title:'External monitor not detected',
+ desc:'Fix dual or external display connection issues.',
+ tags:['monitor','display','docking station'],
+ body:`<h4>Steps</h4><ol>
+ <li>Confirm the cable is fully seated at both ends; try a different cable or port if possible.</li>
+ <li>On Windows, press <code>Win + P</code> and select "Extend" or "Duplicate".</li>
+ <li>On Mac, open System Settings &gt; Displays &gt; Detect Displays.</li>
+ <li>If using a docking station, unplug and replug the dock's power and USB‑C connection.</li>
+ <li>Restart the laptop with the monitor already connected.</li></ol>`},
+
+{id:'KB-0203',cat:'hardware',sev:'ok',title:'Connecting to a docking station',
+ desc:'Set up a single-cable docking station correctly.',
+ tags:['dock','docking station','setup'],
+ body:`<h4>Setup</h4><ol>
+ <li>Connect the dock to power first, then connect the single USB‑C cable to your laptop.</li>
+ <li>Wait 10 seconds for peripherals (monitor, keyboard, mouse, ethernet) to initialize.</li>
+ <li>If a peripheral isn't recognized, unplug just that cable from the dock and reinsert it.</li>
+ <li>Keep dock firmware current via the manufacturer's utility, found in Software Center.</li></ol>`},
+
+{id:'KB-0204',cat:'hardware',sev:'warn',title:'Printer shows offline or won\'t print',
+ desc:'Get a networked office printer working again.',
+ tags:['printer','printing','offline'],
+ body:`<h4>Steps</h4><ol>
+ <li>Confirm the printer's screen shows "Ready" and isn't out of paper or toner.</li>
+ <li>On your computer, open Printers &amp; Scanners, remove the printer, then re‑add it from the directory.</li>
+ <li>Set it as default and send a single test page.</li>
+ <li>If still offline, restart the print spooler: Windows Services &gt; Print Spooler &gt; Restart.</li></ol>
+ <p>Shared office printers that are offline for everyone should be reported via ticket immediately — these affect the whole floor.</p>`},
+
+{id:'KB-0205',cat:'hardware',sev:'ok',title:'Requesting a loaner or replacement laptop',
+ desc:'Process for getting temporary or replacement hardware.',
+ tags:['loaner','replacement','equipment'],
+ body:`<h4>Process</h4><ol>
+ <li>Submit a ticket describing the issue and confirm with your manager that a loaner is approved.</li>
+ <li>Back up any local files to OneDrive/shared drive before handing in your device.</li>
+ <li>Collect the loaner from the IT desk (or arrange courier for remote staff) — typical turnaround is 1 business day.</li>
+ <li>Sign in with your normal credentials; your profile and apps will sync automatically.</li></ol>`},
+
+{id:'KB-0301',cat:'software',sev:'warn',title:'Computer running slow',
+ desc:'Speed up a sluggish Windows or Mac machine.',
+ tags:['performance','slow','speed'],
+ body:`<h4>Quick wins</h4><ol>
+ <li>Restart the computer — this alone resolves most slowdowns caused by memory buildup.</li>
+ <li>Open Task Manager (Windows) or Activity Monitor (Mac) and close high-CPU apps you aren't using.</li>
+ <li>Check available disk space; free up storage if under 10% remaining.</li>
+ <li>Pause cloud sync (OneDrive/Dropbox) temporarily if a large sync is running.</li>
+ <li>Run available OS and antivirus updates, then restart again.</li></ol>`},
+
+{id:'KB-0302',cat:'software',sev:'crit',title:'Application keeps crashing',
+ desc:'Resolve repeated crashes in a specific application.',
+ tags:['crash','app','error'],
+ body:`<h4>Steps</h4><ol>
+ <li>Fully close the app (check it isn't still running in the background) and reopen it.</li>
+ <li>Check Software Center / App Store for a pending update to the app.</li>
+ <li>Restart your computer to clear any corrupted memory state.</li>
+ <li>If a specific file triggers the crash, try opening a different file to isolate the cause.</li>
+ <li>Reinstall the app via Software Center as a last resort — this won't affect your saved files.</li></ol>
+ <p>Include the exact error message and steps to reproduce when filing a ticket — this is the single biggest factor in fast resolution.</p>`},
+
+{id:'KB-0303',cat:'software',sev:'ok',title:'Installing approved software',
+ desc:'How to request and install new applications.',
+ tags:['install','software center','request'],
+ body:`<h4>Steps</h4><ol>
+ <li>Check Software Center (Windows) or Company Portal/Self Service (Mac) first — most approved apps install instantly with no approval needed.</li>
+ <li>If the app isn't listed, submit a software request ticket with a brief business justification.</li>
+ <li>Approved requests are typically available within 1 business day.</li></ol>
+ <p>Installing software from outside these approved channels is restricted and may be automatically blocked by endpoint protection.</p>`},
+
+{id:'KB-0304',cat:'software',sev:'ok',title:'Update is stuck or won\'t install',
+ desc:'Unstick a frozen Windows or macOS update.',
+ tags:['update','patch','windows update'],
+ body:`<h4>Steps</h4><ol>
+ <li>Leave the laptop plugged in, open, and connected to Wi‑Fi for at least 30 minutes.</li>
+ <li>Restart the computer — many "stuck" updates simply need a restart to resume.</li>
+ <li>On Windows, run the built-in Update Troubleshooter from Settings &gt; Troubleshoot.</li>
+ <li>Ensure at least 15GB of free disk space, which large updates require.</li></ol>`},
+
+{id:'KB-0401',cat:'account',sev:'crit',title:'Locked out of your account',
+ desc:'Regain access after too many failed login attempts.',
+ tags:['lockout','login','password'],
+ body:`<h4>Steps</h4><ol>
+ <li>Wait 15 minutes — most lockouts auto-clear after a cooldown period.</li>
+ <li>Use the "Forgot password" link on the login page to reset via your registered recovery method.</li>
+ <li>If recovery options are out of date, contact the help desk by phone with photo ID ready for verification.</li></ol>
+ <p>Never share your password with anyone, including IT staff — we will never ask for it directly.</p>`},
+
+{id:'KB-0402',cat:'account',sev:'ok',title:'How to reset your password',
+ desc:'Self-service password reset walkthrough.',
+ tags:['password','reset','self-service'],
+ body:`<h4>Steps</h4><ol>
+ <li>Go to the company password portal and click "Reset password".</li>
+ <li>Verify your identity via the MFA app or registered phone number.</li>
+ <li>Choose a new password — minimum 12 characters, mixing letters, numbers and symbols.</li>
+ <li>Update the saved password on all devices (phone, laptop, tablet) to avoid repeated lockouts.</li></ol>`},
+
+{id:'KB-0403',cat:'account',sev:'warn',title:'Setting up multi-factor authentication (MFA)',
+ desc:'Configure or change your MFA / 2FA method.',
+ tags:['mfa','2fa','authenticator'],
+ body:`<h4>Setup</h4><ol>
+ <li>Install the company-approved authenticator app on your phone.</li>
+ <li>Go to Account Settings &gt; Security &gt; Multi‑Factor Authentication.</li>
+ <li>Scan the QR code shown with the authenticator app.</li>
+ <li>Enter the 6‑digit code generated to confirm setup.</li>
+ <li>Save the provided backup codes somewhere secure in case you lose your phone.</li></ol>`},
+
+{id:'KB-0404',cat:'account',sev:'warn',title:'Requesting access to a shared drive or system',
+ desc:'Get permission to a folder, app, or system you need.',
+ tags:['access','permissions','request'],
+ body:`<h4>Steps</h4><ol>
+ <li>Identify the exact resource name (folder path, system name) you need access to.</li>
+ <li>Submit an access request ticket naming your manager as approver.</li>
+ <li>Approval typically takes 1–2 business days depending on the resource's sensitivity.</li></ol>`},
+
+{id:'KB-0501',cat:'email',sev:'warn',title:'Email not syncing or sending',
+ desc:'Fix Outlook or mail app sync and send failures.',
+ tags:['outlook','email','sync'],
+ body:`<h4>Steps</h4><ol>
+ <li>Check your internet connection by loading a website.</li>
+ <li>Confirm mailbox storage isn't full — check the quota warning banner if present.</li>
+ <li>Restart the mail app fully (quit, don't just minimize).</li>
+ <li>Remove and re‑add the account in the app's account settings.</li>
+ <li>Check System Status for a known mail service incident before filing a ticket.</li></ol>`},
+
+{id:'KB-0502',cat:'email',sev:'ok',title:'Setting up a shared mailbox',
+ desc:'Add a team or shared mailbox to Outlook.',
+ tags:['shared mailbox','outlook','team'],
+ body:`<h4>Steps</h4><ol>
+ <li>Confirm you've been granted access (request via KB‑0404 if not).</li>
+ <li>In Outlook, go to File &gt; Account Settings &gt; Account Settings.</li>
+ <li>Select your account, click "More Settings" &gt; Advanced &gt; Add, and enter the shared mailbox name.</li>
+ <li>Restart Outlook — the shared mailbox will appear in the left folder pane.</li></ol>`},
+
+{id:'KB-0503',cat:'email',sev:'ok',title:'Calendar invites not showing up',
+ desc:'Resolve missing or delayed calendar invitations.',
+ tags:['calendar','invite','outlook'],
+ body:`<h4>Steps</h4><ol>
+ <li>Check your Junk/Clutter folder — invites are occasionally misfiled.</li>
+ <li>Confirm the sender used your correct email address.</li>
+ <li>Toggle calendar sync off and on in account settings.</li>
+ <li>Restart the mail app to force a manual sync.</li></ol>`},
+
+{id:'KB-0601',cat:'security',sev:'crit',title:'I clicked a suspicious link or attachment',
+ desc:'What to do immediately after a possible phishing click.',
+ tags:['phishing','security','incident'],
+ body:`<h4>Act immediately</h4><ol>
+ <li>Disconnect from Wi‑Fi/network (or unplug ethernet) to limit potential spread.</li>
+ <li>Do not enter any credentials if a login page appeared — close it without typing anything.</li>
+ <li>Report it using the "Report Phishing" button in your mail client, or forward to the security team.</li>
+ <li>Change your password immediately from a different, trusted device.</li>
+ <li>Submit a security incident ticket with the sender address and a screenshot.</li></ol>
+ <p>Reporting quickly is never penalized — fast reporting is the single most effective defense we have.</p>`},
+
+{id:'KB-0602',cat:'security',sev:'warn',title:'How to spot a phishing email',
+ desc:'Common red flags in suspicious emails.',
+ tags:['phishing','awareness','email'],
+ body:`<h4>Red flags</h4><ul>
+ <li>Urgent or threatening language pushing you to act immediately.</li>
+ <li>Sender address that looks close to, but not exactly, a known domain.</li>
+ <li>Requests for passwords, gift cards, or wire transfers — legitimate teams never ask this way.</li>
+ <li>Links that don't match their displayed text when you hover over them.</li>
+ <li>Unexpected attachments, especially .zip or .exe files.</li></ul>
+ <p>When unsure, use the Report Phishing button rather than clicking anything — it costs nothing to report a false alarm.</p>`},
+
+{id:'KB-0603',cat:'security',sev:'ok',title:'Enabling full-disk encryption',
+ desc:'Confirm or enable BitLocker / FileVault on your device.',
+ tags:['encryption','bitlocker','filevault'],
+ body:`<h4>Windows (BitLocker)</h4><ol><li>Go to Settings &gt; Privacy &amp; Security &gt; Device Encryption and confirm it's "On".</li></ol>
+ <h4>Mac (FileVault)</h4><ol><li>Go to System Settings &gt; Privacy &amp; Security &gt; FileVault and confirm it's "On".</li></ol>
+ <p>Company-managed devices typically have this enabled automatically. If it shows "Off," submit a ticket — this is required for all devices handling company data.</p>`},
+
+{id:'KB-0604',cat:'security',sev:'warn',title:'Reporting a lost or stolen device',
+ desc:'Steps to take if a company device goes missing.',
+ tags:['lost device','stolen','incident'],
+ body:`<h4>Immediately</h4><ol>
+ <li>Call the help desk line right away — don't wait until the next business day.</li>
+ <li>Provide the device's asset tag or serial number if known.</li>
+ <li>IT will remotely lock and, if necessary, wipe the device to protect company data.</li>
+ <li>File a police report if the device was stolen, and share the report number with IT.</li></ol>`},
+];
+
+const faqs = [
+ {q:'How fast will my ticket be answered?', a:'Standard requests get a first response within 22 minutes on average during business hours (Mon–Fri, 7am–7pm). Critical outages affecting multiple people are paged to on-call staff 24/7.'},
+ {q:'Do I need approval to install new software?', a:'Apps listed in Software Center / Company Portal install instantly with no approval needed. Anything outside that catalog requires a quick manager-approved request — see KB‑0303.'},
+ {q:'What counts as a "critical" issue?', a:'Anything that fully stops you from working — no network access, locked account with no recovery option, or a security incident like a phishing click. Use the phone line for these rather than the ticket queue.'},
+ {q:'Can I use my personal laptop for work?', a:'Only with prior approval and an MDM (mobile device management) profile installed, which enforces encryption and remote-wipe capability. Submit an access request to start the process.'},
+ {q:'How do I check if an outage is already known?', a:'Check the System Status card under Resources before filing a ticket — most widespread issues are already being tracked there with live updates.'},
+ {q:'Who do I contact for new equipment?', a:'Use the "Request equipment" card under Resources. Standard requests (monitor, keyboard, headset) ship within 2–3 business days; laptops may take longer depending on stock.'},
+];
+
+/* ===================== RENDER ===================== */
+const sevMeta = {
+  crit:{dot:'dot-crit', label:'High impact'},
+  warn:{dot:'dot-warn', label:'Moderate'},
+  ok:{dot:'dot-op', label:'Routine'}
+};
+
+function svgIcon(catKey, color){
+  return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${iconFor[catKey]}</svg>`;
+}
+
+function renderCategories(){
+  const grid = document.getElementById('catGrid');
+  grid.innerHTML = categories.map(c=>{
+    const count = articles.filter(a=>a.cat===c.key).length;
+    return `<div class="cat-card" tabindex="0" role="button" onclick="filterByCategory('${c.key}')" onkeypress="if(event.key==='Enter')filterByCategory('${c.key}')">
+      <div class="cat-top">
+        <div class="cat-icon" style="background:${c.tint}">${svgIcon(c.key, c.color)}</div>
+      </div>
+      <h3>${c.name}</h3>
+      <p>${c.desc}</p>
+      <div class="cat-count"><span class="dot dot-op" style="background:${c.color};box-shadow:none;width:6px;height:6px;"></span>${count} guides</div>
+    </div>`;
+  }).join('');
+}
+
+function renderArticles(list){
+  const wrap = document.getElementById('articleList');
+  document.getElementById('articleCount').textContent = list.length + (list.length===1?' guide':' guides');
+  if(!list.length){
+    wrap.innerHTML = `<div class="no-results">No articles match that filter. <a href="#" onclick="renderArticles(articles);return false;" style="color:var(--teal-dark);text-decoration:underline;">Show all</a></div>`;
+    return;
+  }
+  wrap.innerHTML = list.map(a=>{
+    const sm = sevMeta[a.sev];
+    const cat = categories.find(c=>c.key===a.cat);
+    return `<div class="article-card" tabindex="0" onclick="openArticle('${a.id}')" onkeypress="if(event.key==='Enter')openArticle('${a.id}')">
+      <span class="article-icon" style="background:${cat.tint}">${svgIcon(a.cat, cat.color)}</span>
+      <span class="article-id mono">${a.id}</span>
+      <div class="article-body">
+        <div class="article-title">${a.title}</div>
+        <div class="article-desc">${a.desc}</div>
+      </div>
+      <span class="article-cat">${cat.name}</span>
+      <span class="severity"><span class="dot ${sm.dot}"></span>${sm.label}</span>
+      <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+    </div>`;
+  }).join('');
+}
+
+function renderFaq(){
+  const wrap = document.getElementById('faqList');
+  wrap.innerHTML = faqs.map((f,i)=>`
+    <div class="faq-item" id="faq-${i}">
+      <div class="faq-q" onclick="toggleFaq(${i})">
+        <span>${f.q}</span>
+        <span class="faq-plus">+</span>
+      </div>
+      <div class="faq-a"><div class="faq-a-inner">${f.a}</div></div>
+    </div>`).join('');
+}
+
+function toggleFaq(i){
+  const item = document.getElementById('faq-'+i);
+  const a = item.querySelector('.faq-a');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(el=>{
+    el.classList.remove('open');
+    el.querySelector('.faq-a').style.maxHeight = null;
+  });
+  if(!isOpen){
+    item.classList.add('open');
+    a.style.maxHeight = a.scrollHeight + 'px';
+  }
+}
+
+function filterByCategory(key){
+  renderArticles(articles.filter(a=>a.cat===key));
+  document.getElementById('articles').scrollIntoView({behavior:'smooth'});
+}
+
+/* ===================== SEARCH ===================== */
+const input = document.getElementById('searchInput');
+const resultsBox = document.getElementById('resultsBox');
+
+function runSearch(q){
+  q = q.trim().toLowerCase();
+  if(!q){ resultsBox.classList.remove('show'); return; }
+  const matches = articles.filter(a=>{
+    const hay = (a.title+' '+a.desc+' '+a.tags.join(' ')+' '+a.cat).toLowerCase();
+    return hay.includes(q);
+  }).slice(0,8);
+
+  if(!matches.length){
+    resultsBox.innerHTML = `<div class="no-results">No matches for “${q}”. Try a broader term, or <a href="#" onclick="openTicket();return false;" style="color:var(--teal-dark);text-decoration:underline;">submit a ticket</a>.</div>`;
+  } else {
+    resultsBox.innerHTML = matches.map(a=>{
+      const cat = categories.find(c=>c.key===a.cat);
+      return `<div class="result-row" onclick="openArticle('${a.id}')">
+        <span class="article-icon" style="width:30px;height:30px;background:${cat.tint}">${svgIcon(a.cat, cat.color)}</span>
+        <span class="result-id mono">${a.id}</span>
+        <div class="result-meta">
+          <div class="result-title">${a.title}</div>
+          <div class="result-snip">${a.desc}</div>
+        </div>
+        <span class="result-tag">${cat.name}</span>
+      </div>`;
+    }).join('');
+  }
+  resultsBox.classList.add('show');
+}
+
+input.addEventListener('input', e=>runSearch(e.target.value));
+input.addEventListener('focus', e=>{ if(e.target.value) resultsBox.classList.add('show'); });
+document.addEventListener('click', e=>{
+  if(!resultsBox.contains(e.target) && e.target!==input){ resultsBox.classList.remove('show'); }
+});
+document.addEventListener('keydown', e=>{
+  if(e.key==='/' && document.activeElement!==input){ e.preventDefault(); input.focus(); }
+  if(e.key==='Escape'){ resultsBox.classList.remove('show'); closeModal(); }
+});
+
+document.querySelectorAll('.chip').forEach(chip=>{
+  chip.addEventListener('click', ()=>{
+    input.value = chip.dataset.q;
+    input.focus();
+    runSearch(chip.dataset.q);
+  });
+});
+
+/* ===================== MODAL ===================== */
+function categoryIllustration(catKey, color){
+  const diamond = `<path d="M0 22 L11 0 L22 22 L11 44 Z" fill="${color}" opacity="0.18"/>`;
+  const scenes = {
+    network: `<svg width="240" height="100" viewBox="0 0 240 100" fill="none">
+      ${diamond}<g transform="translate(195,4)">${diamond}</g>
+      <circle cx="120" cy="60" r="6" fill="${color}"/>
+      <path d="M96 60a24 24 0 0 1 48 0" stroke="${color}" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M84 60a36 36 0 0 1 72 0" stroke="${color}" stroke-width="3" fill="none" stroke-linecap="round" opacity=".55"/>
+      <path d="M72 60a48 48 0 0 1 96 0" stroke="${color}" stroke-width="3" fill="none" stroke-linecap="round" opacity=".3"/>
+    </svg>`,
+    hardware: `<svg width="240" height="100" viewBox="0 0 240 100" fill="none">
+      ${diamond}<g transform="translate(195,4)">${diamond}</g>
+      <rect x="90" y="34" width="60" height="40" rx="4" stroke="${color}" stroke-width="3"/>
+      <rect x="100" y="42" width="40" height="24" rx="2" fill="${color}" opacity=".25"/>
+      <path d="M80 80h80l-6 8H86l-6-8Z" stroke="${color}" stroke-width="3" stroke-linejoin="round"/>
+    </svg>`,
+    software: `<svg width="240" height="100" viewBox="0 0 240 100" fill="none">
+      ${diamond}<g transform="translate(195,4)">${diamond}</g>
+      <rect x="86" y="28" width="68" height="50" rx="6" stroke="${color}" stroke-width="3"/>
+      <path d="M86 42h68" stroke="${color}" stroke-width="3"/>
+      <circle cx="94" cy="35" r="2.4" fill="${color}"/><circle cx="101" cy="35" r="2.4" fill="${color}"/>
+      <path d="M104 58l8 6-8 6M126 58l-8 6 8 6" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`,
+    account: `<svg width="240" height="100" viewBox="0 0 240 100" fill="none">
+      ${diamond}<g transform="translate(195,4)">${diamond}</g>
+      <circle cx="120" cy="40" r="14" stroke="${color}" stroke-width="3"/>
+      <path d="M96 82c0-14 10.7-22 24-22s24 8 24 22" stroke="${color}" stroke-width="3" stroke-linecap="round"/>
+    </svg>`,
+    email: `<svg width="240" height="100" viewBox="0 0 240 100" fill="none">
+      ${diamond}<g transform="translate(195,4)">${diamond}</g>
+      <rect x="84" y="32" width="72" height="46" rx="5" stroke="${color}" stroke-width="3"/>
+      <path d="M84 36l36 26 36-26" stroke="${color}" stroke-width="3" stroke-linejoin="round" fill="none"/>
+    </svg>`,
+    security: `<svg width="240" height="100" viewBox="0 0 240 100" fill="none">
+      ${diamond}<g transform="translate(195,4)">${diamond}</g>
+      <path d="M120 24l24 9v18c0 16-10 26-24 31-14-5-24-15-24-31V33l24-9Z" stroke="${color}" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M111 58l7 7 13-15" stroke="${color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`,
+  };
+  return scenes[catKey] || scenes.software;
+}
+
+function openArticle(id){
+  const a = articles.find(x=>x.id===id);
+  if(!a) return;
+  const cat = categories.find(c=>c.key===a.cat);
+  const sm = sevMeta[a.sev];
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-head">
+      <span class="modal-icon" style="background:${cat.tint}">${svgIcon(a.cat, cat.color)}</span>
+      <div class="modal-head-left">
+        <span class="article-id mono">${a.id}</span>
+        <h2>${a.title}</h2>
+      </div>
+      <button class="modal-close" onclick="closeModal()" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="article-hero" style="background:${cat.tint}">${categoryIllustration(a.cat, cat.color)}</div>
+      <div style="display:flex;gap:14px;align-items:center;margin-bottom:4px;font-size:12.5px;color:var(--ink-soft);">
+        <span style="display:flex;align-items:center;gap:6px;"><span class="dot ${sm.dot}"></span>${sm.label}</span>
+        <span>·</span><span>${cat.name}</span>
+      </div>
+      ${a.body.replace(/<ol>/g,'<ol class="step-list">')}
+    </div>
+    <div class="modal-tags">${a.tags.map(t=>`<span>#${t}</span>`).join('')}</div>
+    <div class="modal-foot">
+      <div class="helpful">Was this helpful?
+        <button onclick="this.parentElement.innerHTML='Thanks for the feedback 🛠️'">Yes</button>
+        <button onclick="openTicket()">No, escalate</button>
+      </div>
+    </div>`;
+  document.getElementById('overlay').classList.add('show');
+  resultsBox.classList.remove('show');
+}
+function closeModal(){ document.getElementById('overlay').classList.remove('show'); }
+
+
+/* =====================================================================
+   IN-MEMORY DATABASE (localStorage-backed)
+   ===================================================================== */
+const DB = (function(){
+  const KEY = 'phb_kb_db';
+  const defaults = {tickets:[], nextId:1001};
+
+  function load(){
+    try{ return JSON.parse(localStorage.getItem(KEY)) || defaults; }
+    catch(e){ return defaults; }
+  }
+  function save(data){
+    try{ localStorage.setItem(KEY, JSON.stringify(data)); }catch(e){}
+  }
+
+  const catColors = {
+    hardware:'#C3CE1E', software:'#5B6878', network:'#F5A623',
+    account:'#E2574C', email:'#0EA5A4', security:'#8C1E1E'
+  };
+
+  /* ---- seed sample data on first visit ---- */
+  let db = load();
+  if(!db.tickets.length){
+    const names=['Amir Hassan','Siti Rahayu','Kumar Nair','Noor Azlin','Raj Pillai','Farah Aziz','Danial Iqbal','Mei Ling'];
+    const cats=['hardware','software','network','account','email','security'];
+    const subs=['Monitor not detected','VPN keeps dropping','Password reset request','Outlook not syncing','Phishing email received','Laptop running slow','Printer offline','MFA setup needed','Cannot access shared drive','Blue screen error'];
+    const statuses=['open','open','resolved','pending','resolved','open','resolved','resolved'];
+    const now = Date.now();
+    for(let i=0;i<28;i++){
+      const cat=cats[i%cats.length];
+      const created=now-(Math.random()*30*86400000|0);
+      const resolved=statuses[i%statuses.length]==='resolved'?created+(Math.random()*8*3600000|0):null;
+      db.tickets.push({
+        id:'TK-'+String(db.nextId++).padStart(4,'0'),
+        name:names[i%names.length],
+        email:names[i%names.length].toLowerCase().replace(' ','.')+`@company.com`,
+        cat,
+        priority:['low','medium','medium','high','critical'][i%5],
+        subject:subs[i%subs.length],
+        detail:'User reported this via the knowledge base self-service portal.',
+        status:statuses[i%statuses.length],
+        created, resolved,
+        sat: resolved?Math.floor(Math.random()*2)+4:null
+      });
+    }
+    save(db);
+  }
+
+  return {
+    getAll(){ return load().tickets; },
+    add(t){
+      const d=load();
+      t.id='TK-'+String(d.nextId++).padStart(4,'0');
+      t.created=Date.now(); t.resolved=null; t.status='open'; t.sat=null;
+      d.tickets.unshift(t);
+      save(d);
+      return t;
+    },
+    updateStatus(id,status){
+      const d=load();
+      const t=d.tickets.find(x=>x.id===id);
+      if(t){ t.status=status; if(status==='resolved') t.resolved=Date.now(); save(d); }
+    },
+    catColors
+  };
+})();
+
+/* =====================================================================
+   ACTIVITY LOG (session only)
+   ===================================================================== */
+const activity = [];
+function logActivity(text, color){
+  activity.unshift({text, color, time:new Date()});
+  if(activity.length>20) activity.pop();
+}
+logActivity('Knowledge base loaded', '#4CAF50');
+
+/* =====================================================================
+   DASHBOARD RENDERERS
+   ===================================================================== */
+function timeAgo(ms){
+  const s=Math.round((Date.now()-ms)/1000);
+  if(s<60)return s+'s ago';
+  if(s<3600)return Math.round(s/60)+'m ago';
+  if(s<86400)return Math.round(s/3600)+'h ago';
+  return Math.round(s/86400)+'d ago';
+}
+function fmtDate(ms){
+  return new Date(ms).toLocaleDateString('en-MY',{day:'2-digit',month:'short',year:'numeric'});
+}
+
+function renderKPIs(){
+  const all=DB.getAll();
+  const open=all.filter(t=>t.status==='open').length;
+  const resolved=all.filter(t=>t.status==='resolved').length;
+  const pending=all.filter(t=>t.status==='pending').length;
+  const resolveTimes=all.filter(t=>t.resolved).map(t=>(t.resolved-t.created)/3600000);
+  const avgRes=resolveTimes.length?Math.round(resolveTimes.reduce((a,b)=>a+b,0)/resolveTimes.length*10)/10:0;
+  document.getElementById('kpiGrid').innerHTML=[
+    {label:'Open Tickets',val:open,delta:'+2 this week',dir:'up',color:'var(--amber-tint)'},
+    {label:'Resolved Today',val:resolved,delta:'↑ 18% vs last week',dir:'up',color:'var(--teal-tint)'},
+    {label:'Pending Review',val:pending,delta:pending>3?'Needs attention':'On track',dir:pending>3?'down':'up',color:'var(--coral-tint)'},
+    {label:'Avg. Resolution',val:avgRes+'h',delta:'Target: 4h',dir:avgRes<4?'up':'down',color:'var(--teal-tint)'},
+  ].map(k=>`<div class="kpi" style="--kpi-color:${k.color}">
+    <div class="kpi-label">${k.label}</div>
+    <div class="kpi-val">${k.val}</div>
+    <div class="kpi-delta ${k.dir}">${k.delta}</div>
+  </div>`).join('');
+  document.getElementById('openCount').textContent=open+' open';
+  document.getElementById('dashLastUpdate').textContent='Updated '+timeAgo(Date.now());
+}
+
+function renderTicketTable(){
+  const tickets=DB.getAll().slice(0,10);
+  const statusClass={open:'t-open',resolved:'t-resolved',pending:'t-pending'};
+  const priorityColors={low:'#9AA7B5',medium:DB.catColors.network,high:DB.catColors.security,critical:'var(--coral)'};
+  document.getElementById('ticketTableBody').innerHTML=
+    `<thead><tr><th>ID</th><th>Subject</th><th>Category</th><th>Priority</th><th>Status</th><th>Created</th></tr></thead>
+    <tbody>${tickets.map(t=>`<tr onclick="editTicketStatus('${t.id}')" style="cursor:pointer;">
+      <td class="mono" style="font-size:12px;color:var(--teal-dark);">${t.id}</td>
+      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${t.subject}</td>
+      <td style="font-size:12px;">${categories.find(c=>c.key===t.cat)?.name||t.cat}</td>
+      <td><span style="font-size:11px;font-weight:700;color:${priorityColors[t.priority]||'var(--ink-soft)'};text-transform:uppercase;">${t.priority}</span></td>
+      <td><span class="t-status ${statusClass[t.status]||'t-open'}">${t.status}</span></td>
+      <td style="font-size:12px;color:var(--ink-soft);">${fmtDate(t.created)}</td>
+    </tr>`).join('')}</tbody>`;
+}
+
+function renderCatBars(){
+  const all=DB.getAll();
+  const counts=categories.map(c=>({name:c.name,count:all.filter(t=>t.cat===c.key).length,color:c.color}));
+  const max=Math.max(...counts.map(c=>c.count))||1;
+  document.getElementById('catBars').innerHTML=counts.map(c=>`
+    <div class="cat-bar-row">
+      <div class="cat-bar-label">${c.name}</div>
+      <div class="cat-bar-track"><div class="cat-bar-fill" style="width:${Math.round(c.count/max*100)}%;background:${c.color};"></div></div>
+      <div class="cat-bar-count">${c.count}</div>
+    </div>`).join('');
+}
+
+function renderActivityLog(){
+  const dotColors={'open':'var(--amber)','resolved':'var(--teal)','pending':'var(--coral)','#4CAF50':'#4CAF50','#E2574C':'#E2574C'};
+  const recent=activity.slice(0,8);
+  document.getElementById('activityLog').innerHTML=recent.map(a=>`
+    <div class="act-row">
+      <div class="act-dot" style="background:${a.color||'var(--teal)'}"></div>
+      <div class="act-text">${a.text}</div>
+      <div class="act-time">${timeAgo(a.time)}</div>
+    </div>`).join('');
+}
+
+function renderDashboard(){
+  renderKPIs();
+  renderTicketTable();
+  renderCatBars();
+  renderActivityLog();
+}
+
+/* =====================================================================
+   REPORTS CHARTS
+   ===================================================================== */
+const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function getMonthBuckets(filterCat){
+  const all=DB.getAll().filter(t=>!filterCat||filterCat==='all'||t.cat===filterCat);
+  const buckets=[];
+  const now=new Date();
+  for(let i=5;i>=0;i--){
+    const d=new Date(now.getFullYear(),now.getMonth()-i,1);
+    const label=months[d.getMonth()];
+    const count=all.filter(t=>{
+      const td=new Date(t.created);
+      return td.getFullYear()===d.getFullYear()&&td.getMonth()===d.getMonth();
+    }).length;
+    buckets.push({label,count});
+  }
+  return buckets;
+}
+
+function renderBarChart(filterCat='all'){
+  const buckets=getMonthBuckets(filterCat);
+  const max=Math.max(...buckets.map(b=>b.count))||1;
+  const colors=['#C3CE1E','#A9B41A','#8C8B1E','#C3CE1E','#CBD62A','#8C8B1E'];
+  document.getElementById('barChart').innerHTML=buckets.map((b,i)=>`
+    <div class="bar-col">
+      <div class="bar-val">${b.count}</div>
+      <div class="bar-seg" style="height:${Math.max(4,Math.round(b.count/max*130))}px;background:${colors[i]};"></div>
+      <div class="bar-xlbl">${b.label}</div>
+    </div>`).join('');
+}
+
+function renderDonut(){
+  const all=DB.getAll();
+  const total=all.length||1;
+  const slices=categories.map(c=>({name:c.name,color:c.color,count:all.filter(t=>t.cat===c.key).length}));
+  const R=52,cx=65,cy=65,stroke=16;
+  const circ=2*Math.PI*R;
+  let cumulative=0;
+  const svgPaths=slices.map(s=>{
+    const pct=s.count/total;
+    const dashArray=`${pct*circ} ${circ}`;
+    const rotate=cumulative*360;
+    cumulative+=pct;
+    return `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="${s.color}" stroke-width="${stroke}"
+      stroke-dasharray="${dashArray}" stroke-dashoffset="0"
+      transform="rotate(${rotate-90} ${cx} ${cy})" opacity=".9"/>`;
+  }).join('');
+  document.getElementById('donutSvg').innerHTML=
+    `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="var(--line)" stroke-width="${stroke}"/>`
+    +svgPaths
+    +`<text x="${cx}" y="${cy+5}" text-anchor="middle" font-size="15" font-weight="700" font-family="Space Grotesk" fill="var(--ink)">${total}</text>
+    <text x="${cx}" y="${cy+20}" text-anchor="middle" font-size="9" fill="var(--ink-soft)" font-family="Inter">tickets</text>`;
+  document.getElementById('donutLegend').innerHTML=slices.map(s=>`
+    <div class="legend-row">
+      <div class="legend-dot" style="background:${s.color}"></div>
+      <span style="flex:1;color:var(--ink-soft);">${s.name}</span>
+      <span style="font-weight:600;font-family:'JetBrains Mono';font-size:12px;">${s.count}</span>
+    </div>`).join('');
+}
+
+function renderSparkline(){
+  const buckets=getMonthBuckets('all');
+  const resTimes=[3.2,4.1,2.8,3.9,2.5,3.1];
+  const w=300,h=90,pad=12;
+  const maxY=Math.max(...resTimes)+1;
+  const pts=resTimes.map((v,i)=>{
+    const x=pad+(i/(resTimes.length-1))*(w-2*pad);
+    const y=h-pad-((v/maxY)*(h-2*pad));
+    return [x,y];
+  });
+  const polyline=pts.map(p=>p.join(',')).join(' ');
+  const area='M'+pts[0][0]+','+h+' '+'L'+pts.map(p=>p.join(',')).join(' L')+' L'+pts[pts.length-1][0]+','+h+' Z';
+  const svg=document.getElementById('sparklineSvg');
+  svg.setAttribute('viewBox',`0 0 ${w} ${h}`);
+  svg.innerHTML=`
+    <defs><linearGradient id="areaG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C3CE1E" stop-opacity=".3"/><stop offset="1" stop-color="#C3CE1E" stop-opacity="0"/></linearGradient></defs>
+    <path d="${area}" fill="url(#areaG)"/>
+    <polyline points="${polyline}" fill="none" stroke="#8C8B1E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    ${pts.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="#C3CE1E" stroke="var(--panel)" stroke-width="2"/>
+      <text x="${p[0]}" y="${p[1]-9}" text-anchor="middle" font-size="9" fill="var(--ink-soft)" font-family="JetBrains Mono">${resTimes[i]}h</text>
+      <text x="${p[0]}" y="${h-2}" text-anchor="middle" font-size="8" fill="var(--ink-soft)" font-family="Inter">${buckets[i].label}</text>`).join('')}`;
+}
+
+function renderSatisfaction(){
+  const all=DB.getAll().filter(t=>t.sat!==null);
+  if(!all.length){ document.getElementById('satScore').textContent='N/A'; return; }
+  const avg=(all.reduce((s,t)=>s+t.sat,0)/all.length).toFixed(1);
+  document.getElementById('satScore').textContent=avg+' ⭐';
+  document.getElementById('satCount').textContent=all.length;
+  const stars=[5,4,3,2,1];
+  document.getElementById('satBars').innerHTML=stars.map(s=>{
+    const cnt=all.filter(t=>t.sat===s).length;
+    const pct=Math.round(cnt/all.length*100);
+    return `<div style="display:flex;align-items:center;gap:8px;font-size:12px;">
+      <span style="width:12px;color:var(--ink-soft);font-family:'JetBrains Mono';">${s}</span>
+      <div class="progress-bar" style="flex:1;"><div class="progress-fill" style="width:${pct}%;"></div></div>
+      <span style="width:24px;text-align:right;color:var(--ink-soft);font-size:11.5px;">${pct}%</span>
+    </div>`;
+  }).join('');
+}
+
+function renderReportTable(filter=''){
+  const all=DB.getAll().filter(t=>!filter||(t.subject+t.name+t.id).toLowerCase().includes(filter.toLowerCase()));
+  const statusClass={open:'t-open',resolved:'t-resolved',pending:'t-pending'};
+  document.getElementById('reportTable').innerHTML=
+    `<thead><tr><th>Ticket ID</th><th>Submitted By</th><th>Subject</th><th>Category</th><th>Priority</th><th>Status</th><th>Created</th><th>Resolution</th></tr></thead>
+    <tbody>${all.slice(0,30).map(t=>`<tr>
+      <td class="mono" style="font-size:11.5px;color:var(--teal-dark);">${t.id}</td>
+      <td>${t.name||'—'}</td>
+      <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${t.subject}</td>
+      <td style="font-size:12px;">${categories.find(c=>c.key===t.cat)?.name||t.cat}</td>
+      <td style="text-transform:uppercase;font-size:11px;font-weight:700;">${t.priority}</td>
+      <td><span class="t-status ${statusClass[t.status]||'t-open'}">${t.status}</span></td>
+      <td style="font-size:12px;color:var(--ink-soft);">${fmtDate(t.created)}</td>
+      <td style="font-size:12px;color:var(--ink-soft);">${t.resolved?fmtDate(t.resolved):'—'}</td>
+    </tr>`).join('')}</tbody>`;
+}
+
+function renderReports(){
+  renderBarChart();
+  renderDonut();
+  renderSparkline();
+  renderSatisfaction();
+  renderReportTable();
+}
+
+/* =====================================================================
+   TICKET MODAL
+   ===================================================================== */
+function openNewTicket(){
+  document.getElementById('ticketOverlay').classList.add('show');
+  document.getElementById('tf-name').focus();
+}
+function closeTicketModal(){
+  document.getElementById('ticketOverlay').classList.remove('show');
+}
+/* Power Automate flow URL: "IT KB - New Ticket to SharePoint".
+   Sends every new ticket to your SharePoint list. */
+const SP_NEW_TICKET_FLOW_URL = 'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/00/workflows/725e5634744840fbb50787051d1c4ff4/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=-Wex1NvzY6rCHgtceqjKcXcM2f6AGR2-yoqqRIO6p2s';
+
+async function sendTicketToSharePoint(payload){
+  try{
+    const response = await fetch(SP_NEW_TICKET_FLOW_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    console.log('Status:', response.status);
+    console.log('Status Text:', response.statusText);
+
+    if(!response.ok){
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    console.log('Flow called successfully');
+  }
+  catch(err){
+    console.error('Flow Error:', err);
+    alert('Flow Error: ' + err.message);
+  }
+}
+
+function submitTicket(){
+  const name=document.getElementById('tf-name').value.trim();
+  const email=document.getElementById('tf-email').value.trim();
+  const subject=document.getElementById('tf-subject').value.trim();
+  if(!name||!email||!subject){ showToast('Please fill in Name, Email and Subject.','error'); return; }
+  const category=document.getElementById('tf-cat').value;
+  const priority=document.getElementById('tf-priority').value;
+  const detail=document.getElementById('tf-detail').value;
+
+  const t=DB.add({
+    name,email,
+    cat:category,
+    priority,
+    subject,
+    detail,
+  });
+  logActivity(`New ticket ${t.id}: "${subject}"`, DB.catColors[t.cat]||'var(--teal)');
+  closeTicketModal();
+  showToast(`Ticket ${t.id} submitted successfully!`);
+  ['tf-name','tf-email','tf-subject','tf-detail'].forEach(id=>document.getElementById(id).value='');
+  renderDashboard();
+  renderReports();
+
+  /* send this ticket to your SharePoint list via Power Automate */
+  sendTicketToSharePoint({ name, email, category, priority, subject, detail });
+}
+
+function editTicketStatus(id){
+  const t=DB.getAll().find(x=>x.id===id);
+  if(!t) return;
+  const next=t.status==='open'?'resolved':t.status==='pending'?'open':'pending';
+  if(confirm(`Change ticket ${id} from "${t.status}" → "${next}"?`)){
+    DB.updateStatus(id,next);
+    logActivity(`Ticket ${id} marked "${next}"`, next==='resolved'?'#4CAF50':DB.catColors.network);
+    renderDashboard(); renderReports();
+  }
+}
+
+function openTicket(){ openNewTicket(); }
+
+function showToast(msg, type='success'){
+  const el=document.getElementById('toast');
+  document.getElementById('toastMsg').textContent=msg;
+  el.style.background=type==='error'?'var(--coral)':'var(--ink)';
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),3200);
+}
+
+
+
+const howSteps = [
+ {tag:'Step 01', title:'Search or browse', desc:'Type your issue into the console, or pick a category below to see related guides.',
+  icon:'<circle cx="11" cy="11" r="6"/><line x1="20" y1="20" x2="15.5" y2="15.5"/>'},
+ {tag:'Step 02', title:'Follow the steps', desc:'Each guide is a short, numbered fix — usually 3 to 6 steps, no jargon.',
+  icon:'<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>'},
+ {tag:'Step 03', title:'Rate it helpful', desc:'Tell us if it worked. That feedback keeps the most useful guides easy to find.',
+  icon:'<path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14Z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>'},
+ {tag:'Step 04', title:'Still stuck? Escalate', desc:"Not resolved? One click sends a ticket straight to the help desk team.",
+  icon:'<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92Z"/>'},
+];
+
+function renderInfographic(){
+  const wrap = document.getElementById('infographic');
+  wrap.innerHTML = `<div class="info-steps">${howSteps.map(s=>`
+    <div class="info-step">
+      <div class="info-num"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--teal-dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${s.icon}</svg></div>
+      <span class="info-tag">${s.tag}</span>
+      <h4>${s.title}</h4>
+      <p>${s.desc}</p>
+    </div>`).join('')}</div>`;
+}
+
+/* ===================== THEME TOGGLE ===================== */
+function applyTheme(mode){
+  document.documentElement.setAttribute('data-theme', mode);
+  document.getElementById('themeIconSun').style.display = mode==='dark' ? 'none' : 'block';
+  document.getElementById('themeIconMoon').style.display = mode==='dark' ? 'block' : 'none';
+  try{ localStorage.setItem('phb-kb-theme', mode); }catch(e){}
+}
+function toggleTheme(){
+  const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+  applyTheme(current==='dark' ? 'light' : 'dark');
+}
+(function initTheme(){
+  let saved = 'light';
+  try{ saved = localStorage.getItem('phb-kb-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }catch(e){}
+  applyTheme(saved);
+})();
+
+/* ===================== INIT ===================== */
+renderCategories();
+renderInfographic();
+renderArticles(articles);
+renderFaq();
+renderDashboard();
+renderReports();
+
+/* fade-up on scroll */
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); });
+},{threshold:.1});
+document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+
+/* count-up animation for the stats strip */
+function animateCount(el, target, suffix, duration){
+  const start = performance.now();
+  function tick(now){
+    const p = Math.min(1, (now-start)/duration);
+    const eased = 1 - Math.pow(1-p, 3);
+    const val = Math.round(target*eased);
+    el.textContent = (Number.isInteger(target) ? val : val) + suffix;
+    if(p<1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+const statTargets = [
+  {sel:'.stats .stat:nth-child(1) .stat-num', n:24, suf:''},
+  {sel:'.stats .stat:nth-child(2) .stat-num', n:6, suf:''},
+  {sel:'.stats .stat:nth-child(4) .stat-num', n:92, suf:'%'},
+];
+let statsAnimated = false;
+const statsObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting && !statsAnimated){
+      statsAnimated = true;
+      statTargets.forEach(s=>{
+        const el = document.querySelector(s.sel);
+        if(el) animateCount(el, s.n, s.suf, 900);
+      });
+    }
+  });
+},{threshold:.4});
+const statsEl = document.querySelector('.stats');
+if(statsEl) statsObs.observe(statsEl);
+</script>
+</body>
+</html>

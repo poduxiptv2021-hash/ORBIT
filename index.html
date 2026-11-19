@@ -6,6 +6,9 @@
 <title>HelpDesk // IT Knowledge Base</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 :root{
   --bg:#F4F4EC;
@@ -95,6 +98,18 @@ button{font-family:inherit;}
   display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink-soft);
   background:var(--panel);border:1px solid var(--line);padding:6px 12px;border-radius:999px;
 }
+
+/* ---------- SharePoint sync badge ---------- */
+.sp-badge{
+  display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;
+  padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:var(--panel);
+}
+.sp-badge .dot{width:7px;height:7px;}
+.sp-badge.sp-live{color:var(--teal-dark);background:var(--teal-tint);border-color:var(--teal);}
+.sp-badge.sp-connecting{color:var(--amber);background:var(--amber-tint);border-color:var(--amber);}
+.sp-badge.sp-connecting .dot{animation:pulse 1.2s ease-in-out infinite;}
+.sp-badge.sp-offline{color:var(--coral);background:var(--coral-tint);border-color:var(--coral);}
+.sp-badge.sp-demo{color:var(--ink-soft);}
 nav.topnav{display:flex;gap:22px;font-size:14px;font-weight:500;color:var(--ink-soft);}
 nav.topnav a{text-decoration:none;transition:color .15s;}
 nav.topnav a:hover{color:var(--ink);}
@@ -461,38 +476,297 @@ a:focus-visible, button:focus-visible, .cat-card:focus-visible, .article-card:fo
 .toast.show{transform:translateY(0);opacity:1;}
 .toast-icon{width:22px;height:22px;border-radius:6px;background:var(--teal-tint);display:flex;align-items:center;justify-content:center;}
 @media(max-width:900px){.dash-grid,.report-grid{grid-template-columns:1fr;}.kpi-grid{grid-template-columns:repeat(2,1fr);}.report-full{grid-column:span 1;}}
+
+/* -------- download buttons -------- */
+.dl-btn{
+  display:inline-flex;align-items:center;gap:7px;padding:8px 15px;border-radius:9px;
+  font-size:13px;font-weight:600;border:1.5px solid;cursor:pointer;transition:.15s;font-family:'Inter';
+}
+.dl-btn:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(0,0,0,.12);}
+.dl-btn:active{transform:translateY(0);}
+.dl-pdf{background:#fff3f2;color:#c0392b;border-color:#e74c3c;}
+.dl-pdf:hover{background:#e74c3c;color:#fff;}
+.dl-excel{background:#f0fff4;color:#1a7a3d;border-color:#27ae60;}
+.dl-excel:hover{background:#27ae60;color:#fff;}
+[data-theme="dark"] .dl-pdf{background:#2b1816;color:#ff7675;}
+[data-theme="dark"] .dl-excel{background:#0d2b18;color:#55efc4;}
+/* spinner overlay */
+.dl-spinner{
+  position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.45);backdrop-filter:blur(3px);
+  display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;
+}
+.dl-spinner.show{display:flex;}
+.dl-spinner-ring{
+  width:52px;height:52px;border:4px solid rgba(195,206,30,.25);border-top-color:#C3CE1E;
+  border-radius:50%;animation:spin .7s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* =====================================================================
+   LOGIN / SSO SCREEN
+   ===================================================================== */
+#loginScreen{
+  position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#16161A 0%,#2a2a1a 60%,#16161A 100%);
+}
+#loginScreen.hidden{display:none;}
+.login-card{
+  background:var(--panel);border-radius:20px;padding:44px 40px 36px;max-width:400px;width:90%;
+  box-shadow:0 24px 72px rgba(0,0,0,.55);position:relative;overflow:hidden;
+}
+.login-card::before{
+  content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(195,206,30,.15) 0%,transparent 70%);pointer-events:none;
+}
+.login-logo{display:flex;justify-content:center;margin-bottom:28px;}
+.login-logo img{height:44px;}
+.login-title{font-family:'Space Grotesk';font-size:22px;font-weight:700;text-align:center;margin:0 0 4px;}
+.login-sub{font-size:13px;color:var(--ink-soft);text-align:center;margin:0 0 28px;}
+.login-divider{display:flex;align-items:center;gap:10px;margin:20px 0;color:var(--ink-soft);font-size:12px;}
+.login-divider::before,.login-divider::after{content:'';flex:1;height:1px;background:var(--line);}
+.ms-btn{
+  width:100%;display:flex;align-items:center;justify-content:center;gap:12px;
+  padding:13px 18px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);
+  font-size:14.5px;font-weight:600;cursor:pointer;transition:.15s;color:var(--ink);font-family:'Inter';
+}
+.ms-btn:hover{border-color:#0078d4;background:#f0f7ff;box-shadow:0 3px 12px rgba(0,120,212,.15);}
+.ms-logo{width:20px;height:20px;flex:none;}
+/* account picker (step 2 of SSO flow) */
+#accountPicker{display:none;}
+#accountPicker.show{display:block;}
+.acc-list{display:flex;flex-direction:column;gap:8px;margin-top:12px;}
+.acc-item{
+  display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;border:1.5px solid var(--line);
+  cursor:pointer;transition:.15s;background:var(--bg);
+}
+.acc-item:hover{border-color:var(--teal);background:var(--teal-tint);}
+.acc-avatar{
+  width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:14px;color:#fff;flex:none;
+}
+.acc-info .acc-name{font-weight:600;font-size:14px;}
+.acc-info .acc-role{font-size:11.5px;color:var(--ink-soft);}
+.acc-badge{margin-left:auto;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:999px;}
+.badge-it{background:#16161A;color:#C3CE1E;}
+.badge-hod{background:var(--gold-grad);color:#fff;}
+.badge-user{background:var(--teal-tint);color:var(--teal-dark);}
+/* auth loading */
+#authLoading{display:none;text-align:center;padding:18px 0;}
+#authLoading.show{display:block;}
+.auth-steps{display:flex;flex-direction:column;gap:8px;margin-top:14px;text-align:left;}
+.auth-step{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink-soft);}
+.auth-step.done{color:var(--ink);}
+.auth-step-icon{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none;}
+
+/* =====================================================================
+   ROLE-BASED TOPBAR USER AREA
+   ===================================================================== */
+.user-chip{
+  display:flex;align-items:center;gap:9px;padding:6px 12px 6px 6px;
+  border:1px solid var(--line);border-radius:999px;background:var(--panel);cursor:pointer;
+  position:relative;
+}
+.user-chip-avatar{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex:none;}
+.user-chip-name{font-size:13px;font-weight:600;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.user-chip-role{font-size:10px;color:var(--ink-soft);}
+.user-dropdown{
+  position:absolute;top:calc(100% + 8px);right:0;min-width:200px;
+  background:var(--panel);border:1px solid var(--line);border-radius:12px;
+  box-shadow:var(--shadow);padding:6px;z-index:100;display:none;
+}
+.user-chip:focus-within .user-dropdown,.user-dropdown.open{display:block;}
+.ud-item{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:8px;font-size:13px;cursor:pointer;}
+.ud-item:hover{background:var(--teal-tint);}
+.ud-item svg{color:var(--ink-soft);}
+.ud-sep{height:1px;background:var(--line);margin:4px 0;}
+.role-pill{
+  font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px;letter-spacing:.03em;
+  text-transform:uppercase;
+}
+
+/* =====================================================================
+   VIEW TOGGLE (IT vs USER)
+   ===================================================================== */
+.view-only-it{display:none;}
+.view-only-hod{display:none;}
+.view-only-user{display:none;}
+body.role-hod .view-only-it,.body.role-hod .view-only-hod,
+body.role-hod .view-only-it{display:block;}
+body.role-hod .view-only-hod{display:block;}
+body.role-it .view-only-it{display:block;}
+
+/* =====================================================================
+   HOD — DEPARTMENT STRUCTURE
+   ===================================================================== */
+.dept-header-bar{
+  background:linear-gradient(135deg,#16161A 0%,#2a2a1a 100%);
+  border-radius:var(--radius);padding:28px 32px;margin-bottom:20px;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;
+}
+.dept-header-bar h3{color:#fff;font-family:'Space Grotesk';font-size:20px;margin:0;}
+.dept-header-bar p{color:rgba(255,255,255,.6);font-size:13px;margin:4px 0 0;}
+.dept-stats{display:flex;gap:20px;flex-wrap:wrap;}
+.dept-stat{text-align:center;}
+.dept-stat .n{font-family:'Space Grotesk';font-size:28px;font-weight:700;color:#C3CE1E;}
+.dept-stat .l{font-size:11px;color:rgba(255,255,255,.55);margin-top:2px;}
+.dept-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px;}
+.dept-function{
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  overflow:hidden;transition:.15s;
+}
+.dept-function:hover{border-color:var(--teal);box-shadow:var(--shadow);}
+.dept-fn-head{padding:16px 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line);}
+.dept-fn-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none;}
+.dept-fn-title{font-family:'Space Grotesk';font-size:14.5px;font-weight:700;}
+.dept-fn-lead{font-size:11.5px;color:var(--ink-soft);margin-top:2px;}
+.dept-fn-body{padding:14px 18px;}
+.dept-roles{display:flex;flex-direction:column;gap:7px;}
+.dept-role-row{display:flex;align-items:center;justify-content:space-between;font-size:12.5px;}
+.dept-role-name{color:var(--ink-soft);}
+.dept-role-count{
+  font-family:'JetBrains Mono';font-size:11px;background:var(--teal-tint);
+  color:var(--teal-dark);padding:2px 7px;border-radius:999px;
+}
+.dept-fn-footer{padding:10px 18px;border-top:1px solid var(--line);background:var(--bg);}
+.dept-fn-footer .prog{height:5px;background:var(--line);border-radius:999px;overflow:hidden;margin-top:5px;}
+.dept-fn-footer .prog-fill{height:100%;border-radius:999px;background:var(--gold-grad);}
+
+/* org chart strip */
+.org-chart{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:24px;margin-bottom:16px;}
+.org-chart h4{font-family:'Space Grotesk';font-size:15px;margin:0 0 20px;}
+.org-root{display:flex;flex-direction:column;align-items:center;}
+.org-node{
+  background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:10px 16px;
+  text-align:center;min-width:130px;position:relative;
+}
+.org-node.hod{background:linear-gradient(135deg,#16161A,#2a2a1a);color:#fff;border-color:#C3CE1E;}
+.org-node.lead{background:var(--teal-tint);border-color:var(--teal);}
+.org-node .n{font-weight:700;font-size:13px;}
+.org-node .r{font-size:10.5px;opacity:.75;margin-top:2px;}
+.org-line{width:2px;height:20px;background:var(--line);margin:0 auto;}
+.org-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
+.org-col{display:flex;flex-direction:column;align-items:center;}
+.org-branch{display:flex;align-items:flex-start;gap:0;position:relative;}
+.org-branch::before{
+  content:'';position:absolute;top:0;left:50px;right:50px;height:2px;background:var(--line);
+}
+
+/* =====================================================================
+   USER PORTAL (self-service view)
+   ===================================================================== */
+.user-portal-hero{
+  background:linear-gradient(135deg,#16161A 0%,#2a2a1a 100%);
+  padding:40px 32px;border-radius:var(--radius);margin-bottom:24px;position:relative;overflow:hidden;
+}
+.user-portal-hero::after{
+  content:'';position:absolute;right:-40px;top:-40px;width:220px;height:220px;border-radius:50%;
+  background:radial-gradient(circle,rgba(195,206,30,.18) 0%,transparent 70%);
+}
+.user-portal-hero h2{color:#fff;font-family:'Space Grotesk';font-size:26px;margin:0 0 6px;}
+.user-portal-hero p{color:rgba(255,255,255,.65);font-size:14px;margin:0 0 20px;}
+.user-hero-search{
+  display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:10px 14px;
+  backdrop-filter:blur(4px);
+}
+.user-hero-search input{
+  flex:1;border:none;outline:none;background:transparent;color:#fff;font-size:14.5px;font-family:'Inter';
+}
+.user-hero-search input::placeholder{color:rgba(255,255,255,.45);}
+.user-hero-search button{
+  background:#C3CE1E;color:#16161A;border:none;border-radius:7px;padding:8px 16px;
+  font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;
+}
+/* my tickets */
+.my-ticket-card{
+  background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  display:flex;align-items:center;gap:14px;margin-bottom:10px;
+}
+.my-ticket-card:hover{border-color:var(--teal);}
+.mt-id{font-family:'JetBrains Mono';font-size:11px;color:var(--teal-dark);background:var(--teal-tint);padding:4px 8px;border-radius:6px;flex:none;}
+.mt-body{flex:1;min-width:0;}
+.mt-subj{font-weight:600;font-size:14px;}
+.mt-meta{font-size:12px;color:var(--ink-soft);margin-top:3px;}
+
+/* =====================================================================
+   RESPONSIVE ADJUSTMENTS
+   ===================================================================== */
+@media(max-width:900px){
+  .dept-grid{grid-template-columns:1fr 1fr;}
+  .org-row{gap:6px;}
+}
+@media(max-width:600px){
+  .dept-grid{grid-template-columns:1fr;}
+  .login-card{padding:32px 24px 26px;}
+}
 </style>
 </head>
 <body>
 
+<!-- ============ LOGIN SCREEN (SSO) ============ -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo"><img src="phb-logo.png" alt="PHB"></div>
+    <div class="login-title">IT HelpDesk Portal</div>
+    <p class="login-sub">Pelaburan Hartanah Berhad · Secure Access</p>
+
+    <!-- Step 1: SSO button -->
+    <div id="ssoStep1">
+      <button class="ms-btn" onclick="startSSO()">
+        <svg class="ms-logo" viewBox="0 0 21 21" fill="none">
+          <rect x="1" y="1" width="9" height="9" fill="#F25022"/>
+          <rect x="11" y="1" width="9" height="9" fill="#7FBA00"/>
+          <rect x="1" y="11" width="9" height="9" fill="#00A4EF"/>
+          <rect x="11" y="11" width="9" height="9" fill="#FFB900"/>
+        </svg>
+        Sign in with Microsoft
+      </button>
+      <div class="login-divider">or choose a demo account</div>
+      <div class="acc-list" id="quickAccounts"></div>
+    </div>
+
+    <!-- Step 2: Auth loading -->
+    <div id="authLoading">
+      <div style="display:flex;justify-content:center;">
+        <div class="dl-spinner-ring" style="border-color:rgba(195,206,30,.2);border-top-color:#C3CE1E;"></div>
+      </div>
+      <div style="font-weight:600;font-size:14px;margin:14px 0 4px;text-align:center;" id="authUser"></div>
+      <div class="auth-steps" id="authSteps"></div>
+    </div>
+  </div>
+</div>
+
 <!-- ============ TOP BAR ============ -->
 <div class="topbar">
   <div class="topbar-inner">
-    <div class="brand"><img class="brand-mark" src="phb-logo.png" alt="PHB - Pelaburan Hartanah Berhad"> <span style="margin-left:2px;">ORBIT <i>One Repository for IT</i></span></div>
-    <nav class="topnav">
-      <a href="#categories">Categories</a>
-      <a href="#articles">Articles</a>
-      <a href="#faq">FAQ</a>
-      <a href="#resources">Resources</a>
-      <a href="#dashboard" style="color:var(--teal-dark);font-weight:600;">Dashboard</a>
-      <a href="#reports" style="color:var(--teal-dark);font-weight:600;">Reports</a>
-    </nav>
-    <div style="display:flex;align-items:center;gap:12px;">
+    <div class="brand"><img class="brand-mark" src="phb-logo.png" alt="PHB"> <span style="margin-left:2px;" id="portalTitle">ORBIT <i>One Repository for IT</i></span></div>
+    <nav class="topnav" id="mainNav"></nav>
+    <div style="display:flex;align-items:center;gap:10px;">
       <div class="status-pill"><span class="dot dot-op dot-live"></span>All systems operational</div>
-      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle dark mode" title="Toggle dark mode">
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
         <svg id="themeIconSun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
         <svg id="themeIconMoon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
       </button>
-      <button class="topbar-cta" onclick="openTicket()">Submit a ticket</button>
+      <div class="user-chip" id="userChip" style="display:none;" tabindex="0" onclick="document.getElementById('userDropdown').classList.toggle('open')">
+        <div class="user-chip-avatar" id="chipAvatar"></div>
+        <div><div class="user-chip-name" id="chipName"></div><div class="user-chip-role" id="chipRole"></div></div>
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
+        <div class="user-dropdown" id="userDropdown">
+          <div class="ud-item" onclick="showProfile()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>My Profile</div>
+          <div class="ud-sep"></div>
+          <div class="ud-item" onclick="logout()" style="color:var(--coral);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out</div>
+        </div>
+      </div>
+      <button class="topbar-cta" id="topCta" style="display:none;" onclick="openNewTicket()">+ New Ticket</button>
     </div>
   </div>
 </div>
 
 <!-- ============ HERO / SEARCH CONSOLE ============ -->
 <div class="hero">
-  <div class="hero-eyebrow">&gt; diagnostic console ready</div>
+  <!-- <div class="hero-eyebrow">&gt; diagnostic console ready</div> -->
   <h1>Fix it yourself in <span>under 5 minutes.</span></h1>
-  <p class="lede">Search 24 verified guides covering hardware, software, network, accounts, email and security — written by the IT team, kept current, no jargon.</p>
+ <!--  <p class="lede">Search 24 verified guides covering hardware, software, network, accounts, email and security — written by the IT team, kept current, no jargon.</p> -->
 
   <div class="console">
     <div class="console-bar">
@@ -569,7 +843,7 @@ a:focus-visible, button:focus-visible, .cat-card:focus-visible, .article-card:fo
       <div class="res-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg></div>
       <h4>Submit a ticket</h4>
       <p>For issues a guide can't solve. Avg. first response: 22 min.</p>
-      <div class="res-arrow">helpdesk@company.com →</div>
+      <div class="res-arrow">itu_grp@phb.com.my →</div>
     </a>
     <a class="res-card alt" href="tel:+10000000000">
       <div class="res-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#8C8B1E" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92Z"/></svg></div>
@@ -592,12 +866,91 @@ a:focus-visible, button:focus-visible, .cat-card:focus-visible, .article-card:fo
   </div>
 </div>
 
+<!-- ============ USER PORTAL VIEW ============ -->
+<div id="userPortalSection" style="display:none;">
+  <div class="section" style="padding-bottom:0;">
+    <div class="user-portal-hero">
+      <div style="position:relative;z-index:1;">
+        <h2>Hi, <span id="userGreetName">there</span> 👋</h2>
+        <p>Search the knowledge base or submit a ticket — we're here to help.</p>
+        <div class="user-hero-search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input id="userSearchInput" type="text" placeholder="Describe your issue…" oninput="userSearch(this.value)" autocomplete="off">
+          <button onclick="openNewTicket()">Submit Ticket</button>
+        </div>
+        <div id="userSearchResults" style="margin-top:10px;"></div>
+      </div>
+    </div>
+
+    <!-- User quick categories -->
+    <h3 style="font-family:'Space Grotesk';font-size:18px;margin:0 0 14px;">Browse help topics</h3>
+    <div class="cat-grid" id="userCatGrid" style="margin-bottom:28px;"></div>
+
+    <!-- My Tickets -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <h3 style="font-family:'Space Grotesk';font-size:18px;margin:0;">My Tickets</h3>
+      <button class="btn-primary" style="font-size:12.5px;padding:7px 14px;" onclick="openNewTicket()">+ New Ticket</button>
+    </div>
+    <div id="userTicketList"></div>
+
+    <!-- User FAQ -->
+    <h3 style="font-family:'Space Grotesk';font-size:18px;margin:24px 0 14px;">Quick answers</h3>
+    <div class="faq-list" id="userFaqList"></div>
+  </div>
+</div>
+
+<!-- ============ IT STAFF / HOD SECTIONS ============ -->
+<div id="itAdminSection" style="display:none;">
+
+<!-- HOD DEPT STRUCTURE -->
+<div class="section view-only-hod" id="deptStructure" style="padding-bottom:0;">
+  <div class="section-head fade-up">
+    <h2>IT Department Structure</h2>
+    <div class="sub">Pelaburan Hartanah Berhad · FY 2026</div>
+  </div>
+  <div class="fade-up">
+    <div class="dept-header-bar">
+      <div>
+        <h3>IT Division Overview</h3>
+        <p>Structured to support business goals, security, and digital transformation</p>
+      </div>
+      <div class="dept-stats">
+        <div class="dept-stat"><div class="n">28</div><div class="l">Total IT Staff</div></div>
+        <div class="dept-stat"><div class="n">6</div><div class="l">Functions</div></div>
+        <div class="dept-stat"><div class="n">99.4%</div><div class="l">Uptime SLA</div></div>
+        <div class="dept-stat"><div class="n">RM 4.2M</div><div class="l">IT Budget FY26</div></div>
+      </div>
+    </div>
+
+    <!-- Org chart -->
+   <!--  <div class="org-chart fade-up">
+      <h4>Organisational Hierarchy</h4>
+      <div class="org-root">
+        <div class="org-node hod"><div class="n" id="hodName">Ahmad Razif</div><div class="r">Head of IT (HOD)</div></div>
+        <div class="org-line"></div>
+        <div class="org-row">
+          <div class="org-col"><div class="org-node lead"><div class="n">Sarah Lim</div><div class="r">Infrastructure Lead</div></div></div>
+          <div class="org-col"><div class="org-node lead"><div class="n">Danial Iqbal</div><div class="r">Cybersecurity Lead</div></div></div>
+          <div class="org-col"><div class="org-node lead"><div class="n">Mei Ling</div><div class="r">Applications Lead</div></div></div>
+          <div class="org-col"><div class="org-node lead"><div class="n">Farah Aziz</div><div class="r">Service Desk Lead</div></div></div>
+          <div class="org-col"><div class="org-node lead"><div class="n">Raj Pillai</div><div class="r">IT Projects Lead</div></div></div>
+        </div>
+      </div>
+    </div> -->
+
+    <!-- Function cards -->
+    <div class="dept-grid" id="deptFunctions"></div>
+  </div>
+</div>
+
 <!-- ============ DASHBOARD ============ -->
 <div class="section" id="dashboard" style="padding-bottom:0;">
   <div class="section-head fade-up">
     <h2>IT Dashboard</h2>
-    <div style="display:flex;gap:10px;align-items:center;">
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+      <span class="sp-badge sp-demo" id="spSyncBadge"><span class="dot" style="background:currentColor;"></span>—</span>
       <div class="sub" id="dashLastUpdate"></div>
+      <button class="btn-primary" style="font-size:12.5px;padding:7px 14px;" onclick="DB.refresh().then(()=>{renderDashboard();renderReports();renderUserPortal();})">↻ Sync now</button>
       <button class="btn-primary" style="font-size:12.5px;padding:7px 14px;" onclick="openNewTicket()">+ New Ticket</button>
     </div>
   </div>
@@ -626,7 +979,17 @@ a:focus-visible, button:focus-visible, .cat-card:focus-visible, .article-card:fo
 <div class="section" id="reports" style="padding-bottom:20px;">
   <div class="section-head fade-up">
     <h2>Reports & Analytics</h2>
-    <div class="sub">Based on ticket data this month</div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <div class="sub">Based on ticket data this month</div>
+      <button class="dl-btn dl-pdf" onclick="downloadPDF()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+        Download PDF
+      </button>
+      <button class="dl-btn dl-excel" onclick="downloadExcel()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>
+        Download Excel
+      </button>
+    </div>
   </div>
   <div class="report-grid fade-up">
     <!-- Bar chart: tickets per month -->
@@ -678,6 +1041,8 @@ a:focus-visible, button:focus-visible, .cat-card:focus-visible, .article-card:fo
     </div>
   </div>
 </div>
+
+</div><!-- end #itAdminSection -->
 
 <footer>
   <div class="footer-inner">
@@ -1216,17 +1581,42 @@ function closeModal(){ document.getElementById('overlay').classList.remove('show
 
 
 /* =====================================================================
-   IN-MEMORY DATABASE (localStorage-backed)
+   DATABASE — Microsoft SharePoint List (via Power Automate HTTP flows)
+   =====================================================================
+   This app is a static page with no server of its own, so it cannot
+   safely hold an Azure AD app secret or ask every visitor to sign in
+   just to load the ticket list. Instead it talks to SharePoint through
+   three Power Automate flows that you build once (a "When an HTTP
+   request is received" trigger + a SharePoint action). The flow itself
+   is authenticated with your SharePoint connection — nobody using this
+   page needs a separate Microsoft login.
+
+   See the accompanying "ORBIT — SharePoint Setup Guide" document for:
+     • the exact SharePoint list + column schema to create
+     • step-by-step instructions for building the 3 flows below
+     • the HTTP POST URLs to paste into SP_CONFIG
+
+   Until you paste in real URLs, SP_IS_LIVE is false and the app runs
+   in local demo mode (sample tickets cached in this browser only) so
+   the page still works out of the box.
    ===================================================================== */
+const SP_CONFIG = {
+  listFlowUrl:   '',   // GET  — "List tickets" flow: returns every item in the SharePoint list as JSON
+  createFlowUrl: '',   // POST — "Create ticket" flow: creates a new item, returns the created item
+  updateFlowUrl: '',   // POST — "Update ticket status" flow: updates Status/ResolvedDate, returns ok
+  autoRefreshMs: 45000 // how often to re-pull the SharePoint list while the dashboard is open (0 = off)
+};
+const SP_IS_LIVE = !!(SP_CONFIG.listFlowUrl && SP_CONFIG.createFlowUrl && SP_CONFIG.updateFlowUrl);
+
 const DB = (function(){
-  const KEY = 'phb_kb_db';
+  const KEY = 'phb_kb_db_cache'; // offline cache / demo fallback only — SharePoint is the source of truth once live
   const defaults = {tickets:[], nextId:1001};
 
-  function load(){
+  function loadLocal(){
     try{ return JSON.parse(localStorage.getItem(KEY)) || defaults; }
     catch(e){ return defaults; }
   }
-  function save(data){
+  function saveLocal(data){
     try{ localStorage.setItem(KEY, JSON.stringify(data)); }catch(e){}
   }
 
@@ -1235,9 +1625,12 @@ const DB = (function(){
     account:'#E2574C', email:'#0EA5A4', security:'#8C1E1E'
   };
 
-  /* ---- seed sample data on first visit ---- */
-  let db = load();
-  if(!db.tickets.length){
+  let cache = loadLocal();
+  let syncState = SP_IS_LIVE ? 'connecting' : 'demo'; // 'demo' | 'connecting' | 'live' | 'offline'
+
+  /* ---- seed sample data — demo mode only, never runs once SharePoint is live ---- */
+  function seedIfEmpty(){
+    if(cache.tickets.length) return;
     const names=['Amir Hassan','Siti Rahayu','Kumar Nair','Noor Azlin','Raj Pillai','Farah Aziz','Danial Iqbal','Mei Ling'];
     const cats=['hardware','software','network','account','email','security'];
     const subs=['Monitor not detected','VPN keeps dropping','Password reset request','Outlook not syncing','Phishing email received','Laptop running slow','Printer offline','MFA setup needed','Cannot access shared drive','Blue screen error'];
@@ -1247,8 +1640,8 @@ const DB = (function(){
       const cat=cats[i%cats.length];
       const created=now-(Math.random()*30*86400000|0);
       const resolved=statuses[i%statuses.length]==='resolved'?created+(Math.random()*8*3600000|0):null;
-      db.tickets.push({
-        id:'TK-'+String(db.nextId++).padStart(4,'0'),
+      cache.tickets.push({
+        id:'TK-'+String(cache.nextId++).padStart(4,'0'),
         name:names[i%names.length],
         email:names[i%names.length].toLowerCase().replace(' ','.')+`@company.com`,
         cat,
@@ -1260,23 +1653,122 @@ const DB = (function(){
         sat: resolved?Math.floor(Math.random()*2)+4:null
       });
     }
-    save(db);
+    saveLocal(cache);
+  }
+
+  /* ---- map a SharePoint list item (as returned by the Flow) to our internal ticket shape ---- */
+  function fromSP(item){
+    const created = item.CreatedDate || item.Created;
+    const resolved = item.ResolvedDate;
+    return {
+      id: item.TicketID || item.Title || ('TK-'+item.id),
+      spId: item.id, // SharePoint list item ID — needed to target updates
+      name: item.RequesterName || '',
+      email: item.RequesterEmail || '',
+      cat: String(item.Category||'').toLowerCase(),
+      priority: String(item.Priority||'medium').toLowerCase(),
+      subject: item.Subject || item.Title || '',
+      detail: item.Detail || '',
+      status: String(item.Status||'open').toLowerCase(),
+      created: created ? new Date(created).getTime() : Date.now(),
+      resolved: resolved ? new Date(resolved).getTime() : null,
+      sat: (item.Satisfaction===0||item.Satisfaction) ? Number(item.Satisfaction) : null
+    };
+  }
+
+  /* ---- pull the full ticket list from SharePoint and refresh the cache ---- */
+  async function refreshFromSharePoint(){
+    if(!SP_IS_LIVE){ seedIfEmpty(); syncState='demo'; updateSyncBadge(); return false; }
+    try{
+      syncState='connecting'; updateSyncBadge();
+      const res = await fetch(SP_CONFIG.listFlowUrl, {method:'GET'});
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      const data = await res.json();
+      const items = Array.isArray(data) ? data : (data.value||[]);
+      const tickets = items.map(fromSP).sort((a,b)=>b.created-a.created);
+      const maxNum = tickets.reduce((m,t)=>{
+        const n=parseInt(String(t.id).replace(/\D/g,''),10);
+        return isFinite(n)?Math.max(m,n):m;
+      },1000);
+      cache = {tickets, nextId:maxNum+1};
+      saveLocal(cache); // mirrored locally only so the page still shows data offline
+      syncState='live';
+      updateSyncBadge();
+      return true;
+    }catch(err){
+      console.error('SharePoint refresh failed — showing last known data', err);
+      syncState='offline';
+      updateSyncBadge();
+      return false;
+    }
   }
 
   return {
-    getAll(){ return load().tickets; },
+    getAll(){ return cache.tickets; },
+    isLive(){ return SP_IS_LIVE; },
+    getSyncState(){ return syncState; },
+    refresh: refreshFromSharePoint,
+
+    /* Returns the new ticket immediately (optimistic UI), then syncs to
+       SharePoint in the background and reconciles the cache + re-renders
+       once the flow responds. */
     add(t){
-      const d=load();
-      t.id='TK-'+String(d.nextId++).padStart(4,'0');
-      t.created=Date.now(); t.resolved=null; t.status='open'; t.sat=null;
-      d.tickets.unshift(t);
-      save(d);
-      return t;
+      const optimisticId = 'TK-'+String(cache.nextId++).padStart(4,'0');
+      const optimistic = {...t, id:optimisticId, created:Date.now(), resolved:null, status:'open', sat:null, _pending:SP_IS_LIVE};
+      cache.tickets.unshift(optimistic);
+      saveLocal(cache);
+
+      if(SP_IS_LIVE){
+        fetch(SP_CONFIG.createFlowUrl, {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({
+            RequesterName:t.name, RequesterEmail:t.email, Category:t.cat,
+            Priority:t.priority, Subject:t.subject, Detail:t.detail, Status:'open'
+          })
+        })
+        .then(res=>{ if(!res.ok) throw new Error('HTTP '+res.status); return res.json(); })
+        .then(created=>{
+          const real = fromSP(created);
+          const idx = cache.tickets.findIndex(x=>x.id===optimisticId);
+          if(idx>-1) cache.tickets[idx]=real; else cache.tickets.unshift(real);
+          saveLocal(cache);
+          renderDashboard(); renderReports(); renderUserPortal();
+        })
+        .catch(err=>{
+          console.error('Could not save ticket to SharePoint — kept locally only', err);
+          const idx = cache.tickets.findIndex(x=>x.id===optimisticId);
+          if(idx>-1) cache.tickets[idx]._pending=false;
+          saveLocal(cache);
+          showToast('Saved locally — could not reach SharePoint. It will retry on next sync.', 'error');
+        });
+      }
+      return optimistic;
     },
+
+    /* Updates the cache immediately, pushes the change to SharePoint in
+       the background, and rolls back + re-renders if the flow fails. */
     updateStatus(id,status){
-      const d=load();
-      const t=d.tickets.find(x=>x.id===id);
-      if(t){ t.status=status; if(status==='resolved') t.resolved=Date.now(); save(d); }
+      const t=cache.tickets.find(x=>x.id===id);
+      if(!t) return;
+      const prevStatus=t.status, prevResolved=t.resolved;
+      t.status=status;
+      if(status==='resolved') t.resolved=Date.now();
+      saveLocal(cache);
+
+      if(SP_IS_LIVE){
+        fetch(SP_CONFIG.updateFlowUrl, {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({spId:t.spId, id:t.id, status, resolved:t.resolved})
+        })
+        .then(res=>{ if(!res.ok) throw new Error('HTTP '+res.status); })
+        .catch(err=>{
+          console.error('Could not update ticket status in SharePoint — reverting', err);
+          t.status=prevStatus; t.resolved=prevResolved;
+          saveLocal(cache);
+          showToast('Could not reach SharePoint — status change was not saved.', 'error');
+          renderDashboard(); renderReports();
+        });
+      }
     },
     catColors
   };
@@ -1291,6 +1783,24 @@ function logActivity(text, color){
   if(activity.length>20) activity.pop();
 }
 logActivity('Knowledge base loaded', '#4CAF50');
+
+/* =====================================================================
+   SHAREPOINT SYNC STATUS BADGE
+   ===================================================================== */
+function updateSyncBadge(){
+  const el = document.getElementById('spSyncBadge');
+  if(!el) return;
+  const state = DB.getSyncState();
+  const map = {
+    demo:       {text:'Demo mode — SharePoint not configured', cls:'sp-demo'},
+    connecting: {text:'Syncing with SharePoint…', cls:'sp-connecting'},
+    live:       {text:'Connected to SharePoint list', cls:'sp-live'},
+    offline:    {text:'SharePoint unreachable — showing cached data', cls:'sp-offline'},
+  };
+  const s = map[state]||map.demo;
+  el.className = 'sp-badge '+s.cls;
+  el.innerHTML = `<span class="dot" style="background:currentColor;"></span>${s.text}`;
+}
 
 /* =====================================================================
    DASHBOARD RENDERERS
@@ -1367,6 +1877,7 @@ function renderActivityLog(){
 }
 
 function renderDashboard(){
+  updateSyncBadge();
   renderKPIs();
   renderTicketTable();
   renderCatBars();
@@ -1510,50 +2021,17 @@ function openNewTicket(){
 function closeTicketModal(){
   document.getElementById('ticketOverlay').classList.remove('show');
 }
-/* Power Automate flow URL: "IT KB - New Ticket to SharePoint".
-   Sends every new ticket to your SharePoint list. */
-const SP_NEW_TICKET_FLOW_URL = 'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/00/workflows/725e5634744840fbb50787051d1c4ff4/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=-Wex1NvzY6rCHgtceqjKcXcM2f6AGR2-yoqqRIO6p2s';
-
-async function sendTicketToSharePoint(payload){
-  try{
-    const response = await fetch(SP_NEW_TICKET_FLOW_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
-
-    console.log('Status:', response.status);
-    console.log('Status Text:', response.statusText);
-
-    if(!response.ok){
-      throw new Error(`HTTP ${response.status}`);
-    }
-
-    console.log('Flow called successfully');
-  }
-  catch(err){
-    console.error('Flow Error:', err);
-    alert('Flow Error: ' + err.message);
-  }
-}
-
 function submitTicket(){
   const name=document.getElementById('tf-name').value.trim();
   const email=document.getElementById('tf-email').value.trim();
   const subject=document.getElementById('tf-subject').value.trim();
   if(!name||!email||!subject){ showToast('Please fill in Name, Email and Subject.','error'); return; }
-  const category=document.getElementById('tf-cat').value;
-  const priority=document.getElementById('tf-priority').value;
-  const detail=document.getElementById('tf-detail').value;
-
   const t=DB.add({
     name,email,
-    cat:category,
-    priority,
+    cat:document.getElementById('tf-cat').value,
+    priority:document.getElementById('tf-priority').value,
     subject,
-    detail,
+    detail:document.getElementById('tf-detail').value,
   });
   logActivity(`New ticket ${t.id}: "${subject}"`, DB.catColors[t.cat]||'var(--teal)');
   closeTicketModal();
@@ -1561,9 +2039,6 @@ function submitTicket(){
   ['tf-name','tf-email','tf-subject','tf-detail'].forEach(id=>document.getElementById(id).value='');
   renderDashboard();
   renderReports();
-
-  /* send this ticket to your SharePoint list via Power Automate */
-  sendTicketToSharePoint({ name, email, category, priority, subject, detail });
 }
 
 function editTicketStatus(id){
@@ -1578,6 +2053,684 @@ function editTicketStatus(id){
 }
 
 function openTicket(){ openNewTicket(); }
+
+/* =====================================================================
+   AD SSO MOCK SYSTEM
+   ===================================================================== */
+const AD_USERS = [
+  {id:'u1', name:'Eliza Yazmin', email:'elizayazmin@phb.com.my', dept:'Information Technology', role:'hod',   title:'Head of IT (HOD)',        color:'#8C8B1E', initials:'EY'},
+  {id:'u2', name:'Muhammad Haq',   email:'Haq@phb.com.my',   dept:'IT – Infrastructure',   role:'it',    title:'Infrastructure Lead',      color:'#2a6496', initials:'MH'},
+  {id:'u3', name:'Fahmi',email:'fahmi@phb.com.my',dept:'IT – Cybersecurity',    role:'it',    title:'Cybersecurity Lead',       color:'#7d3c98', initials:'MF'},
+  {id:'u4', name:'Noor Azlin',  email:'noor.azlin@phb.com.my',  dept:'Finance',               role:'user',  title:'Finance Manager',          color:'#27ae60', initials:'NA'},
+  {id:'u5', name:'Kumar Nair',  email:'kumar.nair@phb.com.my',  dept:'Investment',             role:'user',  title:'Investment Analyst',       color:'#e67e22', initials:'KN'},
+  {id:'u6', name:'Mei Ling',    email:'mei.ling@phb.com.my',    dept:'IT – Applications',     role:'it',    title:'Applications Lead',        color:'#c0392b', initials:'ML'},
+];
+
+let currentUser = null;
+
+function renderLoginAccounts(){
+  const badgeMap = {hod:'HOD',it:'IT Staff',user:'User'};
+  const badgeCls = {hod:'badge-hod',it:'badge-it',user:'badge-user'};
+  document.getElementById('quickAccounts').innerHTML = AD_USERS.map(u=>`
+    <div class="acc-item" onclick="selectAccount('${u.id}')">
+      <div class="acc-avatar" style="background:${u.color};">${u.initials}</div>
+      <div class="acc-info">
+        <div class="acc-name">${u.name}</div>
+        <div class="acc-role">${u.email}</div>
+      </div>
+      <span class="acc-badge ${badgeCls[u.role]}">${badgeMap[u.role]}</span>
+    </div>`).join('');
+}
+
+function startSSO(){
+  document.getElementById('ssoStep1').style.display='none';
+  document.getElementById('authLoading').classList.add('show');
+  document.getElementById('authUser').textContent='Connecting to Azure AD…';
+  const steps=[
+    {text:'Redirecting to Microsoft Identity Platform…',delay:400},
+    {text:'Authenticating with Azure Active Directory…',delay:900},
+    {text:'Verifying PHB domain credentials…',delay:1500},
+  ];
+  const stepsEl=document.getElementById('authSteps');
+  stepsEl.innerHTML='';
+  steps.forEach((s,i)=>{
+    setTimeout(()=>{
+      const div=document.createElement('div');
+      div.className='auth-step';
+      div.innerHTML=`<div class="auth-step-icon" style="background:var(--teal-tint);">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--teal-dark)" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>
+      </div><span>${s.text}</span>`;
+      stepsEl.appendChild(div);
+    },s.delay);
+  });
+  setTimeout(()=>{
+    document.getElementById('authLoading').classList.remove('show');
+    document.getElementById('authUser').textContent='';
+    document.getElementById('ssoStep1').style.display='block';
+    stepsEl.innerHTML='';
+    document.querySelector('.login-title').textContent='Choose an account';
+  },2200);
+}
+
+function selectAccount(id){
+  const u=AD_USERS.find(x=>x.id===id);
+  if(!u) return;
+  document.getElementById('ssoStep1').style.display='none';
+  document.getElementById('authLoading').classList.add('show');
+  document.getElementById('authUser').textContent=u.name;
+  const stepsEl=document.getElementById('authSteps');
+  stepsEl.innerHTML='';
+  const steps=[
+    {text:'Issuing access token…'},
+    {text:'Loading user profile and permissions…'},
+    {text:'Applying role: '+u.title+'…'},
+  ];
+  steps.forEach((s,i)=>{
+    setTimeout(()=>{
+      const div=document.createElement('div');
+      div.className='auth-step done';
+      div.innerHTML=`<div class="auth-step-icon" style="background:var(--teal-tint);">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--teal-dark)" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>
+      </div><span>${s.text}</span>`;
+      stepsEl.appendChild(div);
+    },i*350);
+  });
+  setTimeout(()=>completeLogin(u),1300);
+}
+
+function completeLogin(u){
+  currentUser=u;
+  try{sessionStorage.setItem('phb_user',JSON.stringify(u));}catch(e){}
+  document.getElementById('loginScreen').classList.add('hidden');
+  applyRole(u);
+  logActivity(`${u.name} signed in (${u.role.toUpperCase()})`, u.color);
+  renderDashboard();
+  renderReports();
+  renderDeptStructure();
+  renderUserPortal();
+  // pull the latest tickets from SharePoint (or seed demo data) then re-render
+  DB.refresh().then(()=>{
+    renderDashboard();
+    renderReports();
+    renderUserPortal();
+  });
+  startSharePointPolling();
+}
+
+let spPollTimer=null;
+function startSharePointPolling(){
+  if(spPollTimer) clearInterval(spPollTimer);
+  if(!SP_IS_LIVE || !SP_CONFIG.autoRefreshMs) return;
+  spPollTimer=setInterval(()=>{
+    DB.refresh().then(()=>{
+      renderDashboard();
+      renderReports();
+      renderUserPortal();
+    });
+  }, SP_CONFIG.autoRefreshMs);
+}
+function stopSharePointPolling(){
+  if(spPollTimer){ clearInterval(spPollTimer); spPollTimer=null; }
+}
+
+function applyRole(u){
+  // body class
+  document.body.classList.remove('role-hod','role-it','role-user');
+  document.body.classList.add('role-'+u.role);
+
+  // user chip
+  document.getElementById('userChip').style.display='flex';
+  document.getElementById('chipAvatar').style.background=u.color;
+  document.getElementById('chipAvatar').textContent=u.initials;
+  document.getElementById('chipName').textContent=u.name.split(' ')[0];
+  document.getElementById('chipRole').textContent=u.title;
+  document.getElementById('topCta').style.display='block';
+
+  // nav
+  const nav=document.getElementById('mainNav');
+  const itLinks=`<a href="#categories">Knowledge Base</a>
+    <a href="#dashboard" style="color:var(--teal-dark);font-weight:600;">Dashboard</a>
+    <a href="#reports" style="color:var(--teal-dark);font-weight:600;">Reports</a>`;
+  const hodLinks=`<a href="#deptStructure" style="color:var(--teal-dark);font-weight:600;">Dept. Structure</a>`+itLinks;
+  const userLinks=`<a href="#categories">Help Topics</a><a href="#faq">FAQ</a>`;
+
+  if(u.role==='hod'){
+    nav.innerHTML=hodLinks;
+    document.getElementById('portalTitle').textContent='ORBIT - One Repository for IT';
+    document.getElementById('itAdminSection').style.display='block';
+    document.getElementById('userPortalSection').style.display='none';
+    showITSections(true);
+  } else if(u.role==='it'){
+    nav.innerHTML=itLinks;
+    document.getElementById('portalTitle').textContent='IT Staff Portal';
+    document.getElementById('itAdminSection').style.display='block';
+    document.getElementById('userPortalSection').style.display='none';
+    document.getElementById('deptStructure').style.display='none';
+    showITSections(true);
+  } else {
+    nav.innerHTML=userLinks;
+    document.getElementById('portalTitle').textContent='ORBIT - One Repository for IT';
+    document.getElementById('userPortalSection').style.display='block';
+    document.getElementById('itAdminSection').style.display='none';
+    showITSections(false);
+  }
+
+  // greet name
+  const greet=document.getElementById('userGreetName');
+  if(greet) greet.textContent=u.name.split(' ')[0];
+  if(u.role==='hod'){
+    const hodNameEl=document.getElementById('hodName');
+    if(hodNameEl) hodNameEl.textContent=u.name;
+  }
+}
+
+function showITSections(show){
+  ['howitworks','categories','articles','faq','resources'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.style.display=show?'':'none';
+  });
+}
+
+function logout(){
+  stopSharePointPolling();
+  currentUser=null;
+  try{sessionStorage.removeItem('phb_user');}catch(e){}
+  document.body.classList.remove('role-hod','role-it','role-user');
+  document.getElementById('userChip').style.display='none';
+  document.getElementById('topCta').style.display='none';
+  document.getElementById('loginScreen').classList.remove('hidden');
+  document.getElementById('ssoStep1').style.display='block';
+  document.getElementById('authLoading').classList.remove('show');
+  document.querySelector('.login-title').textContent='IT HelpDesk Portal';
+  document.getElementById('itAdminSection').style.display='none';
+  document.getElementById('userPortalSection').style.display='none';
+  document.getElementById('userDropdown').classList.remove('open');
+}
+
+function showProfile(){
+  if(!currentUser) return;
+  const u=currentUser;
+  alert(`👤 ${u.name}\n📧 ${u.email}\n🏢 ${u.dept}\n💼 ${u.title}\n🔑 Role: ${u.role.toUpperCase()}`);
+  document.getElementById('userDropdown').classList.remove('open');
+}
+
+/* =====================================================================
+   DEPT STRUCTURE RENDERER
+   ===================================================================== */
+const deptFunctions=[
+  {key:'infra',icon:'🖥',color:'#2a6496',tint:'#d6eaf8',title:'Infrastructure',lead:'Sarah Lim',
+   roles:[{r:'Server & Cloud Admin',n:3},{r:'Network Engineer',n:2},{r:'Storage & Backup',n:1}],
+   score:94,desc:'Manages servers, cloud (Azure), network, and disaster recovery.'},
+  {key:'cyber',icon:'🔒',color:'#7d3c98',tint:'#e8daef',title:'Cybersecurity',lead:'Danial Iqbal',
+   roles:[{r:'Security Analyst',n:2},{r:'SOC Engineer',n:2},{r:'Compliance Officer',n:1}],
+   score:98,desc:'Protects assets through monitoring, threat response, and compliance.'},
+  {key:'apps',icon:'💻',color:'#c0392b',tint:'#fadbd8',title:'Applications',lead:'Mei Ling',
+   roles:[{r:'Business Systems Analyst',n:2},{r:'ERP/CRM Specialist',n:2},{r:'Integration Dev',n:2}],
+   score:88,desc:'Owns enterprise applications, ERP, and software integrations.'},
+  {key:'svc',icon:'🎧',color:'#1a7a3d',tint:'#d5f5e3',title:'Service Management',lead:'Farah Aziz',
+   roles:[{r:'Help Desk Analyst',n:4},{r:'IT Service Coordinator',n:1}],
+   score:92,desc:'First line of support, ITSM, SLA management, and user satisfaction.'},
+  {key:'proj',icon:'📋',color:'#d35400',tint:'#fdebd0',title:'IT Project Management',lead:'Raj Pillai',
+   roles:[{r:'IT Project Manager',n:1},{r:'Business Analyst',n:2},{r:'Change Manager',n:1}],
+   score:85,desc:'Drives strategic IT initiatives, roadmap, and change management.'},
+  {key:'data',icon:'📊',color:'#117a8b',tint:'#d1ecf1',title:'Data & Analytics',lead:'HOD (Oversight)',
+   roles:[{r:'Data Engineer',n:1},{r:'BI Analyst',n:1}],
+   score:80,desc:'Delivers data governance, reporting, and business intelligence.'},
+];
+
+function renderDeptStructure(){
+  const grid=document.getElementById('deptFunctions');
+  if(!grid) return;
+  grid.innerHTML=deptFunctions.map(f=>`
+    <div class="dept-function">
+      <div class="dept-fn-head">
+        <div class="dept-fn-icon" style="background:${f.tint};font-size:18px;">${f.icon}</div>
+        <div><div class="dept-fn-title">${f.title}</div><div class="dept-fn-lead">Lead: ${f.lead}</div></div>
+      </div>
+      <div class="dept-fn-body">
+        <p style="font-size:12.5px;color:var(--ink-soft);margin:0 0 12px;line-height:1.5;">${f.desc}</p>
+        <div class="dept-roles">${f.roles.map(r=>`
+          <div class="dept-role-row">
+            <span class="dept-role-name">${r.r}</span>
+            <span class="dept-role-count">${r.n}</span>
+          </div>`).join('')}
+        </div>
+      </div>
+      <div class="dept-fn-footer">
+        <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink-soft);">
+          <span>Health Score</span><span style="font-weight:700;color:${f.score>=90?'var(--teal-dark)':'var(--amber)'};">${f.score}%</span>
+        </div>
+        <div class="prog"><div class="prog-fill" style="width:${f.score}%;background:${f.color};opacity:.8;"></div></div>
+      </div>
+    </div>`).join('');
+}
+
+/* =====================================================================
+   USER PORTAL RENDERER
+   ===================================================================== */
+function renderUserPortal(){
+  if(!currentUser||currentUser.role!=='user') return;
+
+  // Categories
+  const ucg=document.getElementById('userCatGrid');
+  if(ucg) ucg.innerHTML=categories.map(c=>`
+    <div class="cat-card" tabindex="0" onclick="filterByCategory('${c.key}');document.getElementById('categories').scrollIntoView({behavior:'smooth'})">
+      <div class="cat-top"><div class="cat-icon" style="background:${c.tint}">${svgIcon(c.key,c.color)}</div></div>
+      <h3>${c.name}</h3>
+      <p>${c.desc}</p>
+      <div class="cat-count"><span class="dot" style="background:${c.color};width:6px;height:6px;"></span>${articles.filter(a=>a.cat===c.key).length} guides</div>
+    </div>`).join('');
+
+  // My tickets (filter by name match)
+  const myTickets=DB.getAll().filter(t=>currentUser&&(t.email===currentUser.email||t.name===currentUser.name)).slice(0,6);
+  const utl=document.getElementById('userTicketList');
+  if(utl){
+    if(!myTickets.length){
+      utl.innerHTML=`<div style="text-align:center;padding:24px;color:var(--ink-soft);font-size:14px;background:var(--panel);border:1px solid var(--line);border-radius:12px;">You have no open tickets. <a href="#" onclick="openNewTicket();return false;" style="color:var(--teal-dark);">Submit one →</a></div>`;
+    } else {
+      const sc={open:'t-open',resolved:'t-resolved',pending:'t-pending'};
+      utl.innerHTML=myTickets.map(t=>`
+        <div class="my-ticket-card">
+          <span class="mt-id">${t.id}</span>
+          <div class="mt-body">
+            <div class="mt-subj">${t.subject}</div>
+            <div class="mt-meta">${categories.find(c=>c.key===t.cat)?.name||t.cat} · ${fmtDate(t.created)}</div>
+          </div>
+          <span class="t-status ${sc[t.status]||'t-open'}">${t.status}</span>
+        </div>`).join('');
+    }
+  }
+
+  // FAQ (reuse)
+  const uf=document.getElementById('userFaqList');
+  if(uf) uf.innerHTML=document.getElementById('faqList').innerHTML;
+}
+
+function userSearch(q){
+  const res=document.getElementById('userSearchResults');
+  if(!q.trim()){ res.innerHTML=''; return; }
+  const matches=articles.filter(a=>(a.title+' '+a.desc+' '+a.tags.join(' ')).toLowerCase().includes(q.toLowerCase())).slice(0,5);
+  if(!matches.length){ res.innerHTML=`<div style="color:rgba(255,255,255,.5);font-size:13px;padding:8px 0;">No articles found. Try submitting a ticket.</div>`; return; }
+  res.innerHTML=`<div style="background:rgba(255,255,255,.1);border-radius:10px;overflow:hidden;">${matches.map(a=>`
+    <div onclick="openArticle('${a.id}')" style="padding:10px 14px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.08);color:#fff;font-size:13.5px;font-weight:500;">
+      <span style="font-family:'JetBrains Mono';font-size:10px;color:#C3CE1E;margin-right:8px;">${a.id}</span>${a.title}
+    </div>`).join('')}</div>`;
+}
+
+/* close dropdown on outside click */
+document.addEventListener('click',e=>{
+  const dd=document.getElementById('userDropdown');
+  const chip=document.getElementById('userChip');
+  if(dd&&chip&&!chip.contains(e.target)) dd.classList.remove('open');
+});
+
+
+function showSpinner(msg){ 
+  document.getElementById('dlSpinnerMsg').textContent=msg||'Generating report…'; 
+  document.getElementById('dlSpinner').classList.add('show'); 
+}
+function hideSpinner(){ document.getElementById('dlSpinner').classList.remove('show'); }
+
+/* ---- colour helpers for jsPDF ---- */
+const PHB_OLIVE=[140,139,30];
+const PHB_LIME=[195,206,30];
+const PHB_GREY=[92,92,82];
+const PHB_BLACK=[22,22,26];
+const PHB_LINE=[225,225,212];
+const STATUS_COLORS={open:[245,166,35], resolved:[195,206,30], pending:[226,87,76]};
+
+/* =====================================================================
+   PDF DOWNLOAD
+   ===================================================================== */
+async function downloadPDF(){
+  if(!window.jspdf){ showToast('PDF library not loaded yet. Try again in a moment.','error'); return; }
+  showSpinner('Building PDF report…');
+  await new Promise(r=>setTimeout(r,60));
+  try{
+    const {jsPDF}=window.jspdf;
+    const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const pw=doc.internal.pageSize.getWidth();   // 210
+    const ph=doc.internal.pageSize.getHeight();  // 297
+    const M=14;  // margin
+
+    /* --- helper: branded page header --- */
+    function pageHeader(title){
+      // olive top bar
+      doc.setFillColor(...PHB_OLIVE);
+      doc.rect(0,0,pw,14,'F');
+      // brand text
+      doc.setTextColor(255,255,255);
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(9);
+      doc.text('PHB  |  Pelaburan Hartanah Berhad — IT HelpDesk',M,9);
+      // right timestamp
+      doc.setFont('helvetica','normal');
+      doc.setFontSize(7.5);
+      doc.text(new Date().toLocaleString('en-MY'),pw-M,9,{align:'right'});
+      // page title
+      doc.setTextColor(...PHB_BLACK);
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(17);
+      doc.text(title,M,28);
+      doc.setDrawColor(...PHB_LIME);
+      doc.setLineWidth(.8);
+      doc.line(M,31,pw-M,31);
+    }
+
+    /* --- helper: section label --- */
+    function sectionLabel(y,txt){
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(8);
+      doc.setTextColor(...PHB_OLIVE);
+      doc.text(txt.toUpperCase(),M,y);
+      doc.setTextColor(...PHB_BLACK);
+    }
+
+    /* ========== PAGE 1 : SUMMARY ========== */
+    pageHeader('IT Reports & Analytics');
+
+    const all=DB.getAll();
+    const open=all.filter(t=>t.status==='open').length;
+    const resolved=all.filter(t=>t.status==='resolved').length;
+    const pending=all.filter(t=>t.status==='pending').length;
+    const resTimes=all.filter(t=>t.resolved).map(t=>(t.resolved-t.created)/3600000);
+    const avgRes=resTimes.length?(resTimes.reduce((a,b)=>a+b,0)/resTimes.length).toFixed(1):'—';
+    const sats=all.filter(t=>t.sat!==null);
+    const avgSat=sats.length?(sats.reduce((s,t)=>s+t.sat,0)/sats.length).toFixed(1):'—';
+
+    // KPI boxes (2×2 grid)
+    const kpis=[
+      {label:'Total Tickets',val:String(all.length)},
+      {label:'Open',val:String(open)},
+      {label:'Resolved',val:String(resolved)},
+      {label:'Avg. Resolution',val:avgRes+'h'},
+      {label:'Pending',val:String(pending)},
+      {label:'Satisfaction Score',val:avgSat+' / 5'},
+    ];
+    const boxW=(pw-2*M-10)/3, boxH=22, boxY=36, gap=5;
+    kpis.forEach((k,i)=>{
+      const col=i%3, row=Math.floor(i/3);
+      const x=M+col*(boxW+gap), y=boxY+row*(boxH+gap);
+      doc.setFillColor(246,248,217);
+      doc.roundedRect(x,y,boxW,boxH,2,2,'F');
+      doc.setDrawColor(...PHB_LINE);
+      doc.setLineWidth(.3);
+      doc.roundedRect(x,y,boxW,boxH,2,2,'S');
+      doc.setFont('helvetica','normal');
+      doc.setFontSize(7);
+      doc.setTextColor(...PHB_GREY);
+      doc.text(k.label,x+4,y+7);
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(14);
+      doc.setTextColor(...PHB_OLIVE);
+      doc.text(k.val,x+4,y+17);
+    });
+
+    let y=36+2*(boxH+gap)+10;
+
+    // Category breakdown bar chart (drawn in PDF)
+    sectionLabel(y,'Tickets by Category'); y+=6;
+    const catCounts=categories.map(c=>({name:c.name,count:all.filter(t=>t.cat===c.key).length}));
+    const maxCat=Math.max(...catCounts.map(c=>c.count))||1;
+    const barMaxW=pw-2*M-40;
+    catCounts.forEach(c=>{
+      doc.setFont('helvetica','normal');
+      doc.setFontSize(8);
+      doc.setTextColor(...PHB_GREY);
+      doc.text(c.name,M,y+3.5);
+      const bw=Math.round((c.count/maxCat)*barMaxW);
+      doc.setFillColor(...PHB_LINE);
+      doc.roundedRect(M+38,y,barMaxW,5,1,1,'F');
+      doc.setFillColor(...PHB_OLIVE);
+      if(bw>0) doc.roundedRect(M+38,y,bw,5,1,1,'F');
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(7.5);
+      doc.setTextColor(...PHB_BLACK);
+      doc.text(String(c.count),pw-M,y+4,{align:'right'});
+      y+=9;
+    });
+
+    y+=4;
+
+    // Monthly volume table
+    sectionLabel(y,'Ticket Volume — Last 6 Months'); y+=5;
+    const buckets=getMonthBuckets('all');
+    doc.autoTable({
+      startY:y,
+      head:[buckets.map(b=>b.label)],
+      body:[buckets.map(b=>String(b.count))],
+      styles:{fontSize:9,cellPadding:3,halign:'center'},
+      headStyles:{fillColor:PHB_OLIVE,textColor:[255,255,255],fontStyle:'bold'},
+      alternateRowStyles:{fillColor:[246,248,217]},
+      margin:{left:M,right:M},
+      tableWidth:'auto',
+    });
+    y=doc.lastAutoTable.finalY+8;
+
+    // Satisfaction distribution
+    if(sats.length){
+      sectionLabel(y,'Satisfaction Distribution'); y+=5;
+      const stars=[5,4,3,2,1];
+      stars.forEach(s=>{
+        const cnt=sats.filter(t=>t.sat===s).length;
+        const pct=Math.round(cnt/sats.length*100);
+        doc.setFont('helvetica','normal');
+        doc.setFontSize(8);
+        doc.setTextColor(...PHB_GREY);
+        doc.text(s+'★',M,y+3.5);
+        const trackW=60;
+        doc.setFillColor(...PHB_LINE);
+        doc.roundedRect(M+10,y,trackW,4.5,1,1,'F');
+        doc.setFillColor(...PHB_LIME);
+        if(pct>0) doc.roundedRect(M+10,y,trackW*pct/100,4.5,1,1,'F');
+        doc.setFontSize(7.5);
+        doc.setTextColor(...PHB_BLACK);
+        doc.text(pct+'%  ('+cnt+')',M+73,y+3.5);
+        y+=8;
+      });
+    }
+
+    /* ========== PAGE 2 : TICKET LOG ========== */
+    doc.addPage();
+    pageHeader('Ticket Log');
+
+    const tableRows=all.map(t=>[
+      t.id,
+      t.name||'—',
+      t.subject.length>40?t.subject.slice(0,38)+'…':t.subject,
+      (categories.find(c=>c.key===t.cat)?.name)||t.cat,
+      t.priority.toUpperCase(),
+      t.status.charAt(0).toUpperCase()+t.status.slice(1),
+      fmtDate(t.created),
+      t.resolved?fmtDate(t.resolved):'—',
+    ]);
+    doc.autoTable({
+      startY:36,
+      head:[['Ticket ID','Name','Subject','Category','Priority','Status','Created','Resolved']],
+      body:tableRows,
+      styles:{fontSize:7.8,cellPadding:2.5,overflow:'ellipsize'},
+      headStyles:{fillColor:PHB_OLIVE,textColor:[255,255,255],fontStyle:'bold'},
+      alternateRowStyles:{fillColor:[246,248,217]},
+      columnStyles:{
+        0:{cellWidth:18,fontStyle:'bold',textColor:PHB_OLIVE},
+        1:{cellWidth:26},
+        2:{cellWidth:48},
+        3:{cellWidth:22},
+        4:{cellWidth:17},
+        5:{cellWidth:18},
+        6:{cellWidth:20},
+        7:{cellWidth:20},
+      },
+      margin:{left:M,right:M},
+      didParseCell(data){
+        if(data.section==='body'&&data.column.index===5){
+          const s=data.cell.raw.toLowerCase();
+          if(s==='open') data.cell.styles.textColor=[160,100,0];
+          else if(s==='resolved') data.cell.styles.textColor=PHB_OLIVE;
+          else if(s==='pending') data.cell.styles.textColor=[180,50,40];
+        }
+      },
+    });
+
+    // page numbers
+    const totalPages=doc.internal.getNumberOfPages();
+    for(let p=1;p<=totalPages;p++){
+      doc.setPage(p);
+      doc.setFont('helvetica','normal');
+      doc.setFontSize(7.5);
+      doc.setTextColor(...PHB_GREY);
+      doc.setFillColor(...PHB_LINE);
+      doc.rect(0,ph-8,pw,8,'F');
+      doc.text(`Page ${p} of ${totalPages}  ·  PHB IT HelpDesk Confidential`,pw/2,ph-3,{align:'center'});
+    }
+
+    const filename=`PHB_IT_Report_${new Date().toISOString().slice(0,10)}.pdf`;
+    doc.save(filename);
+    showToast('PDF downloaded: '+filename);
+  } catch(err){
+    console.error(err);
+    showToast('PDF generation failed: '+err.message,'error');
+  } finally{ hideSpinner(); }
+}
+
+/* =====================================================================
+   EXCEL DOWNLOAD
+   ===================================================================== */
+function downloadExcel(){
+  if(!window.XLSX){ showToast('Excel library not loaded yet. Try again in a moment.','error'); return; }
+  showSpinner('Building Excel workbook…');
+  setTimeout(()=>{
+    try{
+      const wb=XLSX.utils.book_new();
+      const all=DB.getAll();
+
+      /* --- helper: apply header row style --- */
+      function styleHeaderRow(ws, cols){
+        const range=XLSX.utils.decode_range(ws['!ref']);
+        cols.forEach((_,i)=>{
+          const cell=ws[XLSX.utils.encode_cell({r:0,c:i})];
+          if(cell){
+            cell.s={
+              fill:{fgColor:{rgb:'8C8B1E'}},
+              font:{bold:true,color:{rgb:'FFFFFF'},sz:11},
+              alignment:{horizontal:'center',vertical:'center'},
+              border:{bottom:{style:'medium',color:{rgb:'C3CE1E'}}}
+            };
+          }
+        });
+      }
+
+      /* ===== SHEET 1 : SUMMARY ===== */
+      const open=all.filter(t=>t.status==='open').length;
+      const resolved=all.filter(t=>t.status==='resolved').length;
+      const pending=all.filter(t=>t.status==='pending').length;
+      const resTimes=all.filter(t=>t.resolved).map(t=>+(((t.resolved-t.created)/3600000).toFixed(2)));
+      const avgRes=resTimes.length?+(resTimes.reduce((a,b)=>a+b,0)/resTimes.length).toFixed(1):0;
+      const sats=all.filter(t=>t.sat!==null);
+      const avgSat=sats.length?+(sats.reduce((s,t)=>s+t.sat,0)/sats.length).toFixed(1):0;
+
+      const summaryData=[
+        ['PHB IT HelpDesk — Monthly Report','',''],
+        ['Generated',new Date().toLocaleString('en-MY'),''],
+        ['','',''],
+        ['METRIC','VALUE',''],
+        ['Total Tickets',all.length,''],
+        ['Open Tickets',open,''],
+        ['Resolved Tickets',resolved,''],
+        ['Pending Tickets',pending,''],
+        ['Avg. Resolution Time (hrs)',avgRes,''],
+        ['Avg. Satisfaction Score',avgSat,''],
+        ['','',''],
+        ['TICKETS BY CATEGORY','COUNT','% OF TOTAL'],
+        ...categories.map(c=>{
+          const cnt=all.filter(t=>t.cat===c.key).length;
+          return [c.name, cnt, all.length?+(cnt/all.length*100).toFixed(1):0];
+        }),
+        ['','',''],
+        ['MONTHLY VOLUME (Last 6 Months)','',''],
+        ...getMonthBuckets('all').map(b=>[b.label, b.count,'']),
+      ];
+      const ws1=XLSX.utils.aoa_to_sheet(summaryData);
+      ws1['!cols']=[{wch:36},{wch:16},{wch:16}];
+      ws1['!merges']=[{s:{r:0,c:0},e:{r:0,c:2}}];
+      // bold the title cell
+      if(ws1['A1']) ws1['A1'].s={font:{bold:true,sz:14,color:{rgb:'8C8B1E'}},alignment:{horizontal:'left'}};
+      XLSX.utils.book_append_sheet(wb,ws1,'Summary');
+
+      /* ===== SHEET 2 : ALL TICKETS ===== */
+      const ticketHeaders=['Ticket ID','Name','Email','Category','Priority','Status','Subject','Details','Created Date','Resolved Date','Resolution Time (hrs)','Satisfaction (1-5)'];
+      const ticketRows=all.map(t=>[
+        t.id,
+        t.name||'',
+        t.email||'',
+        categories.find(c=>c.key===t.cat)?.name||t.cat,
+        t.priority.charAt(0).toUpperCase()+t.priority.slice(1),
+        t.status.charAt(0).toUpperCase()+t.status.slice(1),
+        t.subject,
+        t.detail||'',
+        fmtDate(t.created),
+        t.resolved?fmtDate(t.resolved):'',
+        t.resolved?+((t.resolved-t.created)/3600000).toFixed(2):'',
+        t.sat||'',
+      ]);
+      const ws2=XLSX.utils.aoa_to_sheet([ticketHeaders,...ticketRows]);
+      ws2['!cols']=[{wch:12},{wch:18},{wch:26},{wch:16},{wch:10},{wch:11},{wch:38},{wch:40},{wch:14},{wch:14},{wch:20},{wch:16}];
+      styleHeaderRow(ws2,ticketHeaders);
+      XLSX.utils.book_append_sheet(wb,ws2,'All Tickets');
+
+      /* ===== SHEET 3 : BY CATEGORY ===== */
+      const catHeaders=['Category','Total','Open','Resolved','Pending','Avg Resolution (hrs)','Avg Satisfaction'];
+      const catRows=categories.map(c=>{
+        const ts=all.filter(t=>t.cat===c.key);
+        const rt=ts.filter(t=>t.resolved).map(t=>(t.resolved-t.created)/3600000);
+        const st=ts.filter(t=>t.sat!==null);
+        return [
+          c.name,
+          ts.length,
+          ts.filter(t=>t.status==='open').length,
+          ts.filter(t=>t.status==='resolved').length,
+          ts.filter(t=>t.status==='pending').length,
+          rt.length?+(rt.reduce((a,b)=>a+b,0)/rt.length).toFixed(1):'',
+          st.length?+(st.reduce((a,b)=>a+b.sat,0)/st.length).toFixed(1):'',
+        ];
+      });
+      const ws3=XLSX.utils.aoa_to_sheet([catHeaders,...catRows]);
+      ws3['!cols']=[{wch:18},{wch:8},{wch:8},{wch:10},{wch:10},{wch:22},{wch:18}];
+      styleHeaderRow(ws3,catHeaders);
+      XLSX.utils.book_append_sheet(wb,ws3,'By Category');
+
+      /* ===== SHEET 4 : MONTHLY TREND ===== */
+      const trendHeaders=['Month','Total Tickets','Resolved','Open','Pending'];
+      const trendRows=getMonthBuckets('all').map(b=>{
+        const d=new Date(); // approx bucket filter
+        const mTickets=all.filter(t=>{const td=new Date(t.created);return months[td.getMonth()]===b.label;});
+        return [b.label,b.count,mTickets.filter(t=>t.status==='resolved').length,mTickets.filter(t=>t.status==='open').length,mTickets.filter(t=>t.status==='pending').length];
+      });
+      const ws4=XLSX.utils.aoa_to_sheet([trendHeaders,...trendRows]);
+      ws4['!cols']=[{wch:12},{wch:14},{wch:11},{wch:8},{wch:10}];
+      styleHeaderRow(ws4,trendHeaders);
+      XLSX.utils.book_append_sheet(wb,ws4,'Monthly Trend');
+
+      /* ===== SHEET 5 : SATISFACTION ===== */
+      const satHeaders=['Ticket ID','Name','Category','Subject','Status','Score (1-5)','Resolved Date'];
+      const satRows=all.filter(t=>t.sat!==null).map(t=>[
+        t.id,t.name,categories.find(c=>c.key===t.cat)?.name||t.cat,
+        t.subject,t.status,t.sat,t.resolved?fmtDate(t.resolved):'',
+      ]);
+      const ws5=XLSX.utils.aoa_to_sheet([satHeaders,...satRows]);
+      ws5['!cols']=[{wch:12},{wch:18},{wch:16},{wch:38},{wch:11},{wch:13},{wch:14}];
+      styleHeaderRow(ws5,satHeaders);
+      XLSX.utils.book_append_sheet(wb,ws5,'Satisfaction');
+
+      const filename=`PHB_IT_Report_${new Date().toISOString().slice(0,10)}.xlsx`;
+      XLSX.writeFile(wb,filename);
+      showToast('Excel downloaded: '+filename);
+    } catch(err){
+      console.error(err);
+      showToast('Excel generation failed: '+err.message,'error');
+    } finally{ hideSpinner(); }
+  },80);
+}
 
 function showToast(msg, type='success'){
   const el=document.getElementById('toast');
@@ -1596,7 +2749,7 @@ const howSteps = [
   icon:'<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>'},
  {tag:'Step 03', title:'Rate it helpful', desc:'Tell us if it worked. That feedback keeps the most useful guides easy to find.',
   icon:'<path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14Z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>'},
- {tag:'Step 04', title:'Still stuck? Escalate', desc:"Not resolved? One click sends a ticket straight to the help desk team.",
+ {tag:'Step 04', title:'Still stuck? Escalate', desc:"Not resolved? One click sends a ticket straight to the ITD team.",
   icon:'<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92Z"/>'},
 ];
 
@@ -1633,8 +2786,26 @@ renderCategories();
 renderInfographic();
 renderArticles(articles);
 renderFaq();
-renderDashboard();
-renderReports();
+
+/* show login screen or restore session */
+(function initApp(){
+  renderLoginAccounts();
+  // hide all content sections until logged in
+  ['howitworks','categories','articles','faq','resources'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.style.display='none';
+  });
+  document.getElementById('itAdminSection').style.display='none';
+  document.getElementById('userPortalSection').style.display='none';
+  // check for saved session
+  try{
+    const saved=sessionStorage.getItem('phb_user');
+    if(saved){
+      const u=JSON.parse(saved);
+      document.getElementById('loginScreen').classList.add('hidden');
+      completeLogin(u);
+    }
+  }catch(e){}
+})();
 
 /* fade-up on scroll */
 const obs = new IntersectionObserver(entries=>{
@@ -1674,5 +2845,10 @@ const statsObs = new IntersectionObserver(entries=>{
 const statsEl = document.querySelector('.stats');
 if(statsEl) statsObs.observe(statsEl);
 </script>
+<!-- Download spinner -->
+<div class="dl-spinner" id="dlSpinner">
+  <div class="dl-spinner-ring"></div>
+  <div style="color:#fff;font-size:14px;font-weight:600;font-family:'Inter';" id="dlSpinnerMsg">Generating report…</div>
+</div>
 </body>
 </html>

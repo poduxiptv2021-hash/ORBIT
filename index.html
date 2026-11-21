@@ -1,2890 +1,399 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HelpDesk // IT Knowledge Base</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script src="https://alcdn.msauth.net/browser/2.38.0/js/msal-browser.min.js"></script>
+<html lang="en"><head><meta charset="utf-8"><title>ORBIT – IT HelpDesk Portal | PHB</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@azure/msal-browser@2.38.3/lib/msal-browser.min.js"></script>
 <style>
-:root{
-  --bg:#F4F4EC;
-  --panel:#FFFFFF;
-  --ink:#16161A;
-  --ink-soft:#5C5C52;
-  --line:#E1E1D4;
-  --teal:#C3CE1E;
-  --teal-dark:#8C8B1E;
-  --amber:#F5A623;
-  --coral:#E2574C;
-  --teal-tint:#F6F8D9;
-  --amber-tint:#FDF1DD;
-  --coral-tint:#FBE7E5;
-  --gold-grad: linear-gradient(160deg, #CBD62A 0%, #8C8B1E 100%);
-  --shadow: 0 1px 2px rgba(22,22,26,.05), 0 8px 24px rgba(22,22,26,.07);
-  --radius: 14px;
-  --pattern-opacity: .5;
-}
-[data-theme="dark"]{
-  --bg:#121210;
-  --panel:#1B1B17;
-  --ink:#F3F3EC;
-  --ink-soft:#A8A89C;
-  --line:#33332C;
-  --teal-tint:#23260F;
-  --amber-tint:#2B2310;
-  --coral-tint:#2B1816;
-  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 30px rgba(0,0,0,.45);
-  --pattern-opacity: .14;
-}
-*{box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--ink);
-  font-family:'Inter',sans-serif;
-  -webkit-font-smoothing:antialiased;
-  transition:background .35s ease, color .35s ease;
-  position:relative;
-}
-/* stylish diamond-pattern background, echoing the logo motif */
-body::before{
-  content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
-  background-image:
-    linear-gradient(135deg, transparent 47%, rgba(140,139,30,var(--pattern-opacity)) 47%, rgba(140,139,30,var(--pattern-opacity)) 50%, transparent 50%),
-    linear-gradient(45deg, transparent 47%, rgba(195,206,30,var(--pattern-opacity)) 47%, rgba(195,206,30,var(--pattern-opacity)) 50%, transparent 50%);
-  background-size:64px 64px;
-  background-position:0 0, 0 0;
-  mask-image:radial-gradient(ellipse 80% 60% at 50% 0%, #000 0%, transparent 70%);
-  opacity:.06;
-}
-@media (prefers-reduced-motion: reduce){
-  *{animation-duration:.01ms !important; transition-duration:.01ms !important; scroll-behavior:auto !important;}
-}
-h1,h2,h3,.display{font-family:'Space Grotesk',sans-serif;}
-.mono{font-family:'JetBrains Mono',monospace;}
-a{color:inherit;}
-button{font-family:inherit;}
+:root{--bg:#f5f3ee;--card:#fff;--tx:#1a1a1a;--mut:#666;--bd:#e0ddd6;--pri:#6b7c2e;--prd:#4a5520;--acc:#8fa33a;--soft:#eeede8;--red:#c0392b;--amber:#d4860b;--green:#2e7d32;--sh:0 2px 8px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font:14px/1.5 Inter,system-ui,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh}
+button,input,select,textarea{font:inherit;color:var(--tx)}
+/* ── LOGIN ── */
+#lgn{position:fixed;inset:0;z-index:80;background:var(--bg);display:grid;place-items:center;padding:16px;overflow:auto}
+.lc{background:var(--card);border-radius:20px;padding:36px;width:min(420px,100%);box-shadow:0 8px 40px rgba(0,0,0,.12)}
+.phb-logo{display:block;height:52px;margin:0 auto 20px}
+.lc h1{text-align:center;font-size:22px;font-weight:800;margin-bottom:4px}
+.lc p{text-align:center;color:var(--mut);font-size:13px;margin-bottom:22px}
+.msb{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:13px 16px;border:1.5px solid var(--bd);border-radius:12px;background:var(--soft);cursor:pointer;font-weight:600;font-size:14px;transition:.15s}
+.msb:hover{background:#e8e6e0;border-color:#bbb}
+.ms-grid{display:grid;grid-template-columns:repeat(2,9px);gap:2.5px}
+.ms-grid span{width:9px;height:9px;display:block}
+.or{display:flex;align-items:center;gap:10px;color:var(--mut);font-size:12px;margin:18px 0}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--bd)}
+.demo-list{display:flex;flex-direction:column;gap:8px}
+.demo-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:12px;border:1.5px solid var(--bd);cursor:pointer;transition:.15s;background:var(--card)}
+.demo-item:hover{border-color:var(--pri);background:#f9f8f4}
+.av{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;flex-shrink:0;color:#fff}
+.di-info{flex:1;min-width:0}.di-name{font-weight:600;font-size:13px}.di-email{font-size:11px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.role-pill{padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;white-space:nowrap}
+.rp-it{background:#1a1a1a;color:#fff}.rp-hod{background:var(--pri);color:#fff}.rp-user{background:#e8e4d9;color:#555}
+#lErr{color:var(--red);font-size:12px;margin-top:10px;min-height:16px;text-align:center}
+/* ── SHELL ── */
+#app{display:none;min-height:100vh;flex-direction:column}
+body.auth #lgn{display:none}body.auth #app{display:flex}
+nav{background:var(--tx);color:#fff;padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between;gap:16px;position:sticky;top:0;z-index:30}
+.nav-brand{display:flex;align-items:center;gap:10px}.nav-brand img{height:28px;filter:brightness(10)}
+.nav-brand .orbit{font-size:17px;font-weight:900;letter-spacing:-.3px;color:#fff}.nav-brand .sub{font-size:11px;opacity:.6;margin-top:1px}
+.nav-links{display:flex;gap:2px}
+.nl{border:0;background:none;color:rgba(255,255,255,.65);padding:6px 12px;border-radius:8px;cursor:pointer;font-weight:500;font-size:13px;transition:.15s}
+.nl:hover,.nl.on{background:rgba(255,255,255,.12);color:#fff}
+.nav-right{display:flex;align-items:center;gap:10px}
+.sys-status{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.1);border-radius:99px;padding:4px 10px;font-size:12px;font-weight:500}
+.ss-dot{width:8px;height:8px;border-radius:50%;background:#4caf50}
+.usr-chip{background:rgba(255,255,255,.12);border-radius:99px;padding:4px 12px 4px 4px;display:flex;align-items:center;gap:7px;font-size:12px}
+.ub-av{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:10px;color:#fff}
+.btn-so{border:0;background:none;color:rgba(255,255,255,.5);font-size:12px;cursor:pointer;padding:4px 8px;border-radius:6px}
+.btn-so:hover{color:#fff;background:rgba(255,255,255,.1)}
+/* ── MAIN ── */
+main{flex:1;padding:0 24px 48px;max-width:1100px;width:100%;margin:0 auto}
+/* ── HOME ── */
+.hero-home{padding:40px 0 32px}
+.hero-home h2{font-size:36px;font-weight:900;line-height:1.15;margin-bottom:8px}
+.hero-home h2 span{color:var(--pri)}
+.hero-home p{color:var(--mut);max-width:520px;font-size:15px}
+.search-wrap{position:relative;margin:28px 0 16px}
+.search-wrap input{width:100%;padding:16px 20px 16px 48px;font-size:15px;border:2px solid var(--bd);border-radius:14px;background:var(--card);box-shadow:var(--sh);outline:none;transition:.15s}
+.search-wrap input:focus{border-color:var(--pri)}
+.search-wrap .si{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:18px;color:var(--mut)}
+.search-wrap .sk{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:var(--soft);border:1px solid var(--bd);border-radius:6px;padding:2px 7px;font-size:11px;color:var(--mut)}
+.tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:28px}
+.tag{padding:5px 14px;border:1.5px solid var(--bd);border-radius:99px;font-size:12px;font-weight:500;cursor:pointer;background:var(--card);transition:.15s}
+.tag:hover{border-color:var(--pri);color:var(--pri)}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:36px}
+.stat-c{background:var(--card);border-radius:14px;padding:18px 20px;border:1.5px solid var(--bd)}
+.stat-c .n{font-size:30px;font-weight:900;color:var(--pri)}.stat-c .l{font-size:12px;color:var(--mut);margin-top:2px}
+.section-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.section-hd h3{font-size:17px;font-weight:800}
+.link-sm{font-size:13px;color:var(--pri);cursor:pointer;font-weight:600}
+.guides-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.guide-card{background:var(--card);border-radius:14px;padding:18px;border:1.5px solid var(--bd);cursor:pointer;transition:.15s;display:flex;flex-direction:column;gap:8px}
+.guide-card:hover{border-color:var(--pri);box-shadow:var(--sh)}
+.gc-cat{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--pri)}
+.gc-title{font-size:14px;font-weight:700;line-height:1.3}
+.gc-desc{font-size:12px;color:var(--mut);line-height:1.5}
+.gc-foot{display:flex;align-items:center;justify-content:space-between;margin-top:4px}
+.gc-time{font-size:11px;color:var(--mut)}
+.gc-badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px}
+.verified{background:#e8f5e9;color:var(--green)}
+/* ── TICKET ── */
+.page-hd{padding:28px 0 20px;border-bottom:1px solid var(--bd);margin-bottom:24px}
+.page-hd h2{font-size:24px;font-weight:800}.page-hd p{color:var(--mut);font-size:14px;margin-top:4px}
+.btn{border:1.5px solid var(--bd);background:var(--card);border-radius:10px;padding:9px 16px;cursor:pointer;font-weight:600;font-size:13px;transition:.15s}
+.btn:hover{border-color:var(--pri);color:var(--pri)}
+.btn.p{background:var(--pri);border-color:var(--pri);color:#fff}.btn.p:hover{background:var(--prd);border-color:var(--prd)}
+.btn.d{background:#c0392b;border-color:#c0392b;color:#fff}
+.tickets-wrap{display:flex;flex-direction:column;gap:10px}
+.ticket-row{background:var(--card);border-radius:12px;padding:16px 18px;border:1.5px solid var(--bd);display:flex;align-items:center;gap:14px;cursor:pointer;transition:.15s}
+.ticket-row:hover{border-color:var(--pri);box-shadow:var(--sh)}
+.tc-num{font-size:11px;font-family:ui-monospace,monospace;color:var(--mut);white-space:nowrap}
+.tc-title{font-weight:600;font-size:14px;flex:1;min-width:0}.tc-dept{font-size:12px;color:var(--mut)}
+.tc-meta{font-size:12px;color:var(--mut);white-space:nowrap}
+.pill{display:inline-block;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;white-space:nowrap}
+.sp-open{background:#fff3e0;color:#e65100}.sp-inprog{background:#e3f2fd;color:#1565c0}.sp-resolved{background:#e8f5e9;color:var(--green)}.sp-pending{background:#fce4ec;color:#880e4f}.sp-closed{background:#f5f5f5;color:#555}
+.prio-high{background:#fdecea;color:var(--red)}.prio-med{background:#fff8e1;color:var(--amber)}.prio-low{background:#e8f5e9;color:var(--green)}
+/* ── MODAL ── */
+.md{position:fixed;inset:0;z-index:50;display:none;place-items:center;background:rgba(0,0,0,.45);padding:16px}
+.md.show{display:grid}
+.md>div{background:var(--card);border-radius:18px;width:min(600px,100%);max-height:92vh;overflow:auto;box-shadow:0 24px 60px rgba(0,0,0,.2)}
+.mh{padding:20px 24px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--card);z-index:1}
+.mh h3{font-size:17px;font-weight:800}.mb{padding:22px 24px}
+.in{background:var(--soft);border:1.5px solid var(--bd);border-radius:10px;padding:10px 13px;width:100%;transition:.15s;outline:none}
+.in:focus{border-color:var(--pri);background:#fff}
+label{display:block;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut);margin-bottom:5px}
+.fg{margin-bottom:16px}
+.row{display:flex;gap:10px;flex-wrap:wrap}.row>.fg{flex:1;min-width:140px}
+/* ── DASHBOARD (admin) ── */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:24px}
+.kpi{background:var(--card);border-radius:14px;padding:16px 18px;border:1.5px solid var(--bd);border-top:4px solid var(--c)}
+.kpi small{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}.kpi b{display:block;font-size:28px;font-weight:900;color:var(--c);margin-top:3px}
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px}
+.chart-box{background:var(--card);border-radius:14px;padding:18px;border:1.5px solid var(--bd)}
+.chart-box h4{font-size:13px;font-weight:700;margin-bottom:14px;color:var(--mut)}
+.bar-chart{display:flex;flex-direction:column;gap:9px}
+.bc-row{display:flex;align-items:center;gap:10px;font-size:12px}
+.bc-label{width:110px;text-align:right;flex-shrink:0;color:var(--mut)}
+.bc-track{flex:1;background:var(--soft);border-radius:99px;height:10px;overflow:hidden}
+.bc-fill{height:100%;border-radius:99px;background:var(--pri);transition:.6s}
+.bc-val{width:28px;text-align:right;font-weight:600}
+/* ── GUIDE MODAL ── */
+.guide-body{padding:22px 24px;line-height:1.8;font-size:14px}
+.guide-body h2{font-size:20px;font-weight:800;margin-bottom:6px}
+.guide-body .meta{font-size:12px;color:var(--mut);margin-bottom:20px;display:flex;gap:14px}
+.guide-body h3{font-size:14px;font-weight:700;margin:20px 0 8px;text-transform:uppercase;letter-spacing:.5px;color:var(--pri)}
+.guide-body ol,.guide-body ul{padding-left:20px}
+.guide-body li{margin-bottom:6px}
+.guide-body .alert{background:#fff8e1;border:1px solid #ffe082;border-radius:10px;padding:12px 14px;font-size:13px;margin:14px 0}
+.guide-body code{background:var(--soft);padding:1px 7px;border-radius:5px;font-family:ui-monospace,monospace;font-size:12px}
+/* ── TOAST ── */
+#toast{position:fixed;bottom:20px;right:20px;background:#1a1a1a;color:#fff;padding:12px 18px;border-radius:12px;display:none;z-index:99;box-shadow:var(--sh);font-weight:500;font-size:13px}
+@media(max-width:700px){.stats-row{grid-template-columns:1fr 1fr}.chart-row{grid-template-columns:1fr}nav{padding:0 16px}.nav-links{display:none}main{padding:0 14px 40px}}
+</style></head><body>
 
-/* ---------- status dot system (signature element) ---------- */
-.dot{display:inline-block;width:8px;height:8px;border-radius:50%;flex:none;}
-.dot-op{background:var(--gold-grad); box-shadow:0 0 0 3px var(--teal-tint);}
-.dot-warn{background:var(--amber); box-shadow:0 0 0 3px var(--amber-tint);}
-.dot-crit{background:var(--coral); box-shadow:0 0 0 3px var(--coral-tint);}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
-.dot-live{animation:pulse 2s ease-in-out infinite;}
+<!-- ═══════════════════════ LOGIN ═══════════════════════ -->
+<div id="lgn"><div class="lc">
+<img src="https://www.phb.com.my/clients/asset_E5316276-9983-47F1-A6C2-76D0C7985656/contentms/img/logo/logo-phb.svg" class="phb-logo" alt="PHB" onerror="this.style.display='none'">
+<h1>ORBIT</h1>
+<p>One Repository for IT · Pelaburan Hartanah Berhad</p>
+<button class="msb" onclick="msLogin()">
+ <div class="ms-grid"><span style="background:#f25022"></span><span style="background:#7fba00"></span><span style="background:#00a4ef"></span><span style="background:#ffb900"></span></div>
+ Sign in with Microsoft
+</button>
+<div class="or">or choose a demo account</div>
+<div class="demo-list">
+ <div class="demo-item" onclick="demoLogin('nurhaliza@phb.com.my','Haliza Zainal','IT Admin','it')"><div class="av" style="background:#1a1a1a">HZ</div><div class="di-info"><div class="di-name">Haliza Zainal</div><div class="di-email">nurhaliza@phb.com.my</div></div><span class="role-pill rp-it">IT Admin</span></div>
+ <div class="demo-item" onclick="demoLogin('elizayazmin@phb.com.my','Eliza Yazmin','HOD','hod')"><div class="av" style="background:#6b7c2e">EY</div><div class="di-info"><div class="di-name">Eliza Yazmin</div><div class="di-email">elizayazmin@phb.com.my</div></div><span class="role-pill rp-hod">HOD</span></div>
+ <div class="demo-item" onclick="demoLogin('haq@phb.com.my','Muhammad Haq','IT Staff','it')"><div class="av" style="background:#1565c0">MH</div><div class="di-info"><div class="di-name">Muhammad Haq</div><div class="di-email">haq@phb.com.my</div></div><span class="role-pill rp-it">IT Staff</span></div>
+ <div class="demo-item" onclick="demoLogin('noor.azlin@phb.com.my','Noor Azlin','User','user')"><div class="av" style="background:#2e7d32">NA</div><div class="di-info"><div class="di-name">Noor Azlin</div><div class="di-email">noor.azlin@phb.com.my</div></div><span class="role-pill rp-user">User</span></div>
+ <div class="demo-item" onclick="demoLogin('kumar.nair@phb.com.my','Kumar Nair','User','user')"><div class="av" style="background:#d4860b">KN</div><div class="di-info"><div class="di-name">Kumar Nair</div><div class="di-email">kumar.nair@phb.com.my</div></div><span class="role-pill rp-user">User</span></div>
+</div>
+<div id="lErr"></div>
+</div></div>
 
-/* ---------- top bar ---------- */
-.topbar{
-  position:sticky;top:0;z-index:50;
-  background:var(--bg);
-  opacity:.97;
-  backdrop-filter:blur(10px);
-  border-bottom:1px solid var(--line);
-}
-.topbar-inner{
-  max-width:1180px;margin:0 auto;padding:14px 24px;
-  display:flex;align-items:center;gap:18px;justify-content:space-between;
-}
-.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;letter-spacing:-.01em;}
-.brand-mark{
-  height:30px;width:auto;flex:none;
-}
-.status-pill{
-  display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink-soft);
-  background:var(--panel);border:1px solid var(--line);padding:6px 12px;border-radius:999px;
-}
-
-/* ---------- SharePoint sync badge ---------- */
-.sp-badge{
-  display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;
-  padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:var(--panel);
-}
-.sp-badge .dot{width:7px;height:7px;}
-.sp-badge.sp-live{color:var(--teal-dark);background:var(--teal-tint);border-color:var(--teal);}
-.sp-badge.sp-connecting{color:var(--amber);background:var(--amber-tint);border-color:var(--amber);}
-.sp-badge.sp-connecting .dot{animation:pulse 1.2s ease-in-out infinite;}
-.sp-badge.sp-offline{color:var(--coral);background:var(--coral-tint);border-color:var(--coral);}
-.sp-badge.sp-demo{color:var(--ink-soft);}
-nav.topnav{display:flex;gap:22px;font-size:14px;font-weight:500;color:var(--ink-soft);}
-nav.topnav a{text-decoration:none;transition:color .15s;}
-nav.topnav a:hover{color:var(--ink);}
-.topbar-cta{
-  background:var(--ink);color:#fff;border:none;padding:9px 16px;border-radius:9px;
-  font-size:13.5px;font-weight:600;cursor:pointer;transition:transform .15s, background .15s;
-}
-.topbar-cta:hover{background:var(--gold-grad); color:var(--ink);}
-.theme-toggle{
-  width:36px;height:36px;border-radius:9px;border:1px solid var(--line);background:var(--panel);
-  color:var(--ink-soft);display:flex;align-items:center;justify-content:center;cursor:pointer;
-  flex:none;transition:.15s;
-}
-.theme-toggle:hover{border-color:var(--teal);color:var(--teal-dark);transform:rotate(12deg);}
-.topbar-cta:active{transform:scale(.97);}
-
-/* ---------- hero / console ---------- */
-.hero{max-width:1180px;margin:0 auto;padding:56px 24px 28px;position:relative;overflow:hidden;}
-.hero > *{position:relative;z-index:1;}
-.hero-eyebrow{
-  font-family:'JetBrains Mono';font-size:12px;color:var(--teal-dark);
-  display:flex;align-items:center;gap:8px;margin-bottom:14px;letter-spacing:.02em;
-}
-.hero h1{font-size:clamp(30px,4.2vw,46px);line-height:1.08;margin:0 0 12px;letter-spacing:-.02em;}
-.hero h1 span{
-  background:var(--gold-grad);
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-}
-.hero p.lede{color:var(--ink-soft);font-size:16.5px;max-width:560px;margin:0 0 28px;line-height:1.55;}
-
-/* console search */
-.console{
-  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
-  box-shadow:var(--shadow);padding:6px;
-}
-.console-bar{display:flex;align-items:center;gap:10px;padding:14px 16px;}
-.console-bar svg{flex:none;color:var(--ink-soft);}
-.console-bar input{
-  border:none;outline:none;flex:1;font-size:16px;background:transparent;color:var(--ink);font-family:'Inter';
-}
-.console-bar input::placeholder{color:#9AA7B5;}
-.console-kbd{
-  font-family:'JetBrains Mono';font-size:11px;color:var(--ink-soft);
-  border:1px solid var(--line);border-radius:6px;padding:3px 7px;background:var(--bg);
-}
-.console-suggest{display:flex;flex-wrap:wrap;gap:8px;padding:0 10px 12px;}
-.chip{
-  font-size:12.5px;border:1px solid var(--line);background:var(--bg);color:var(--ink-soft);
-  padding:6px 12px;border-radius:999px;cursor:pointer;transition:.15s;font-weight:500;
-}
-.chip:hover{border-color:var(--teal);color:var(--teal-dark);background:var(--teal-tint);}
-
-/* search results dropdown */
-.results-panel{
-  max-width:1180px;margin:0 auto;padding:0 24px;
-}
-#resultsBox{
-  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
-  box-shadow:var(--shadow);margin-top:10px;overflow:hidden;display:none;
-}
-#resultsBox.show{display:block;}
-.result-row{
-  display:flex;align-items:flex-start;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line);
-  cursor:pointer;transition:background .12s;
-}
-.result-row:last-child{border-bottom:none;}
-.result-row:hover{background:var(--teal-tint);}
-.result-id{font-family:'JetBrains Mono';font-size:11px;color:var(--ink-soft);margin-top:3px;flex:none;width:64px;}
-.result-meta{flex:1;}
-.result-title{font-weight:600;font-size:14.5px;margin-bottom:3px;}
-.result-snip{font-size:13px;color:var(--ink-soft);line-height:1.4;}
-.result-tag{
-  font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--teal-dark);font-weight:700;flex:none;
-}
-.no-results{padding:28px 18px;text-align:center;color:var(--ink-soft);font-size:14px;}
-
-/* ---------- stats strip ---------- */
-.stats{max-width:1180px;margin:34px auto 0;padding:0 24px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
-.stat{
-  background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
-}
-.stat-num{font-family:'Space Grotesk';font-size:24px;font-weight:700;}
-.stat-label{font-size:12.5px;color:var(--ink-soft);margin-top:2px;}
-
-/* ---------- section shell ---------- */
-.section{max-width:1180px;margin:0 auto;padding:64px 24px 0;}
-.section-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:24px;gap:16px;flex-wrap:wrap;}
-.section-head h2{font-size:25px;margin:0;letter-spacing:-.01em;}
-.section-head .sub{color:var(--ink-soft);font-size:14px;}
-
-/* ---------- categories grid ---------- */
-.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
-.cat-card{
-  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px;
-  cursor:pointer;transition:transform .15s, box-shadow .15s, border-color .15s;
-}
-.cat-card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--teal);}
-.cat-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-.cat-icon{
-  width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;
-}
-.cat-card h3{font-size:16.5px;margin:0 0 6px;}
-.cat-card p{font-size:13px;color:var(--ink-soft);margin:0 0 14px;line-height:1.5;}
-.cat-count{font-family:'JetBrains Mono';font-size:11.5px;color:var(--ink-soft);display:flex;align-items:center;gap:6px;}
-
-/* ---------- articles ---------- */
-.article-list{display:flex;flex-direction:column;gap:10px;}
-.article-card{
-  background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
-  display:flex;align-items:center;gap:16px;cursor:pointer;transition:.15s;
-}
-.article-card:hover{border-color:var(--teal);box-shadow:var(--shadow);}
-.article-id{
-  font-family:'JetBrains Mono';font-size:11px;color:var(--teal-dark);background:var(--teal-tint);
-  padding:4px 8px;border-radius:6px;flex:none;
-}
-.article-icon{
-  flex:none;width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;
-}
-.article-body{flex:1;min-width:0;}
-.article-title{font-weight:600;font-size:14.5px;margin-bottom:3px;}
-.article-desc{font-size:13px;color:var(--ink-soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.article-cat{
-  font-size:11px;font-weight:600;color:var(--ink-soft);border:1px solid var(--line);padding:4px 9px;border-radius:999px;flex:none;
-}
-.severity{flex:none;display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ink-soft);}
-.chevron{flex:none;color:var(--ink-soft);transition:transform .15s;}
-
-.hidden{display:none !important;}
-
-/* ---------- infographic ---------- */
-.infographic{
-  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
-  padding:32px 28px 28px;box-shadow:var(--shadow);
-}
-.info-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative;}
-.info-step{position:relative;padding:0 18px;text-align:left;}
-.info-step:not(:last-child)::after{
-  content:'';position:absolute;top:27px;left:calc(50% + 46px);width:calc(100% - 46px);height:2px;
-  background:repeating-linear-gradient(90deg, var(--line) 0 6px, transparent 6px 11px);
-}
-.info-num{
-  width:54px;height:54px;border-radius:14px;background:var(--teal-tint);border:1px solid var(--teal);
-  display:flex;align-items:center;justify-content:center;margin-bottom:16px;position:relative;z-index:1;
-}
-.info-num svg{display:block;}
-.info-step h4{font-family:'Space Grotesk';font-size:15px;margin:0 0 6px;}
-.info-step p{font-size:12.5px;color:var(--ink-soft);line-height:1.5;margin:0;}
-.info-tag{
-  font-family:'JetBrains Mono';font-size:10.5px;color:var(--teal-dark);letter-spacing:.04em;
-  text-transform:uppercase;margin-bottom:6px;display:block;
-}
-@media (max-width:820px){
-  .info-steps{grid-template-columns:1fr 1fr;row-gap:28px;}
-  .info-step:not(:last-child)::after{display:none;}
-}
-@media (max-width:520px){
-  .info-steps{grid-template-columns:1fr;}
-}
-.faq-list{display:flex;flex-direction:column;gap:10px;}
-.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
-.faq-q{
-  padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;
-  cursor:pointer;font-weight:600;font-size:14.5px;
-}
-.faq-plus{flex:none;width:22px;height:22px;border-radius:6px;background:var(--bg);display:flex;align-items:center;justify-content:center;transition:transform .2s;color:var(--ink-soft);font-size:16px;}
-.faq-item.open .faq-plus{transform:rotate(45deg);background:var(--teal-tint);color:var(--teal-dark);}
-.faq-a{max-height:0;overflow:hidden;transition:max-height .25s ease;}
-.faq-a-inner{padding:0 18px 18px;color:var(--ink-soft);font-size:13.5px;line-height:1.65;}
-
-/* ---------- resources ---------- */
-.res-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
-.res-card{
-  background:#16161A;color:#fff;border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:10px;
-  text-decoration:none;transition:transform .15s;
-}
-.res-card:hover{transform:translateY(-3px);}
-.res-card.alt{background:var(--panel);color:var(--ink);border:1px solid var(--line);}
-.res-icon{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;}
-.res-card.alt .res-icon{background:var(--teal-tint);}
-.res-card h4{margin:0;font-size:15px;font-family:'Space Grotesk';}
-.res-card p{margin:0;font-size:12.5px;opacity:.75;line-height:1.45;}
-.res-arrow{margin-top:auto;font-size:12px;font-family:'JetBrains Mono';opacity:.8;}
-
-/* ---------- footer ---------- */
-footer{margin-top:80px;border-top:1px solid var(--line);padding:32px 24px 40px;}
-.footer-inner{max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
-.footer-inner p{font-size:12.5px;color:var(--ink-soft);margin:0;}
-
-/* ---------- article modal ---------- */
-.overlay{
-  position:fixed;inset:0;background:rgba(20,26,33,.55);backdrop-filter:blur(2px);
-  display:none;align-items:flex-start;justify-content:center;z-index:100;padding:48px 18px;overflow-y:auto;
-}
-.overlay.show{display:flex;}
-.modal{
-  background:var(--panel);border-radius:18px;max-width:680px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.25);
-  animation:modalIn .2s ease;
-}
-@keyframes modalIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
-.modal-head{padding:24px 28px 16px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;justify-content:space-between;gap:14px;}
-.modal-icon{flex:none;width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;}
-.modal-head-left{flex:1;min-width:0;}
-.modal-head-left .article-id{margin-bottom:10px;display:inline-block;}
-.modal-head h2{margin:0;font-size:21px;line-height:1.3;}
-.modal-close{
-  flex:none;width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:var(--bg);
-  cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink-soft);
-}
-.modal-close:hover{background:var(--coral-tint);color:var(--coral);border-color:var(--coral);}
-.modal-body{padding:22px 28px 28px;font-size:14.5px;line-height:1.75;color:var(--ink);}
-.article-hero{
-  margin:0 -28px 20px;padding:26px 28px;
-  display:flex;align-items:center;justify-content:center;
-}
-.article-hero svg{max-width:100%;height:auto;}
-.modal-body h4{font-family:'Space Grotesk';font-size:14px;margin:18px 0 10px;color:var(--teal-dark);}
-.step-list{list-style:none;margin:0 0 16px;padding:0;counter-reset:step;}
-.step-list li{
-  counter-increment:step;position:relative;padding:0 0 18px 40px;margin:0;
-}
-.step-list li:last-child{padding-bottom:2px;}
-.step-list li::before{
-  content:counter(step);font-family:'JetBrains Mono';font-weight:600;font-size:12.5px;
-  position:absolute;left:0;top:0;width:26px;height:26px;border-radius:50%;
-  background:var(--teal-tint);color:var(--teal-dark);border:1px solid var(--teal);
-  display:flex;align-items:center;justify-content:center;z-index:1;
-}
-.step-list li::after{
-  content:'';position:absolute;left:13px;top:26px;bottom:0;width:1px;background:var(--line);
-}
-.step-list li:last-child::after{display:none;}
-.modal-body ul{margin:0 0 12px;padding-left:20px;}
-.modal-body li{margin-bottom:6px;}
-.modal-body code{font-family:'JetBrains Mono';background:var(--bg);padding:2px 6px;border-radius:5px;font-size:12.5px;}
-.modal-tags{display:flex;gap:8px;padding:0 28px 22px;flex-wrap:wrap;}
-.modal-tags span{font-size:11px;background:var(--bg);border:1px solid var(--line);padding:4px 10px;border-radius:999px;color:var(--ink-soft);}
-.modal-foot{padding:16px 28px 26px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;}
-.helpful{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--ink-soft);}
-.helpful button{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:13px;}
-.helpful button:hover{border-color:var(--teal);color:var(--teal-dark);}
-
-/* scroll-fade-in */
-.fade-up{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease;}
-.fade-up.in{opacity:1;transform:translateY(0);}
-
-/* ---------- focus ---------- */
-a:focus-visible, button:focus-visible, .cat-card:focus-visible, .article-card:focus-visible, .faq-q:focus-visible, input:focus-visible{
-  outline:2px solid var(--teal); outline-offset:2px;
-}
-
-/* ---------- responsive ---------- */
-@media (max-width:900px){
-  .cat-grid{grid-template-columns:repeat(2,1fr);}
-  .stats{grid-template-columns:repeat(2,1fr);}
-  .res-grid{grid-template-columns:repeat(2,1fr);}
-  nav.topnav{display:none;}
-}
-@media (max-width:560px){
-  .cat-grid{grid-template-columns:1fr;}
-  .res-grid{grid-template-columns:1fr;}
-  .article-cat{display:none;}
-  .severity{display:none;}
-}
-
-/* ===================== DASHBOARD ===================== */
-#dashboard,#reports{background:transparent;}
-.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
-.kpi{
-  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;
-  position:relative;overflow:hidden;
-}
-.kpi::after{
-  content:'';position:absolute;right:-14px;top:-14px;width:72px;height:72px;border-radius:50%;
-  background:var(--kpi-color,var(--teal-tint));opacity:.35;
-}
-.kpi-label{font-size:12px;color:var(--ink-soft);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;}
-.kpi-val{font-family:'Space Grotesk';font-size:32px;font-weight:700;line-height:1;}
-.kpi-delta{font-size:12px;margin-top:6px;font-weight:600;}
-.kpi-delta.up{color:#4CAF50;} .kpi-delta.down{color:var(--coral);}
-.dash-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;align-items:start;}
-.dash-panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
-.dash-panel-head{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:8px;}
-.dash-panel-head h3{font-size:14px;margin:0;font-family:'Space Grotesk';}
-.dash-panel-head .badge{font-size:11px;background:var(--teal-tint);color:var(--teal-dark);padding:3px 8px;border-radius:999px;font-weight:600;}
-.ticket-table{width:100%;border-collapse:collapse;font-size:13px;}
-.ticket-table th{text-align:left;padding:10px 18px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);border-bottom:1px solid var(--line);font-weight:600;background:var(--bg);}
-.ticket-table td{padding:11px 18px;border-bottom:1px solid var(--line);vertical-align:middle;}
-.ticket-table tr:last-child td{border-bottom:none;}
-.ticket-table tr:hover td{background:var(--teal-tint);}
-.t-status{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:999px;}
-.t-open{background:var(--amber-tint);color:#996600;}
-.t-resolved{background:var(--teal-tint);color:var(--teal-dark);}
-.t-pending{background:var(--coral-tint);color:var(--coral);}
-.act-list{padding:0 0 4px;}
-.act-row{display:flex;align-items:flex-start;gap:11px;padding:11px 18px;border-bottom:1px solid var(--line);}
-.act-row:last-child{border-bottom:none;}
-.act-dot{width:8px;height:8px;border-radius:50%;flex:none;margin-top:5px;}
-.act-text{font-size:13px;flex:1;line-height:1.4;}
-.act-time{font-size:11px;color:var(--ink-soft);font-family:'JetBrains Mono';flex:none;margin-top:2px;}
-/* category bar mini chart */
-.cat-bars{padding:14px 18px;display:flex;flex-direction:column;gap:10px;}
-.cat-bar-row{display:flex;align-items:center;gap:10px;font-size:12.5px;}
-.cat-bar-label{width:110px;color:var(--ink-soft);flex:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.cat-bar-track{flex:1;height:10px;background:var(--line);border-radius:999px;overflow:hidden;}
-.cat-bar-fill{height:100%;border-radius:999px;background:var(--gold-grad);transition:width .7s cubic-bezier(.4,0,.2,1);}
-.cat-bar-count{width:22px;text-align:right;color:var(--ink-soft);flex:none;font-family:'JetBrains Mono';font-size:11.5px;}
-
-/* ===================== REPORTS ===================== */
-.report-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
-.chart-box{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
-.chart-box-head{padding:14px 18px 10px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;}
-.chart-box-head h3{font-size:14px;margin:0;font-family:'Space Grotesk';}
-.chart-box-head select{font-size:12px;border:1px solid var(--line);border-radius:7px;padding:4px 8px;background:var(--bg);color:var(--ink);cursor:pointer;}
-.chart-area{padding:18px;}
-.bar-chart{display:flex;align-items:flex-end;gap:10px;height:160px;}
-.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;}
-.bar-seg{width:100%;border-radius:6px 6px 0 0;transition:height .6s cubic-bezier(.4,0,.2,1);}
-.bar-xlbl{font-size:10.5px;color:var(--ink-soft);font-family:'JetBrains Mono';text-align:center;}
-.bar-val{font-size:11px;color:var(--ink-soft);font-family:'JetBrains Mono';}
-/* donut chart */
-.donut-wrap{display:flex;align-items:center;gap:22px;padding:18px;}
-.donut-legend{display:flex;flex-direction:column;gap:10px;flex:1;}
-.legend-row{display:flex;align-items:center;gap:8px;font-size:12.5px;}
-.legend-dot{width:10px;height:10px;border-radius:3px;flex:none;}
-/* line sparkline */
-.sparkline-svg{display:block;width:100%;height:100px;}
-/* report table */
-.report-full{grid-column:span 2;}
-.report-table{width:100%;border-collapse:collapse;font-size:12.5px;}
-.report-table th{text-align:left;padding:9px 16px;background:var(--bg);border-bottom:1px solid var(--line);font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft);}
-.report-table td{padding:10px 16px;border-bottom:1px solid var(--line);}
-.report-table tr:last-child td{border-bottom:none;}
-.report-table tr:hover td{background:var(--teal-tint);}
-.progress-bar{height:7px;background:var(--line);border-radius:999px;overflow:hidden;}
-.progress-fill{height:100%;border-radius:999px;background:var(--gold-grad);}
-
-/* ===================== NEW TICKET MODAL ===================== */
-.ticket-modal{
-  background:var(--panel);border-radius:18px;max-width:520px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.25);
-  animation:modalIn .2s ease;
-}
-.tm-head{padding:22px 26px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;}
-.tm-head h3{margin:0;font-size:18px;font-family:'Space Grotesk';}
-.tm-body{padding:20px 26px 24px;display:flex;flex-direction:column;gap:14px;}
-.tm-field label{display:block;font-size:12px;font-weight:600;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px;}
-.tm-field input,.tm-field select,.tm-field textarea{
-  width:100%;border:1px solid var(--line);border-radius:9px;padding:10px 13px;font-size:14px;
-  background:var(--bg);color:var(--ink);font-family:'Inter';outline:none;transition:.15s;
-}
-.tm-field input:focus,.tm-field select:focus,.tm-field textarea:focus{border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-tint);}
-.tm-field textarea{min-height:90px;resize:vertical;}
-.tm-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.tm-foot{padding:0 26px 24px;display:flex;gap:10px;justify-content:flex-end;}
-.btn-primary{background:var(--ink);color:#fff;border:none;padding:10px 20px;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;transition:.15s;}
-.btn-primary:hover{background:var(--gold-grad);color:var(--ink);}
-.btn-ghost{background:transparent;border:1px solid var(--line);color:var(--ink-soft);padding:10px 18px;border-radius:9px;font-size:14px;cursor:pointer;}
-.btn-ghost:hover{border-color:var(--ink);}
-.toast{
-  position:fixed;bottom:28px;right:28px;z-index:200;background:var(--ink);color:#fff;
-  padding:13px 18px;border-radius:12px;font-size:13.5px;font-weight:500;display:flex;align-items:center;gap:10px;
-  box-shadow:0 8px 24px rgba(0,0,0,.3);transform:translateY(80px);opacity:0;transition:all .3s ease;
-}
-.toast.show{transform:translateY(0);opacity:1;}
-.toast-icon{width:22px;height:22px;border-radius:6px;background:var(--teal-tint);display:flex;align-items:center;justify-content:center;}
-@media(max-width:900px){.dash-grid,.report-grid{grid-template-columns:1fr;}.kpi-grid{grid-template-columns:repeat(2,1fr);}.report-full{grid-column:span 1;}}
-
-/* -------- download buttons -------- */
-.dl-btn{
-  display:inline-flex;align-items:center;gap:7px;padding:8px 15px;border-radius:9px;
-  font-size:13px;font-weight:600;border:1.5px solid;cursor:pointer;transition:.15s;font-family:'Inter';
-}
-.dl-btn:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(0,0,0,.12);}
-.dl-btn:active{transform:translateY(0);}
-.dl-pdf{background:#fff3f2;color:#c0392b;border-color:#e74c3c;}
-.dl-pdf:hover{background:#e74c3c;color:#fff;}
-.dl-excel{background:#f0fff4;color:#1a7a3d;border-color:#27ae60;}
-.dl-excel:hover{background:#27ae60;color:#fff;}
-[data-theme="dark"] .dl-pdf{background:#2b1816;color:#ff7675;}
-[data-theme="dark"] .dl-excel{background:#0d2b18;color:#55efc4;}
-/* spinner overlay */
-.dl-spinner{
-  position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.45);backdrop-filter:blur(3px);
-  display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;
-}
-.dl-spinner.show{display:flex;}
-.dl-spinner-ring{
-  width:52px;height:52px;border:4px solid rgba(195,206,30,.25);border-top-color:#C3CE1E;
-  border-radius:50%;animation:spin .7s linear infinite;
-}
-@keyframes spin{to{transform:rotate(360deg);}}
-
-/* =====================================================================
-   LOGIN / SSO SCREEN
-   ===================================================================== */
-#loginScreen{
-  position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(135deg,#16161A 0%,#2a2a1a 60%,#16161A 100%);
-}
-#loginScreen.hidden{display:none;}
-.login-card{
-  background:var(--panel);border-radius:20px;padding:44px 40px 36px;max-width:400px;width:90%;
-  box-shadow:0 24px 72px rgba(0,0,0,.55);position:relative;overflow:hidden;
-}
-.login-card::before{
-  content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;
-  background:radial-gradient(circle,rgba(195,206,30,.15) 0%,transparent 70%);pointer-events:none;
-}
-.login-logo{display:flex;justify-content:center;margin-bottom:28px;}
-.login-logo img{height:44px;}
-.login-title{font-family:'Space Grotesk';font-size:22px;font-weight:700;text-align:center;margin:0 0 4px;}
-.login-sub{font-size:13px;color:var(--ink-soft);text-align:center;margin:0 0 28px;}
-.login-divider{display:flex;align-items:center;gap:10px;margin:20px 0;color:var(--ink-soft);font-size:12px;}
-.login-divider::before,.login-divider::after{content:'';flex:1;height:1px;background:var(--line);}
-.ms-btn{
-  width:100%;display:flex;align-items:center;justify-content:center;gap:12px;
-  padding:13px 18px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);
-  font-size:14.5px;font-weight:600;cursor:pointer;transition:.15s;color:var(--ink);font-family:'Inter';
-}
-.ms-btn:hover{border-color:#0078d4;background:#f0f7ff;box-shadow:0 3px 12px rgba(0,120,212,.15);}
-.ms-logo{width:20px;height:20px;flex:none;}
-/* account picker (step 2 of SSO flow) */
-#accountPicker{display:none;}
-#accountPicker.show{display:block;}
-.acc-list{display:flex;flex-direction:column;gap:8px;margin-top:12px;}
-.acc-item{
-  display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;border:1.5px solid var(--line);
-  cursor:pointer;transition:.15s;background:var(--bg);
-}
-.acc-item:hover{border-color:var(--teal);background:var(--teal-tint);}
-.acc-avatar{
-  width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  font-weight:700;font-size:14px;color:#fff;flex:none;
-}
-.acc-info .acc-name{font-weight:600;font-size:14px;}
-.acc-info .acc-role{font-size:11.5px;color:var(--ink-soft);}
-.acc-badge{margin-left:auto;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:999px;}
-.badge-it{background:#16161A;color:#C3CE1E;}
-.badge-hod{background:var(--gold-grad);color:#fff;}
-.badge-user{background:var(--teal-tint);color:var(--teal-dark);}
-/* auth loading */
-#authLoading{display:none;text-align:center;padding:18px 0;}
-#authLoading.show{display:block;}
-.auth-steps{display:flex;flex-direction:column;gap:8px;margin-top:14px;text-align:left;}
-.auth-step{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink-soft);}
-.auth-step.done{color:var(--ink);}
-.auth-step-icon{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none;}
-
-/* =====================================================================
-   ROLE-BASED TOPBAR USER AREA
-   ===================================================================== */
-.user-chip{
-  display:flex;align-items:center;gap:9px;padding:6px 12px 6px 6px;
-  border:1px solid var(--line);border-radius:999px;background:var(--panel);cursor:pointer;
-  position:relative;
-}
-.user-chip-avatar{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex:none;}
-.user-chip-name{font-size:13px;font-weight:600;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.user-chip-role{font-size:10px;color:var(--ink-soft);}
-.user-dropdown{
-  position:absolute;top:calc(100% + 8px);right:0;min-width:200px;
-  background:var(--panel);border:1px solid var(--line);border-radius:12px;
-  box-shadow:var(--shadow);padding:6px;z-index:100;display:none;
-}
-.user-chip:focus-within .user-dropdown,.user-dropdown.open{display:block;}
-.ud-item{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:8px;font-size:13px;cursor:pointer;}
-.ud-item:hover{background:var(--teal-tint);}
-.ud-item svg{color:var(--ink-soft);}
-.ud-sep{height:1px;background:var(--line);margin:4px 0;}
-.role-pill{
-  font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px;letter-spacing:.03em;
-  text-transform:uppercase;
-}
-
-/* =====================================================================
-   VIEW TOGGLE (IT vs USER)
-   ===================================================================== */
-.view-only-it{display:none;}
-.view-only-hod{display:none;}
-.view-only-user{display:none;}
-body.role-hod .view-only-it,.body.role-hod .view-only-hod,
-body.role-hod .view-only-it{display:block;}
-body.role-hod .view-only-hod{display:block;}
-body.role-it .view-only-it{display:block;}
-
-/* =====================================================================
-   HOD — DEPARTMENT STRUCTURE
-   ===================================================================== */
-.dept-header-bar{
-  background:linear-gradient(135deg,#16161A 0%,#2a2a1a 100%);
-  border-radius:var(--radius);padding:28px 32px;margin-bottom:20px;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;
-}
-.dept-header-bar h3{color:#fff;font-family:'Space Grotesk';font-size:20px;margin:0;}
-.dept-header-bar p{color:rgba(255,255,255,.6);font-size:13px;margin:4px 0 0;}
-.dept-stats{display:flex;gap:20px;flex-wrap:wrap;}
-.dept-stat{text-align:center;}
-.dept-stat .n{font-family:'Space Grotesk';font-size:28px;font-weight:700;color:#C3CE1E;}
-.dept-stat .l{font-size:11px;color:rgba(255,255,255,.55);margin-top:2px;}
-.dept-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px;}
-.dept-function{
-  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
-  overflow:hidden;transition:.15s;
-}
-.dept-function:hover{border-color:var(--teal);box-shadow:var(--shadow);}
-.dept-fn-head{padding:16px 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line);}
-.dept-fn-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none;}
-.dept-fn-title{font-family:'Space Grotesk';font-size:14.5px;font-weight:700;}
-.dept-fn-lead{font-size:11.5px;color:var(--ink-soft);margin-top:2px;}
-.dept-fn-body{padding:14px 18px;}
-.dept-roles{display:flex;flex-direction:column;gap:7px;}
-.dept-role-row{display:flex;align-items:center;justify-content:space-between;font-size:12.5px;}
-.dept-role-name{color:var(--ink-soft);}
-.dept-role-count{
-  font-family:'JetBrains Mono';font-size:11px;background:var(--teal-tint);
-  color:var(--teal-dark);padding:2px 7px;border-radius:999px;
-}
-.dept-fn-footer{padding:10px 18px;border-top:1px solid var(--line);background:var(--bg);}
-.dept-fn-footer .prog{height:5px;background:var(--line);border-radius:999px;overflow:hidden;margin-top:5px;}
-.dept-fn-footer .prog-fill{height:100%;border-radius:999px;background:var(--gold-grad);}
-
-/* org chart strip */
-.org-chart{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:24px;margin-bottom:16px;}
-.org-chart h4{font-family:'Space Grotesk';font-size:15px;margin:0 0 20px;}
-.org-root{display:flex;flex-direction:column;align-items:center;}
-.org-node{
-  background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:10px 16px;
-  text-align:center;min-width:130px;position:relative;
-}
-.org-node.hod{background:linear-gradient(135deg,#16161A,#2a2a1a);color:#fff;border-color:#C3CE1E;}
-.org-node.lead{background:var(--teal-tint);border-color:var(--teal);}
-.org-node .n{font-weight:700;font-size:13px;}
-.org-node .r{font-size:10.5px;opacity:.75;margin-top:2px;}
-.org-line{width:2px;height:20px;background:var(--line);margin:0 auto;}
-.org-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
-.org-col{display:flex;flex-direction:column;align-items:center;}
-.org-branch{display:flex;align-items:flex-start;gap:0;position:relative;}
-.org-branch::before{
-  content:'';position:absolute;top:0;left:50px;right:50px;height:2px;background:var(--line);
-}
-
-/* =====================================================================
-   USER PORTAL (self-service view)
-   ===================================================================== */
-.user-portal-hero{
-  background:linear-gradient(135deg,#16161A 0%,#2a2a1a 100%);
-  padding:40px 32px;border-radius:var(--radius);margin-bottom:24px;position:relative;overflow:hidden;
-}
-.user-portal-hero::after{
-  content:'';position:absolute;right:-40px;top:-40px;width:220px;height:220px;border-radius:50%;
-  background:radial-gradient(circle,rgba(195,206,30,.18) 0%,transparent 70%);
-}
-.user-portal-hero h2{color:#fff;font-family:'Space Grotesk';font-size:26px;margin:0 0 6px;}
-.user-portal-hero p{color:rgba(255,255,255,.65);font-size:14px;margin:0 0 20px;}
-.user-hero-search{
-  display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.1);
-  border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:10px 14px;
-  backdrop-filter:blur(4px);
-}
-.user-hero-search input{
-  flex:1;border:none;outline:none;background:transparent;color:#fff;font-size:14.5px;font-family:'Inter';
-}
-.user-hero-search input::placeholder{color:rgba(255,255,255,.45);}
-.user-hero-search button{
-  background:#C3CE1E;color:#16161A;border:none;border-radius:7px;padding:8px 16px;
-  font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;
-}
-/* my tickets */
-.my-ticket-card{
-  background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
-  display:flex;align-items:center;gap:14px;margin-bottom:10px;
-}
-.my-ticket-card:hover{border-color:var(--teal);}
-.mt-id{font-family:'JetBrains Mono';font-size:11px;color:var(--teal-dark);background:var(--teal-tint);padding:4px 8px;border-radius:6px;flex:none;}
-.mt-body{flex:1;min-width:0;}
-.mt-subj{font-weight:600;font-size:14px;}
-.mt-meta{font-size:12px;color:var(--ink-soft);margin-top:3px;}
-
-/* =====================================================================
-   RESPONSIVE ADJUSTMENTS
-   ===================================================================== */
-@media(max-width:900px){
-  .dept-grid{grid-template-columns:1fr 1fr;}
-  .org-row{gap:6px;}
-}
-@media(max-width:600px){
-  .dept-grid{grid-template-columns:1fr;}
-  .login-card{padding:32px 24px 26px;}
-}
-</style>
-</head>
-<body>
-
-<!-- ============ LOGIN SCREEN (SSO) ============ -->
-<div id="loginScreen">
-  <div class="login-card">
-    <div class="login-logo"><img src="https://www.phb.com.my/clients/asset_E5316276-9983-47F1-A6C2-76D0C7985656/contentms/img/logo/logo-phb.svg" alt="PHB"></div>
-    <div class="login-title">IT HelpDesk Portal</div>
-    <p class="login-sub">Pelaburan Hartanah Berhad · Secure Access</p>
-
-    <!-- Step 1: SSO button -->
-    <div id="ssoStep1">
-      <button class="ms-btn" onclick="startSSO()">
-        <svg class="ms-logo" viewBox="0 0 21 21" fill="none">
-          <rect x="1" y="1" width="9" height="9" fill="#F25022"/>
-          <rect x="11" y="1" width="9" height="9" fill="#7FBA00"/>
-          <rect x="1" y="11" width="9" height="9" fill="#00A4EF"/>
-          <rect x="11" y="11" width="9" height="9" fill="#FFB900"/>
-        </svg>
-        Sign in with Microsoft
-      </button>
-      <div class="login-divider">or choose a demo account</div>
-      <div class="acc-list" id="quickAccounts"></div>
-    </div>
-
-    <!-- Step 2: Auth loading -->
-    <div id="authLoading">
-      <div style="display:flex;justify-content:center;">
-        <div class="dl-spinner-ring" style="border-color:rgba(195,206,30,.2);border-top-color:#C3CE1E;"></div>
-      </div>
-      <div style="font-weight:600;font-size:14px;margin:14px 0 4px;text-align:center;" id="authUser"></div>
-      <div class="auth-steps" id="authSteps"></div>
-    </div>
-  </div>
+<!-- ═══════════════════════ APP SHELL ═══════════════════════ -->
+<div id="app">
+<nav>
+ <div class="nav-brand">
+  <img src="https://www.phb.com.my/clients/asset_E5316276-9983-47F1-A6C2-76D0C7985656/contentms/img/logo/logo-phb.svg" alt="PHB" onerror="this.style.display='none'">
+  <div><div class="orbit">ORBIT</div><div class="sub">One Repository for IT</div></div>
+ </div>
+ <div class="nav-links">
+  <button class="nl on" onclick="nav('home')">Home</button>
+  <button class="nl" onclick="nav('tickets')">Tickets</button>
+  <button class="nl" onclick="nav('guides')">Articles</button>
+  <button class="nl" onclick="nav('faq')">FAQ</button>
+  <button class="nl" id="navDash" onclick="nav('dash')" style="display:none">Dashboard</button>
+ </div>
+ <div class="nav-right">
+  <div class="sys-status"><span class="ss-dot"></span>All systems operational</div>
+  <div class="usr-chip"><div class="ub-av" id="navAv"></div><span id="navName"></span></div>
+  <button class="btn-so" onclick="signOut()">Sign out</button>
+ </div>
+</nav>
+<main id="mainArea"></main>
 </div>
 
-<!-- ============ TOP BAR ============ -->
-<div class="topbar">
-  <div class="topbar-inner">
-    <div class="brand"><img class="brand-mark" src="https://www.phb.com.my/clients/asset_E5316276-9983-47F1-A6C2-76D0C7985656/contentms/img/logo/logo-phb.svg" alt="PHB"> <span style="margin-left:2px;" id="portalTitle">ORBIT <i>One Repository for IT</i></span></div>
-    <nav class="topnav" id="mainNav"></nav>
-    <div style="display:flex;align-items:center;gap:10px;">
-      <div class="status-pill"><span class="dot dot-op dot-live"></span>All systems operational</div>
-      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
-        <svg id="themeIconSun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
-        <svg id="themeIconMoon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
-      </button>
-      <div class="user-chip" id="userChip" style="display:none;" tabindex="0" onclick="document.getElementById('userDropdown').classList.toggle('open')">
-        <div class="user-chip-avatar" id="chipAvatar"></div>
-        <div><div class="user-chip-name" id="chipName"></div><div class="user-chip-role" id="chipRole"></div></div>
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
-        <div class="user-dropdown" id="userDropdown">
-          <div class="ud-item" onclick="showProfile()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>My Profile</div>
-          <div class="ud-sep"></div>
-          <div class="ud-item" onclick="logout()" style="color:var(--coral);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out</div>
-        </div>
-      </div>
-      <button class="topbar-cta" id="topCta" style="display:none;" onclick="openNewTicket()">+ New Ticket</button>
-    </div>
-  </div>
-</div>
+<!-- ═══════════════════════ MODALS ═══════════════════════ -->
+<!-- New Ticket -->
+<div class="md" id="ticketM"><div>
+<div class="mh"><h3>Submit a ticket</h3><button class="btn" onclick="hide('ticketM')">✕</button></div>
+<div class="mb">
+ <div class="fg"><label>Subject *</label><input class="in" id="tk1" placeholder="Brief description of your issue"></div>
+ <div class="row">
+  <div class="fg"><label>Category *</label><select class="in" id="tk2"><option value="">Select…</option><option>Hardware</option><option>Software</option><option>Network / VPN</option><option>Account & Access</option><option>Email</option><option>Security</option><option>Other</option></select></div>
+  <div class="fg"><label>Priority</label><select class="in" id="tk3"><option>Low</option><option>Medium</option><option>High</option><option>Critical</option></select></div>
+ </div>
+ <div class="fg"><label>Description *</label><textarea class="in" id="tk4" rows="4" placeholder="Steps to reproduce, error messages, what you've already tried…"></textarea></div>
+ <div class="fg"><label>Department</label><input class="in" id="tk5" placeholder="Your department"></div>
+ <div class="row" style="justify-content:flex-end;margin-top:4px"><button class="btn" onclick="hide('ticketM')">Cancel</button><button class="btn p" onclick="submitTicket()">Submit ticket</button></div>
+</div></div></div>
 
-<!-- ============ HERO / SEARCH CONSOLE ============ -->
-<div class="hero">
-  <!-- <div class="hero-eyebrow">&gt; diagnostic console ready</div> -->
-  <h1>Fix it yourself in <span>under 5 minutes.</span></h1>
- <!--  <p class="lede">Search 24 verified guides covering hardware, software, network, accounts, email and security — written by the IT team, kept current, no jargon.</p> -->
+<!-- Ticket Detail -->
+<div class="md" id="ticketDetailM"><div>
+<div class="mh"><h3 id="tdTitle">Ticket</h3><button class="btn" onclick="hide('ticketDetailM')">✕</button></div>
+<div id="tdBody" class="mb"></div>
+</div></div>
 
-  <div class="console">
-    <div class="console-bar">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input id="searchInput" type="text" placeholder="Describe your issue — e.g. “wifi keeps disconnecting”" autocomplete="off">
-      <span class="console-kbd">/</span>
-    </div>
-    <div class="console-suggest">
-      <button class="chip" data-q="vpn">VPN won't connect</button>
-      <button class="chip" data-q="password reset">Reset password</button>
-      <button class="chip" data-q="printer">Printer offline</button>
-      <button class="chip" data-q="slow">Computer running slow</button>
-      <button class="chip" data-q="email">Email not syncing</button>
-      <button class="chip" data-q="mfa">MFA / 2FA setup</button>
-    </div>
-  </div>
-</div>
+<!-- Guide Modal -->
+<div class="md" id="guideM"><div>
+<div class="mh"><h3 id="gmTitle">Guide</h3><button class="btn" onclick="hide('guideM')">✕</button></div>
+<div id="gmBody"></div>
+</div></div>
 
-<div class="results-panel">
-  <div id="resultsBox"></div>
-</div>
-
-<!-- ============ STATS ============ -->
-<div class="stats">
-  <div class="stat"><div class="stat-num mono">24</div><div class="stat-label">Self-service guides</div></div>
-  <div class="stat"><div class="stat-num mono">6</div><div class="stat-label">Categories</div></div>
-  <div class="stat"><div class="stat-num mono">~4 min</div><div class="stat-label">Avg. read time</div></div>
-  <div class="stat"><div class="stat-num mono">92%</div><div class="stat-label">Resolved without a ticket</div></div>
-</div>
-
-<!-- ============ CATEGORIES ============ -->
-<div class="section" id="howitworks">
-  <div class="section-head fade-up">
-    <h2>How to use this knowledge base</h2>
-    <div class="sub">Four steps from "something's broken" to "fixed"</div>
-  </div>
-  <div class="infographic fade-up" id="infographic"></div>
-</div>
-
-<div class="section" id="categories">
-  <div class="section-head fade-up">
-    <h2>Browse by category</h2>
-    <div class="sub">Jump straight to the area you're troubleshooting</div>
-  </div>
-  <div class="cat-grid" id="catGrid"></div>
-</div>
-
-<!-- ============ ARTICLES ============ -->
-<div class="section" id="articles">
-  <div class="section-head fade-up">
-    <h2>All articles</h2>
-    <div class="sub" id="articleCount">24 guides</div>
-  </div>
-  <div class="article-list fade-up" id="articleList"></div>
-</div>
-
-<!-- ============ FAQ ============ -->
-<div class="section" id="faq">
-  <div class="section-head fade-up">
-    <h2>Frequently asked questions</h2>
-    <div class="sub">Quick answers to the most common questions</div>
-  </div>
-  <div class="faq-list fade-up" id="faqList"></div>
-</div>
-
-<!-- ============ RESOURCES ============ -->
-<div class="section" id="resources" style="padding-bottom:20px;">
-  <div class="section-head fade-up">
-    <h2>Need a human instead?</h2>
-    <div class="sub">Direct lines to the IT support team</div>
-  </div>
-  <div class="res-grid fade-up">
-    <a class="res-card" href="#" onclick="openTicket();return false;">
-      <div class="res-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg></div>
-      <h4>Submit a ticket</h4>
-      <p>For issues a guide can't solve. Avg. first response: 22 min.</p>
-      <div class="res-arrow">itu_grp@phb.com.my →</div>
-    </a>
-    <a class="res-card alt" href="tel:+10000000000">
-      <div class="res-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#8C8B1E" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92Z"/></svg></div>
-      <h4>Call the help desk</h4>
-      <p>Mon–Fri, 7am–7pm. Critical outages answered 24/7.</p>
-      <div class="res-arrow">ext. 4357 (HELP) →</div>
-    </a>
-    <a class="res-card alt" href="#" onclick="alert('This would link to your live status page.');return false;">
-      <div class="res-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#8C8B1E" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></div>
-      <h4>System status</h4>
-      <p>Live uptime for email, VPN, intranet and core apps.</p>
-      <div class="res-arrow">view status →</div>
-    </a>
-    <a class="res-card" href="#" onclick="alert('This would open your IT asset / equipment request form.');return false;">
-      <div class="res-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
-      <h4>Request equipment</h4>
-      <p>New laptop, monitor, headset or peripheral requests.</p>
-      <div class="res-arrow">open form →</div>
-    </a>
-  </div>
-</div>
-
-<!-- ============ USER PORTAL VIEW ============ -->
-<div id="userPortalSection" style="display:none;">
-  <div class="section" style="padding-bottom:0;">
-    <div class="user-portal-hero">
-      <div style="position:relative;z-index:1;">
-        <h2>Hi, <span id="userGreetName">there</span> 👋</h2>
-        <p>Search the knowledge base or submit a ticket — we're here to help.</p>
-        <div class="user-hero-search">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input id="userSearchInput" type="text" placeholder="Describe your issue…" oninput="userSearch(this.value)" autocomplete="off">
-          <button onclick="openNewTicket()">Submit Ticket</button>
-        </div>
-        <div id="userSearchResults" style="margin-top:10px;"></div>
-      </div>
-    </div>
-
-    <!-- User quick categories -->
-    <h3 style="font-family:'Space Grotesk';font-size:18px;margin:0 0 14px;">Browse help topics</h3>
-    <div class="cat-grid" id="userCatGrid" style="margin-bottom:28px;"></div>
-
-    <!-- My Tickets -->
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-      <h3 style="font-family:'Space Grotesk';font-size:18px;margin:0;">My Tickets</h3>
-      <button class="btn-primary" style="font-size:12.5px;padding:7px 14px;" onclick="openNewTicket()">+ New Ticket</button>
-    </div>
-    <div id="userTicketList"></div>
-
-    <!-- User FAQ -->
-    <h3 style="font-family:'Space Grotesk';font-size:18px;margin:24px 0 14px;">Quick answers</h3>
-    <div class="faq-list" id="userFaqList"></div>
-  </div>
-</div>
-
-<!-- ============ IT STAFF / HOD SECTIONS ============ -->
-<div id="itAdminSection" style="display:none;">
-
-<!-- HOD DEPT STRUCTURE -->
-<div class="section view-only-hod" id="deptStructure" style="padding-bottom:0;">
-  <div class="section-head fade-up">
-    <h2>IT Department Structure</h2>
-    <div class="sub">Pelaburan Hartanah Berhad · FY 2026</div>
-  </div>
-  <div class="fade-up">
-    <div class="dept-header-bar">
-      <div>
-        <h3>IT Division Overview</h3>
-        <p>Structured to support business goals, security, and digital transformation</p>
-      </div>
-      <div class="dept-stats">
-        <div class="dept-stat"><div class="n">28</div><div class="l">Total IT Staff</div></div>
-        <div class="dept-stat"><div class="n">6</div><div class="l">Functions</div></div>
-        <div class="dept-stat"><div class="n">99.4%</div><div class="l">Uptime SLA</div></div>
-        <div class="dept-stat"><div class="n">RM 4.2M</div><div class="l">IT Budget FY26</div></div>
-      </div>
-    </div>
-
-    <!-- Org chart -->
-   <!--  <div class="org-chart fade-up">
-      <h4>Organisational Hierarchy</h4>
-      <div class="org-root">
-        <div class="org-node hod"><div class="n" id="hodName">Ahmad Razif</div><div class="r">Head of IT (HOD)</div></div>
-        <div class="org-line"></div>
-        <div class="org-row">
-          <div class="org-col"><div class="org-node lead"><div class="n">Sarah Lim</div><div class="r">Infrastructure Lead</div></div></div>
-          <div class="org-col"><div class="org-node lead"><div class="n">Danial Iqbal</div><div class="r">Cybersecurity Lead</div></div></div>
-          <div class="org-col"><div class="org-node lead"><div class="n">Mei Ling</div><div class="r">Applications Lead</div></div></div>
-          <div class="org-col"><div class="org-node lead"><div class="n">Farah Aziz</div><div class="r">Service Desk Lead</div></div></div>
-          <div class="org-col"><div class="org-node lead"><div class="n">Raj Pillai</div><div class="r">IT Projects Lead</div></div></div>
-        </div>
-      </div>
-    </div> -->
-
-    <!-- Function cards -->
-    <div class="dept-grid" id="deptFunctions"></div>
-  </div>
-</div>
-
-<!-- ============ DASHBOARD ============ -->
-<div class="section" id="dashboard" style="padding-bottom:0;">
-  <div class="section-head fade-up">
-    <h2>IT Dashboard</h2>
-    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-      <span class="sp-badge sp-demo" id="spSyncBadge"><span class="dot" style="background:currentColor;"></span>—</span>
-      <div class="sub" id="dashLastUpdate"></div>
-      <button class="btn-primary" style="font-size:12.5px;padding:7px 14px;" onclick="DB.refresh().then(()=>{renderDashboard();renderReports();renderUserPortal();})">↻ Sync now</button>
-      <button class="btn-primary" style="font-size:12.5px;padding:7px 14px;" onclick="openNewTicket()">+ New Ticket</button>
-    </div>
-  </div>
-  <!-- KPI cards -->
-  <div class="kpi-grid fade-up" id="kpiGrid"></div>
-  <!-- lower grid -->
-  <div class="dash-grid fade-up">
-    <div class="dash-panel">
-      <div class="dash-panel-head"><h3>Recent Tickets</h3><span class="badge" id="openCount">—</span></div>
-      <div style="overflow-x:auto;"><table class="ticket-table" id="ticketTableBody"></table></div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:14px;">
-      <div class="dash-panel">
-        <div class="dash-panel-head"><h3>Tickets by Category</h3></div>
-        <div class="cat-bars" id="catBars"></div>
-      </div>
-      <div class="dash-panel">
-        <div class="dash-panel-head"><h3>Recent Activity</h3></div>
-        <div class="act-list" id="activityLog"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ============ REPORTS ============ -->
-<div class="section" id="reports" style="padding-bottom:20px;">
-  <div class="section-head fade-up">
-    <h2>Reports & Analytics</h2>
-    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-      <div class="sub">Based on ticket data this month</div>
-      <button class="dl-btn dl-pdf" onclick="downloadPDF()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
-        Download PDF
-      </button>
-      <button class="dl-btn dl-excel" onclick="downloadExcel()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>
-        Download Excel
-      </button>
-    </div>
-  </div>
-  <div class="report-grid fade-up">
-    <!-- Bar chart: tickets per month -->
-    <div class="chart-box">
-      <div class="chart-box-head">
-        <h3>Ticket Volume — Last 6 Months</h3>
-        <select onchange="renderBarChart(this.value)">
-          <option value="all">All categories</option>
-          <option value="network">Network</option>
-          <option value="hardware">Hardware</option>
-          <option value="software">Software</option>
-          <option value="account">Account</option>
-          <option value="email">Email</option>
-          <option value="security">Security</option>
-        </select>
-      </div>
-      <div class="chart-area"><div class="bar-chart" id="barChart"></div></div>
-    </div>
-    <!-- Donut: by category -->
-    <div class="chart-box">
-      <div class="chart-box-head"><h3>Distribution by Category</h3></div>
-      <div class="donut-wrap">
-        <svg id="donutSvg" width="130" height="130" viewBox="0 0 130 130"></svg>
-        <div class="donut-legend" id="donutLegend"></div>
-      </div>
-    </div>
-    <!-- Sparkline: resolution trend -->
-    <div class="chart-box">
-      <div class="chart-box-head"><h3>Avg. Resolution Time (hrs)</h3></div>
-      <div class="chart-area">
-        <svg id="sparklineSvg" class="sparkline-svg"></svg>
-      </div>
-    </div>
-    <!-- Satisfaction -->
-    <div class="chart-box">
-      <div class="chart-box-head"><h3>Satisfaction Score</h3></div>
-      <div class="chart-area" style="padding:16px 22px;">
-        <div style="font-family:'Space Grotesk';font-size:42px;font-weight:700;" id="satScore">—</div>
-        <div style="font-size:12.5px;color:var(--ink-soft);margin-top:4px;">out of 5.0 · <span id="satCount">—</span> responses</div>
-        <div style="margin-top:18px;display:flex;flex-direction:column;gap:8px;" id="satBars"></div>
-      </div>
-    </div>
-    <!-- Full table -->
-    <div class="chart-box report-full">
-      <div class="chart-box-head"><h3>Ticket Log</h3>
-        <input type="text" id="tableSearch" placeholder="Filter tickets…" style="font-size:12.5px;border:1px solid var(--line);border-radius:7px;padding:5px 10px;background:var(--bg);color:var(--ink);width:180px;" oninput="renderReportTable(this.value)">
-      </div>
-      <div style="overflow-x:auto;"><table class="report-table" id="reportTable"></table></div>
-    </div>
-  </div>
-</div>
-
-</div><!-- end #itAdminSection -->
-
-<footer>
-  <div class="footer-inner">
-    <p>HelpDesk Knowledge Base — maintained by the IT Support team. Content reviewed quarterly.</p>
-    <p class="mono">last sync: 2026-06-30</p>
-  </div>
-</footer>
-
-<!-- ============ NEW TICKET MODAL ============ -->
-<div class="overlay" id="ticketOverlay" onclick="if(event.target===this)closeTicketModal()">
-  <div class="ticket-modal">
-    <div class="tm-head">
-      <h3>Submit a Support Ticket</h3>
-      <button class="modal-close" onclick="closeTicketModal()">✕</button>
-    </div>
-    <div class="tm-body">
-      <div class="tm-row">
-        <div class="tm-field"><label>Your Name</label><input id="tf-name" placeholder="Jane Smith"></div>
-        <div class="tm-field"><label>Email</label><input id="tf-email" type="email" placeholder="jane@company.com"></div>
-      </div>
-      <div class="tm-row">
-        <div class="tm-field"><label>Category</label>
-          <select id="tf-cat">
-            <option value="hardware">Hardware</option>
-            <option value="software">Software</option>
-            <option value="network">Network & VPN</option>
-            <option value="account">Account & Access</option>
-            <option value="email">Email & Calendar</option>
-            <option value="security">Security</option>
-          </select>
-        </div>
-        <div class="tm-field"><label>Priority</label>
-          <select id="tf-priority">
-            <option value="low">Low</option>
-            <option value="medium" selected>Medium</option>
-            <option value="high">High</option>
-            <option value="critical">Critical</option>
-          </select>
-        </div>
-      </div>
-      <div class="tm-field"><label>Subject</label><input id="tf-subject" placeholder="Brief description of the issue"></div>
-      <div class="tm-field"><label>Details</label><textarea id="tf-detail" placeholder="Steps to reproduce, error messages, what you've already tried…"></textarea></div>
-    </div>
-    <div class="tm-foot">
-      <button class="btn-ghost" onclick="closeTicketModal()">Cancel</button>
-      <button class="btn-primary" onclick="submitTicket()">Submit Ticket</button>
-    </div>
-  </div>
-</div>
-
-<!-- Toast notification -->
-<div class="toast" id="toast">
-  <div class="toast-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8C8B1E" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div>
-  <span id="toastMsg">Ticket submitted!</span>
-</div>
-
-
-<!-- ============ ARTICLE MODAL ============ -->
-<div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()">
-  <div class="modal" id="modalContent"></div>
-</div>
+<div id="toast"></div>
 
 <script>
-/* ===================== DATA ===================== */
-const categories = [
-  {key:'hardware', name:'Hardware', desc:'Laptops, monitors, peripherals & docking stations.', color:'#8C8B1E', tint:'#F6F8D9'},
-  {key:'software', name:'Software', desc:'Installs, updates, crashes and licensing.', color:'#5B6878', tint:'#E9EDF1'},
-  {key:'network', name:'Network & VPN', desc:'Wi‑Fi, VPN, remote access and connectivity.', color:'#F5A623', tint:'#FDF1DD'},
-  {key:'account', name:'Account & Access', desc:'Passwords, MFA, permissions and lockouts.', color:'#E2574C', tint:'#FBE7E5'},
-  {key:'email', name:'Email & Calendar', desc:'Outlook, sync issues, shared mailboxes.', color:'#8C8B1E', tint:'#F6F8D9'},
-  {key:'security', name:'Security', desc:'Phishing, malware, device encryption.', color:'#E2574C', tint:'#FBE7E5'},
+// ═══════════════════ CONFIG ═══════════════════
+var CFG={
+ TENANT_ID:"cc9afa77-5900-4c38-8262-c226c4c2e27d",
+ CLIENT_ID:"86a53736-4355-4cb2-98dd-0466f0426e2e",
+ REDIRECT_URI:"https://poduxiptv2021-hash.github.io/ORBIT",
+ F_TICKETS_SAVE:"https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/01/workflows/eb61e2c74bb64ddc829c58e048b1e054/triggers/manual/paths/invoke?api-version=1",
+ F_TICKETS:"https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/26/workflows/eaf49b60f83e47d48d86407219ecb944/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=9k6JGlDLpEgdR2BwpTi5PqgKyM-NL7E_S80pIrO4Cmk",   // Power Automate: load/save tickets
+ F_NOTIFY:"https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/26/workflows/2ece387695584e40b7ab291f83fd67b8/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=U-lpNp1C-dR54r9R_USBFFapChNomovLGOQNU16xrPg"     // Power Automate: send email notification
+};
+var U=null,MS=null,TICKETS=[],CUR_PAGE="home";
+var COLORS=["#1a1a1a","#6b7c2e","#1565c0","#2e7d32","#d4860b","#880e4f","#c0392b","#5b2e91"];
+function initials(n){return n.split(" ").map(function(w){return w[0]}).join("").slice(0,2).toUpperCase()}
+function colorFor(s){var h=0;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))&0xffffffff;return COLORS[Math.abs(h)%COLORS.length]}
+
+// ═══════════════════ HELPERS ═══════════════════
+function g(i){return document.getElementById(i)}
+function e(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function toast(m,t){var el=g("toast");el.textContent=m;el.style.display="block";clearTimeout(el._t);el._t=setTimeout(function(){el.style.display="none"},t||3000)}
+function show(i){g(i).classList.add("show")}function hide(i){g(i).classList.remove("show")}
+function isSet(v){return!!v&&String(v).indexOf("please input the api")<0}
+function fmtDate(d){return new Date(d).toLocaleDateString("en-MY",{day:"numeric",month:"short",year:"numeric"})}
+function ticketNum(id){return"TK-"+String(id).padStart(5,"0")}
+function statusClass(s){return{Open:"sp-open","In Progress":"sp-inprog",Resolved:"sp-resolved",Pending:"sp-pending",Closed:"sp-closed"}[s]||"sp-open"}
+function prioClass(p){return{High:"prio-high",Critical:"prio-high",Medium:"prio-med",Low:"prio-low"}[p]||"prio-low"}
+
+// ═══════════════════ AUTH ═══════════════════
+function demoLogin(email,name,role,type){
+ U={email:email,name:name,role:role,type:type,initials:initials(name),color:colorFor(email)};
+ enter()}
+
+async function msLogin(){g("lErr").textContent="";
+ if(!isSet(CFG.TENANT_ID)){g("lErr").textContent="Tenant ID not configured. Use a demo account or set the CONFIG.";return}
+ try{if(!MS)MS=new msal.PublicClientApplication({auth:{clientId:CFG.CLIENT_ID,authority:"https://login.microsoftonline.com/"+CFG.TENANT_ID,redirectUri:isSet(CFG.REDIRECT_URI)?CFG.REDIRECT_URI:location.origin+location.pathname},cache:{cacheLocation:"sessionStorage"}});
+  var req={scopes:["User.Read"]};var acct=MS.getAllAccounts()[0];
+  if(!acct)acct=(await MS.loginPopup(req)).account;
+  var tk=(await MS.acquireTokenSilent({scopes:req.scopes,account:acct})).accessToken;
+  var me=await (await fetch("https://graph.microsoft.com/v1.0/me?$select=displayName,mail,department,jobTitle",{headers:{Authorization:"Bearer "+tk}})).json();
+  U={email:(me.mail||acct.username||"").toLowerCase(),name:me.displayName||acct.name,role:me.jobTitle||"User",type:me.department||"user",initials:initials(me.displayName||"U"),color:colorFor(me.mail||"")};
+  enter()}catch(x){g("lErr").textContent=x.message||String(x)}}
+
+function enter(){
+ document.body.classList.add("auth");
+ g("navAv").textContent=U.initials;g("navAv").style.background=U.color;
+ g("navName").textContent=U.name;
+ if(U.type==="it"||U.role==="IT Admin"||U.role==="IT Staff")g("navDash").style.display="";
+ loadTickets();nav("home")}
+
+function signOut(){U=null;document.body.classList.remove("auth");try{sessionStorage.clear()}catch(x){}}
+
+// ═══════════════════ NAVIGATION ═══════════════════
+function nav(p){CUR_PAGE=p;document.querySelectorAll(".nl").forEach(function(b){b.classList.remove("on")});var nb=document.querySelector('.nl[onclick*="\''+p+'\'"]');if(nb)nb.classList.add("on");renderPage()}
+
+function renderPage(){
+ var main=g("mainArea"),p=CUR_PAGE;
+ if(p==="home")main.innerHTML=renderHome();
+ else if(p==="tickets")main.innerHTML=renderTickets();
+ else if(p==="guides")main.innerHTML=renderGuides();
+ else if(p==="faq")main.innerHTML=renderFAQ();
+ else if(p==="dash")main.innerHTML=renderDash();
+}
+
+// ═══════════════════ DATA ═══════════════════
+var SAMPLE_TICKETS=[
+ {id:1,subject:"Cannot connect to VPN from home",cat:"Network / VPN",prio:"High",status:"In Progress",dept:"Finance",by:"Noor Azlin",email:"noor.azlin@phb.com.my",desc:"VPN client shows 'Authentication failed'. Has worked fine until yesterday.",assignee:"Muhammad Haq",created:"2026-11-18",updated:"2026-11-19",comments:[{by:"Muhammad Haq",dt:"2026-11-19",txt:"Investigating. Please try resetting your password first."}]},
+ {id:2,subject:"Laptop screen flickering",cat:"Hardware",prio:"Medium",status:"Open",dept:"Investment",by:"Kumar Nair",email:"kumar.nair@phb.com.my",desc:"Screen flickers every few minutes, especially when on battery.",assignee:null,created:"2026-11-19",updated:"2026-11-19",comments:[]},
+ {id:3,subject:"Outlook not syncing emails",cat:"Email",prio:"Medium",status:"Resolved",dept:"HR",by:"Eliza Yazmin",email:"elizayazmin@phb.com.my",desc:"Emails stuck in outbox, inbox not loading new messages.",assignee:"Haliza Zainal",created:"2026-11-15",updated:"2026-11-17",comments:[{by:"Haliza Zainal",dt:"2026-11-17",txt:"Fixed by rebuilding the Outlook profile. Issue resolved."}]},
+ {id:4,subject:"Request new software installation – Adobe Acrobat",cat:"Software",prio:"Low",status:"Pending",dept:"Legal",by:"Ahmad Fauzi",email:"ahmad.fauzi@phb.com.my",desc:"Need Adobe Acrobat Pro for contract review.",assignee:"Muhammad Haq",created:"2026-11-17",updated:"2026-11-18",comments:[]},
+ {id:5,subject:"Printer on Level 12 offline",cat:"Hardware",prio:"High",status:"Open",dept:"Finance",by:"Noor Azlin",email:"noor.azlin@phb.com.my",desc:"Shared printer HP LaserJet MFP not responding since morning.",assignee:null,created:"2026-11-20",updated:"2026-11-20",comments:[]}
 ];
 
-const iconFor = {
-  hardware:'<path d="M4 5h16v10H4z"/><path d="M2 19h20"/>',
-  software:'<rect x="3" y="3" width="18" height="14" rx="2"/><path d="M8 21h8"/>',
-  network:'<path d="M5 12.5a8 8 0 0 1 14 0"/><path d="M8.5 16a4 4 0 0 1 7 0"/><circle cx="12" cy="19" r="1"/>',
-  account:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',
-  email:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
-  security:'<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3Z"/>'
+function loadTickets(){
+ if(TICKETS.length)return;
+ TICKETS=JSON.parse(JSON.stringify(SAMPLE_TICKETS));
+ try{var s=localStorage.getItem("orbit_tickets");if(s)TICKETS=JSON.parse(s)}catch(x){}}
+function saveTickets(){try{localStorage.setItem("orbit_tickets",JSON.stringify(TICKETS))}catch(x){}}
+function myTickets(){return U.type==="it"?TICKETS:TICKETS.filter(function(t){return t.email===U.email})}
+
+// ═══════════════════ HOME PAGE ═══════════════════
+var GUIDES=[
+ {id:1,cat:"Network",title:"VPN won't connect",desc:"Step-by-step fix for Cisco AnyConnect and Microsoft VPN authentication errors.",time:"3 min",tags:["vpn","network","remote"]},
+ {id:2,cat:"Account",title:"Reset your password",desc:"How to reset your Microsoft 365 / Windows password via SSPR or IT helpdesk.",time:"2 min",tags:["password","account","microsoft"]},
+ {id:3,cat:"Hardware",title:"Printer offline fix",desc:"Diagnose and fix offline shared printers on Windows 10/11.",time:"4 min",tags:["printer","hardware","offline"]},
+ {id:4,cat:"Hardware",title:"Computer running slow",desc:"Quick steps to diagnose and fix a sluggish Windows PC without calling IT.",time:"5 min",tags:["slow","performance","windows"]},
+ {id:5,cat:"Email",title:"Email not syncing",desc:"Fix Outlook sync issues – stuck outbox, missing emails, and profile rebuild.",time:"4 min",tags:["outlook","email","sync"]},
+ {id:6,cat:"Account",title:"MFA / 2FA setup",desc:"Set up Microsoft Authenticator for your PHB account on iOS or Android.",time:"3 min",tags:["mfa","2fa","security","authenticator"]},
+ {id:7,cat:"Software",title:"Microsoft Teams not loading",desc:"Fix Teams startup, login loops, and audio/video issues.",time:"4 min",tags:["teams","software","microsoft"]},
+ {id:8,cat:"Security",title:"Suspected phishing email",desc:"How to identify phishing emails and report them to IT Security.",time:"2 min",tags:["phishing","security","email"]},
+];
+var SEARCH_Q="";
+function renderHome(){
+ var open=TICKETS.filter(function(t){return t.status==="Open"||t.status==="In Progress"}).length;
+ return'<div class="hero-home"><h2>Fix it yourself in <span>under 5 minutes.</span></h2><p>Search '+GUIDES.length+' verified guides covering hardware, software, network, accounts, email and security — written by the IT team, kept current, no jargon.</p></div>'
+ +'<div class="search-wrap"><span class="si">🔍</span><input id="homeQ" value="'+e(SEARCH_Q)+'" placeholder="Search e.g. VPN, slow laptop, printer, password…" oninput="homeSearch(this.value)"><span class="sk">/ to focus</span></div>'
+ +'<div class="tags">'+["VPN won't connect","Reset password","Printer offline","Computer running slow","Email not syncing","MFA / 2FA setup"].map(function(t){return'<span class="tag" onclick="homeSearch(\''+e(t)+'\'">'+e(t)+'</span>'}).join("")+'</div>'
+ +'<div class="stats-row"><div class="stat-c"><div class="n">'+GUIDES.length+'</div><div class="l">Self-service guides</div></div><div class="stat-c"><div class="n">6</div><div class="l">Categories</div></div><div class="stat-c"><div class="n">~4 min</div><div class="l">Avg. read time</div></div><div class="stat-c"><div class="n">'+open+'</div><div class="l">Open tickets</div></div></div>'
+ +'<div class="section-hd"><h3>'+(!SEARCH_Q?"Popular guides":"Results for \""+e(SEARCH_Q)+'"')+'</h3><span class="link-sm" onclick="nav(\'guides\')">View all →</span></div>'
+ +'<div class="guides-grid">'+filteredGuides(SEARCH_Q).map(function(g){return guideCard(g)}).join("")+'</div>'
+ +'<div class="section-hd" style="margin-top:32px"><h3>Your recent tickets</h3><span class="link-sm" onclick="nav(\'tickets\')">All tickets →</span></div>'
+ +'<div class="tickets-wrap">'+myTickets().slice(0,3).map(function(t){return ticketRow(t)}).join("")+'</div>'
+ +'<div style="text-align:center;margin-top:28px"><button class="btn p" onclick="show(\'ticketM\')">Submit a ticket</button></div>'}
+
+function homeSearch(q){SEARCH_Q=q;var area=g("mainArea");if(!area)return;var gGrid=area.querySelector(".guides-grid");if(gGrid)gGrid.innerHTML=filteredGuides(q).map(function(g){return guideCard(g)}).join("")}
+function filteredGuides(q){if(!q)return GUIDES.slice(0,6);var lq=q.toLowerCase();return GUIDES.filter(function(g){return(g.title+g.desc+g.cat+g.tags.join(" ")).toLowerCase().indexOf(lq)>=0})}
+function guideCard(g){return'<div class="guide-card" onclick="openGuide('+g.id+')"><div class="gc-cat">'+e(g.cat)+'</div><div class="gc-title">'+e(g.title)+'</div><div class="gc-desc">'+e(g.desc)+'</div><div class="gc-foot"><span class="gc-time">📖 '+g.time+' read</span><span class="gc-badge verified">✓ Verified</span></div></div>'}
+function ticketRow(t){return'<div class="ticket-row" onclick="openTicket('+t.id+')"><span class="tc-num">'+ticketNum(t.id)+'</span><div><div class="tc-title">'+e(t.subject)+'</div><div class="tc-dept">'+e(t.cat)+' · '+e(t.dept)+'</div></div><span class="pill '+prioClass(t.prio)+'">'+e(t.prio)+'</span><span class="pill '+statusClass(t.status)+'">'+e(t.status)+'</span><span class="tc-meta">'+fmtDate(t.updated)+'</span></div>'}
+
+// ═══════════════════ TICKETS PAGE ═══════════════════
+function renderTickets(){
+ var list=myTickets(),isIT=U.type==="it";
+ return'<div class="page-hd" style="display:flex;justify-content:space-between;align-items:flex-start"><div><h2>'+( isIT?"All tickets":"My tickets")+'</h2><p>'+(isIT?"Manage and resolve all incoming IT tickets.":"Track your submitted support requests.")+'</p></div><button class="btn p" onclick="show(\'ticketM\')">+ New ticket</button></div>'
+ +(isIT?'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">'+["All","Open","In Progress","Pending","Resolved","Closed"].map(function(s){return'<button class="btn" onclick="filterTickets(\''+s+'\')" id="tf-'+s.replace(" ","_")+'">'+s+'</button>'}).join("")+'</div>':'')
+ +'<div class="tickets-wrap" id="tickList">'+list.map(function(t){return ticketRow(t)}).join("")+(list.length?"":'<div style="text-align:center;padding:36px;color:var(--mut)">No tickets yet. Submit your first ticket above.</div>')+'</div>'}
+
+function filterTickets(s){var list=TICKETS;if(s!=="All")list=TICKETS.filter(function(t){return t.status===s});var el=g("tickList");if(!el)return;el.innerHTML=list.map(function(t){return ticketRow(t)}).join("")||'<div style="text-align:center;padding:36px;color:var(--mut)">No tickets in this filter.</div>'}
+
+function openTicket(id){var t=TICKETS.find(function(x){return x.id===id});if(!t)return;
+ var isIT=U.type==="it";
+ g("tdTitle").textContent=ticketNum(t.id)+" – "+t.subject;
+ g("tdBody").innerHTML='<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px">'
+  +'<div style="background:var(--soft);border-radius:10px;padding:10px 14px;flex:1;min-width:120px"><small style="color:var(--mut);font-size:11px;text-transform:uppercase">Status</small><div class="pill '+statusClass(t.status)+'" style="margin-top:4px">'+e(t.status)+'</div></div>'
+  +'<div style="background:var(--soft);border-radius:10px;padding:10px 14px;flex:1;min-width:120px"><small style="color:var(--mut);font-size:11px;text-transform:uppercase">Priority</small><div class="pill '+prioClass(t.prio)+'" style="margin-top:4px">'+e(t.prio)+'</div></div>'
+  +'<div style="background:var(--soft);border-radius:10px;padding:10px 14px;flex:1;min-width:120px"><small style="color:var(--mut);font-size:11px;text-transform:uppercase">Category</small><div style="font-weight:600;margin-top:4px">'+e(t.cat)+'</div></div>'
+  +'<div style="background:var(--soft);border-radius:10px;padding:10px 14px;flex:1;min-width:120px"><small style="color:var(--mut);font-size:11px;text-transform:uppercase">Assignee</small><div style="font-weight:600;margin-top:4px">'+e(t.assignee||"Unassigned")+'</div></div></div>'
+  +'<div style="margin-bottom:14px"><div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--mut);margin-bottom:6px">Description</div><div style="background:var(--soft);border-radius:10px;padding:12px 14px;line-height:1.6">'+e(t.desc)+'</div></div>'
+  +(isIT?'<div class="row" style="margin-bottom:16px"><div class="fg" style="flex:1"><label>Change status</label><select class="in" id="tdSt" onchange="updateTicketStatus('+t.id+',this.value)"><option'+(t.status==="Open"?" selected":"")+'>Open</option><option'+(t.status==="In Progress"?" selected":"")+'>In Progress</option><option'+(t.status==="Pending"?" selected":"")+'>Pending</option><option'+(t.status==="Resolved"?" selected":"")+'>Resolved</option><option'+(t.status==="Closed"?" selected":"")+'>Closed</option></select></div><div class="fg" style="flex:1"><label>Assign to</label><select class="in" id="tdAss" onchange="assignTicket('+t.id+',this.value)"><option value="">Unassigned</option><option'+(t.assignee==="Haliza Zainal"?" selected":"")+'>Haliza Zainal</option><option'+(t.assignee==="Muhammad Haq"?" selected":"")+'>Muhammad Haq</option></select></div></div>':"")
+  +'<div><div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--mut);margin-bottom:8px">Comments ('+t.comments.length+')</div>'
+  +(t.comments.map(function(c){return'<div style="display:flex;gap:10px;margin-bottom:12px"><div class="av" style="background:'+colorFor(c.by)+';width:32px;height:32px;font-size:11px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;color:#fff">'+initials(c.by)+'</div><div><div style="font-weight:600;font-size:13px">'+e(c.by)+' <span style="color:var(--mut);font-weight:400;font-size:11px">'+fmtDate(c.dt)+'</span></div><div style="font-size:13px;margin-top:3px">'+e(c.txt)+'</div></div></div>'}).join("")||'<div style="color:var(--mut);font-size:13px;margin-bottom:12px">No comments yet.</div>')
+  +'<div style="display:flex;gap:8px;margin-top:4px"><input class="in" id="cmt-'+t.id+'" placeholder="Add a comment…" style="flex:1"><button class="btn p" onclick="addComment('+t.id+')">Post</button></div></div>';
+ show("ticketDetailM")}
+
+function updateTicketStatus(id,v){var t=TICKETS.find(function(x){return x.id===id});if(t){t.status=v;t.updated=new Date().toISOString().slice(0,10);saveTickets();toast("Status updated to "+v)}}
+function assignTicket(id,v){var t=TICKETS.find(function(x){return x.id===id});if(t){t.assignee=v||null;saveTickets();toast(v?"Assigned to "+v:"Unassigned")}}
+function addComment(id){var t=TICKETS.find(function(x){return x.id===id}),el=g("cmt-"+id);if(!t||!el||!el.value.trim()){toast("Enter a comment first");return}t.comments.push({by:U.name,dt:new Date().toISOString().slice(0,10),txt:el.value.trim()});t.updated=new Date().toISOString().slice(0,10);saveTickets();el.value="";openTicket(id);toast("Comment added")}
+
+function submitTicket(){var s=g("tk1").value.trim(),c=g("tk2").value,d=g("tk4").value.trim();
+ if(!s){toast("Please enter a subject");return}if(!c){toast("Please select a category");return}if(!d){toast("Please describe the issue");return}
+ var t={id:TICKETS.reduce(function(m,x){return Math.max(m,x.id)},0)+1,subject:s,cat:c,prio:g("tk3").value,status:"Open",dept:g("tk5").value||U.role||"",by:U.name,email:U.email,desc:d,assignee:null,created:new Date().toISOString().slice(0,10),updated:new Date().toISOString().slice(0,10),comments:[]};
+ TICKETS.unshift(t);saveTickets();hide("ticketM");["tk1","tk2","tk4","tk5"].forEach(function(i){g(i).value=""});g("tk3").value="Low";
+ renderPage();toast("Ticket "+ticketNum(t.id)+" submitted! IT team will respond soon.")}
+
+// ═══════════════════ GUIDES PAGE ═══════════════════
+function renderGuides(){
+ var cats=["All","Hardware","Software","Network","Account","Email","Security"];
+ return'<div class="page-hd"><h2>IT Articles & Self-Service Guides</h2><p>'+GUIDES.length+' guides · Written by the IT team · Updated regularly</p></div>'
+ +'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">'+cats.map(function(c){return'<button class="btn" onclick="filterGuides(\''+c+'\')" id="gf-'+c+'">'+c+'</button>'}).join("")+'</div>'
+ +'<div class="guides-grid" id="guideGrid">'+GUIDES.map(function(g){return guideCard(g)}).join("")+'</div>'}
+
+function filterGuides(cat){var list=cat==="All"?GUIDES:GUIDES.filter(function(g){return g.cat===cat});var el=g("guideGrid");if(el)el.innerHTML=list.map(function(g){return guideCard(g)}).join("")}
+
+var GUIDE_CONTENT={
+ 1:{title:"VPN won't connect",steps:"<h3>Common causes</h3><ul><li>Incorrect credentials</li><li>VPN client needs update</li><li>MFA token expired</li><li>Network firewall blocking port 443</li></ul><h3>Step-by-step fix</h3><ol><li>Open <code>Cisco AnyConnect</code> (or the VPN client you use)</li><li>Check the server address: should be <code>vpn.phb.com.my</code></li><li>Try your Windows password — it should match your Microsoft 365 password</li><li>If prompted for MFA, approve on your Authenticator app</li><li>If still failing: open <b>Control Panel → Network and Sharing Centre → Change adapter settings</b> → right-click your VPN adapter → <b>Disable</b>, then <b>Enable</b></li><li>Still stuck? Restart the VPN client service: <code>services.msc</code> → <b>Cisco AnyConnect</b> → <b>Restart</b></li></ol><div class='alert'>⚠ If you see 'Certificate error', contact IT — your VPN certificate may have expired.</div><h3>Still not working?</h3><p>Submit a ticket with your VPN client version, Windows version, and the exact error message shown.</p>"},
+ 2:{title:"Reset your password",steps:"<h3>Via Microsoft SSPR (Self-Service)</h3><ol><li>Go to <code>aka.ms/sspr</code></li><li>Enter your PHB email address</li><li>Verify via your registered phone or email</li><li>Set a new password (min 12 characters, mix of upper/lower/numbers/symbols)</li><li>Sign out of all devices, then sign back in</li></ol><h3>Forgot your registered recovery details?</h3><p>Contact IT helpdesk with your staff ID for a manual reset.</p><div class='alert'>⚠ Your new password must not match your last 24 passwords.</div>"},
+ 3:{title:"Printer offline fix",steps:"<h3>Quick checks</h3><ul><li>Is the printer powered on and showing 'Ready'?</li><li>Is the network cable plugged in, or is the printer on the right Wi-Fi?</li></ul><h3>Windows steps</h3><ol><li>Open <b>Settings → Bluetooth & devices → Printers & scanners</b></li><li>Click your printer → <b>Open print queue</b></li><li>Click <b>Printer</b> in the menu → uncheck <b>Use Printer Offline</b></li><li>Click <b>Printer → Cancel All Documents</b></li><li>Restart the Print Spooler: open <code>services.msc</code> → <b>Print Spooler</b> → <b>Restart</b></li></ol><div class='alert'>⚠ For shared floor printers, check if the issue affects others on the same floor. If yes, submit a ticket as it may need IT on-site.</div>"},
+ 4:{title:"Computer running slow",steps:"<h3>Quick wins (do these first)</h3><ol><li>Restart your computer — not sleep, a full restart</li><li>Check Windows Update: <b>Settings → Windows Update</b></li><li>Close unused tabs and apps</li></ol><h3>Deeper checks</h3><ol><li>Open <b>Task Manager</b> (<code>Ctrl+Shift+Esc</code>) → <b>Performance</b> tab — check CPU, Memory and Disk usage</li><li>If Disk is at 100%: open <b>Services</b> and disable <b>SysMain (Superfetch)</b> — right-click → Properties → Startup type: Disabled</li><li>Run <b>Disk Cleanup</b>: search for it in Start menu → clean up system files</li><li>Check startup items: Task Manager → <b>Startup</b> tab → disable non-essential items</li></ol><div class='alert'>⚠ If the laptop feels hot, it may be overheating. Place it on a hard surface to improve airflow, or bring it to IT for cleaning.</div>"},
+ 5:{title:"Email not syncing",steps:"<h3>Outlook (Windows)</h3><ol><li>Check your internet connection first</li><li>Click <b>Send/Receive → Update Folder</b></li><li>If stuck: go to <b>File → Account Settings → Account Settings</b> → select your account → <b>Change → More Settings → Advanced</b> → try changing server timeouts</li><li>If still failing: close Outlook, hold <code>Ctrl</code> and click the Outlook icon in the system tray → <b>Test Email AutoConfiguration</b></li></ol><h3>Rebuild your Outlook profile (last resort)</h3><ol><li>Control Panel → Mail → <b>Show Profiles → Add</b> → create a new profile</li><li>Add your PHB account to the new profile</li><li>Set as default and restart Outlook</li></ol>"},
+ 6:{title:"MFA / 2FA setup",steps:"<h3>Install Microsoft Authenticator</h3><ol><li>Download <b>Microsoft Authenticator</b> from the App Store or Google Play</li><li>Go to <code>aka.ms/mfasetup</code> on your computer</li><li>Click <b>Add method → Authenticator app → Next</b></li><li>Open the Authenticator app on your phone → tap <b>+</b> → <b>Work or school account</b></li><li>Scan the QR code shown on your computer</li><li>Enter the 6-digit code shown in the app to confirm</li></ol><div class='alert'>⚠ If you change phones, re-register your Authenticator before wiping your old phone. Contact IT if locked out.</div>"},
+ 7:{title:"Microsoft Teams not loading",steps:"<h3>Quick fixes</h3><ol><li>Close Teams completely (right-click system tray icon → Quit)</li><li>Press <code>Win+R</code>, type <code>%appdata%\\Microsoft\\Teams</code>, press Enter</li><li>Delete the <code>Cache</code> folder</li><li>Restart Teams</li></ol><h3>Login loop fix</h3><ol><li>Open Teams → click your profile picture → <b>Sign out</b></li><li>Close Teams fully</li><li>Reopen and sign in again with your PHB account</li></ol>"},
+ 8:{title:"Suspected phishing email",steps:"<h3>How to identify phishing</h3><ul><li>Unexpected urgency ('Your account will be closed in 24 hours!')</li><li>Sender email doesn't match the displayed name</li><li>Links that look almost right (e.g. <code>phb-login.com</code> instead of <code>phb.com.my</code>)</li><li>Unexpected attachments, especially <code>.zip</code>, <code>.exe</code>, or macro-enabled Office files</li></ul><h3>What to do</h3><ol><li><b>Do not click any links or download attachments</b></li><li>Report it: in Outlook, click the <b>Phish Alert</b> button in the ribbon, or forward the email as an attachment to <code>security@phb.com.my</code></li><li>If you accidentally clicked a link, disconnect from the network immediately and call IT</li></ol><div class='alert'>⚠ IT will never ask for your password via email or Teams message. If in doubt, call us directly.</div>"},
 };
 
-const articles = [
-{id:'KB-0101',cat:'network',sev:'crit',title:"VPN won't connect or keeps dropping",
- desc:'Fix the most common VPN client errors and dropped tunnels.',
- tags:['vpn','remote access','connection'],
- body:`<h4>Quick checks</h4><ol>
- <li>Confirm you have an active internet connection (try loading any website).</li>
- <li>Fully quit the VPN client — not just close the window — then reopen it.</li>
- <li>Restart your computer if the client was open before your last update.</li></ol>
- <h4>If it still won't connect</h4><ol>
- <li>Open the client and check the server region selected. Switch to the nearest region.</li>
- <li>Forget the saved network in Wi‑Fi settings and reconnect with the password.</li>
- <li>Run <code>ipconfig /flushdns</code> (Windows) or <code>sudo dscacheutil -flushcache</code> (Mac) in a terminal.</li>
- <li>Reset your VPN credentials from the Account &gt; Security portal if login fails repeatedly.</li></ol>
- <h4>Still stuck?</h4><p>Submit a ticket with the exact error code shown in the client — this cuts resolution time roughly in half.</p>`},
+function openGuide(id){var g2=GUIDES.find(function(x){return x.id===id}),c=GUIDE_CONTENT[id];if(!g2)return;g("gmTitle").textContent=g2.title;g("gmBody").innerHTML='<div class="guide-body"><h2>'+e(g2.title)+'</h2><div class="meta"><span>📂 '+e(g2.cat)+'</span><span>⏱ '+g2.time+' read</span><span>✅ Verified by IT</span></div>'+(c?c.steps:"<p>Guide content coming soon.</p>")+'<div style="margin-top:24px;padding-top:16px;border-top:1px solid var(--bd);font-size:13px;color:var(--mut)">Still stuck after following this guide?<br><button class="btn p" style="margin-top:8px" onclick="hide(\'guideM\');show(\'ticketM\')">Submit a ticket</button></div></div>';show("guideM")}
 
-{id:'KB-0102',cat:'network',sev:'warn',title:'Wi‑Fi keeps disconnecting',
- desc:'Stabilize a flaky office or home Wi‑Fi connection.',
- tags:['wifi','wireless','connectivity'],
- body:`<h4>Steps</h4><ol>
- <li>Move closer to the access point — office Wi‑Fi range drops sharply past 2 walls.</li>
- <li>Forget the network and rejoin, entering the password fresh.</li>
- <li>Toggle Wi‑Fi off and back on; on laptops, toggle Airplane mode for 5 seconds.</li>
- <li>Update your network adapter driver via Device Manager (Windows) or System Update (Mac).</li>
- <li>If on home Wi‑Fi, restart your router and confirm no firmware update is pending.</li></ol>
- <p>If disconnects happen only on the office network and persist after these steps, it may be an access point issue — submit a ticket with your desk location.</p>`},
-
-{id:'KB-0103',cat:'network',sev:'ok',title:'How to set up VPN on a new device',
- desc:'First-time VPN client install and configuration.',
- tags:['vpn','setup','onboarding'],
- body:`<h4>Setup</h4><ol>
- <li>Download the approved client from the Software Center / Company Portal — never a third-party site.</li>
- <li>Install and launch the client, then sign in with your company email and password.</li>
- <li>Complete MFA approval on your phone when prompted.</li>
- <li>Select the server region closest to your physical location.</li>
- <li>Click Connect — a green status indicator confirms an active tunnel.</li></ol>`},
-
-{id:'KB-0104',cat:'network',sev:'warn',title:'Slow internet on company network',
- desc:'Diagnose and resolve sluggish browsing or downloads.',
- tags:['speed','bandwidth','wifi'],
- body:`<h4>Diagnose</h4><ol>
- <li>Run a speed test and note the result — compare against the posted office baseline.</li>
- <li>Close bandwidth-heavy apps (video calls, large uploads, sync clients) running in the background.</li>
- <li>Disconnect from VPN briefly to see if speed improves — some sites are intentionally routed slower over VPN.</li>
- <li>Switch from Wi‑Fi to a wired connection if available, to rule out wireless interference.</li></ol>
- <p>If slow speed affects a whole floor or team, this is likely an infrastructure issue — check System Status before filing a ticket.</p>`},
-
-{id:'KB-0201',cat:'hardware',sev:'crit',title:'Laptop won\'t turn on',
- desc:'Troubleshoot a completely unresponsive laptop.',
- tags:['laptop','power','boot'],
- body:`<h4>Try in order</h4><ol>
- <li>Plug directly into a wall outlet (not a power strip) and confirm the charging light is on.</li>
- <li>Hold the power button for 15 seconds to force a hard reset, then try powering on again.</li>
- <li>Try a different charging cable or adapter if one is available nearby.</li>
- <li>Remove the battery (if removable), wait 30 seconds, reinsert, and try again.</li></ol>
- <p>If there is no charging light at all with a known-good outlet and cable, this is a hardware fault — request a loaner via the Equipment Request form and submit a ticket.</p>`},
-
-{id:'KB-0202',cat:'hardware',sev:'warn',title:'External monitor not detected',
- desc:'Fix dual or external display connection issues.',
- tags:['monitor','display','docking station'],
- body:`<h4>Steps</h4><ol>
- <li>Confirm the cable is fully seated at both ends; try a different cable or port if possible.</li>
- <li>On Windows, press <code>Win + P</code> and select "Extend" or "Duplicate".</li>
- <li>On Mac, open System Settings &gt; Displays &gt; Detect Displays.</li>
- <li>If using a docking station, unplug and replug the dock's power and USB‑C connection.</li>
- <li>Restart the laptop with the monitor already connected.</li></ol>`},
-
-{id:'KB-0203',cat:'hardware',sev:'ok',title:'Connecting to a docking station',
- desc:'Set up a single-cable docking station correctly.',
- tags:['dock','docking station','setup'],
- body:`<h4>Setup</h4><ol>
- <li>Connect the dock to power first, then connect the single USB‑C cable to your laptop.</li>
- <li>Wait 10 seconds for peripherals (monitor, keyboard, mouse, ethernet) to initialize.</li>
- <li>If a peripheral isn't recognized, unplug just that cable from the dock and reinsert it.</li>
- <li>Keep dock firmware current via the manufacturer's utility, found in Software Center.</li></ol>`},
-
-{id:'KB-0204',cat:'hardware',sev:'warn',title:'Printer shows offline or won\'t print',
- desc:'Get a networked office printer working again.',
- tags:['printer','printing','offline'],
- body:`<h4>Steps</h4><ol>
- <li>Confirm the printer's screen shows "Ready" and isn't out of paper or toner.</li>
- <li>On your computer, open Printers &amp; Scanners, remove the printer, then re‑add it from the directory.</li>
- <li>Set it as default and send a single test page.</li>
- <li>If still offline, restart the print spooler: Windows Services &gt; Print Spooler &gt; Restart.</li></ol>
- <p>Shared office printers that are offline for everyone should be reported via ticket immediately — these affect the whole floor.</p>`},
-
-{id:'KB-0205',cat:'hardware',sev:'ok',title:'Requesting a loaner or replacement laptop',
- desc:'Process for getting temporary or replacement hardware.',
- tags:['loaner','replacement','equipment'],
- body:`<h4>Process</h4><ol>
- <li>Submit a ticket describing the issue and confirm with your manager that a loaner is approved.</li>
- <li>Back up any local files to OneDrive/shared drive before handing in your device.</li>
- <li>Collect the loaner from the IT desk (or arrange courier for remote staff) — typical turnaround is 1 business day.</li>
- <li>Sign in with your normal credentials; your profile and apps will sync automatically.</li></ol>`},
-
-{id:'KB-0301',cat:'software',sev:'warn',title:'Computer running slow',
- desc:'Speed up a sluggish Windows or Mac machine.',
- tags:['performance','slow','speed'],
- body:`<h4>Quick wins</h4><ol>
- <li>Restart the computer — this alone resolves most slowdowns caused by memory buildup.</li>
- <li>Open Task Manager (Windows) or Activity Monitor (Mac) and close high-CPU apps you aren't using.</li>
- <li>Check available disk space; free up storage if under 10% remaining.</li>
- <li>Pause cloud sync (OneDrive/Dropbox) temporarily if a large sync is running.</li>
- <li>Run available OS and antivirus updates, then restart again.</li></ol>`},
-
-{id:'KB-0302',cat:'software',sev:'crit',title:'Application keeps crashing',
- desc:'Resolve repeated crashes in a specific application.',
- tags:['crash','app','error'],
- body:`<h4>Steps</h4><ol>
- <li>Fully close the app (check it isn't still running in the background) and reopen it.</li>
- <li>Check Software Center / App Store for a pending update to the app.</li>
- <li>Restart your computer to clear any corrupted memory state.</li>
- <li>If a specific file triggers the crash, try opening a different file to isolate the cause.</li>
- <li>Reinstall the app via Software Center as a last resort — this won't affect your saved files.</li></ol>
- <p>Include the exact error message and steps to reproduce when filing a ticket — this is the single biggest factor in fast resolution.</p>`},
-
-{id:'KB-0303',cat:'software',sev:'ok',title:'Installing approved software',
- desc:'How to request and install new applications.',
- tags:['install','software center','request'],
- body:`<h4>Steps</h4><ol>
- <li>Check Software Center (Windows) or Company Portal/Self Service (Mac) first — most approved apps install instantly with no approval needed.</li>
- <li>If the app isn't listed, submit a software request ticket with a brief business justification.</li>
- <li>Approved requests are typically available within 1 business day.</li></ol>
- <p>Installing software from outside these approved channels is restricted and may be automatically blocked by endpoint protection.</p>`},
-
-{id:'KB-0304',cat:'software',sev:'ok',title:'Update is stuck or won\'t install',
- desc:'Unstick a frozen Windows or macOS update.',
- tags:['update','patch','windows update'],
- body:`<h4>Steps</h4><ol>
- <li>Leave the laptop plugged in, open, and connected to Wi‑Fi for at least 30 minutes.</li>
- <li>Restart the computer — many "stuck" updates simply need a restart to resume.</li>
- <li>On Windows, run the built-in Update Troubleshooter from Settings &gt; Troubleshoot.</li>
- <li>Ensure at least 15GB of free disk space, which large updates require.</li></ol>`},
-
-{id:'KB-0401',cat:'account',sev:'crit',title:'Locked out of your account',
- desc:'Regain access after too many failed login attempts.',
- tags:['lockout','login','password'],
- body:`<h4>Steps</h4><ol>
- <li>Wait 15 minutes — most lockouts auto-clear after a cooldown period.</li>
- <li>Use the "Forgot password" link on the login page to reset via your registered recovery method.</li>
- <li>If recovery options are out of date, contact the help desk by phone with photo ID ready for verification.</li></ol>
- <p>Never share your password with anyone, including IT staff — we will never ask for it directly.</p>`},
-
-{id:'KB-0402',cat:'account',sev:'ok',title:'How to reset your password',
- desc:'Self-service password reset walkthrough.',
- tags:['password','reset','self-service'],
- body:`<h4>Steps</h4><ol>
- <li>Go to the company password portal and click "Reset password".</li>
- <li>Verify your identity via the MFA app or registered phone number.</li>
- <li>Choose a new password — minimum 12 characters, mixing letters, numbers and symbols.</li>
- <li>Update the saved password on all devices (phone, laptop, tablet) to avoid repeated lockouts.</li></ol>`},
-
-{id:'KB-0403',cat:'account',sev:'warn',title:'Setting up multi-factor authentication (MFA)',
- desc:'Configure or change your MFA / 2FA method.',
- tags:['mfa','2fa','authenticator'],
- body:`<h4>Setup</h4><ol>
- <li>Install the company-approved authenticator app on your phone.</li>
- <li>Go to Account Settings &gt; Security &gt; Multi‑Factor Authentication.</li>
- <li>Scan the QR code shown with the authenticator app.</li>
- <li>Enter the 6‑digit code generated to confirm setup.</li>
- <li>Save the provided backup codes somewhere secure in case you lose your phone.</li></ol>`},
-
-{id:'KB-0404',cat:'account',sev:'warn',title:'Requesting access to a shared drive or system',
- desc:'Get permission to a folder, app, or system you need.',
- tags:['access','permissions','request'],
- body:`<h4>Steps</h4><ol>
- <li>Identify the exact resource name (folder path, system name) you need access to.</li>
- <li>Submit an access request ticket naming your manager as approver.</li>
- <li>Approval typically takes 1–2 business days depending on the resource's sensitivity.</li></ol>`},
-
-{id:'KB-0501',cat:'email',sev:'warn',title:'Email not syncing or sending',
- desc:'Fix Outlook or mail app sync and send failures.',
- tags:['outlook','email','sync'],
- body:`<h4>Steps</h4><ol>
- <li>Check your internet connection by loading a website.</li>
- <li>Confirm mailbox storage isn't full — check the quota warning banner if present.</li>
- <li>Restart the mail app fully (quit, don't just minimize).</li>
- <li>Remove and re‑add the account in the app's account settings.</li>
- <li>Check System Status for a known mail service incident before filing a ticket.</li></ol>`},
-
-{id:'KB-0502',cat:'email',sev:'ok',title:'Setting up a shared mailbox',
- desc:'Add a team or shared mailbox to Outlook.',
- tags:['shared mailbox','outlook','team'],
- body:`<h4>Steps</h4><ol>
- <li>Confirm you've been granted access (request via KB‑0404 if not).</li>
- <li>In Outlook, go to File &gt; Account Settings &gt; Account Settings.</li>
- <li>Select your account, click "More Settings" &gt; Advanced &gt; Add, and enter the shared mailbox name.</li>
- <li>Restart Outlook — the shared mailbox will appear in the left folder pane.</li></ol>`},
-
-{id:'KB-0503',cat:'email',sev:'ok',title:'Calendar invites not showing up',
- desc:'Resolve missing or delayed calendar invitations.',
- tags:['calendar','invite','outlook'],
- body:`<h4>Steps</h4><ol>
- <li>Check your Junk/Clutter folder — invites are occasionally misfiled.</li>
- <li>Confirm the sender used your correct email address.</li>
- <li>Toggle calendar sync off and on in account settings.</li>
- <li>Restart the mail app to force a manual sync.</li></ol>`},
-
-{id:'KB-0601',cat:'security',sev:'crit',title:'I clicked a suspicious link or attachment',
- desc:'What to do immediately after a possible phishing click.',
- tags:['phishing','security','incident'],
- body:`<h4>Act immediately</h4><ol>
- <li>Disconnect from Wi‑Fi/network (or unplug ethernet) to limit potential spread.</li>
- <li>Do not enter any credentials if a login page appeared — close it without typing anything.</li>
- <li>Report it using the "Report Phishing" button in your mail client, or forward to the security team.</li>
- <li>Change your password immediately from a different, trusted device.</li>
- <li>Submit a security incident ticket with the sender address and a screenshot.</li></ol>
- <p>Reporting quickly is never penalized — fast reporting is the single most effective defense we have.</p>`},
-
-{id:'KB-0602',cat:'security',sev:'warn',title:'How to spot a phishing email',
- desc:'Common red flags in suspicious emails.',
- tags:['phishing','awareness','email'],
- body:`<h4>Red flags</h4><ul>
- <li>Urgent or threatening language pushing you to act immediately.</li>
- <li>Sender address that looks close to, but not exactly, a known domain.</li>
- <li>Requests for passwords, gift cards, or wire transfers — legitimate teams never ask this way.</li>
- <li>Links that don't match their displayed text when you hover over them.</li>
- <li>Unexpected attachments, especially .zip or .exe files.</li></ul>
- <p>When unsure, use the Report Phishing button rather than clicking anything — it costs nothing to report a false alarm.</p>`},
-
-{id:'KB-0603',cat:'security',sev:'ok',title:'Enabling full-disk encryption',
- desc:'Confirm or enable BitLocker / FileVault on your device.',
- tags:['encryption','bitlocker','filevault'],
- body:`<h4>Windows (BitLocker)</h4><ol><li>Go to Settings &gt; Privacy &amp; Security &gt; Device Encryption and confirm it's "On".</li></ol>
- <h4>Mac (FileVault)</h4><ol><li>Go to System Settings &gt; Privacy &amp; Security &gt; FileVault and confirm it's "On".</li></ol>
- <p>Company-managed devices typically have this enabled automatically. If it shows "Off," submit a ticket — this is required for all devices handling company data.</p>`},
-
-{id:'KB-0604',cat:'security',sev:'warn',title:'Reporting a lost or stolen device',
- desc:'Steps to take if a company device goes missing.',
- tags:['lost device','stolen','incident'],
- body:`<h4>Immediately</h4><ol>
- <li>Call the help desk line right away — don't wait until the next business day.</li>
- <li>Provide the device's asset tag or serial number if known.</li>
- <li>IT will remotely lock and, if necessary, wipe the device to protect company data.</li>
- <li>File a police report if the device was stolen, and share the report number with IT.</li></ol>`},
+// ═══════════════════ FAQ ═══════════════════
+var FAQS=[
+ {q:"How do I request a new software installation?",a:"Submit a ticket under category 'Software'. Include the software name, version, and business justification. HOD approval may be required for licensed software."},
+ {q:"What is the standard SLA for IT support?",a:"Critical: 2 hours. High: 4 hours. Medium: 1 business day. Low: 3 business days. SLA clock starts when the ticket is assigned."},
+ {q:"How do I access my files when working from home?",a:"Use OneDrive for personal files or SharePoint for team files. VPN is required to access internal shared drives. See the VPN guide if you have connection issues."},
+ {q:"My account is locked out. What do I do?",a:"Accounts lock after 10 failed login attempts. Wait 15 minutes for auto-unlock, or use aka.ms/sspr to unlock via self-service. If that doesn't work, call the IT helpdesk."},
+ {q:"How do I join a Teams meeting on a room display?",a:"On the room display, tap 'Join' on the Teams meeting invitation. For ad-hoc calls, use 'Meet now' in Teams on your laptop and add the room as a participant."},
+ {q:"Can I use my personal phone for MFA?",a:"Yes. Install Microsoft Authenticator on your personal phone and register it at aka.ms/mfasetup. This does not give IT access to your personal device."},
+ {q:"How do I report a data breach or suspicious activity?",a:"Call the IT Security team immediately on ext. 2911 or email security@phb.com.my. Do not forward or delete any suspicious emails until IT has reviewed them."},
 ];
-
-const faqs = [
- {q:'How fast will my ticket be answered?', a:'Standard requests get a first response within 22 minutes on average during business hours (Mon–Fri, 7am–7pm). Critical outages affecting multiple people are paged to on-call staff 24/7.'},
- {q:'Do I need approval to install new software?', a:'Apps listed in Software Center / Company Portal install instantly with no approval needed. Anything outside that catalog requires a quick manager-approved request — see KB‑0303.'},
- {q:'What counts as a "critical" issue?', a:'Anything that fully stops you from working — no network access, locked account with no recovery option, or a security incident like a phishing click. Use the phone line for these rather than the ticket queue.'},
- {q:'Can I use my personal laptop for work?', a:'Only with prior approval and an MDM (mobile device management) profile installed, which enforces encryption and remote-wipe capability. Submit an access request to start the process.'},
- {q:'How do I check if an outage is already known?', a:'Check the System Status card under Resources before filing a ticket — most widespread issues are already being tracked there with live updates.'},
- {q:'Who do I contact for new equipment?', a:'Use the "Request equipment" card under Resources. Standard requests (monitor, keyboard, headset) ship within 2–3 business days; laptops may take longer depending on stock.'},
-];
-
-/* ===================== RENDER ===================== */
-const sevMeta = {
-  crit:{dot:'dot-crit', label:'High impact'},
-  warn:{dot:'dot-warn', label:'Moderate'},
-  ok:{dot:'dot-op', label:'Routine'}
-};
-
-function svgIcon(catKey, color){
-  return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${iconFor[catKey]}</svg>`;
-}
-
-function renderCategories(){
-  const grid = document.getElementById('catGrid');
-  grid.innerHTML = categories.map(c=>{
-    const count = articles.filter(a=>a.cat===c.key).length;
-    return `<div class="cat-card" tabindex="0" role="button" onclick="filterByCategory('${c.key}')" onkeypress="if(event.key==='Enter')filterByCategory('${c.key}')">
-      <div class="cat-top">
-        <div class="cat-icon" style="background:${c.tint}">${svgIcon(c.key, c.color)}</div>
-      </div>
-      <h3>${c.name}</h3>
-      <p>${c.desc}</p>
-      <div class="cat-count"><span class="dot dot-op" style="background:${c.color};box-shadow:none;width:6px;height:6px;"></span>${count} guides</div>
-    </div>`;
-  }).join('');
-}
-
-function renderArticles(list){
-  const wrap = document.getElementById('articleList');
-  document.getElementById('articleCount').textContent = list.length + (list.length===1?' guide':' guides');
-  if(!list.length){
-    wrap.innerHTML = `<div class="no-results">No articles match that filter. <a href="#" onclick="renderArticles(articles);return false;" style="color:var(--teal-dark);text-decoration:underline;">Show all</a></div>`;
-    return;
-  }
-  wrap.innerHTML = list.map(a=>{
-    const sm = sevMeta[a.sev];
-    const cat = categories.find(c=>c.key===a.cat);
-    return `<div class="article-card" tabindex="0" onclick="openArticle('${a.id}')" onkeypress="if(event.key==='Enter')openArticle('${a.id}')">
-      <span class="article-icon" style="background:${cat.tint}">${svgIcon(a.cat, cat.color)}</span>
-      <span class="article-id mono">${a.id}</span>
-      <div class="article-body">
-        <div class="article-title">${a.title}</div>
-        <div class="article-desc">${a.desc}</div>
-      </div>
-      <span class="article-cat">${cat.name}</span>
-      <span class="severity"><span class="dot ${sm.dot}"></span>${sm.label}</span>
-      <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
-    </div>`;
-  }).join('');
-}
-
-function renderFaq(){
-  const wrap = document.getElementById('faqList');
-  wrap.innerHTML = faqs.map((f,i)=>`
-    <div class="faq-item" id="faq-${i}">
-      <div class="faq-q" onclick="toggleFaq(${i})">
-        <span>${f.q}</span>
-        <span class="faq-plus">+</span>
-      </div>
-      <div class="faq-a"><div class="faq-a-inner">${f.a}</div></div>
-    </div>`).join('');
-}
-
-function toggleFaq(i){
-  const item = document.getElementById('faq-'+i);
-  const a = item.querySelector('.faq-a');
-  const isOpen = item.classList.contains('open');
-  document.querySelectorAll('.faq-item.open').forEach(el=>{
-    el.classList.remove('open');
-    el.querySelector('.faq-a').style.maxHeight = null;
-  });
-  if(!isOpen){
-    item.classList.add('open');
-    a.style.maxHeight = a.scrollHeight + 'px';
-  }
-}
-
-function filterByCategory(key){
-  renderArticles(articles.filter(a=>a.cat===key));
-  document.getElementById('articles').scrollIntoView({behavior:'smooth'});
-}
-
-/* ===================== SEARCH ===================== */
-const input = document.getElementById('searchInput');
-const resultsBox = document.getElementById('resultsBox');
-
-function runSearch(q){
-  q = q.trim().toLowerCase();
-  if(!q){ resultsBox.classList.remove('show'); return; }
-  const matches = articles.filter(a=>{
-    const hay = (a.title+' '+a.desc+' '+a.tags.join(' ')+' '+a.cat).toLowerCase();
-    return hay.includes(q);
-  }).slice(0,8);
-
-  if(!matches.length){
-    resultsBox.innerHTML = `<div class="no-results">No matches for “${q}”. Try a broader term, or <a href="#" onclick="openTicket();return false;" style="color:var(--teal-dark);text-decoration:underline;">submit a ticket</a>.</div>`;
-  } else {
-    resultsBox.innerHTML = matches.map(a=>{
-      const cat = categories.find(c=>c.key===a.cat);
-      return `<div class="result-row" onclick="openArticle('${a.id}')">
-        <span class="article-icon" style="width:30px;height:30px;background:${cat.tint}">${svgIcon(a.cat, cat.color)}</span>
-        <span class="result-id mono">${a.id}</span>
-        <div class="result-meta">
-          <div class="result-title">${a.title}</div>
-          <div class="result-snip">${a.desc}</div>
-        </div>
-        <span class="result-tag">${cat.name}</span>
-      </div>`;
-    }).join('');
-  }
-  resultsBox.classList.add('show');
-}
-
-input.addEventListener('input', e=>runSearch(e.target.value));
-input.addEventListener('focus', e=>{ if(e.target.value) resultsBox.classList.add('show'); });
-document.addEventListener('click', e=>{
-  if(!resultsBox.contains(e.target) && e.target!==input){ resultsBox.classList.remove('show'); }
-});
-document.addEventListener('keydown', e=>{
-  if(e.key==='/' && document.activeElement!==input){ e.preventDefault(); input.focus(); }
-  if(e.key==='Escape'){ resultsBox.classList.remove('show'); closeModal(); }
-});
-
-document.querySelectorAll('.chip').forEach(chip=>{
-  chip.addEventListener('click', ()=>{
-    input.value = chip.dataset.q;
-    input.focus();
-    runSearch(chip.dataset.q);
-  });
-});
-
-/* ===================== MODAL ===================== */
-function categoryIllustration(catKey, color){
-  const diamond = `<path d="M0 22 L11 0 L22 22 L11 44 Z" fill="${color}" opacity="0.18"/>`;
-  const scenes = {
-    network: `<svg width="240" height="100" viewBox="0 0 240 100" fill="none">
-      ${diamond}<g transform="translate(195,4)">${diamond}</g>
-      <circle cx="120" cy="60" r="6" fill="${color}"/>
-      <path d="M96 60a24 24 0 0 1 48 0" stroke="${color}" stroke-width="3" fill="none" stroke-linecap="round"/>
-      <path d="M84 60a36 36 0 0 1 72 0" stroke="${color}" stroke-width="3" fill="none" stroke-linecap="round" opacity=".55"/>
-      <path d="M72 60a48 48 0 0 1 96 0" stroke="${color}" stroke-width="3" fill="none" stroke-linecap="round" opacity=".3"/>
-    </svg>`,
-    hardware: `<svg width="240" height="100" viewBox="0 0 240 100" fill="none">
-      ${diamond}<g transform="translate(195,4)">${diamond}</g>
-      <rect x="90" y="34" width="60" height="40" rx="4" stroke="${color}" stroke-width="3"/>
-      <rect x="100" y="42" width="40" height="24" rx="2" fill="${color}" opacity=".25"/>
-      <path d="M80 80h80l-6 8H86l-6-8Z" stroke="${color}" stroke-width="3" stroke-linejoin="round"/>
-    </svg>`,
-    software: `<svg width="240" height="100" viewBox="0 0 240 100" fill="none">
-      ${diamond}<g transform="translate(195,4)">${diamond}</g>
-      <rect x="86" y="28" width="68" height="50" rx="6" stroke="${color}" stroke-width="3"/>
-      <path d="M86 42h68" stroke="${color}" stroke-width="3"/>
-      <circle cx="94" cy="35" r="2.4" fill="${color}"/><circle cx="101" cy="35" r="2.4" fill="${color}"/>
-      <path d="M104 58l8 6-8 6M126 58l-8 6 8 6" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>`,
-    account: `<svg width="240" height="100" viewBox="0 0 240 100" fill="none">
-      ${diamond}<g transform="translate(195,4)">${diamond}</g>
-      <circle cx="120" cy="40" r="14" stroke="${color}" stroke-width="3"/>
-      <path d="M96 82c0-14 10.7-22 24-22s24 8 24 22" stroke="${color}" stroke-width="3" stroke-linecap="round"/>
-    </svg>`,
-    email: `<svg width="240" height="100" viewBox="0 0 240 100" fill="none">
-      ${diamond}<g transform="translate(195,4)">${diamond}</g>
-      <rect x="84" y="32" width="72" height="46" rx="5" stroke="${color}" stroke-width="3"/>
-      <path d="M84 36l36 26 36-26" stroke="${color}" stroke-width="3" stroke-linejoin="round" fill="none"/>
-    </svg>`,
-    security: `<svg width="240" height="100" viewBox="0 0 240 100" fill="none">
-      ${diamond}<g transform="translate(195,4)">${diamond}</g>
-      <path d="M120 24l24 9v18c0 16-10 26-24 31-14-5-24-15-24-31V33l24-9Z" stroke="${color}" stroke-width="3" stroke-linejoin="round"/>
-      <path d="M111 58l7 7 13-15" stroke="${color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>`,
-  };
-  return scenes[catKey] || scenes.software;
-}
-
-function openArticle(id){
-  const a = articles.find(x=>x.id===id);
-  if(!a) return;
-  const cat = categories.find(c=>c.key===a.cat);
-  const sm = sevMeta[a.sev];
-  document.getElementById('modalContent').innerHTML = `
-    <div class="modal-head">
-      <span class="modal-icon" style="background:${cat.tint}">${svgIcon(a.cat, cat.color)}</span>
-      <div class="modal-head-left">
-        <span class="article-id mono">${a.id}</span>
-        <h2>${a.title}</h2>
-      </div>
-      <button class="modal-close" onclick="closeModal()" aria-label="Close">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="article-hero" style="background:${cat.tint}">${categoryIllustration(a.cat, cat.color)}</div>
-      <div style="display:flex;gap:14px;align-items:center;margin-bottom:4px;font-size:12.5px;color:var(--ink-soft);">
-        <span style="display:flex;align-items:center;gap:6px;"><span class="dot ${sm.dot}"></span>${sm.label}</span>
-        <span>·</span><span>${cat.name}</span>
-      </div>
-      ${a.body.replace(/<ol>/g,'<ol class="step-list">')}
-    </div>
-    <div class="modal-tags">${a.tags.map(t=>`<span>#${t}</span>`).join('')}</div>
-    <div class="modal-foot">
-      <div class="helpful">Was this helpful?
-        <button onclick="this.parentElement.innerHTML='Thanks for the feedback 🛠️'">Yes</button>
-        <button onclick="openTicket()">No, escalate</button>
-      </div>
-    </div>`;
-  document.getElementById('overlay').classList.add('show');
-  resultsBox.classList.remove('show');
-}
-function closeModal(){ document.getElementById('overlay').classList.remove('show'); }
-
-
-/* =====================================================================
-   DATABASE — Microsoft SharePoint List (via Power Automate HTTP flows)
-   =====================================================================
-   This app is a static page with no server of its own, so it cannot
-   safely hold an Azure AD app secret or ask every visitor to sign in
-   just to load the ticket list. Instead it talks to SharePoint through
-   three Power Automate flows that you build once (a "When an HTTP
-   request is received" trigger + a SharePoint action). The flow itself
-   is authenticated with your SharePoint connection — nobody using this
-   page needs a separate Microsoft login.
-
-   See the accompanying "ORBIT — SharePoint Setup Guide" document for:
-     • the exact SharePoint list + column schema to create
-     • step-by-step instructions for building the 3 flows below
-     • the HTTP POST URLs to paste into SP_CONFIG
-
-   Until you paste in real URLs, SP_IS_LIVE is false and the app runs
-   in local demo mode (sample tickets cached in this browser only) so
-   the page still works out of the box.
-   ===================================================================== */
-const SP_CONFIG = {
-  listFlowUrl:   '',   // GET  — "List tickets" flow: returns every item in the SharePoint list as JSON
-  createFlowUrl: '',   // POST — "Create ticket" flow: creates a new item, returns the created item
-  updateFlowUrl: '',   // POST — "Update ticket status" flow: updates Status/ResolvedDate, returns ok
-  autoRefreshMs: 45000 // how often to re-pull the SharePoint list while the dashboard is open (0 = off)
-};
-const SP_IS_LIVE = !!(SP_CONFIG.listFlowUrl && SP_CONFIG.createFlowUrl && SP_CONFIG.updateFlowUrl);
-
-const DB = (function(){
-  const KEY = 'phb_kb_db_cache'; // offline cache / demo fallback only — SharePoint is the source of truth once live
-  const defaults = {tickets:[], nextId:1001};
-
-  function loadLocal(){
-    try{ return JSON.parse(localStorage.getItem(KEY)) || defaults; }
-    catch(e){ return defaults; }
-  }
-  function saveLocal(data){
-    try{ localStorage.setItem(KEY, JSON.stringify(data)); }catch(e){}
-  }
-
-  const catColors = {
-    hardware:'#C3CE1E', software:'#5B6878', network:'#F5A623',
-    account:'#E2574C', email:'#0EA5A4', security:'#8C1E1E'
-  };
-
-  let cache = loadLocal();
-  let syncState = SP_IS_LIVE ? 'connecting' : 'demo'; // 'demo' | 'connecting' | 'live' | 'offline'
-
-  /* ---- seed sample data — demo mode only, never runs once SharePoint is live ---- */
-  function seedIfEmpty(){
-    if(cache.tickets.length) return;
-    const names=['Amir Hassan','Siti Rahayu','Kumar Nair','Noor Azlin','Raj Pillai','Farah Aziz','Danial Iqbal','Mei Ling'];
-    const cats=['hardware','software','network','account','email','security'];
-    const subs=['Monitor not detected','VPN keeps dropping','Password reset request','Outlook not syncing','Phishing email received','Laptop running slow','Printer offline','MFA setup needed','Cannot access shared drive','Blue screen error'];
-    const statuses=['open','open','resolved','pending','resolved','open','resolved','resolved'];
-    const now = Date.now();
-    for(let i=0;i<28;i++){
-      const cat=cats[i%cats.length];
-      const created=now-(Math.random()*30*86400000|0);
-      const resolved=statuses[i%statuses.length]==='resolved'?created+(Math.random()*8*3600000|0):null;
-      cache.tickets.push({
-        id:'TK-'+String(cache.nextId++).padStart(4,'0'),
-        name:names[i%names.length],
-        email:names[i%names.length].toLowerCase().replace(' ','.')+`@company.com`,
-        cat,
-        priority:['low','medium','medium','high','critical'][i%5],
-        subject:subs[i%subs.length],
-        detail:'User reported this via the knowledge base self-service portal.',
-        status:statuses[i%statuses.length],
-        created, resolved,
-        sat: resolved?Math.floor(Math.random()*2)+4:null
-      });
-    }
-    saveLocal(cache);
-  }
-
-  /* ---- map a SharePoint list item (as returned by the Flow) to our internal ticket shape ---- */
-  function fromSP(item){
-    const created = item.CreatedDate || item.Created;
-    const resolved = item.ResolvedDate;
-    return {
-      id: item.TicketID || item.Title || ('TK-'+item.id),
-      spId: item.id, // SharePoint list item ID — needed to target updates
-      name: item.RequesterName || '',
-      email: item.RequesterEmail || '',
-      cat: String(item.Category||'').toLowerCase(),
-      priority: String(item.Priority||'medium').toLowerCase(),
-      subject: item.Subject || item.Title || '',
-      detail: item.Detail || '',
-      status: String(item.Status||'open').toLowerCase(),
-      created: created ? new Date(created).getTime() : Date.now(),
-      resolved: resolved ? new Date(resolved).getTime() : null,
-      sat: (item.Satisfaction===0||item.Satisfaction) ? Number(item.Satisfaction) : null
-    };
-  }
-
-  /* ---- pull the full ticket list from SharePoint and refresh the cache ---- */
-  async function refreshFromSharePoint(){
-    if(!SP_IS_LIVE){ seedIfEmpty(); syncState='demo'; updateSyncBadge(); return false; }
-    try{
-      syncState='connecting'; updateSyncBadge();
-      const res = await fetch(SP_CONFIG.listFlowUrl, {method:'GET'});
-      if(!res.ok) throw new Error('HTTP '+res.status);
-      const data = await res.json();
-      const items = Array.isArray(data) ? data : (data.value||[]);
-      const tickets = items.map(fromSP).sort((a,b)=>b.created-a.created);
-      const maxNum = tickets.reduce((m,t)=>{
-        const n=parseInt(String(t.id).replace(/\D/g,''),10);
-        return isFinite(n)?Math.max(m,n):m;
-      },1000);
-      cache = {tickets, nextId:maxNum+1};
-      saveLocal(cache); // mirrored locally only so the page still shows data offline
-      syncState='live';
-      updateSyncBadge();
-      return true;
-    }catch(err){
-      console.error('SharePoint refresh failed — showing last known data', err);
-      syncState='offline';
-      updateSyncBadge();
-      return false;
-    }
-  }
-
-  return {
-    getAll(){ return cache.tickets; },
-    isLive(){ return SP_IS_LIVE; },
-    getSyncState(){ return syncState; },
-    refresh: refreshFromSharePoint,
-
-    /* Returns the new ticket immediately (optimistic UI), then syncs to
-       SharePoint in the background and reconciles the cache + re-renders
-       once the flow responds. */
-    add(t){
-      const optimisticId = 'TK-'+String(cache.nextId++).padStart(4,'0');
-      const optimistic = {...t, id:optimisticId, created:Date.now(), resolved:null, status:'open', sat:null, _pending:SP_IS_LIVE};
-      cache.tickets.unshift(optimistic);
-      saveLocal(cache);
-
-      if(SP_IS_LIVE){
-        fetch(SP_CONFIG.createFlowUrl, {
-          method:'POST', headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({
-            RequesterName:t.name, RequesterEmail:t.email, Category:t.cat,
-            Priority:t.priority, Subject:t.subject, Detail:t.detail, Status:'open'
-          })
-        })
-        .then(res=>{ if(!res.ok) throw new Error('HTTP '+res.status); return res.json(); })
-        .then(created=>{
-          const real = fromSP(created);
-          const idx = cache.tickets.findIndex(x=>x.id===optimisticId);
-          if(idx>-1) cache.tickets[idx]=real; else cache.tickets.unshift(real);
-          saveLocal(cache);
-          renderDashboard(); renderReports(); renderUserPortal();
-        })
-        .catch(err=>{
-          console.error('Could not save ticket to SharePoint — kept locally only', err);
-          const idx = cache.tickets.findIndex(x=>x.id===optimisticId);
-          if(idx>-1) cache.tickets[idx]._pending=false;
-          saveLocal(cache);
-          showToast('Saved locally — could not reach SharePoint. It will retry on next sync.', 'error');
-        });
-      }
-      return optimistic;
-    },
-
-    /* Updates the cache immediately, pushes the change to SharePoint in
-       the background, and rolls back + re-renders if the flow fails. */
-    updateStatus(id,status){
-      const t=cache.tickets.find(x=>x.id===id);
-      if(!t) return;
-      const prevStatus=t.status, prevResolved=t.resolved;
-      t.status=status;
-      if(status==='resolved') t.resolved=Date.now();
-      saveLocal(cache);
-
-      if(SP_IS_LIVE){
-        fetch(SP_CONFIG.updateFlowUrl, {
-          method:'POST', headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({spId:t.spId, id:t.id, status, resolved:t.resolved})
-        })
-        .then(res=>{ if(!res.ok) throw new Error('HTTP '+res.status); })
-        .catch(err=>{
-          console.error('Could not update ticket status in SharePoint — reverting', err);
-          t.status=prevStatus; t.resolved=prevResolved;
-          saveLocal(cache);
-          showToast('Could not reach SharePoint — status change was not saved.', 'error');
-          renderDashboard(); renderReports();
-        });
-      }
-    },
-    catColors
-  };
-})();
-
-/* =====================================================================
-   ACTIVITY LOG (session only)
-   ===================================================================== */
-const activity = [];
-function logActivity(text, color){
-  activity.unshift({text, color, time:new Date()});
-  if(activity.length>20) activity.pop();
-}
-logActivity('Knowledge base loaded', '#4CAF50');
-
-/* =====================================================================
-   SHAREPOINT SYNC STATUS BADGE
-   ===================================================================== */
-function updateSyncBadge(){
-  const el = document.getElementById('spSyncBadge');
-  if(!el) return;
-  const state = DB.getSyncState();
-  const map = {
-    demo:       {text:'Demo mode — SharePoint not configured', cls:'sp-demo'},
-    connecting: {text:'Syncing with SharePoint…', cls:'sp-connecting'},
-    live:       {text:'Connected to SharePoint list', cls:'sp-live'},
-    offline:    {text:'SharePoint unreachable — showing cached data', cls:'sp-offline'},
-  };
-  const s = map[state]||map.demo;
-  el.className = 'sp-badge '+s.cls;
-  el.innerHTML = `<span class="dot" style="background:currentColor;"></span>${s.text}`;
-}
-
-/* =====================================================================
-   DASHBOARD RENDERERS
-   ===================================================================== */
-function timeAgo(ms){
-  const s=Math.round((Date.now()-ms)/1000);
-  if(s<60)return s+'s ago';
-  if(s<3600)return Math.round(s/60)+'m ago';
-  if(s<86400)return Math.round(s/3600)+'h ago';
-  return Math.round(s/86400)+'d ago';
-}
-function fmtDate(ms){
-  return new Date(ms).toLocaleDateString('en-MY',{day:'2-digit',month:'short',year:'numeric'});
-}
-
-function renderKPIs(){
-  const all=DB.getAll();
-  const open=all.filter(t=>t.status==='open').length;
-  const resolved=all.filter(t=>t.status==='resolved').length;
-  const pending=all.filter(t=>t.status==='pending').length;
-  const resolveTimes=all.filter(t=>t.resolved).map(t=>(t.resolved-t.created)/3600000);
-  const avgRes=resolveTimes.length?Math.round(resolveTimes.reduce((a,b)=>a+b,0)/resolveTimes.length*10)/10:0;
-  document.getElementById('kpiGrid').innerHTML=[
-    {label:'Open Tickets',val:open,delta:'+2 this week',dir:'up',color:'var(--amber-tint)'},
-    {label:'Resolved Today',val:resolved,delta:'↑ 18% vs last week',dir:'up',color:'var(--teal-tint)'},
-    {label:'Pending Review',val:pending,delta:pending>3?'Needs attention':'On track',dir:pending>3?'down':'up',color:'var(--coral-tint)'},
-    {label:'Avg. Resolution',val:avgRes+'h',delta:'Target: 4h',dir:avgRes<4?'up':'down',color:'var(--teal-tint)'},
-  ].map(k=>`<div class="kpi" style="--kpi-color:${k.color}">
-    <div class="kpi-label">${k.label}</div>
-    <div class="kpi-val">${k.val}</div>
-    <div class="kpi-delta ${k.dir}">${k.delta}</div>
-  </div>`).join('');
-  document.getElementById('openCount').textContent=open+' open';
-  document.getElementById('dashLastUpdate').textContent='Updated '+timeAgo(Date.now());
-}
-
-function renderTicketTable(){
-  const tickets=DB.getAll().slice(0,10);
-  const statusClass={open:'t-open',resolved:'t-resolved',pending:'t-pending'};
-  const priorityColors={low:'#9AA7B5',medium:DB.catColors.network,high:DB.catColors.security,critical:'var(--coral)'};
-  document.getElementById('ticketTableBody').innerHTML=
-    `<thead><tr><th>ID</th><th>Subject</th><th>Category</th><th>Priority</th><th>Status</th><th>Created</th></tr></thead>
-    <tbody>${tickets.map(t=>`<tr onclick="editTicketStatus('${t.id}')" style="cursor:pointer;">
-      <td class="mono" style="font-size:12px;color:var(--teal-dark);">${t.id}</td>
-      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${t.subject}</td>
-      <td style="font-size:12px;">${categories.find(c=>c.key===t.cat)?.name||t.cat}</td>
-      <td><span style="font-size:11px;font-weight:700;color:${priorityColors[t.priority]||'var(--ink-soft)'};text-transform:uppercase;">${t.priority}</span></td>
-      <td><span class="t-status ${statusClass[t.status]||'t-open'}">${t.status}</span></td>
-      <td style="font-size:12px;color:var(--ink-soft);">${fmtDate(t.created)}</td>
-    </tr>`).join('')}</tbody>`;
-}
-
-function renderCatBars(){
-  const all=DB.getAll();
-  const counts=categories.map(c=>({name:c.name,count:all.filter(t=>t.cat===c.key).length,color:c.color}));
-  const max=Math.max(...counts.map(c=>c.count))||1;
-  document.getElementById('catBars').innerHTML=counts.map(c=>`
-    <div class="cat-bar-row">
-      <div class="cat-bar-label">${c.name}</div>
-      <div class="cat-bar-track"><div class="cat-bar-fill" style="width:${Math.round(c.count/max*100)}%;background:${c.color};"></div></div>
-      <div class="cat-bar-count">${c.count}</div>
-    </div>`).join('');
-}
-
-function renderActivityLog(){
-  const dotColors={'open':'var(--amber)','resolved':'var(--teal)','pending':'var(--coral)','#4CAF50':'#4CAF50','#E2574C':'#E2574C'};
-  const recent=activity.slice(0,8);
-  document.getElementById('activityLog').innerHTML=recent.map(a=>`
-    <div class="act-row">
-      <div class="act-dot" style="background:${a.color||'var(--teal)'}"></div>
-      <div class="act-text">${a.text}</div>
-      <div class="act-time">${timeAgo(a.time)}</div>
-    </div>`).join('');
-}
-
-function renderDashboard(){
-  updateSyncBadge();
-  renderKPIs();
-  renderTicketTable();
-  renderCatBars();
-  renderActivityLog();
-}
-
-/* =====================================================================
-   REPORTS CHARTS
-   ===================================================================== */
-const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-function getMonthBuckets(filterCat){
-  const all=DB.getAll().filter(t=>!filterCat||filterCat==='all'||t.cat===filterCat);
-  const buckets=[];
-  const now=new Date();
-  for(let i=5;i>=0;i--){
-    const d=new Date(now.getFullYear(),now.getMonth()-i,1);
-    const label=months[d.getMonth()];
-    const count=all.filter(t=>{
-      const td=new Date(t.created);
-      return td.getFullYear()===d.getFullYear()&&td.getMonth()===d.getMonth();
-    }).length;
-    buckets.push({label,count});
-  }
-  return buckets;
-}
-
-function renderBarChart(filterCat='all'){
-  const buckets=getMonthBuckets(filterCat);
-  const max=Math.max(...buckets.map(b=>b.count))||1;
-  const colors=['#C3CE1E','#A9B41A','#8C8B1E','#C3CE1E','#CBD62A','#8C8B1E'];
-  document.getElementById('barChart').innerHTML=buckets.map((b,i)=>`
-    <div class="bar-col">
-      <div class="bar-val">${b.count}</div>
-      <div class="bar-seg" style="height:${Math.max(4,Math.round(b.count/max*130))}px;background:${colors[i]};"></div>
-      <div class="bar-xlbl">${b.label}</div>
-    </div>`).join('');
-}
-
-function renderDonut(){
-  const all=DB.getAll();
-  const total=all.length||1;
-  const slices=categories.map(c=>({name:c.name,color:c.color,count:all.filter(t=>t.cat===c.key).length}));
-  const R=52,cx=65,cy=65,stroke=16;
-  const circ=2*Math.PI*R;
-  let cumulative=0;
-  const svgPaths=slices.map(s=>{
-    const pct=s.count/total;
-    const dashArray=`${pct*circ} ${circ}`;
-    const rotate=cumulative*360;
-    cumulative+=pct;
-    return `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="${s.color}" stroke-width="${stroke}"
-      stroke-dasharray="${dashArray}" stroke-dashoffset="0"
-      transform="rotate(${rotate-90} ${cx} ${cy})" opacity=".9"/>`;
-  }).join('');
-  document.getElementById('donutSvg').innerHTML=
-    `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="var(--line)" stroke-width="${stroke}"/>`
-    +svgPaths
-    +`<text x="${cx}" y="${cy+5}" text-anchor="middle" font-size="15" font-weight="700" font-family="Space Grotesk" fill="var(--ink)">${total}</text>
-    <text x="${cx}" y="${cy+20}" text-anchor="middle" font-size="9" fill="var(--ink-soft)" font-family="Inter">tickets</text>`;
-  document.getElementById('donutLegend').innerHTML=slices.map(s=>`
-    <div class="legend-row">
-      <div class="legend-dot" style="background:${s.color}"></div>
-      <span style="flex:1;color:var(--ink-soft);">${s.name}</span>
-      <span style="font-weight:600;font-family:'JetBrains Mono';font-size:12px;">${s.count}</span>
-    </div>`).join('');
-}
-
-function renderSparkline(){
-  const buckets=getMonthBuckets('all');
-  const resTimes=[3.2,4.1,2.8,3.9,2.5,3.1];
-  const w=300,h=90,pad=12;
-  const maxY=Math.max(...resTimes)+1;
-  const pts=resTimes.map((v,i)=>{
-    const x=pad+(i/(resTimes.length-1))*(w-2*pad);
-    const y=h-pad-((v/maxY)*(h-2*pad));
-    return [x,y];
-  });
-  const polyline=pts.map(p=>p.join(',')).join(' ');
-  const area='M'+pts[0][0]+','+h+' '+'L'+pts.map(p=>p.join(',')).join(' L')+' L'+pts[pts.length-1][0]+','+h+' Z';
-  const svg=document.getElementById('sparklineSvg');
-  svg.setAttribute('viewBox',`0 0 ${w} ${h}`);
-  svg.innerHTML=`
-    <defs><linearGradient id="areaG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C3CE1E" stop-opacity=".3"/><stop offset="1" stop-color="#C3CE1E" stop-opacity="0"/></linearGradient></defs>
-    <path d="${area}" fill="url(#areaG)"/>
-    <polyline points="${polyline}" fill="none" stroke="#8C8B1E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-    ${pts.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="#C3CE1E" stroke="var(--panel)" stroke-width="2"/>
-      <text x="${p[0]}" y="${p[1]-9}" text-anchor="middle" font-size="9" fill="var(--ink-soft)" font-family="JetBrains Mono">${resTimes[i]}h</text>
-      <text x="${p[0]}" y="${h-2}" text-anchor="middle" font-size="8" fill="var(--ink-soft)" font-family="Inter">${buckets[i].label}</text>`).join('')}`;
-}
-
-function renderSatisfaction(){
-  const all=DB.getAll().filter(t=>t.sat!==null);
-  if(!all.length){ document.getElementById('satScore').textContent='N/A'; return; }
-  const avg=(all.reduce((s,t)=>s+t.sat,0)/all.length).toFixed(1);
-  document.getElementById('satScore').textContent=avg+' ⭐';
-  document.getElementById('satCount').textContent=all.length;
-  const stars=[5,4,3,2,1];
-  document.getElementById('satBars').innerHTML=stars.map(s=>{
-    const cnt=all.filter(t=>t.sat===s).length;
-    const pct=Math.round(cnt/all.length*100);
-    return `<div style="display:flex;align-items:center;gap:8px;font-size:12px;">
-      <span style="width:12px;color:var(--ink-soft);font-family:'JetBrains Mono';">${s}</span>
-      <div class="progress-bar" style="flex:1;"><div class="progress-fill" style="width:${pct}%;"></div></div>
-      <span style="width:24px;text-align:right;color:var(--ink-soft);font-size:11.5px;">${pct}%</span>
-    </div>`;
-  }).join('');
-}
-
-function renderReportTable(filter=''){
-  const all=DB.getAll().filter(t=>!filter||(t.subject+t.name+t.id).toLowerCase().includes(filter.toLowerCase()));
-  const statusClass={open:'t-open',resolved:'t-resolved',pending:'t-pending'};
-  document.getElementById('reportTable').innerHTML=
-    `<thead><tr><th>Ticket ID</th><th>Submitted By</th><th>Subject</th><th>Category</th><th>Priority</th><th>Status</th><th>Created</th><th>Resolution</th></tr></thead>
-    <tbody>${all.slice(0,30).map(t=>`<tr>
-      <td class="mono" style="font-size:11.5px;color:var(--teal-dark);">${t.id}</td>
-      <td>${t.name||'—'}</td>
-      <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${t.subject}</td>
-      <td style="font-size:12px;">${categories.find(c=>c.key===t.cat)?.name||t.cat}</td>
-      <td style="text-transform:uppercase;font-size:11px;font-weight:700;">${t.priority}</td>
-      <td><span class="t-status ${statusClass[t.status]||'t-open'}">${t.status}</span></td>
-      <td style="font-size:12px;color:var(--ink-soft);">${fmtDate(t.created)}</td>
-      <td style="font-size:12px;color:var(--ink-soft);">${t.resolved?fmtDate(t.resolved):'—'}</td>
-    </tr>`).join('')}</tbody>`;
-}
-
-function renderReports(){
-  renderBarChart();
-  renderDonut();
-  renderSparkline();
-  renderSatisfaction();
-  renderReportTable();
-}
-
-/* =====================================================================
-   TICKET MODAL
-   ===================================================================== */
-function openNewTicket(){
-  document.getElementById('ticketOverlay').classList.add('show');
-  document.getElementById('tf-name').focus();
-}
-function closeTicketModal(){
-  document.getElementById('ticketOverlay').classList.remove('show');
-}
-function submitTicket(){
-  const name=document.getElementById('tf-name').value.trim();
-  const email=document.getElementById('tf-email').value.trim();
-  const subject=document.getElementById('tf-subject').value.trim();
-  if(!name||!email||!subject){ showToast('Please fill in Name, Email and Subject.','error'); return; }
-  const t=DB.add({
-    name,email,
-    cat:document.getElementById('tf-cat').value,
-    priority:document.getElementById('tf-priority').value,
-    subject,
-    detail:document.getElementById('tf-detail').value,
-  });
-  logActivity(`New ticket ${t.id}: "${subject}"`, DB.catColors[t.cat]||'var(--teal)');
-  closeTicketModal();
-  showToast(`Ticket ${t.id} submitted successfully!`);
-  ['tf-name','tf-email','tf-subject','tf-detail'].forEach(id=>document.getElementById(id).value='');
-  renderDashboard();
-  renderReports();
-}
-
-function editTicketStatus(id){
-  const t=DB.getAll().find(x=>x.id===id);
-  if(!t) return;
-  const next=t.status==='open'?'resolved':t.status==='pending'?'open':'pending';
-  if(confirm(`Change ticket ${id} from "${t.status}" → "${next}"?`)){
-    DB.updateStatus(id,next);
-    logActivity(`Ticket ${id} marked "${next}"`, next==='resolved'?'#4CAF50':DB.catColors.network);
-    renderDashboard(); renderReports();
-  }
-}
-
-function openTicket(){ openNewTicket(); }
-
-/* =====================================================================
-   ENTRA ID (MICROSOFT SSO) CONFIGURATION
-   ===================================================================== */
-const ENTRA_CONFIG = {
-  clientId: '86a53736-4355-4cb2-98dd-0466f0426e2e',
-  tenantId: 'cc9afa77-5900-4c38-8262-c226c4c2e27d',
-  redirectUri: 'https://poduxiptv2021-hash.github.io/ORBIT/'
-};
-
-// Map PHB staff emails to roles: 'hod' | 'it' (everyone else defaults to 'user')
-const ROLE_BY_EMAIL = {
-  'elizayazmin@phb.com.my': 'hod',
-  'haq@phb.com.my': 'it',
-  'fahmi@phb.com.my': 'it',
-  'nurhaliza@phb.com.my': 'hod'
-};
-
-let msalInstance = null;
-
-async function getMsalInstance() {
-  if (!ENTRA_CONFIG.clientId || ENTRA_CONFIG.clientId.startsWith('PASTE_')) {
-    return null;
-  }
-  if (!msalInstance) {
-    msalInstance = new msal.PublicClientApplication({
-      auth: {
-        clientId: ENTRA_CONFIG.clientId,
-        authority: `https://login.microsoftonline.com/${ENTRA_CONFIG.tenantId}`,
-        redirectUri: ENTRA_CONFIG.redirectUri
-      },
-      cache: {
-        cacheLocation: 'sessionStorage',
-        storeAuthStateInCookie: false
-      }
-    });
-    await msalInstance.initialize();
-  }
-  return msalInstance;
-}
-
-async function startSSO() {
-  const pca = await getMsalInstance();
-  if (!pca) {
-    alert('Please paste your Entra ID clientId and tenantId in ENTRA_CONFIG first.');
-    return;
-  }
-
-  document.getElementById('ssoStep1').style.display = 'none';
-  document.getElementById('authLoading').classList.add('show');
-  document.getElementById('authUser').textContent = 'Signing in with Microsoft…';
-
-  try {
-    const res = await pca.loginPopup({
-      scopes: ['User.Read'],
-      prompt: 'select_account'
-    });
-
-    const account = res.account;
-    const email = (account.username || '').toLowerCase();
-    const role = ROLE_BY_EMAIL[email] || 'user';
-    const name = account.name || email.split('@')[0];
-    const initials = name.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
-
-    const userObj = {
-      id: account.localAccountId || email,
-      name,
-      email,
-      dept: role === 'user' ? 'PHB Staff' : 'Information Technology',
-      role,
-      title: role === 'hod' ? 'Head of IT (HOD)' : (role === 'it' ? 'IT Staff' : 'Employee'),
-      color: role === 'hod' ? '#8C8B1E' : (role === 'it' ? '#2a6496' : '#27ae60'),
-      initials
-    };
-
-    document.getElementById('authLoading').classList.remove('show');
-    document.getElementById('ssoStep1').style.display = 'block';
-    completeLogin(userObj);
-  } catch (err) {
-    console.error('Entra SSO error:', err);
-    document.getElementById('authLoading').classList.remove('show');
-    document.getElementById('ssoStep1').style.display = 'block';
-    alert('Sign-in failed: ' + (err.message || err));
-  }
-}
-
-function selectAccount(id){
-  const u=AD_USERS.find(x=>x.id===id);
-  if(!u) return;
-  document.getElementById('ssoStep1').style.display='none';
-  document.getElementById('authLoading').classList.add('show');
-  document.getElementById('authUser').textContent=u.name;
-  const stepsEl=document.getElementById('authSteps');
-  stepsEl.innerHTML='';
-  const steps=[
-    {text:'Issuing access token…'},
-    {text:'Loading user profile and permissions…'},
-    {text:'Applying role: '+u.title+'…'},
-  ];
-  steps.forEach((s,i)=>{
-    setTimeout(()=>{
-      const div=document.createElement('div');
-      div.className='auth-step done';
-      div.innerHTML=`<div class="auth-step-icon" style="background:var(--teal-tint);">
-        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--teal-dark)" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>
-      </div><span>${s.text}</span>`;
-      stepsEl.appendChild(div);
-    },i*350);
-  });
-  setTimeout(()=>completeLogin(u),1300);
-}
-
-function completeLogin(u){
-  currentUser=u;
-  try{sessionStorage.setItem('phb_user',JSON.stringify(u));}catch(e){}
-  document.getElementById('loginScreen').classList.add('hidden');
-  applyRole(u);
-  logActivity(`${u.name} signed in (${u.role.toUpperCase()})`, u.color);
-  renderDashboard();
-  renderReports();
-  renderDeptStructure();
-  renderUserPortal();
-  // pull the latest tickets from SharePoint (or seed demo data) then re-render
-  DB.refresh().then(()=>{
-    renderDashboard();
-    renderReports();
-    renderUserPortal();
-  });
-  startSharePointPolling();
-}
-
-let spPollTimer=null;
-function startSharePointPolling(){
-  if(spPollTimer) clearInterval(spPollTimer);
-  if(!SP_IS_LIVE || !SP_CONFIG.autoRefreshMs) return;
-  spPollTimer=setInterval(()=>{
-    DB.refresh().then(()=>{
-      renderDashboard();
-      renderReports();
-      renderUserPortal();
-    });
-  }, SP_CONFIG.autoRefreshMs);
-}
-function stopSharePointPolling(){
-  if(spPollTimer){ clearInterval(spPollTimer); spPollTimer=null; }
-}
-
-function applyRole(u){
-  // body class
-  document.body.classList.remove('role-hod','role-it','role-user');
-  document.body.classList.add('role-'+u.role);
-
-  // user chip
-  document.getElementById('userChip').style.display='flex';
-  document.getElementById('chipAvatar').style.background=u.color;
-  document.getElementById('chipAvatar').textContent=u.initials;
-  document.getElementById('chipName').textContent=u.name.split(' ')[0];
-  document.getElementById('chipRole').textContent=u.title;
-  document.getElementById('topCta').style.display='block';
-
-  // nav
-  const nav=document.getElementById('mainNav');
-  const itLinks=`<a href="#categories">Knowledge Base</a>
-    <a href="#dashboard" style="color:var(--teal-dark);font-weight:600;">Dashboard</a>
-    <a href="#reports" style="color:var(--teal-dark);font-weight:600;">Reports</a>`;
-  const hodLinks=`<a href="#deptStructure" style="color:var(--teal-dark);font-weight:600;">Dept. Structure</a>`+itLinks;
-  const userLinks=`<a href="#categories">Help Topics</a><a href="#faq">FAQ</a>`;
-
-  if(u.role==='hod'){
-    nav.innerHTML=hodLinks;
-    document.getElementById('portalTitle').textContent='ORBIT - One Repository for IT';
-    document.getElementById('itAdminSection').style.display='block';
-    document.getElementById('userPortalSection').style.display='none';
-    showITSections(true);
-  } else if(u.role==='it'){
-    nav.innerHTML=itLinks;
-    document.getElementById('portalTitle').textContent='IT Staff Portal';
-    document.getElementById('itAdminSection').style.display='block';
-    document.getElementById('userPortalSection').style.display='none';
-    document.getElementById('deptStructure').style.display='none';
-    showITSections(true);
-  } else {
-    nav.innerHTML=userLinks;
-    document.getElementById('portalTitle').textContent='ORBIT - One Repository for IT';
-    document.getElementById('userPortalSection').style.display='block';
-    document.getElementById('itAdminSection').style.display='none';
-    showITSections(false);
-  }
-
-  // greet name
-  const greet=document.getElementById('userGreetName');
-  if(greet) greet.textContent=u.name.split(' ')[0];
-  if(u.role==='hod'){
-    const hodNameEl=document.getElementById('hodName');
-    if(hodNameEl) hodNameEl.textContent=u.name;
-  }
-}
-
-function showITSections(show){
-  ['howitworks','categories','articles','faq','resources'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el) el.style.display=show?'':'none';
-  });
-}
-
-async function logout() {
-  stopSharePointPolling();
-  currentUser = null;
-  try { sessionStorage.removeItem('phb_user'); } catch (e) {}
-
-  const pca = await getMsalInstance();
-  if (pca) {
-    const accounts = pca.getAllAccounts();
-    if (accounts.length > 0) {
-      await pca.logoutPopup({ account: accounts[0] }).catch(() => {});
-    }
-  }
-
-  document.body.classList.remove('role-hod', 'role-it', 'role-user');
-  document.getElementById('userChip').style.display = 'none';
-  document.getElementById('topCta').style.display = 'none';
-  document.getElementById('loginScreen').classList.remove('hidden');
-  document.getElementById('ssoStep1').style.display = 'block';
-  document.getElementById('authLoading').classList.remove('show');
-  document.querySelector('.login-title').textContent = 'IT HelpDesk Portal';
-  document.getElementById('itAdminSection').style.display = 'none';
-  document.getElementById('userPortalSection').style.display = 'none';
-  document.getElementById('userDropdown').classList.remove('open');
-}
-function showProfile(){
-  if(!currentUser) return;
-  const u=currentUser;
-  alert(`👤 ${u.name}\n📧 ${u.email}\n🏢 ${u.dept}\n💼 ${u.title}\n🔑 Role: ${u.role.toUpperCase()}`);
-  document.getElementById('userDropdown').classList.remove('open');
-}
-
-/* =====================================================================
-   DEPT STRUCTURE RENDERER
-   ===================================================================== */
-const deptFunctions=[
-  {key:'infra',icon:'🖥',color:'#2a6496',tint:'#d6eaf8',title:'Infrastructure',lead:'Sarah Lim',
-   roles:[{r:'Server & Cloud Admin',n:3},{r:'Network Engineer',n:2},{r:'Storage & Backup',n:1}],
-   score:94,desc:'Manages servers, cloud (Azure), network, and disaster recovery.'},
-  {key:'cyber',icon:'🔒',color:'#7d3c98',tint:'#e8daef',title:'Cybersecurity',lead:'Danial Iqbal',
-   roles:[{r:'Security Analyst',n:2},{r:'SOC Engineer',n:2},{r:'Compliance Officer',n:1}],
-   score:98,desc:'Protects assets through monitoring, threat response, and compliance.'},
-  {key:'apps',icon:'💻',color:'#c0392b',tint:'#fadbd8',title:'Applications',lead:'Mei Ling',
-   roles:[{r:'Business Systems Analyst',n:2},{r:'ERP/CRM Specialist',n:2},{r:'Integration Dev',n:2}],
-   score:88,desc:'Owns enterprise applications, ERP, and software integrations.'},
-  {key:'svc',icon:'🎧',color:'#1a7a3d',tint:'#d5f5e3',title:'Service Management',lead:'Farah Aziz',
-   roles:[{r:'Help Desk Analyst',n:4},{r:'IT Service Coordinator',n:1}],
-   score:92,desc:'First line of support, ITSM, SLA management, and user satisfaction.'},
-  {key:'proj',icon:'📋',color:'#d35400',tint:'#fdebd0',title:'IT Project Management',lead:'Raj Pillai',
-   roles:[{r:'IT Project Manager',n:1},{r:'Business Analyst',n:2},{r:'Change Manager',n:1}],
-   score:85,desc:'Drives strategic IT initiatives, roadmap, and change management.'},
-  {key:'data',icon:'📊',color:'#117a8b',tint:'#d1ecf1',title:'Data & Analytics',lead:'HOD (Oversight)',
-   roles:[{r:'Data Engineer',n:1},{r:'BI Analyst',n:1}],
-   score:80,desc:'Delivers data governance, reporting, and business intelligence.'},
-];
-
-function renderDeptStructure(){
-  const grid=document.getElementById('deptFunctions');
-  if(!grid) return;
-  grid.innerHTML=deptFunctions.map(f=>`
-    <div class="dept-function">
-      <div class="dept-fn-head">
-        <div class="dept-fn-icon" style="background:${f.tint};font-size:18px;">${f.icon}</div>
-        <div><div class="dept-fn-title">${f.title}</div><div class="dept-fn-lead">Lead: ${f.lead}</div></div>
-      </div>
-      <div class="dept-fn-body">
-        <p style="font-size:12.5px;color:var(--ink-soft);margin:0 0 12px;line-height:1.5;">${f.desc}</p>
-        <div class="dept-roles">${f.roles.map(r=>`
-          <div class="dept-role-row">
-            <span class="dept-role-name">${r.r}</span>
-            <span class="dept-role-count">${r.n}</span>
-          </div>`).join('')}
-        </div>
-      </div>
-      <div class="dept-fn-footer">
-        <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink-soft);">
-          <span>Health Score</span><span style="font-weight:700;color:${f.score>=90?'var(--teal-dark)':'var(--amber)'};">${f.score}%</span>
-        </div>
-        <div class="prog"><div class="prog-fill" style="width:${f.score}%;background:${f.color};opacity:.8;"></div></div>
-      </div>
-    </div>`).join('');
-}
-
-/* =====================================================================
-   USER PORTAL RENDERER
-   ===================================================================== */
-function renderUserPortal(){
-  if(!currentUser||currentUser.role!=='user') return;
-
-  // Categories
-  const ucg=document.getElementById('userCatGrid');
-  if(ucg) ucg.innerHTML=categories.map(c=>`
-    <div class="cat-card" tabindex="0" onclick="filterByCategory('${c.key}');document.getElementById('categories').scrollIntoView({behavior:'smooth'})">
-      <div class="cat-top"><div class="cat-icon" style="background:${c.tint}">${svgIcon(c.key,c.color)}</div></div>
-      <h3>${c.name}</h3>
-      <p>${c.desc}</p>
-      <div class="cat-count"><span class="dot" style="background:${c.color};width:6px;height:6px;"></span>${articles.filter(a=>a.cat===c.key).length} guides</div>
-    </div>`).join('');
-
-  // My tickets (filter by name match)
-  const myTickets=DB.getAll().filter(t=>currentUser&&(t.email===currentUser.email||t.name===currentUser.name)).slice(0,6);
-  const utl=document.getElementById('userTicketList');
-  if(utl){
-    if(!myTickets.length){
-      utl.innerHTML=`<div style="text-align:center;padding:24px;color:var(--ink-soft);font-size:14px;background:var(--panel);border:1px solid var(--line);border-radius:12px;">You have no open tickets. <a href="#" onclick="openNewTicket();return false;" style="color:var(--teal-dark);">Submit one →</a></div>`;
-    } else {
-      const sc={open:'t-open',resolved:'t-resolved',pending:'t-pending'};
-      utl.innerHTML=myTickets.map(t=>`
-        <div class="my-ticket-card">
-          <span class="mt-id">${t.id}</span>
-          <div class="mt-body">
-            <div class="mt-subj">${t.subject}</div>
-            <div class="mt-meta">${categories.find(c=>c.key===t.cat)?.name||t.cat} · ${fmtDate(t.created)}</div>
-          </div>
-          <span class="t-status ${sc[t.status]||'t-open'}">${t.status}</span>
-        </div>`).join('');
-    }
-  }
-
-  // FAQ (reuse)
-  const uf=document.getElementById('userFaqList');
-  if(uf) uf.innerHTML=document.getElementById('faqList').innerHTML;
-}
-
-function userSearch(q){
-  const res=document.getElementById('userSearchResults');
-  if(!q.trim()){ res.innerHTML=''; return; }
-  const matches=articles.filter(a=>(a.title+' '+a.desc+' '+a.tags.join(' ')).toLowerCase().includes(q.toLowerCase())).slice(0,5);
-  if(!matches.length){ res.innerHTML=`<div style="color:rgba(255,255,255,.5);font-size:13px;padding:8px 0;">No articles found. Try submitting a ticket.</div>`; return; }
-  res.innerHTML=`<div style="background:rgba(255,255,255,.1);border-radius:10px;overflow:hidden;">${matches.map(a=>`
-    <div onclick="openArticle('${a.id}')" style="padding:10px 14px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.08);color:#fff;font-size:13.5px;font-weight:500;">
-      <span style="font-family:'JetBrains Mono';font-size:10px;color:#C3CE1E;margin-right:8px;">${a.id}</span>${a.title}
-    </div>`).join('')}</div>`;
-}
-
-/* close dropdown on outside click */
-document.addEventListener('click',e=>{
-  const dd=document.getElementById('userDropdown');
-  const chip=document.getElementById('userChip');
-  if(dd&&chip&&!chip.contains(e.target)) dd.classList.remove('open');
-});
-
-
-function showSpinner(msg){ 
-  document.getElementById('dlSpinnerMsg').textContent=msg||'Generating report…'; 
-  document.getElementById('dlSpinner').classList.add('show'); 
-}
-function hideSpinner(){ document.getElementById('dlSpinner').classList.remove('show'); }
-
-/* ---- colour helpers for jsPDF ---- */
-const PHB_OLIVE=[140,139,30];
-const PHB_LIME=[195,206,30];
-const PHB_GREY=[92,92,82];
-const PHB_BLACK=[22,22,26];
-const PHB_LINE=[225,225,212];
-const STATUS_COLORS={open:[245,166,35], resolved:[195,206,30], pending:[226,87,76]};
-
-/* =====================================================================
-   PDF DOWNLOAD
-   ===================================================================== */
-async function downloadPDF(){
-  if(!window.jspdf){ showToast('PDF library not loaded yet. Try again in a moment.','error'); return; }
-  showSpinner('Building PDF report…');
-  await new Promise(r=>setTimeout(r,60));
-  try{
-    const {jsPDF}=window.jspdf;
-    const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-    const pw=doc.internal.pageSize.getWidth();   // 210
-    const ph=doc.internal.pageSize.getHeight();  // 297
-    const M=14;  // margin
-
-    /* --- helper: branded page header --- */
-    function pageHeader(title){
-      // olive top bar
-      doc.setFillColor(...PHB_OLIVE);
-      doc.rect(0,0,pw,14,'F');
-      // brand text
-      doc.setTextColor(255,255,255);
-      doc.setFont('helvetica','bold');
-      doc.setFontSize(9);
-      doc.text('PHB  |  Pelaburan Hartanah Berhad — IT HelpDesk',M,9);
-      // right timestamp
-      doc.setFont('helvetica','normal');
-      doc.setFontSize(7.5);
-      doc.text(new Date().toLocaleString('en-MY'),pw-M,9,{align:'right'});
-      // page title
-      doc.setTextColor(...PHB_BLACK);
-      doc.setFont('helvetica','bold');
-      doc.setFontSize(17);
-      doc.text(title,M,28);
-      doc.setDrawColor(...PHB_LIME);
-      doc.setLineWidth(.8);
-      doc.line(M,31,pw-M,31);
-    }
-
-    /* --- helper: section label --- */
-    function sectionLabel(y,txt){
-      doc.setFont('helvetica','bold');
-      doc.setFontSize(8);
-      doc.setTextColor(...PHB_OLIVE);
-      doc.text(txt.toUpperCase(),M,y);
-      doc.setTextColor(...PHB_BLACK);
-    }
-
-    /* ========== PAGE 1 : SUMMARY ========== */
-    pageHeader('IT Reports & Analytics');
-
-    const all=DB.getAll();
-    const open=all.filter(t=>t.status==='open').length;
-    const resolved=all.filter(t=>t.status==='resolved').length;
-    const pending=all.filter(t=>t.status==='pending').length;
-    const resTimes=all.filter(t=>t.resolved).map(t=>(t.resolved-t.created)/3600000);
-    const avgRes=resTimes.length?(resTimes.reduce((a,b)=>a+b,0)/resTimes.length).toFixed(1):'—';
-    const sats=all.filter(t=>t.sat!==null);
-    const avgSat=sats.length?(sats.reduce((s,t)=>s+t.sat,0)/sats.length).toFixed(1):'—';
-
-    // KPI boxes (2×2 grid)
-    const kpis=[
-      {label:'Total Tickets',val:String(all.length)},
-      {label:'Open',val:String(open)},
-      {label:'Resolved',val:String(resolved)},
-      {label:'Avg. Resolution',val:avgRes+'h'},
-      {label:'Pending',val:String(pending)},
-      {label:'Satisfaction Score',val:avgSat+' / 5'},
-    ];
-    const boxW=(pw-2*M-10)/3, boxH=22, boxY=36, gap=5;
-    kpis.forEach((k,i)=>{
-      const col=i%3, row=Math.floor(i/3);
-      const x=M+col*(boxW+gap), y=boxY+row*(boxH+gap);
-      doc.setFillColor(246,248,217);
-      doc.roundedRect(x,y,boxW,boxH,2,2,'F');
-      doc.setDrawColor(...PHB_LINE);
-      doc.setLineWidth(.3);
-      doc.roundedRect(x,y,boxW,boxH,2,2,'S');
-      doc.setFont('helvetica','normal');
-      doc.setFontSize(7);
-      doc.setTextColor(...PHB_GREY);
-      doc.text(k.label,x+4,y+7);
-      doc.setFont('helvetica','bold');
-      doc.setFontSize(14);
-      doc.setTextColor(...PHB_OLIVE);
-      doc.text(k.val,x+4,y+17);
-    });
-
-    let y=36+2*(boxH+gap)+10;
-
-    // Category breakdown bar chart (drawn in PDF)
-    sectionLabel(y,'Tickets by Category'); y+=6;
-    const catCounts=categories.map(c=>({name:c.name,count:all.filter(t=>t.cat===c.key).length}));
-    const maxCat=Math.max(...catCounts.map(c=>c.count))||1;
-    const barMaxW=pw-2*M-40;
-    catCounts.forEach(c=>{
-      doc.setFont('helvetica','normal');
-      doc.setFontSize(8);
-      doc.setTextColor(...PHB_GREY);
-      doc.text(c.name,M,y+3.5);
-      const bw=Math.round((c.count/maxCat)*barMaxW);
-      doc.setFillColor(...PHB_LINE);
-      doc.roundedRect(M+38,y,barMaxW,5,1,1,'F');
-      doc.setFillColor(...PHB_OLIVE);
-      if(bw>0) doc.roundedRect(M+38,y,bw,5,1,1,'F');
-      doc.setFont('helvetica','bold');
-      doc.setFontSize(7.5);
-      doc.setTextColor(...PHB_BLACK);
-      doc.text(String(c.count),pw-M,y+4,{align:'right'});
-      y+=9;
-    });
-
-    y+=4;
-
-    // Monthly volume table
-    sectionLabel(y,'Ticket Volume — Last 6 Months'); y+=5;
-    const buckets=getMonthBuckets('all');
-    doc.autoTable({
-      startY:y,
-      head:[buckets.map(b=>b.label)],
-      body:[buckets.map(b=>String(b.count))],
-      styles:{fontSize:9,cellPadding:3,halign:'center'},
-      headStyles:{fillColor:PHB_OLIVE,textColor:[255,255,255],fontStyle:'bold'},
-      alternateRowStyles:{fillColor:[246,248,217]},
-      margin:{left:M,right:M},
-      tableWidth:'auto',
-    });
-    y=doc.lastAutoTable.finalY+8;
-
-    // Satisfaction distribution
-    if(sats.length){
-      sectionLabel(y,'Satisfaction Distribution'); y+=5;
-      const stars=[5,4,3,2,1];
-      stars.forEach(s=>{
-        const cnt=sats.filter(t=>t.sat===s).length;
-        const pct=Math.round(cnt/sats.length*100);
-        doc.setFont('helvetica','normal');
-        doc.setFontSize(8);
-        doc.setTextColor(...PHB_GREY);
-        doc.text(s+'★',M,y+3.5);
-        const trackW=60;
-        doc.setFillColor(...PHB_LINE);
-        doc.roundedRect(M+10,y,trackW,4.5,1,1,'F');
-        doc.setFillColor(...PHB_LIME);
-        if(pct>0) doc.roundedRect(M+10,y,trackW*pct/100,4.5,1,1,'F');
-        doc.setFontSize(7.5);
-        doc.setTextColor(...PHB_BLACK);
-        doc.text(pct+'%  ('+cnt+')',M+73,y+3.5);
-        y+=8;
-      });
-    }
-
-    /* ========== PAGE 2 : TICKET LOG ========== */
-    doc.addPage();
-    pageHeader('Ticket Log');
-
-    const tableRows=all.map(t=>[
-      t.id,
-      t.name||'—',
-      t.subject.length>40?t.subject.slice(0,38)+'…':t.subject,
-      (categories.find(c=>c.key===t.cat)?.name)||t.cat,
-      t.priority.toUpperCase(),
-      t.status.charAt(0).toUpperCase()+t.status.slice(1),
-      fmtDate(t.created),
-      t.resolved?fmtDate(t.resolved):'—',
-    ]);
-    doc.autoTable({
-      startY:36,
-      head:[['Ticket ID','Name','Subject','Category','Priority','Status','Created','Resolved']],
-      body:tableRows,
-      styles:{fontSize:7.8,cellPadding:2.5,overflow:'ellipsize'},
-      headStyles:{fillColor:PHB_OLIVE,textColor:[255,255,255],fontStyle:'bold'},
-      alternateRowStyles:{fillColor:[246,248,217]},
-      columnStyles:{
-        0:{cellWidth:18,fontStyle:'bold',textColor:PHB_OLIVE},
-        1:{cellWidth:26},
-        2:{cellWidth:48},
-        3:{cellWidth:22},
-        4:{cellWidth:17},
-        5:{cellWidth:18},
-        6:{cellWidth:20},
-        7:{cellWidth:20},
-      },
-      margin:{left:M,right:M},
-      didParseCell(data){
-        if(data.section==='body'&&data.column.index===5){
-          const s=data.cell.raw.toLowerCase();
-          if(s==='open') data.cell.styles.textColor=[160,100,0];
-          else if(s==='resolved') data.cell.styles.textColor=PHB_OLIVE;
-          else if(s==='pending') data.cell.styles.textColor=[180,50,40];
-        }
-      },
-    });
-
-    // page numbers
-    const totalPages=doc.internal.getNumberOfPages();
-    for(let p=1;p<=totalPages;p++){
-      doc.setPage(p);
-      doc.setFont('helvetica','normal');
-      doc.setFontSize(7.5);
-      doc.setTextColor(...PHB_GREY);
-      doc.setFillColor(...PHB_LINE);
-      doc.rect(0,ph-8,pw,8,'F');
-      doc.text(`Page ${p} of ${totalPages}  ·  PHB IT HelpDesk Confidential`,pw/2,ph-3,{align:'center'});
-    }
-
-    const filename=`PHB_IT_Report_${new Date().toISOString().slice(0,10)}.pdf`;
-    doc.save(filename);
-    showToast('PDF downloaded: '+filename);
-  } catch(err){
-    console.error(err);
-    showToast('PDF generation failed: '+err.message,'error');
-  } finally{ hideSpinner(); }
-}
-
-/* =====================================================================
-   EXCEL DOWNLOAD
-   ===================================================================== */
-function downloadExcel(){
-  if(!window.XLSX){ showToast('Excel library not loaded yet. Try again in a moment.','error'); return; }
-  showSpinner('Building Excel workbook…');
-  setTimeout(()=>{
-    try{
-      const wb=XLSX.utils.book_new();
-      const all=DB.getAll();
-
-      /* --- helper: apply header row style --- */
-      function styleHeaderRow(ws, cols){
-        const range=XLSX.utils.decode_range(ws['!ref']);
-        cols.forEach((_,i)=>{
-          const cell=ws[XLSX.utils.encode_cell({r:0,c:i})];
-          if(cell){
-            cell.s={
-              fill:{fgColor:{rgb:'8C8B1E'}},
-              font:{bold:true,color:{rgb:'FFFFFF'},sz:11},
-              alignment:{horizontal:'center',vertical:'center'},
-              border:{bottom:{style:'medium',color:{rgb:'C3CE1E'}}}
-            };
-          }
-        });
-      }
-
-      /* ===== SHEET 1 : SUMMARY ===== */
-      const open=all.filter(t=>t.status==='open').length;
-      const resolved=all.filter(t=>t.status==='resolved').length;
-      const pending=all.filter(t=>t.status==='pending').length;
-      const resTimes=all.filter(t=>t.resolved).map(t=>+(((t.resolved-t.created)/3600000).toFixed(2)));
-      const avgRes=resTimes.length?+(resTimes.reduce((a,b)=>a+b,0)/resTimes.length).toFixed(1):0;
-      const sats=all.filter(t=>t.sat!==null);
-      const avgSat=sats.length?+(sats.reduce((s,t)=>s+t.sat,0)/sats.length).toFixed(1):0;
-
-      const summaryData=[
-        ['PHB IT HelpDesk — Monthly Report','',''],
-        ['Generated',new Date().toLocaleString('en-MY'),''],
-        ['','',''],
-        ['METRIC','VALUE',''],
-        ['Total Tickets',all.length,''],
-        ['Open Tickets',open,''],
-        ['Resolved Tickets',resolved,''],
-        ['Pending Tickets',pending,''],
-        ['Avg. Resolution Time (hrs)',avgRes,''],
-        ['Avg. Satisfaction Score',avgSat,''],
-        ['','',''],
-        ['TICKETS BY CATEGORY','COUNT','% OF TOTAL'],
-        ...categories.map(c=>{
-          const cnt=all.filter(t=>t.cat===c.key).length;
-          return [c.name, cnt, all.length?+(cnt/all.length*100).toFixed(1):0];
-        }),
-        ['','',''],
-        ['MONTHLY VOLUME (Last 6 Months)','',''],
-        ...getMonthBuckets('all').map(b=>[b.label, b.count,'']),
-      ];
-      const ws1=XLSX.utils.aoa_to_sheet(summaryData);
-      ws1['!cols']=[{wch:36},{wch:16},{wch:16}];
-      ws1['!merges']=[{s:{r:0,c:0},e:{r:0,c:2}}];
-      // bold the title cell
-      if(ws1['A1']) ws1['A1'].s={font:{bold:true,sz:14,color:{rgb:'8C8B1E'}},alignment:{horizontal:'left'}};
-      XLSX.utils.book_append_sheet(wb,ws1,'Summary');
-
-      /* ===== SHEET 2 : ALL TICKETS ===== */
-      const ticketHeaders=['Ticket ID','Name','Email','Category','Priority','Status','Subject','Details','Created Date','Resolved Date','Resolution Time (hrs)','Satisfaction (1-5)'];
-      const ticketRows=all.map(t=>[
-        t.id,
-        t.name||'',
-        t.email||'',
-        categories.find(c=>c.key===t.cat)?.name||t.cat,
-        t.priority.charAt(0).toUpperCase()+t.priority.slice(1),
-        t.status.charAt(0).toUpperCase()+t.status.slice(1),
-        t.subject,
-        t.detail||'',
-        fmtDate(t.created),
-        t.resolved?fmtDate(t.resolved):'',
-        t.resolved?+((t.resolved-t.created)/3600000).toFixed(2):'',
-        t.sat||'',
-      ]);
-      const ws2=XLSX.utils.aoa_to_sheet([ticketHeaders,...ticketRows]);
-      ws2['!cols']=[{wch:12},{wch:18},{wch:26},{wch:16},{wch:10},{wch:11},{wch:38},{wch:40},{wch:14},{wch:14},{wch:20},{wch:16}];
-      styleHeaderRow(ws2,ticketHeaders);
-      XLSX.utils.book_append_sheet(wb,ws2,'All Tickets');
-
-      /* ===== SHEET 3 : BY CATEGORY ===== */
-      const catHeaders=['Category','Total','Open','Resolved','Pending','Avg Resolution (hrs)','Avg Satisfaction'];
-      const catRows=categories.map(c=>{
-        const ts=all.filter(t=>t.cat===c.key);
-        const rt=ts.filter(t=>t.resolved).map(t=>(t.resolved-t.created)/3600000);
-        const st=ts.filter(t=>t.sat!==null);
-        return [
-          c.name,
-          ts.length,
-          ts.filter(t=>t.status==='open').length,
-          ts.filter(t=>t.status==='resolved').length,
-          ts.filter(t=>t.status==='pending').length,
-          rt.length?+(rt.reduce((a,b)=>a+b,0)/rt.length).toFixed(1):'',
-          st.length?+(st.reduce((a,b)=>a+b.sat,0)/st.length).toFixed(1):'',
-        ];
-      });
-      const ws3=XLSX.utils.aoa_to_sheet([catHeaders,...catRows]);
-      ws3['!cols']=[{wch:18},{wch:8},{wch:8},{wch:10},{wch:10},{wch:22},{wch:18}];
-      styleHeaderRow(ws3,catHeaders);
-      XLSX.utils.book_append_sheet(wb,ws3,'By Category');
-
-      /* ===== SHEET 4 : MONTHLY TREND ===== */
-      const trendHeaders=['Month','Total Tickets','Resolved','Open','Pending'];
-      const trendRows=getMonthBuckets('all').map(b=>{
-        const d=new Date(); // approx bucket filter
-        const mTickets=all.filter(t=>{const td=new Date(t.created);return months[td.getMonth()]===b.label;});
-        return [b.label,b.count,mTickets.filter(t=>t.status==='resolved').length,mTickets.filter(t=>t.status==='open').length,mTickets.filter(t=>t.status==='pending').length];
-      });
-      const ws4=XLSX.utils.aoa_to_sheet([trendHeaders,...trendRows]);
-      ws4['!cols']=[{wch:12},{wch:14},{wch:11},{wch:8},{wch:10}];
-      styleHeaderRow(ws4,trendHeaders);
-      XLSX.utils.book_append_sheet(wb,ws4,'Monthly Trend');
-
-      /* ===== SHEET 5 : SATISFACTION ===== */
-      const satHeaders=['Ticket ID','Name','Category','Subject','Status','Score (1-5)','Resolved Date'];
-      const satRows=all.filter(t=>t.sat!==null).map(t=>[
-        t.id,t.name,categories.find(c=>c.key===t.cat)?.name||t.cat,
-        t.subject,t.status,t.sat,t.resolved?fmtDate(t.resolved):'',
-      ]);
-      const ws5=XLSX.utils.aoa_to_sheet([satHeaders,...satRows]);
-      ws5['!cols']=[{wch:12},{wch:18},{wch:16},{wch:38},{wch:11},{wch:13},{wch:14}];
-      styleHeaderRow(ws5,satHeaders);
-      XLSX.utils.book_append_sheet(wb,ws5,'Satisfaction');
-
-      const filename=`PHB_IT_Report_${new Date().toISOString().slice(0,10)}.xlsx`;
-      XLSX.writeFile(wb,filename);
-      showToast('Excel downloaded: '+filename);
-    } catch(err){
-      console.error(err);
-      showToast('Excel generation failed: '+err.message,'error');
-    } finally{ hideSpinner(); }
-  },80);
-}
-
-function showToast(msg, type='success'){
-  const el=document.getElementById('toast');
-  document.getElementById('toastMsg').textContent=msg;
-  el.style.background=type==='error'?'var(--coral)':'var(--ink)';
-  el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'),3200);
-}
-
-
-
-const howSteps = [
- {tag:'Step 01', title:'Search or browse', desc:'Type your issue into the console, or pick a category below to see related guides.',
-  icon:'<circle cx="11" cy="11" r="6"/><line x1="20" y1="20" x2="15.5" y2="15.5"/>'},
- {tag:'Step 02', title:'Follow the steps', desc:'Each guide is a short, numbered fix — usually 3 to 6 steps, no jargon.',
-  icon:'<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>'},
- {tag:'Step 03', title:'Rate it helpful', desc:'Tell us if it worked. That feedback keeps the most useful guides easy to find.',
-  icon:'<path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14Z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>'},
- {tag:'Step 04', title:'Still stuck? Escalate', desc:"Not resolved? One click sends a ticket straight to the ITD team.",
-  icon:'<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92Z"/>'},
-];
-
-function renderInfographic(){
-  const wrap = document.getElementById('infographic');
-  wrap.innerHTML = `<div class="info-steps">${howSteps.map(s=>`
-    <div class="info-step">
-      <div class="info-num"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--teal-dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${s.icon}</svg></div>
-      <span class="info-tag">${s.tag}</span>
-      <h4>${s.title}</h4>
-      <p>${s.desc}</p>
-    </div>`).join('')}</div>`;
-}
-
-/* ===================== THEME TOGGLE ===================== */
-function applyTheme(mode){
-  document.documentElement.setAttribute('data-theme', mode);
-  document.getElementById('themeIconSun').style.display = mode==='dark' ? 'none' : 'block';
-  document.getElementById('themeIconMoon').style.display = mode==='dark' ? 'block' : 'none';
-  try{ localStorage.setItem('phb-kb-theme', mode); }catch(e){}
-}
-function toggleTheme(){
-  const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-  applyTheme(current==='dark' ? 'light' : 'dark');
-}
-(function initTheme(){
-  let saved = 'light';
-  try{ saved = localStorage.getItem('phb-kb-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }catch(e){}
-  applyTheme(saved);
-})();
-
-/* ===================== INIT ===================== */
-renderCategories();
-renderInfographic();
-renderArticles(articles);
-renderFaq();
-
-/* show login screen or restore session */
-(function initApp(){
-  renderLoginAccounts();
-  // hide all content sections until logged in
-  ['howitworks','categories','articles','faq','resources'].forEach(id=>{
-    const el=document.getElementById(id); if(el) el.style.display='none';
-  });
-  document.getElementById('itAdminSection').style.display='none';
-  document.getElementById('userPortalSection').style.display='none';
-  // check for saved session
-  try{
-    const saved=sessionStorage.getItem('phb_user');
-    if(saved){
-      const u=JSON.parse(saved);
-      document.getElementById('loginScreen').classList.add('hidden');
-      completeLogin(u);
-    }
-  }catch(e){}
-})();
-
-/* fade-up on scroll */
-const obs = new IntersectionObserver(entries=>{
-  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); });
-},{threshold:.1});
-document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
-
-/* count-up animation for the stats strip */
-function animateCount(el, target, suffix, duration){
-  const start = performance.now();
-  function tick(now){
-    const p = Math.min(1, (now-start)/duration);
-    const eased = 1 - Math.pow(1-p, 3);
-    const val = Math.round(target*eased);
-    el.textContent = (Number.isInteger(target) ? val : val) + suffix;
-    if(p<1) requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-}
-const statTargets = [
-  {sel:'.stats .stat:nth-child(1) .stat-num', n:24, suf:''},
-  {sel:'.stats .stat:nth-child(2) .stat-num', n:6, suf:''},
-  {sel:'.stats .stat:nth-child(4) .stat-num', n:92, suf:'%'},
-];
-let statsAnimated = false;
-const statsObs = new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting && !statsAnimated){
-      statsAnimated = true;
-      statTargets.forEach(s=>{
-        const el = document.querySelector(s.sel);
-        if(el) animateCount(el, s.n, s.suf, 900);
-      });
-    }
-  });
-},{threshold:.4});
-const statsEl = document.querySelector('.stats');
-if(statsEl) statsObs.observe(statsEl);
-</script>
-<!-- Download spinner -->
-<div class="dl-spinner" id="dlSpinner">
-  <div class="dl-spinner-ring"></div>
-  <div style="color:#fff;font-size:14px;font-weight:600;font-family:'Inter';" id="dlSpinnerMsg">Generating report…</div>
-</div>
-</body>
-</html>
+function renderFAQ(){
+ return'<div class="page-hd"><h2>Frequently Asked Questions</h2><p>Quick answers to common IT questions.</p></div>'
+ +'<div style="display:flex;flex-direction:column;gap:10px">'+FAQS.map(function(f,i){return'<div style="background:var(--card);border-radius:12px;border:1.5px solid var(--bd);overflow:hidden"><button style="width:100%;text-align:left;border:0;background:none;padding:16px 18px;font-weight:700;font-size:14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center" onclick="toggleFaq('+i+')">'+e(f.q)+'<span id="faqIcon-'+i+'">▼</span></button><div id="faqAns-'+i+'" style="display:none;padding:0 18px 16px;font-size:13px;color:var(--mut);line-height:1.6">'+e(f.a)+'</div></div>'}).join("")+'</div>'}
+
+function toggleFaq(i){var a=g("faqAns-"+i),ic=g("faqIcon-"+i);if(!a)return;var open=a.style.display==="block";a.style.display=open?"none":"block";ic.textContent=open?"▼":"▲"}
+
+// ═══════════════════ DASHBOARD (IT admin) ═══════════════════
+function renderDash(){
+ var byStatus={},byCat={},byPrio={};
+ TICKETS.forEach(function(t){byStatus[t.status]=(byStatus[t.status]||0)+1;byCat[t.cat]=(byCat[t.cat]||0)+1;byPrio[t.prio]=(byPrio[t.prio]||0)+1});
+ var open=byStatus.Open||0,prog=byStatus["In Progress"]||0,pend=byStatus.Pending||0,res=byStatus.Resolved||0;
+ var maxCat=Math.max.apply(null,Object.values(byCat).concat([1]));
+ return'<div class="page-hd"><h2>IT Dashboard</h2><p>Live overview of all support tickets and system health.</p></div>'
+ +'<div class="kpis"><div class="kpi" style="--c:#e65100"><small>Open</small><b>'+open+'</b></div><div class="kpi" style="--c:#1565c0"><small>In Progress</small><b>'+prog+'</b></div><div class="kpi" style="--c:#d4860b"><small>Pending</small><b>'+pend+'</b></div><div class="kpi" style="--c:var(--green)"><small>Resolved</small><b>'+res+'</b></div><div class="kpi" style="--c:var(--pri)"><small>Total</small><b>'+TICKETS.length+'</b></div></div>'
+ +'<div class="chart-row"><div class="chart-box"><h4>Tickets by category</h4><div class="bar-chart">'+Object.entries(byCat).sort(function(a,b){return b[1]-a[1]}).map(function(x){return'<div class="bc-row"><span class="bc-label">'+e(x[0])+'</span><div class="bc-track"><div class="bc-fill" style="width:'+Math.round(x[1]/maxCat*100)+'%"></div></div><span class="bc-val">'+x[1]+'</span></div>'}).join("")+'</div></div>'
+ +'<div class="chart-box"><h4>Recent unassigned tickets</h4>'+TICKETS.filter(function(t){return!t.assignee&&t.status==="Open"}).slice(0,4).map(function(t){return'<div style="padding:8px 0;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:8px;cursor:pointer" onclick="openTicket('+t.id+')"><span style="font-size:11px;font-family:monospace;color:var(--mut)">'+ticketNum(t.id)+'</span><span style="flex:1;font-size:13px;font-weight:600">'+e(t.subject.slice(0,36))+'</span><span class="pill '+prioClass(t.prio)+'">'+e(t.prio)+'</span></div>'}).join("")+(TICKETS.filter(function(t){return!t.assignee&&t.status==="Open"}).length?"":'<div style="color:var(--mut);font-size:13px;margin-top:8px">No unassigned tickets.</div>')+'</div></div>'
+ +'<div class="section-hd" style="margin-top:8px"><h3>All tickets</h3><div style="display:flex;gap:8px">'+["All","Open","In Progress","Pending"].map(function(s){return'<button class="btn" onclick="filterTickets(\''+s+'\')">'+s+'</button>'}).join("")+'</div></div>'
+ +'<div class="tickets-wrap" id="tickList">'+TICKETS.map(function(t){return ticketRow(t)}).join("")+'</div>'}
+
+// ═══════════════════ BOOT ═══════════════════
+document.addEventListener("keydown",function(ev){if(ev.key==="/"&&document.activeElement.tagName!=="INPUT"&&document.activeElement.tagName!=="TEXTAREA"){ev.preventDefault();var q=document.getElementById("homeQ");if(q){q.focus();q.select()}}});
+document.addEventListener("click",function(ev){["ticketM","ticketDetailM","guideM"].forEach(function(id){var el=document.getElementById(id);if(el&&el.classList.contains("show")&&ev.target===el)el.classList.remove("show")})});
+</script></body></html>

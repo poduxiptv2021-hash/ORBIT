@@ -8,7 +8,7 @@
 <!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
 
 <!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
@@ -60,7 +60,7 @@
   --phb-card: #FFFFFF;
   --phb-line: #E5E7EB;
   --phb-text: #111827;
-  --phb-soft: #6B7280;
+  --phb-soft: #4B5563;
   --phb-teal-tint: #E6F4F1;
 }
 
@@ -81,8 +81,24 @@ body {
 }
 
 .phb-grid-bg {
-  background-image: radial-gradient(rgba(0, 122, 94, 0.05) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(0, 122, 94, 0.06) 1px, transparent 1px);
   background-size: 28px 28px;
+}
+
+.nav-pill-hover {
+  transition: transform 160ms ease, color 160ms ease, background-color 160ms ease;
+}
+.nav-pill-hover:hover {
+  transform: translateY(-1px);
+}
+
+.card-interactive {
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+.card-interactive:hover {
+  transform: translateY(-3px);
+  border-color: #007A5E;
+  box-shadow: 0 12px 24px -10px rgba(0, 122, 94, 0.25);
 }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -100,13 +116,12 @@ body {
 .dark .badge-pending { background-color: #450A0A; color: #FECACA; border-color: #7F1D1D; }
 .dark .badge-resolved { background-color: #064E3B; color: #A7F3D0; border-color: #047857; }
 
-/* Custom Step List for KB Reader Modal */
 .step-list { list-style: none; counter-reset: step; padding: 0; margin: 0; }
 .step-list li { counter-increment: step; position: relative; padding-left: 2.25rem; margin-bottom: 1rem; }
 .step-list li::before {
   content: counter(step);
   font-family: 'JetBrains Mono', monospace;
-  font-weight: 700;
+  font-weight: 800;
   font-size: 0.75rem;
   position: absolute;
   left: 0;
@@ -140,51 +155,57 @@ html { scroll-behavior: smooth; }
 <!-- Top Gradient Corporate Accent Bar -->
 <div class="h-1.5 w-full bg-gradient-to-r from-[#007A5E] via-[#005A4B] to-[#0B2545]"></div>
 
-<!-- ==================== TOP NAVIGATION HEADER ==================== -->
+<!-- ==================== TOP NAVIGATION HEADER (3 HOME SECTIONS) ==================== -->
 <header class="sticky top-0 z-40 bg-[var(--phb-card)]/95 border-b border-[var(--phb-line)] backdrop-blur-md shadow-xs">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-    
+
     <!-- Brand Title & PHB Logo -->
     <div class="flex items-center gap-3 sm:gap-4">
-      <img src="https://www.phb.com.my/clients/asset_E5316276-9983-47F1-A6C2-76D0C7985656/contentms/img/logo/logo-phb.svg" 
-           alt="Pelaburan Hartanah Berhad Logo" class="h-8 sm:h-9 w-auto object-contain"
-           onerror="this.src='https://placehold.co/160x40/007A5E/ffffff?text=PHB+Logo'">
-      <div class="h-6 w-px bg-[var(--phb-line)] hidden sm:block"></div>
-      <div class="flex items-center gap-2">
-        <span class="font-display font-extrabold text-lg sm:text-xl tracking-tight text-[var(--phb-text)]">ORBIT</span>
-        <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/60 text-[#007A5E] dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 hidden md:inline-block">
-          One Repository for IT
-        </span>
-      </div>
+      <a href="#sectionHow" class="flex items-center gap-3 group">
+        <img src="https://www.phb.com.my/clients/asset_E5316276-9983-47F1-A6C2-76D0C7985656/contentms/img/logo/logo-phb.svg"
+             alt="Pelaburan Hartanah Berhad Logo" class="h-8 sm:h-9 w-auto object-contain transition-transform group-hover:scale-105"
+             onerror="this.src='https://placehold.co/160x40/007A5E/ffffff?text=PHB+Logo'">
+        <div class="h-6 w-px bg-[var(--phb-line)] hidden sm:block"></div>
+        <div class="flex items-center gap-2">
+          <span class="font-display font-extrabold text-lg sm:text-xl tracking-tight text-[var(--phb-text)] group-hover:text-[#007A5E] transition-colors">ORBIT</span>
+          <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/60 text-[#007A5E] dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 hidden md:inline-block">
+            One Repository for IT
+          </span>
+        </div>
+      </a>
     </div>
 
-    <!-- Navigation Links -->
-    <nav class="hidden lg:flex items-center gap-6 text-xs font-bold text-[var(--phb-soft)]">
-      <a href="#sectionSearch" class="hover:text-[var(--phb-text)] transition-colors">Search Console</a>
-      <a href="#sectionHow" class="hover:text-[var(--phb-text)] transition-colors">How it Works</a>
-      <a href="#sectionBrowse" class="hover:text-[var(--phb-text)] transition-colors">Categories</a>
-      <a href="#sectionKB" class="hover:text-[var(--phb-text)] transition-colors">Articles (24)</a>
-      <a href="#sectionFaq" class="hover:text-[var(--phb-text)] transition-colors">FAQ</a>
-      <a id="navTicketsLink" href="#sectionTicketQueue" class="hidden text-[#007A5E] dark:text-emerald-400 hover:underline">Tickets</a>
-      <a id="navReportsLink" href="#sectionReports" class="hidden text-amber-600 dark:text-amber-400 hover:underline">Reports</a>
+    <!-- 3 Home Navigation Links + Role-Scoped Links -->
+    <nav class="hidden lg:flex items-center gap-2 text-xs font-extrabold text-[var(--phb-soft)]">
+      <a href="#sectionHow" class="nav-pill-hover px-3 py-1.5 rounded-xl hover:bg-emerald-50 dark:hover:bg-emerald-950/50 hover:text-[#007A5E] dark:hover:text-emerald-300">
+        1. How It Works
+      </a>
+      <a href="#sectionBrowse" class="nav-pill-hover px-3 py-1.5 rounded-xl hover:bg-emerald-50 dark:hover:bg-emerald-950/50 hover:text-[#007A5E] dark:hover:text-emerald-300">
+        2. Categories
+      </a>
+      <a href="#sectionKB" class="nav-pill-hover px-3 py-1.5 rounded-xl hover:bg-emerald-50 dark:hover:bg-emerald-950/50 hover:text-[#007A5E] dark:hover:text-emerald-300">
+        3. Knowledge Base (24)
+      </a>
+      <a id="navTicketsLink" href="#sectionTicketQueue" class="nav-pill-hover hidden px-3 py-1.5 rounded-xl text-[#007A5E] dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/50">
+        Tickets
+      </a>
+      <a id="navReportsLink" href="#sectionReports" class="nav-pill-hover hidden px-3 py-1.5 rounded-xl text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/50">
+        Reports
+      </a>
     </nav>
 
     <!-- Controls & User Menu -->
     <div class="flex items-center gap-2 sm:gap-3">
-      
-      <!-- Dark Mode Switcher -->
-      <button onclick="toggleDarkMode()" title="Toggle Dark/Light Mode" class="p-2 rounded-xl border border-[var(--phb-line)] hover:bg-[var(--phb-bg)] text-[var(--phb-soft)] hover:text-[var(--phb-text)] transition-colors">
+      <button onclick="toggleDarkMode()" title="Toggle Dark/Light Mode" class="p-2 rounded-xl border border-[var(--phb-line)] hover:border-[#007A5E] hover:bg-[var(--phb-bg)] text-[var(--phb-soft)] hover:text-[var(--phb-text)] transition-all">
         <svg id="sunIcon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
         <svg id="moonIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
       </button>
 
-      <!-- Sign In Button -->
-      <button id="signInBtn" onclick="openLoginModal()" class="px-3.5 py-1.5 rounded-xl border border-[var(--phb-line)] hover:border-[#007A5E] text-xs font-bold text-[var(--phb-text)] transition-all bg-[var(--phb-card)] shadow-xs">
+      <button id="signInBtn" onclick="openLoginModal()" class="px-3.5 py-1.5 rounded-xl border border-[var(--phb-line)] hover:border-[#007A5E] hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-xs font-extrabold text-[var(--phb-text)] transition-all bg-[var(--phb-card)] shadow-xs">
         Sign in
       </button>
 
-      <!-- Quick Submit Button -->
-      <button onclick="openNewTicketModal()" class="px-3.5 py-1.5 rounded-xl bg-[#007A5E] hover:bg-[#005A4B] text-white text-xs font-bold shadow-sm transition-all flex items-center gap-1.5">
+      <button onclick="openNewTicketModal()" class="px-3.5 py-1.5 rounded-xl bg-[#007A5E] hover:bg-[#005A4B] hover:-translate-y-0.5 text-white text-xs font-extrabold shadow-sm transition-all flex items-center gap-1.5">
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
         <span>Submit Ticket</span>
       </button>
@@ -201,7 +222,6 @@ html { scroll-behavior: smooth; }
           </div>
         </button>
 
-        <!-- Dropdown Menu -->
         <div id="userDropdown" class="hidden absolute right-0 mt-2 w-64 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-2xl py-2 z-50">
           <div class="px-4 py-3 border-b border-[var(--phb-line)] bg-[var(--phb-bg)]/50">
             <p id="menuRoleTitle" class="text-[10px] font-extrabold uppercase tracking-wider text-[#007A5E] dark:text-emerald-400">Staff View</p>
@@ -240,7 +260,6 @@ html { scroll-behavior: smooth; }
         <span>Sign in with Microsoft 365</span>
       </button>
 
-      <!-- Role Selector Simulator (Useful for local testing) -->
       <div id="demoRoleSelectorArea" class="pt-3 border-t border-[var(--phb-line)]">
         <label class="block text-[10px] font-extrabold uppercase tracking-wider text-[var(--phb-soft)] mb-2">Simulate Role (SharePoint ORBITUsers)</label>
         <div class="grid grid-cols-2 gap-2 font-mono text-[11px]">
@@ -281,92 +300,58 @@ html { scroll-behavior: smooth; }
     </div>
   </div>
 
-  <!-- ==================== SEARCH CONSOLE & DIAGNOSTICS HERO ==================== -->
-  <section id="sectionSearch" class="space-y-6">
-    
-    <!-- Leadership Oversight Banner -->
-    <div id="staffHodBanner" class="p-4 sm:p-5 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] border-l-4 border-l-[#007A5E] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+  <!-- QUICK FINDING BAR (NO SEARCH BOX) -->
+  <div class="p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-[#007A5E] via-[#005A4B] to-[#0B2545] text-white shadow-lg">
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
       <div>
-        <div class="text-[10px] font-extrabold uppercase tracking-widest text-[#007A5E] dark:text-emerald-400">Department Leadership & IT Oversight</div>
-        <div class="text-base font-extrabold text-[var(--phb-text)] mt-0.5">
-          Nur Haliza Binti Haron <span class="text-xs font-semibold text-[var(--phb-soft)]">— Head of IT Division (HOD IT)</span>
+        <div class="font-mono text-[11px] text-emerald-300 font-extrabold tracking-widest uppercase">
+          &gt; PHB IT QUICK FINDING
         </div>
-        <div class="text-xs text-[var(--phb-soft)] mt-0.5 font-mono">
-          Division: Information Technology (ITD) &middot; Direct Email: <a href="mailto:nurhaliza@phb.com.my" class="text-[#007A5E] dark:text-emerald-400 font-bold underline">nurhaliza@phb.com.my</a>
-        </div>
-      </div>
-      <div class="flex items-center gap-2">
-        <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-800 dark:bg-emerald-950/70 dark:text-emerald-300 text-xs font-bold border border-emerald-200 dark:border-emerald-800">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span>HelpDesk Active &middot; SLA Monitored</span>
-        </span>
-      </div>
-    </div>
-
-    <!-- Hero Diagnostic Search Box -->
-    <div class="p-6 sm:p-10 rounded-3xl bg-gradient-to-r from-[#007A5E] via-[#005A4B] to-[#0B2545] text-white shadow-xl relative overflow-hidden">
-      <div class="relative z-10 max-w-3xl">
-        <div class="font-mono text-xs text-emerald-300 font-bold tracking-widest uppercase mb-2">
-          &gt; PHB IT DIAGNOSTIC CONSOLE READY
-        </div>
-        <h1 id="heroGuestHeading" class="font-display text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
-          Fix technical issues in <span class="text-emerald-300 underline decoration-emerald-400/50 underline-offset-4">under 5 minutes.</span>
+        <h1 id="heroGuestHeading" class="font-display text-2xl sm:text-4xl font-extrabold tracking-tight mt-1">
+          Fix common IT issues <span class="text-emerald-300">in minutes.</span>
         </h1>
-        <h1 id="heroWelcomeHeading" class="hidden font-display text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
+        <h1 id="heroWelcomeHeading" class="hidden font-display text-2xl sm:text-4xl font-extrabold tracking-tight mt-1">
           Welcome to ORBIT, <span id="staffHeroName" class="text-emerald-300">colleague</span> 👋
         </h1>
-        <p class="text-xs sm:text-sm text-emerald-100 opacity-90 mt-3 leading-relaxed max-w-2xl">
-          Search 24 verified IT guides covering hardware, software, FortiClient VPN, password resets, Outlook, and cybersecurity — maintained directly by PHB IT Division.
-        </p>
+      </div>
 
-        <!-- Live Search Console Input -->
-        <div class="mt-6 space-y-3">
-          <div class="flex flex-col sm:flex-row items-center gap-2.5">
-            <div class="relative flex items-center flex-1 w-full">
-              <svg class="w-5 h-5 absolute left-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-              <input id="searchInput" type="text" oninput="handleSearch(this.value)" placeholder="Search 24 guides (e.g., 'VPN', 'Password Reset', 'Printer', 'Phishing')" 
-                     class="w-full pl-12 pr-16 py-3.5 rounded-2xl text-slate-900 dark:text-white bg-white dark:bg-slate-900 border-none text-xs sm:text-sm focus:ring-4 focus:ring-emerald-400 focus:outline-none shadow-lg font-medium">
-              <span class="hidden sm:inline-block absolute right-4 text-[10px] font-mono font-bold text-slate-400 border border-slate-300 dark:border-slate-700 px-2 py-1 rounded-md">/ SEARCH</span>
-            </div>
-            <button onclick="openNewTicketModal()" class="w-full sm:w-auto px-5 py-3.5 rounded-2xl bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-extrabold text-xs sm:text-sm shadow-lg transition-colors flex items-center justify-center gap-1.5 whitespace-nowrap">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
-              <span>Submit Ticket</span>
-            </button>
-          </div>
-
-          <!-- Quick Suggestion Chips -->
-          <div class="flex flex-wrap items-center gap-2 pt-1">
-            <span class="text-[11px] text-emerald-200 font-bold uppercase tracking-wider">Quick:</span>
-            <button onclick="applyQuickChip('vpn')" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold backdrop-blur-xs transition-colors">VPN connection</button>
-            <button onclick="applyQuickChip('password reset')" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold backdrop-blur-xs transition-colors">Password reset</button>
-            <button onclick="applyQuickChip('printer')" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold backdrop-blur-xs transition-colors">Printer offline</button>
-            <button onclick="applyQuickChip('slow')" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold backdrop-blur-xs transition-colors">Computer slow</button>
-            <button onclick="applyQuickChip('phishing')" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold backdrop-blur-xs transition-colors">Phishing report</button>
-          </div>
-        </div>
+      <!-- 3-Section Quick Jump Bar -->
+      <div class="flex flex-wrap items-center gap-2 text-xs font-extrabold">
+        <a href="#sectionHow" class="px-3.5 py-2 rounded-xl bg-white/15 hover:bg-white/25 border border-white/20 transition-all">
+          1. How It Works
+        </a>
+        <a href="#sectionBrowse" class="px-3.5 py-2 rounded-xl bg-white/15 hover:bg-white/25 border border-white/20 transition-all">
+          2. Categories
+        </a>
+        <a href="#sectionKB" class="px-3.5 py-2 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-slate-950 transition-all">
+          3. All 24 Guides
+        </a>
       </div>
     </div>
 
-    <!-- Quick Performance Counters -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-      <div class="p-4 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-xs text-center">
-        <div class="font-display text-2xl sm:text-3xl font-extrabold text-[#007A5E] dark:text-emerald-400">24</div>
-        <div class="text-xs font-semibold text-[var(--phb-soft)] mt-0.5">Verified KB Articles</div>
-      </div>
-      <div class="p-4 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-xs text-center">
-        <div class="font-display text-2xl sm:text-3xl font-extrabold text-[#007A5E] dark:text-emerald-400">6</div>
-        <div class="text-xs font-semibold text-[var(--phb-soft)] mt-0.5">Core Categories</div>
-      </div>
-      <div class="p-4 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-xs text-center">
-        <div class="font-display text-2xl sm:text-3xl font-extrabold text-amber-600 dark:text-amber-400">~4 min</div>
-        <div class="text-xs font-semibold text-[var(--phb-soft)] mt-0.5">Avg Resolution Time</div>
-      </div>
-      <div class="p-4 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-xs text-center">
-        <div class="font-display text-2xl sm:text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">92%</div>
-        <div class="text-xs font-semibold text-[var(--phb-soft)] mt-0.5">First Contact Resolution</div>
-      </div>
+    <!-- Quick Finding Chips -->
+    <div class="flex flex-wrap items-center gap-2 pt-4 mt-4 border-t border-white/15">
+      <span class="text-[11px] text-emerald-200 font-extrabold uppercase tracking-wider mr-1">Quick Finding:</span>
+      <button onclick="applyQuickChip('vpn')" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white hover:text-slate-950 text-white text-xs font-extrabold transition-all cursor-pointer">
+        VPN Connection
+      </button>
+      <button onclick="applyQuickChip('password reset')" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white hover:text-slate-950 text-white text-xs font-extrabold transition-all cursor-pointer">
+        Password Reset
+      </button>
+      <button onclick="applyQuickChip('printer')" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white hover:text-slate-950 text-white text-xs font-extrabold transition-all cursor-pointer">
+        Printer Offline
+      </button>
+      <button onclick="applyQuickChip('slow')" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white hover:text-slate-950 text-white text-xs font-extrabold transition-all cursor-pointer">
+        Computer Slow
+      </button>
+      <button onclick="applyQuickChip('phishing')" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white hover:text-slate-950 text-white text-xs font-extrabold transition-all cursor-pointer">
+        Phishing Report
+      </button>
+      <button onclick="applyQuickChip('')" class="px-3 py-1.5 rounded-xl bg-emerald-950/60 hover:bg-emerald-900 text-emerald-200 text-xs font-bold transition-all cursor-pointer">
+        Reset Filter
+      </button>
     </div>
-  </section>
+  </div>
 
   <!-- ==================== EXECUTIVE DASHBOARD KPI OVERVIEW ==================== -->
   <section id="sectionExecutiveOverview" class="hidden space-y-4">
@@ -383,7 +368,6 @@ html { scroll-behavior: smooth; }
         </p>
       </div>
 
-      <!-- Live KPI Cards -->
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 min-w-[320px]">
         <div class="p-3.5 rounded-2xl bg-[var(--phb-bg)] border border-[var(--phb-line)] text-center">
           <div id="kpiTotal" class="font-display text-2xl font-extrabold text-[#007A5E] dark:text-emerald-400">0</div>
@@ -407,17 +391,13 @@ html { scroll-behavior: smooth; }
 
   <!-- ==================== TICKET QUEUE SECTION ==================== -->
   <section id="sectionTicketQueue" class="hidden space-y-4 scroll-mt-20">
-    
-    <!-- Queue Toolbar -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-sm">
-      
       <div class="flex flex-wrap items-center gap-3">
         <h2 class="font-display font-extrabold text-lg text-[var(--phb-text)] flex items-center gap-2">
           <span>Ticket Queue</span>
           <span id="ticketBadgeCount" class="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">0</span>
         </h2>
 
-        <!-- Department Filter Dropdown (Enabled for HOD IT & IT Admin) -->
         <div id="deptFilterArea" class="flex items-center gap-2">
           <label for="deptSelect" class="text-xs font-bold text-[var(--phb-soft)] uppercase tracking-wider">Dept Filter:</label>
           <select id="deptSelect" onchange="filterAndRenderTickets()" class="px-3 py-1.5 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-xs font-bold text-[var(--phb-text)] focus:ring-2 focus:ring-[#007A5E] focus:outline-none">
@@ -426,21 +406,18 @@ html { scroll-behavior: smooth; }
         </div>
       </div>
 
-      <!-- Controls: Filter & Exports -->
       <div class="flex flex-wrap items-center gap-2">
         <div class="relative">
-          <input id="ticketSearchInput" type="text" oninput="filterAndRenderTickets()" placeholder="Search queue..." 
+          <input id="ticketSearchInput" type="text" oninput="filterAndRenderTickets()" placeholder="Filter queue..."
                  class="w-36 sm:w-48 pl-8 pr-3 py-1.5 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-xs text-[var(--phb-text)] focus:outline-none focus:ring-2 focus:ring-[#007A5E]">
           <svg class="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-[var(--phb-soft)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
         </div>
 
-        <!-- Refresh Button -->
         <button onclick="loadSession(true)" title="Refresh Tickets from SharePoint" class="px-3 py-1.5 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-xs font-bold hover:bg-[var(--phb-card)] transition-colors flex items-center gap-1">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
           <span>Refresh</span>
         </button>
 
-        <!-- PDF & Excel Exports -->
         <div id="exportBtnArea" class="hidden flex items-center gap-1.5">
           <button onclick="exportToPDF()" title="Export PDF Report" class="px-3 py-1.5 rounded-xl border border-rose-200 bg-rose-50 text-rose-700 dark:bg-rose-950/50 dark:border-rose-900 dark:text-rose-300 text-xs font-bold hover:bg-rose-100 transition-colors">PDF</button>
           <button onclick="exportToExcel()" title="Export Excel Sheet" class="px-3 py-1.5 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:border-emerald-900 dark:text-emerald-300 text-xs font-bold hover:bg-emerald-100 transition-colors">Excel</button>
@@ -453,7 +430,6 @@ html { scroll-behavior: smooth; }
       </div>
     </div>
 
-    <!-- Ticket Table -->
     <div id="ticketViewList" class="rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-sm overflow-hidden">
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse text-xs">
@@ -469,9 +445,7 @@ html { scroll-behavior: smooth; }
               <th class="py-3.5 px-4 text-right">Action</th>
             </tr>
           </thead>
-          <tbody id="ticketTableBody" class="divide-y divide-[var(--phb-line)]">
-            <!-- Rendered by JS -->
-          </tbody>
+          <tbody id="ticketTableBody" class="divide-y divide-[var(--phb-line)]"></tbody>
         </table>
       </div>
     </div>
@@ -479,64 +453,62 @@ html { scroll-behavior: smooth; }
 
   <!-- ==================== HOME SECTION 1: HOW TO USE ==================== -->
   <section id="sectionHow" class="space-y-4 scroll-mt-20">
-    <div class="flex items-center gap-3 border-l-4 border-[#007A5E] pl-3 py-1">
+    <div class="flex items-center justify-between gap-3 border-l-4 border-[#007A5E] pl-4 py-1">
       <div>
-        <h2 class="font-display text-xl sm:text-2xl font-extrabold text-[var(--phb-text)] tracking-tight">
-          How to use ORBIT
+        <span class="text-[11px] font-mono font-extrabold uppercase tracking-widest text-[#007A5E] dark:text-emerald-400">Section 01</span>
+        <h2 class="font-display text-2xl sm:text-3xl font-extrabold text-[var(--phb-text)] tracking-tight">
+          How to Use ORBIT
         </h2>
-        <p class="text-xs font-semibold text-[var(--phb-soft)]">
-          Four simple steps from encountering an issue to resolution
+        <p class="text-xs sm:text-sm font-bold text-[var(--phb-soft)]">
+          Four fast steps from quick finding to resolution
         </p>
       </div>
     </div>
-    <div id="howGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      <!-- Rendered by JS -->
-    </div>
+    <div id="howGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
   </section>
 
   <!-- ==================== HOME SECTION 2: BROWSE BY CATEGORY ==================== -->
   <section id="sectionBrowse" class="space-y-4 scroll-mt-20">
-    <div class="flex items-center gap-3 border-l-4 border-[#007A5E] pl-3 py-1">
+    <div class="flex items-center justify-between gap-3 border-l-4 border-[#007A5E] pl-4 py-1">
       <div>
-        <h2 class="font-display text-xl sm:text-2xl font-extrabold text-[var(--phb-text)] tracking-tight">
-          Browse by category
+        <span class="text-[11px] font-mono font-extrabold uppercase tracking-widest text-[#007A5E] dark:text-emerald-400">Section 02</span>
+        <h2 class="font-display text-2xl sm:text-3xl font-extrabold text-[var(--phb-text)] tracking-tight">
+          Browse by Category
         </h2>
-        <p class="text-xs font-semibold text-[var(--phb-soft)]">
-          Jump directly to the technical domain you are troubleshooting
+        <p class="text-xs sm:text-sm font-bold text-[var(--phb-soft)]">
+          Click any category card to filter guides immediately
         </p>
       </div>
     </div>
-    <div id="browseGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-      <!-- 6 Categories rendered by JS -->
-    </div>
+    <div id="browseGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
   </section>
 
   <!-- ==================== HOME SECTION 3: ALL 24 ARTICLES ==================== -->
   <section id="sectionKB" class="space-y-4 scroll-mt-20">
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-l-4 border-[#007A5E] pl-3 py-1">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-l-4 border-[#007A5E] pl-4 py-1">
       <div>
-        <h2 class="font-display text-xl sm:text-2xl font-extrabold text-[var(--phb-text)] tracking-tight flex items-center gap-3">
+        <span class="text-[11px] font-mono font-extrabold uppercase tracking-widest text-[#007A5E] dark:text-emerald-400">Section 03</span>
+        <h2 class="font-display text-2xl sm:text-3xl font-extrabold text-[var(--phb-text)] tracking-tight flex items-center gap-3">
           <span>Self-Service Knowledge Base</span>
-          <span id="articleCountBadge" class="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">24 Articles</span>
+          <span id="articleCountBadge" class="text-xs font-mono font-extrabold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">24 Articles</span>
         </h2>
-        <p class="text-xs font-semibold text-[var(--phb-soft)]">
-          Verified technical resolution guides maintained directly by PHB IT Division
+        <p class="text-xs sm:text-sm font-bold text-[var(--phb-soft)]">
+          Verified step-by-step guides maintained by PHB IT Division
         </p>
       </div>
 
-      <div class="flex items-center gap-2">
-        <span id="kbFilterBadge" class="hidden text-[11px] font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300"></span>
-        <button id="kbShowAllBtn" onclick="filterKBByCategory('All')" class="hidden text-xs font-bold text-[#007A5E] dark:text-emerald-400 hover:underline">Show all 24 guides</button>
+      <div class="flex flex-wrap items-center gap-2">
+        <span id="kbFilterBadge" class="hidden text-xs font-extrabold px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300"></span>
+        <button id="kbShowAllBtn" onclick="filterKBByCategory('All')" class="hidden px-3 py-1.5 rounded-xl bg-[#007A5E] text-white text-xs font-extrabold hover:bg-[#005A4B] transition-colors">
+          Show all 24 guides
+        </button>
       </div>
     </div>
 
-    <!-- Articles Grid -->
-    <div id="kbGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      <!-- Rendered by JS -->
-    </div>
+    <div id="kbGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
   </section>
 
-  <!-- ==================== REPORTS & ANALYTICS SECTION ==================== -->
+  <!-- ==================== REPORTS & ANALYTICS SECTION (ROLE-GATED) ==================== -->
   <section id="sectionReports" class="hidden space-y-6 scroll-mt-20">
     <div class="flex items-center gap-3 border-l-4 border-amber-500 pl-3 py-1">
       <div>
@@ -550,61 +522,21 @@ html { scroll-behavior: smooth; }
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <!-- Bar Chart -->
       <div class="p-5 rounded-3xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-sm space-y-4">
         <div class="flex items-center justify-between pb-3 border-b border-[var(--phb-line)]">
           <h3 class="font-display font-bold text-sm text-[var(--phb-text)]">Ticket Volume &mdash; Monthly Trend</h3>
           <span class="text-[10px] font-mono font-bold text-[#007A5E]">REAL-TIME</span>
         </div>
-        <div id="barChart" class="flex items-end justify-between gap-3 h-44 pt-4">
-          <!-- Rendered by JS -->
-        </div>
+        <div id="barChart" class="flex items-end justify-between gap-3 h-44 pt-4"></div>
       </div>
 
-      <!-- Category Distribution -->
       <div class="p-5 rounded-3xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-sm space-y-4">
         <div class="flex items-center justify-between pb-3 border-b border-[var(--phb-line)]">
           <h3 class="font-display font-bold text-sm text-[var(--phb-text)]">Category Ratio Breakdown</h3>
           <span class="text-[10px] font-mono font-bold text-[var(--phb-soft)]">24 TOTAL GUIDES</span>
         </div>
-        <div id="catDistributionList" class="space-y-3 pt-1">
-          <!-- Rendered by JS -->
-        </div>
+        <div id="catDistributionList" class="space-y-3 pt-1"></div>
       </div>
-    </div>
-  </section>
-
-  <!-- ==================== HOME SECTION 4: FAQ ==================== -->
-  <section id="sectionFaq" class="space-y-4 scroll-mt-20">
-    <div class="flex items-center gap-3 border-l-4 border-[#007A5E] pl-3 py-1">
-      <div>
-        <h2 class="font-display text-xl sm:text-2xl font-extrabold text-[var(--phb-text)] tracking-tight">
-          Frequently asked questions
-        </h2>
-        <p class="text-xs font-semibold text-[var(--phb-soft)]">
-          Quick answers about using ORBIT
-        </p>
-      </div>
-    </div>
-    <div id="faqList" class="space-y-2.5">
-      <!-- Rendered by JS -->
-    </div>
-  </section>
-
-  <!-- ==================== HOME SECTION 5: NEED A HUMAN ==================== -->
-  <section id="sectionSupport" class="space-y-4 scroll-mt-20">
-    <div class="flex items-center gap-3 border-l-4 border-[#007A5E] pl-3 py-1">
-      <div>
-        <h2 class="font-display text-xl sm:text-2xl font-extrabold text-[var(--phb-text)] tracking-tight">
-          Need a human instead?
-        </h2>
-        <p class="text-xs font-semibold text-[var(--phb-soft)]">
-          Reach out directly to the PHB IT support team
-        </p>
-      </div>
-    </div>
-    <div id="supportGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-      <!-- Rendered by JS -->
     </div>
   </section>
 
@@ -614,12 +546,12 @@ html { scroll-behavior: smooth; }
 <footer class="mt-auto bg-[var(--phb-card)] border-t border-[var(--phb-line)] py-6 text-xs text-[var(--phb-soft)]">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
     <div class="flex items-center gap-3">
-      <img src="https://www.phb.com.my/clients/asset_E5316276-9983-47F1-A6C2-76D0C7985656/contentms/img/logo/logo-phb.svg" 
+      <img src="https://www.phb.com.my/clients/asset_E5316276-9983-47F1-A6C2-76D0C7985656/contentms/img/logo/logo-phb.svg"
            alt="PHB" class="h-6 w-auto opacity-80"
            onerror="this.src='https://placehold.co/120x30/007A5E/ffffff?text=PHB'">
-      <span>Pelaburan Hartanah Berhad &middot; Controlled via Power Automate HTTP</span>
+      <span class="font-semibold">Pelaburan Hartanah Berhad &middot; Controlled via Power Automate HTTP</span>
     </div>
-    <div class="font-display font-bold tracking-wider uppercase text-[11px] text-[#007A5E] dark:text-emerald-400">
+    <div class="font-display font-extrabold tracking-wider uppercase text-[11px] text-[#007A5E] dark:text-emerald-400">
       WE ARE PHB &mdash; PROFESSIONAL | HARMONIOUS | BOLD
     </div>
   </div>
@@ -630,7 +562,6 @@ html { scroll-behavior: smooth; }
 <!-- 1. KB ARTICLE READER MODAL -->
 <div id="modalArticle" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs" onclick="if(event.target===this)closeModal('modalArticle')">
   <div class="max-w-2xl w-full bg-[var(--phb-card)] rounded-3xl shadow-2xl border border-[var(--phb-line)] overflow-hidden max-h-[90vh] flex flex-col">
-    
     <div class="px-6 py-4 border-b border-[var(--phb-line)] bg-[var(--phb-bg)] flex items-center justify-between">
       <div class="flex items-center gap-3">
         <span id="artId" class="font-mono text-xs font-bold text-[#007A5E] dark:text-emerald-400 px-2.5 py-1 rounded-md bg-emerald-50 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-800">KB-0000</span>
@@ -650,12 +581,9 @@ html { scroll-behavior: smooth; }
         <ol id="artSteps" class="step-list text-[var(--phb-text)] leading-relaxed"></ol>
       </div>
 
-      <div id="artTags" class="flex flex-wrap gap-1.5 pt-1">
-        <!-- Tags -->
-      </div>
+      <div id="artTags" class="flex flex-wrap gap-1.5 pt-1"></div>
     </div>
 
-    <!-- Article Feedback Footer -->
     <div class="p-4 px-6 border-t border-[var(--phb-line)] bg-[var(--phb-bg)]/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
       <div class="flex items-center gap-2">
         <span class="font-semibold text-[var(--phb-soft)]">Was this guide helpful?</span>
@@ -676,7 +604,7 @@ html { scroll-behavior: smooth; }
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
-    
+
     <form onsubmit="handleNewTicketSubmit(event)" class="p-6 space-y-4 text-xs">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
@@ -692,11 +620,7 @@ html { scroll-behavior: smooth; }
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div>
           <label class="block font-bold text-[var(--phb-soft)] uppercase tracking-wider text-[10px] mb-1">Department</label>
-          <input
-    id="formDept"
-    type="text"
-    readonly
->
+          <input id="formDept" type="text" readonly class="w-full px-3 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-[var(--phb-text)] font-semibold">
         </div>
         <div>
           <label class="block font-bold text-[var(--phb-soft)] uppercase tracking-wider text-[10px] mb-1">Category</label>
@@ -742,7 +666,7 @@ html { scroll-behavior: smooth; }
 <div id="drawerTicket" class="fixed inset-0 z-50 hidden">
   <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-xs" onclick="closeDrawer('drawerTicket')"></div>
   <div class="absolute right-0 top-0 bottom-0 w-full max-w-md bg-[var(--phb-card)] border-l border-[var(--phb-line)] shadow-2xl flex flex-col overflow-hidden">
-    
+
     <div class="p-5 border-b border-[var(--phb-line)] bg-[var(--phb-bg)] flex items-center justify-between">
       <div>
         <span id="drwTicketID" class="text-xs font-mono font-bold px-2.5 py-0.5 rounded bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">TK-0000</span>
@@ -754,8 +678,6 @@ html { scroll-behavior: smooth; }
     </div>
 
     <div class="p-5 overflow-y-auto flex-1 space-y-4 text-xs">
-      
-      <!-- Metadata Grid -->
       <div class="grid grid-cols-2 gap-3 p-3.5 rounded-2xl bg-[var(--phb-bg)] border border-[var(--phb-line)]">
         <div>
           <span class="text-[var(--phb-soft)] font-bold block uppercase text-[9px]">Requester</span>
@@ -775,7 +697,6 @@ html { scroll-behavior: smooth; }
         </div>
       </div>
 
-      <!-- Description -->
       <div>
         <span class="font-bold text-[var(--phb-soft)] uppercase text-[10px] block mb-1">Issue Details</span>
         <div id="drwDetails" class="p-3.5 rounded-2xl bg-[var(--phb-bg)] border border-[var(--phb-line)] text-[var(--phb-text)] whitespace-pre-wrap leading-relaxed font-medium">
@@ -783,10 +704,9 @@ html { scroll-behavior: smooth; }
         </div>
       </div>
 
-      <!-- Action Panel for Assigning & Updating Status -->
       <div id="drwActionPanel" class="p-4 rounded-2xl border border-emerald-200 bg-emerald-50/60 dark:bg-emerald-950/30 dark:border-emerald-900 space-y-3">
         <h4 class="font-extrabold text-xs uppercase tracking-wider text-[#007A5E] dark:text-emerald-300">Update Ticket & Assignee</h4>
-        
+
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block font-bold text-[var(--phb-soft)] mb-1">Status</label>
@@ -799,9 +719,7 @@ html { scroll-behavior: smooth; }
           </div>
           <div id="drwAssigneeWrapper">
             <label class="block font-bold text-[var(--phb-soft)] mb-1">Assign Officer</label>
-            <select id="drwAssigneeSelect" class="w-full px-2.5 py-1.5 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-card)] font-bold text-[var(--phb-text)]">
-              <!-- Populated by JS -->
-            </select>
+            <select id="drwAssigneeSelect" class="w-full px-2.5 py-1.5 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-card)] font-bold text-[var(--phb-text)]"></select>
           </div>
         </div>
 
@@ -825,21 +743,20 @@ html { scroll-behavior: smooth; }
 <script>
 /* ==================== 1. PRODUCTION CONFIGURATION ==================== */
 const CONFIG = {
-  msal: { 
-    clientId: '86a53736-4355-4cb2-98dd-0466f0426e2e', 
-    tenantId: 'cc9afa77-5900-4c38-8262-c226c4c2e27d' 
+  msal: {
+    clientId: '86a53736-4355-4cb2-98dd-0466f0426e2e',
+    tenantId: 'cc9afa77-5900-4c38-8262-c226c4c2e27d'
   },
-  flows: { 
-    load: 'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/26/workflows/eaf49b60f83e47d48d86407219ecb944/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=9k6JGlDLpEgdR2BwpTi5PqgKyM-NL7E_S80pIrO4Cmk', 
+  flows: {
+    load: 'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/26/workflows/eaf49b60f83e47d48d86407219ecb944/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=9k6JGlDLpEgdR2BwpTi5PqgKyM-NL7E_S80pIrO4Cmk',
     create: 'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/11/workflows/9bb69e06bbda4b6c80a2d1670a89de05/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=KDbFdzw_1aY-1p5uPJ-UhtD7JCAfn9d_F_wmzKJule0',
-    save: 'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/01/workflows/eb61e2c74bb64ddc829c58e048b1e054/triggers/manual/paths/invoke?api-version=1' 
-  }
+    save: 'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/01/workflows/eb61e2c74bb64ddc829c58e048b1e054/triggers/manual/paths/invoke?api-version=1'
+  },
+  departments: []
 };
 
-// DEMO is false when load and create/save Power Automate URLs are present
 const DEMO = !CONFIG.flows.load || (!CONFIG.flows.create && !CONFIG.flows.save);
 
-/* Simulation Users (for quick testing when role code specified) */
 const SIMULATED_USERS = [
   { id: 'u1', name: 'Nur Haliza Binti Haron', email: 'nurhaliza@phb.com.my', role: 'hod_it', roleTitle: 'Head of IT Division (HOD IT)', department: 'Information Technology Department (ITD)' },
   { id: 'u2', name: 'Haq', email: 'haq@phb.com.my', role: 'it_admin', roleTitle: 'IT Support Admin (IT Officer)', department: 'Information Technology Department (ITD)' },
@@ -847,7 +764,6 @@ const SIMULATED_USERS = [
   { id: 'u4', name: 'Siti Rahayu', email: 'siti.rahayu@phb.com.my', role: 'staff', roleTitle: 'Staff Member / Senior Executive', department: 'Finance Department (FD)' }
 ];
 
-/* 24 ARTICLES LIBRARIES */
 const KB_ARTICLES = [
   { id: 'KB-0101', cat: 'Network & VPN', sev: 'crit', title: "VPN won't connect or keeps dropping", desc: "Fix the most common VPN client errors and dropped tunnels.", tags: ['vpn', 'remote access', 'connection'], steps: ["Confirm you have an active internet connection.", "Fully quit the VPN client (not just close window) and reopen.", "Restart computer if client was open before update.", "Switch to nearest server region.", "Flush DNS via command prompt: ipconfig /flushdns"] },
   { id: 'KB-0102', cat: 'Network & VPN', sev: 'warn', title: "Wi-Fi keeps disconnecting", desc: "Stabilize a flaky office or home Wi-Fi connection.", tags: ['wifi', 'wireless', 'connectivity'], steps: ["Move closer to access point — office Wi-Fi range drops past 2 walls.", "Forget the network and rejoin with fresh password.", "Toggle Wi-Fi off and back on; or toggle Airplane mode for 5s.", "Update network adapter driver via Device Manager."] },
@@ -880,14 +796,6 @@ const KB_ARTICLES = [
   { id: 'KB-0604', cat: 'Security', sev: 'warn', title: "Reporting a lost or stolen device", desc: "Steps to take if a PHB laptop goes missing.", tags: ['lost', 'stolen', 'device'], steps: ["Call IT HelpDesk immediately.", "Provide asset tag or serial number.", "IT will remotely lock and wipe device.", "File police report for insurance."] }
 ];
 
-const FAQS = [
-  { q: "Do I need to sign in to read troubleshooting guides?", a: "No. All 24 guides, category diagnostics, FAQ, and contact details are open to everyone. Sign in with your PHB Microsoft 365 account only when submitting or tracking a ticket." },
-  { q: "Who can see support tickets?", a: "Staff members can see ONLY their own submitted tickets. Department HODs see their tickets and tickets from their department. HOD IT and IT Admins have overall visibility." },
-  { q: "Which priority level should I choose for a ticket?", a: "Low: minor issue with workaround. Medium: standard issue affecting daily work. High: prevents work completion. Critical: major outage, security incident, or multiple staff affected." },
-  { q: "How will I know when my ticket is updated?", a: "Status changes appear live in your Ticket Queue, and an automated email notification is sent to your inbox via Power Automate." },
-  { q: "What should I do if login fails?", a: "Ensure you use your official @phb.com.my Microsoft 365 credentials, allow pop-ups for this domain, or complete the redirect sign-in flow." }
-];
-
 const CATEGORIES = [
   { key: 'Hardware', desc: 'Laptops, monitors, peripherals & docking stations', count: 5 },
   { key: 'Software', desc: 'Installs, updates, crashes and software licenses', count: 4 },
@@ -897,7 +805,6 @@ const CATEGORIES = [
   { key: 'Security', desc: 'Phishing reports, lost laptops & full-disk encryption', count: 4 }
 ];
 
-/* State Variables */
 let ticketsStore = [];
 let assigneeList = ['Haq (ITD)', 'Fahmi (ITD)', 'Nur Haliza (HOD IT)', 'Unassigned'];
 let currentUser = null;
@@ -909,7 +816,6 @@ let msalApp = null;
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const $ = id => document.getElementById(id);
 
-/* Precise 4-Tier Role Mapping */
 function resolveRole(r) {
   const s = String(r || '').toLowerCase().replace('-', '_').trim();
   if (s === 'hod_it' || s === 'hodit' || s === 'hod it') return { code: 'hod_it', title: 'Head of IT Division (HOD IT)' };
@@ -925,28 +831,23 @@ window.addEventListener('DOMContentLoaded', async () => {
   renderHowSteps();
   renderBrowseGrid();
   renderKBGrid();
-  renderFaq();
-  renderSupport();
   renderReportsData();
-
   applyRoleView();
 
-  // Initialize MSAL with popup + redirect fallback support
   try {
-    if (window.msal && CONFIG.msal.clientId) {
+    if (window.msal && CONFIG.msal.clientId && CONFIG.msal.tenantId) {
       msalApp = new msal.PublicClientApplication({
-        auth: { 
-          clientId: CONFIG.msal.clientId, 
-          authority: 'https://login.microsoftonline.com/' + CONFIG.msal.tenantId, 
-          redirectUri: window.location.origin + window.location.pathname 
+        auth: {
+          clientId: CONFIG.msal.clientId,
+          authority: 'https://login.microsoftonline.com/' + CONFIG.msal.tenantId,
+          redirectUri: window.location.origin + window.location.pathname
         },
-        cache: { 
+        cache: {
           cacheLocation: 'localStorage',
-          storeAuthStateInCookie: true 
+          storeAuthStateInCookie: true
         }
       });
 
-      // Handle redirect promise when coming back from loginRedirect
       const redirectResponse = await msalApp.handleRedirectPromise().catch(err => {
         console.error("MSAL Redirect Handle Error:", err);
         showToast("Redirect Auth Error: " + (err.errorMessage || err.message), "error");
@@ -967,9 +868,9 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
   } catch (e) {
     console.error("MSAL Initialization Error:", e);
+    showToast("MSAL init warning: " + (e.message || e), "error");
   }
 
-  // Check URL query string for quick role simulation testing (e.g. ?role=hod_it)
   const urlRole = new URLSearchParams(location.search).get('role');
   if (urlRole) {
     simulateRoleLogin(urlRole);
@@ -977,20 +878,23 @@ window.addEventListener('DOMContentLoaded', async () => {
 });
 
 function populateDepartmentDropdowns() {
-    const deptSelect = $('deptSelect');
-    const formDept = $('formDept');
+  const deptSelect = $('deptSelect');
+  const formDept = $('formDept');
+  const depts = Array.isArray(CONFIG.departments) ? CONFIG.departments : [];
 
-    const optionsHTML = CONFIG.departments.map(d =>
-        `<option value="${esc(d)}">${esc(d)}</option>`
-    ).join('');
+  const optionsHTML = depts.map(d =>
+    `<option value="${esc(d)}">${esc(d)}</option>`
+  ).join('');
 
+  if (deptSelect) {
     deptSelect.innerHTML =
-        '<option value="ALL">All Departments (Executive View)</option>' +
-        optionsHTML;
+      '<option value="ALL">All Departments (Executive View)</option>' +
+      optionsHTML;
+  }
 
-    if (currentUser?.department) {
-        formDept.value = currentUser.department;
-    }
+  if (formDept) {
+    formDept.value = (currentUser && currentUser.department) ? currentUser.department : 'General';
+  }
 }
 
 function openLoginModal() { $('loginScreen').classList.remove('hidden'); }
@@ -1009,7 +913,6 @@ async function startSSO() {
   showToast('Connecting to Microsoft 365...', 'info');
 
   try {
-    // 1. Primary Attempt: Popup sign-in
     const loginResponse = await msalApp.loginPopup({
       scopes: ['User.Read'],
       prompt: 'select_account'
@@ -1018,14 +921,12 @@ async function startSSO() {
     await loadSession();
   } catch (popupErr) {
     console.warn("MSAL loginPopup failed or blocked:", popupErr);
-    
     const errStr = String(popupErr && (popupErr.errorMessage || popupErr.message || popupErr));
     if (errStr.includes("user_cancelled") || errStr.includes("User cancelled")) {
       showToast("Sign-in cancelled by user.", "error");
       return;
     }
 
-    // 2. Fallback Attempt: Redirect sign-in (for iframe or popup blocked scenarios)
     showToast("Popup blocked/failed. Redirecting to Microsoft Login...", "info");
     try {
       await msalApp.loginRedirect({
@@ -1041,7 +942,7 @@ async function startSSO() {
 }
 
 function simulateRoleLogin(roleCode) {
-  const u = SIMULATED_USERS.find(x => x.role === roleCode) || SIMULATED_USERS[3]; // Default to Staff
+  const u = SIMULATED_USERS.find(x => x.role === roleCode) || SIMULATED_USERS[3];
   setSession(u, [], ['Haq (ITD)', 'Fahmi (ITD)', 'Nur Haliza (HOD IT)']);
   showToast('Simulated Sign-in as ' + u.name + ' (' + u.roleTitle + ')');
 }
@@ -1071,14 +972,14 @@ function setSession(u, rows, assignees) {
   const resolvedEmail = (u && u.email) || msalEmail;
   const roleObj = resolveRole(u && u.role);
 
-  currentUser = { 
-    name: resolvedName, 
-    email: resolvedEmail, 
-    role: roleObj.code, 
-    roleTitle: (u && u.roleTitle) || roleObj.title, 
-    department: (u && u.department) || ''
+  currentUser = {
+    name: resolvedName,
+    email: resolvedEmail,
+    role: roleObj.code,
+    roleTitle: (u && u.roleTitle) || roleObj.title,
+    department: (u && u.department) || 'Finance Department (FD)'
   };
-  
+
   ticketsStore = rows || [];
   assigneeList = (assignees && assignees.length) ? assignees : ['Haq (ITD)', 'Fahmi (ITD)', 'Nur Haliza (HOD IT)', 'Unassigned'];
 
@@ -1086,7 +987,7 @@ function setSession(u, rows, assignees) {
   $('chipName').textContent = firstName;
   $('chipAvatar').textContent = currentUser.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
   $('chipRoleBadge').textContent = currentUser.role.toUpperCase().replace('_', ' ');
-  
+
   $('menuRoleTitle').textContent = currentUser.roleTitle;
   $('menuName').textContent = currentUser.name;
   $('menuEmail').textContent = currentUser.email || 'No email returned';
@@ -1117,7 +1018,7 @@ function applyRoleView() {
 
   show('sectionTicketQueue', !!u);
   show('navTicketsLink', !!u);
-  
+
   show('signInBtn', !u);
   show('userChipArea', !!u);
 
@@ -1127,7 +1028,7 @@ function applyRoleView() {
   if (u) {
     if (role === 'hod_it') {
       $('roleOverviewBadge').textContent = 'HOD IT Executive Dashboard';
-      $('roleOverviewDesc').textContent = 'Full enterprise oversight across all 16 PHB departments, SLA metrics, and IT officer assignments.';
+      $('roleOverviewDesc').textContent = 'Full enterprise oversight across PHB departments, SLA metrics, and IT officer assignments.';
     } else if (role === 'it_admin') {
       $('roleOverviewBadge').textContent = 'IT Support Operational Dashboard';
       $('roleOverviewDesc').textContent = 'Operational ticket queue, SLA response times, and active officer assignments.';
@@ -1135,7 +1036,7 @@ function applyRoleView() {
       $('roleOverviewBadge').textContent = 'Departmental Leadership Dashboard';
       $('roleOverviewDesc').textContent = 'Departmental ticket queue scoped strictly to ' + currentUser.department + '.';
     }
-    
+
     if (canFilterDepts) {
       $('deptSelect').value = 'ALL';
     }
@@ -1168,12 +1069,12 @@ async function getToken() {
 
 async function callFlow(url, payload) {
   const token = await getToken();
-  const res = await fetch(url, { 
-    method: 'POST', 
-    headers: { 'Content-Type': 'application/json' }, 
-    body: JSON.stringify({ ...payload, token }) 
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ...payload, token })
   });
-  
+
   if (!res.ok) {
     let msg = 'HTTP ' + res.status;
     try { const j = await res.json(); if (j && j.message) msg = j.message; } catch (e) {}
@@ -1196,10 +1097,10 @@ async function loadSession(manual) {
     });
     setSession(d.user || {}, d.tickets || d.value || [], d.assignees || []);
     if (manual) showToast('Refreshed live tickets from SharePoint.');
-  } catch (e) { 
+  } catch (e) {
     console.error("loadSession failed:", e);
     setSession({ name: msalName, email: msalEmail }, [], []);
-    showToast('Signed in, but could not load tickets: ' + e.message, 'error'); 
+    showToast('Signed in, but could not load tickets: ' + e.message, 'error');
   }
 }
 
@@ -1229,7 +1130,7 @@ function getFilteredTickets() {
 
   const query = $('ticketSearchInput').value.toLowerCase().trim();
   if (query) {
-    list = list.filter(t => 
+    list = list.filter(t =>
       (t.TicketID && t.TicketID.toLowerCase().includes(query)) ||
       (t.Subject && t.Subject.toLowerCase().includes(query)) ||
       (t.RequesterName && t.RequesterName.toLowerCase().includes(query)) ||
@@ -1265,7 +1166,7 @@ function renderListView(tickets) {
   }
 
   tbody.innerHTML = tickets.map(t => {
-    const statusClass = 
+    const statusClass =
       t.Status === 'Open' ? 'badge-open' :
       t.Status === 'In Progress' ? 'badge-inprogress' :
       t.Status === 'Pending' ? 'badge-pending' : 'badge-resolved';
@@ -1323,23 +1224,23 @@ async function saveTicketChangesFromDrawer() {
   if (!activeDrawerTicketId) return;
   const t = ticketsStore.find(x => x.TicketID === activeDrawerTicketId);
   if (!t) return;
-  
+
   const payload = {
     action: 'update', ticketId: t.TicketID,
-    status: $('drwStatusSelect').value, 
-    assignee: $('drwAssigneeSelect').value, 
+    status: $('drwStatusSelect').value,
+    assignee: $('drwAssigneeSelect').value,
     remarks: $('drwRemarks').value
   };
 
   try {
-    if (DEMO) { 
-      t.Status = payload.status; 
-      t.Assignee = payload.assignee; 
-      t.Remarks = payload.remarks; 
-      filterAndRenderTickets(); 
-    } else { 
-      await callFlow(CONFIG.flows.save, payload); 
-      await loadSession(); 
+    if (DEMO) {
+      t.Status = payload.status;
+      t.Assignee = payload.assignee;
+      t.Remarks = payload.remarks;
+      filterAndRenderTickets();
+    } else {
+      await callFlow(CONFIG.flows.save, payload);
+      await loadSession();
     }
     showToast(`Ticket ${t.TicketID} updated successfully.`);
     closeDrawer('drawerTicket');
@@ -1364,10 +1265,10 @@ async function handleNewTicketSubmit(e) {
     action: 'create',
     requesterName: $('formReqName').value.trim(),
     requesterEmail: $('formReqEmail').value.trim(),
-    subject: $('formSubject').value.trim(), 
-    category: $('formCategory').value, 
+    subject: $('formSubject').value.trim(),
+    category: $('formCategory').value,
     priority: $('formPriority').value,
-    department: $('formDept').value, 
+    department: $('formDept').value,
     detail: $('formDetail').value.trim()
   };
 
@@ -1375,10 +1276,10 @@ async function handleNewTicketSubmit(e) {
     let id;
     if (DEMO) {
       id = 'TK-' + (1000 + ticketsStore.length + 1);
-      ticketsStore.unshift({ 
+      ticketsStore.unshift({
         TicketID: id, Subject: payload.subject, Category: payload.category, Priority: payload.priority, Status: 'Open',
         Department: payload.department, RequesterName: currentUser.name, RequesterEmail: currentUser.email, Assignee: 'Unassigned',
-        Submitted: new Date().toISOString().slice(0, 16).replace('T', ' '), Detail: payload.detail 
+        Submitted: new Date().toISOString().slice(0, 16).replace('T', ' '), Detail: payload.detail
       });
       filterAndRenderTickets();
     } else {
@@ -1398,31 +1299,31 @@ async function handleNewTicketSubmit(e) {
 function closeModal(id) { $(id).classList.add('hidden'); }
 function closeDrawer(id) { $(id).classList.add('hidden'); }
 
-/* ==================== 6. HOME SCREEN & KB RENDERING ==================== */
+/* ==================== 6. HOME SCREEN (3 SECTIONS) & KB RENDERING ==================== */
 function renderHowSteps() {
   const steps = [
-    { n: '01', t: 'Search or browse', d: 'Type your issue in the diagnostic console or select a category below.' },
-    { n: '02', t: 'Follow step-by-step', d: 'Each guide is a short, numbered resolution written by PHB IT Division.' },
-    { n: '03', t: 'Sign in & submit', d: 'If issue persists, sign in with PHB Microsoft 365 to raise a ticket.' },
-    { n: '04', t: 'Track to resolution', d: 'Monitor progress live in your queue with automated email updates.' }
+    { n: '01', t: 'Pick a Quick Finding', d: 'Use the quick-finding chips above or jump straight to a category below.' },
+    { n: '02', t: 'Follow Numbered Steps', d: 'Complete verified resolution steps written by PHB IT Division.' },
+    { n: '03', t: 'Sign In & Submit', d: 'Need hands-on help? Sign in with PHB Microsoft 365 to log a ticket.' },
+    { n: '04', t: 'Track Live Status', d: 'Check real-time ticket progress and email updates in your queue.' }
   ];
 
   $('howGrid').innerHTML = steps.map(s => `
-    <div class="p-5 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-xs space-y-2 relative overflow-hidden">
+    <div class="card-interactive p-5 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-xs space-y-2">
       <div class="font-mono text-xs font-extrabold text-[#007A5E] dark:text-emerald-400 tracking-wider">STEP ${s.n}</div>
-      <h3 class="font-display font-extrabold text-base text-[var(--phb-text)]">${s.t}</h3>
-      <p class="text-xs text-[var(--phb-soft)] leading-relaxed">${s.d}</p>
+      <h3 class="font-display font-extrabold text-lg text-[var(--phb-text)]">${s.t}</h3>
+      <p class="text-xs font-semibold text-[var(--phb-soft)] leading-relaxed">${s.d}</p>
     </div>`).join('');
 }
 
 function renderBrowseGrid() {
   $('browseGrid').innerHTML = CATEGORIES.map(c => `
-    <div onclick="filterKBByCategory('${c.key}')" class="p-5 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] hover:border-[#007A5E] hover:shadow-md cursor-pointer transition-all space-y-2">
-      <div class="flex items-center justify-between">
-        <h3 class="font-display font-extrabold text-base text-[var(--phb-text)]">${c.key}</h3>
-        <span class="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950 text-[#007A5E]">${c.count} guides</span>
+    <div onclick="filterKBByCategory('${c.key}')" class="card-interactive group p-5 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] cursor-pointer space-y-2">
+      <div class="flex items-center justify-between gap-2">
+        <h3 class="font-display font-extrabold text-lg text-[var(--phb-text)] group-hover:text-[#007A5E] dark:group-hover:text-emerald-400 transition-colors">${c.key}</h3>
+        <span class="text-xs font-mono font-extrabold px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950 text-[#007A5E] dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">${c.count} guides</span>
       </div>
-      <p class="text-xs text-[var(--phb-soft)] leading-relaxed">${c.desc}</p>
+      <p class="text-xs font-semibold text-[var(--phb-soft)] leading-relaxed">${c.desc}</p>
     </div>`).join('');
 }
 
@@ -1437,52 +1338,52 @@ function renderKBGrid() {
 
   if (!list.length) {
     $('kbGrid').innerHTML = `
-      <div class="col-span-full py-12 text-center text-xs text-[var(--phb-soft)]">
-        No articles match your search. Try different keywords or <button onclick="openNewTicketModal()" class="text-[#007A5E] underline font-bold">submit a ticket</button>.
+      <div class="col-span-full py-12 text-center text-xs font-bold text-[var(--phb-soft)]">
+        No articles match this quick filter. <button onclick="applyQuickChip('')" class="text-[#007A5E] underline font-extrabold">Show all 24 guides</button> or <button onclick="openNewTicketModal()" class="text-[#007A5E] underline font-extrabold">submit a ticket</button>.
       </div>`;
     return;
   }
 
   $('kbGrid').innerHTML = list.map(a => {
-    const sevBadge = a.sev === 'crit' ? 'text-rose-600 bg-rose-50 border-rose-200 dark:bg-rose-950 dark:border-rose-900' :
-                     a.sev === 'warn' ? 'text-amber-600 bg-amber-50 border-amber-200 dark:bg-amber-950 dark:border-amber-900' :
-                     'text-emerald-600 bg-emerald-50 border-emerald-200 dark:bg-emerald-950 dark:border-emerald-900';
+    const sevBadge = a.sev === 'crit' ? 'text-rose-700 bg-rose-50 border-rose-200 dark:bg-rose-950 dark:text-rose-300 dark:border-rose-900' :
+                     a.sev === 'warn' ? 'text-amber-700 bg-amber-50 border-amber-200 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-900' :
+                     'text-emerald-700 bg-emerald-50 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-900';
 
     return `
-      <div onclick="openKBModal('${a.id}')" class="p-5 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] hover:border-[#007A5E] hover:shadow-sm cursor-pointer transition-all space-y-3 flex flex-col justify-between">
+      <div onclick="openKBModal('${a.id}')" class="card-interactive group p-5 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] cursor-pointer space-y-3 flex flex-col justify-between">
         <div>
           <div class="flex items-center justify-between mb-2">
-            <span class="font-mono text-xs font-bold text-[#007A5E] dark:text-emerald-400">${a.id}</span>
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded border uppercase tracking-wider ${sevBadge}">${a.sev === 'crit' ? 'Critical' : a.sev === 'warn' ? 'Moderate' : 'Routine'}</span>
+            <span class="font-mono text-xs font-extrabold text-[#007A5E] dark:text-emerald-400">${a.id}</span>
+            <span class="text-[10px] font-extrabold px-2 py-0.5 rounded border uppercase tracking-wider ${sevBadge}">${a.sev === 'crit' ? 'Critical' : a.sev === 'warn' ? 'Moderate' : 'Routine'}</span>
           </div>
-          <h3 class="font-display font-extrabold text-sm text-[var(--phb-text)] line-clamp-1">${a.title}</h3>
-          <p class="text-xs text-[var(--phb-soft)] mt-1 line-clamp-2 leading-relaxed">${a.desc}</p>
+          <h3 class="font-display font-extrabold text-base text-[var(--phb-text)] group-hover:text-[#007A5E] dark:group-hover:text-emerald-400 transition-colors line-clamp-1">${a.title}</h3>
+          <p class="text-xs font-semibold text-[var(--phb-soft)] mt-1 line-clamp-2 leading-relaxed">${a.desc}</p>
         </div>
-        <div class="pt-2 border-t border-[var(--phb-line)] flex items-center justify-between text-[11px] font-semibold text-[var(--phb-soft)]">
+        <div class="pt-2.5 border-t border-[var(--phb-line)] flex items-center justify-between text-xs font-extrabold text-[var(--phb-soft)]">
           <span>${a.cat}</span>
-          <span class="text-[#007A5E] font-bold">Read &rarr;</span>
+          <span class="text-[#007A5E] dark:text-emerald-400 group-hover:translate-x-1 transition-transform">Read &rarr;</span>
         </div>
       </div>`;
   }).join('');
 
-  const isFiltered = kbCategory !== 'All';
-  $('kbFilterBadge').textContent = 'Category: ' + kbCategory;
+  const isFiltered = kbCategory !== 'All' || Boolean(q);
+  const labelText = kbCategory !== 'All'
+    ? 'Category: ' + kbCategory
+    : (q ? 'Quick Finding: ' + q : '');
+  $('kbFilterBadge').textContent = labelText;
   $('kbFilterBadge').classList.toggle('hidden', !isFiltered);
   $('kbShowAllBtn').classList.toggle('hidden', !isFiltered);
 }
 
-function handleSearch(q) {
-  kbQuery = q;
-  renderKBGrid();
-}
-
 function applyQuickChip(term) {
-  $('searchInput').value = term;
-  handleSearch(term);
+  kbCategory = 'All';
+  kbQuery = term || '';
+  renderKBGrid();
   $('sectionKB').scrollIntoView();
 }
 
 function filterKBByCategory(cat) {
+  kbQuery = '';
   kbCategory = cat;
   renderKBGrid();
   $('sectionKB').scrollIntoView();
@@ -1495,10 +1396,10 @@ function openKBModal(id) {
   $('artCat').textContent = art.cat;
   $('artTitle').textContent = art.title;
   $('artDesc').textContent = art.desc;
-  
+
   $('artSteps').innerHTML = art.steps.map(s => `<li>${esc(s)}</li>`).join('');
   $('artTags').innerHTML = art.tags.map(t => `<span class="px-2.5 py-0.5 rounded-full bg-[var(--phb-bg)] border border-[var(--phb-line)] text-[10px] font-mono text-[var(--phb-soft)]">#${esc(t)}</span>`).join('');
-  
+
   $('modalArticle').classList.remove('hidden');
 }
 
@@ -1509,36 +1410,6 @@ function markHelpful(isHelpful) {
     closeModal('modalArticle');
     openNewTicketModal();
   }
-}
-
-function renderFaq() {
-  $('faqList').innerHTML = FAQS.map((f, i) => `
-    <details class="group rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] px-5 py-3.5 shadow-xs">
-      <summary class="cursor-pointer list-none flex items-center justify-between gap-3 font-extrabold text-xs sm:text-sm text-[var(--phb-text)]">
-        <span>${f.q}</span>
-        <span class="text-[#007A5E] dark:text-emerald-400 text-lg leading-none group-open:rotate-45 transition-transform">+</span>
-      </summary>
-      <p class="mt-2.5 text-xs text-[var(--phb-soft)] leading-relaxed font-medium">${f.a}</p>
-    </details>`).join('');
-}
-
-function renderSupport() {
-  $('supportGrid').innerHTML = `
-    <div onclick="openNewTicketModal()" class="p-5 rounded-2xl bg-[#007A5E] text-white cursor-pointer hover:bg-[#005A4B] transition-colors space-y-2 shadow-sm">
-      <h3 class="font-display font-extrabold text-base">Submit a Ticket</h3>
-      <p class="text-xs opacity-90 leading-relaxed">Direct routing to IT officers. Sign in required.</p>
-      <span class="inline-block text-xs font-bold underline pt-2">Open Form &rarr;</span>
-    </div>
-    <a href="mailto:ithelpdesk@phb.com.my" class="p-5 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] hover:border-[#007A5E] transition-all space-y-2 block">
-      <h3 class="font-display font-extrabold text-base text-[var(--phb-text)]">Email IT Support</h3>
-      <p class="text-xs font-mono text-[#007A5E] dark:text-emerald-400">ithelpdesk@phb.com.my</p>
-      <p class="text-[11px] text-[var(--phb-soft)]">Mon - Fri &middot; 8:00 AM - 5:30 PM</p>
-    </a>
-    <a href="tel:+60312345678" class="p-5 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] hover:border-[#007A5E] transition-all space-y-2 block">
-      <h3 class="font-display font-extrabold text-base text-[var(--phb-text)]">Call HelpDesk HotLine</h3>
-      <p class="text-xs font-mono text-[#007A5E] dark:text-emerald-400">ext. 4357 / +603-1234 5678</p>
-      <p class="text-[11px] text-[var(--phb-soft)]">Emergency escalations available 24/7</p>
-    </a>`;
 }
 
 /* ==================== 7. REPORTS & EXPORTS ==================== */

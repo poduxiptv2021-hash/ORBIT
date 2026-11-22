@@ -692,9 +692,11 @@ html { scroll-behavior: smooth; }
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div>
           <label class="block font-bold text-[var(--phb-soft)] uppercase tracking-wider text-[10px] mb-1">Department</label>
-          <select id="formDept" required class="w-full px-3 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-[var(--phb-text)] font-semibold">
-            <!-- 16 PHB Departments populated by JS -->
-          </select>
+          <input
+    id="formDept"
+    type="text"
+    readonly
+>
         </div>
         <div>
           <label class="block font-bold text-[var(--phb-soft)] uppercase tracking-wider text-[10px] mb-1">Category</label>
@@ -975,13 +977,20 @@ window.addEventListener('DOMContentLoaded', async () => {
 });
 
 function populateDepartmentDropdowns() {
-  const deptSelect = $('deptSelect');
-  const formDept = $('formDept');
-  
-  const optionsHTML = CONFIG.departments.map(d => `<option value="${esc(d)}">${esc(d)}</option>`).join('');
-  
-  deptSelect.innerHTML = '<option value="ALL">All Departments (Executive View)</option>' + optionsHTML;
-  formDept.innerHTML = optionsHTML;
+    const deptSelect = $('deptSelect');
+    const formDept = $('formDept');
+
+    const optionsHTML = CONFIG.departments.map(d =>
+        `<option value="${esc(d)}">${esc(d)}</option>`
+    ).join('');
+
+    deptSelect.innerHTML =
+        '<option value="ALL">All Departments (Executive View)</option>' +
+        optionsHTML;
+
+    if (currentUser?.department) {
+        formDept.value = currentUser.department;
+    }
 }
 
 function openLoginModal() { $('loginScreen').classList.remove('hidden'); }
@@ -1067,7 +1076,7 @@ function setSession(u, rows, assignees) {
     email: resolvedEmail, 
     role: roleObj.code, 
     roleTitle: (u && u.roleTitle) || roleObj.title, 
-    department: (u && u.department) || 'Finance Department (FD)' 
+    department: (u && u.department) || ''
   };
   
   ticketsStore = rows || [];

@@ -1,18 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ORBIT // PHB IT HelpDesk & Knowledge Base</title>
 
-<!-- Fonts -->
+<!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 
 <!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 
-<!-- Export & Auth Libraries -->
+<!-- Export & Microsoft Entra Authentication Libraries -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -25,24 +26,24 @@
       extend: {
         colors: {
           phb: {
-            green: '#4D9A2A',
-            lime: '#6BBF3B',
-            darkGreen: '#2E6619',
-            tint: '#F0F9EB',
-            gold: '#F5B800',
-            teal: '#007A5E',
-            deepTeal: '#005A4B',
+            green: '#007A5E',
+            greenDark: '#005A4B',
             navy: '#0B2545',
-            darkNavy: '#07182D',
-            canvas: '#F8F9FA',
-            card: '#FFFFFF',
-            line: '#E5E7EB',
-            text: '#111827',
-            soft: '#6B7280'
+            navyDark: '#07182D',
+            lime: '#4D9A2A',
+            brightLime: '#6BBF3B',
+            gold: '#F5B800',
+            bgLight: '#F8F9FA',
+            cardLight: '#FFFFFF',
+            lineLight: '#E5E7EB',
+            bgDark: '#090E17',
+            cardDark: '#111827',
+            lineDark: '#1F2937'
           }
         },
         fontFamily: {
           sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+          display: ['Space Grotesk', 'Plus Jakarta Sans', 'sans-serif'],
           mono: ['JetBrains Mono', 'monospace']
         }
       }
@@ -52,35 +53,36 @@
 
 <style>
 :root {
-  --phb-green: #4D9A2A;
-  --phb-teal: #007A5E;
+  --phb-green: #007A5E;
+  --phb-green-dark: #005A4B;
   --phb-navy: #0B2545;
-  --phb-canvas: #F8F9FA;
+  --phb-bg: #F8F9FA;
   --phb-card: #FFFFFF;
   --phb-line: #E5E7EB;
   --phb-text: #111827;
   --phb-soft: #6B7280;
-  --phb-grad: linear-gradient(90deg, #007A5E 0%, #005A4B 55%, #0B2545 100%);
+  --phb-teal-tint: #E6F4F1;
 }
 
 .dark {
-  --phb-canvas: #090E17;
+  --phb-bg: #090E17;
   --phb-card: #111827;
   --phb-line: #1F2937;
   --phb-text: #F9FAFB;
   --phb-soft: #9CA3AF;
+  --phb-teal-tint: #064E3B;
 }
 
 body {
-  background-color: var(--phb-canvas);
+  background-color: var(--phb-bg);
   color: var(--phb-text);
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
 .phb-grid-bg {
-  background-image: radial-gradient(rgba(0,122,94,0.04) 1px, transparent 1px);
-  background-size: 24px 24px;
+  background-image: radial-gradient(rgba(0, 122, 94, 0.05) 1px, transparent 1px);
+  background-size: 28px 28px;
 }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -98,281 +100,359 @@ body {
 .dark .badge-pending { background-color: #450A0A; color: #FECACA; border-color: #7F1D1D; }
 .dark .badge-resolved { background-color: #064E3B; color: #A7F3D0; border-color: #047857; }
 
+/* Custom Step List for KB Modal */
+.step-list { list-style: none; counter-reset: step; padding: 0; margin: 0; }
+.step-list li { counter-increment: step; position: relative; padding-left: 2.25rem; margin-bottom: 1rem; }
+.step-list li::before {
+  content: counter(step);
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 0.75rem;
+  position: absolute;
+  left: 0;
+  top: 0.1rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 9999px;
+  background-color: var(--phb-teal-tint);
+  color: var(--phb-green);
+  border: 1px solid #007A5E;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.step-list li::after {
+  content: '';
+  position: absolute;
+  left: 0.72rem;
+  top: 1.6rem;
+  bottom: -0.75rem;
+  width: 1px;
+  background-color: var(--phb-line);
+}
+.step-list li:last-child::after { display: none; }
+
 html { scroll-behavior: smooth; }
-.drawer-overlay { transition: opacity 0.25s ease-in-out; }
-.drawer-content { transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
 </style>
 </head>
 <body class="phb-grid-bg flex flex-col min-h-screen">
 
-<!-- Corporate Top Gradient Bar -->
+<!-- Top Gradient Corporate Accent Bar -->
 <div class="h-1.5 w-full bg-gradient-to-r from-[#007A5E] via-[#005A4B] to-[#0B2545]"></div>
 
-<!-- ==================== HEADER ==================== -->
-<header class="sticky top-0 z-30 bg-[var(--phb-card)]/95 border-b border-[var(--phb-line)] backdrop-blur-md">
+<!-- ==================== TOP NAVIGATION HEADER ==================== -->
+<header class="sticky top-0 z-40 bg-[var(--phb-card)]/95 border-b border-[var(--phb-line)] backdrop-blur-md shadow-xs">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
     
-    <!-- Brand Title & Logo -->
+    <!-- Brand Title & PHB Logo -->
     <div class="flex items-center gap-3 sm:gap-4">
       <img src="https://www.phb.com.my/clients/asset_E5316276-9983-47F1-A6C2-76D0C7985656/contentms/img/logo/logo-phb.svg" 
-           alt="Pelaburan Hartanah Berhad" class="h-8 sm:h-9 w-auto object-contain"
+           alt="Pelaburan Hartanah Berhad Logo" class="h-8 sm:h-9 w-auto object-contain"
            onerror="this.src='https://placehold.co/160x40/007A5E/ffffff?text=PHB+Logo'">
       <div class="h-6 w-px bg-[var(--phb-line)] hidden sm:block"></div>
-      <div>
-        <div class="flex items-center gap-2">
-          <span class="font-bold text-base sm:text-lg tracking-tight text-[var(--phb-text)]">ORBIT</span>
-          <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 hidden md:inline-block">
-            One Repository for IT
-          </span>
-        </div>
+      <div class="flex items-center gap-2">
+        <span class="font-display font-extrabold text-lg sm:text-xl tracking-tight text-[var(--phb-text)]">ORBIT</span>
+        <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/60 text-[#007A5E] dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 hidden md:inline-block">
+          One Repository for IT
+        </span>
       </div>
     </div>
 
-    <!-- Section links -->
-    <nav class="hidden xl:flex items-center gap-5 text-xs font-semibold text-[var(--phb-soft)]">
-      <a id="navTickets" href="#sectionTicketQueue" class="hidden text-emerald-700 dark:text-emerald-400 hover:underline">Tickets</a>
-      <a href="#sectionHow" class="hover:text-[var(--phb-text)]">How to use</a>
-      <a href="#sectionBrowse" class="hover:text-[var(--phb-text)]">Browse</a>
-      <a href="#sectionKB" class="hover:text-[var(--phb-text)]">Articles</a>
-      <a href="#sectionFaq" class="hover:text-[var(--phb-text)]">FAQ</a>
-      <a href="#sectionSupport" class="hover:text-[var(--phb-text)]">Need a human?</a>
+    <!-- Navigation Links -->
+    <nav class="hidden lg:flex items-center gap-6 text-xs font-bold text-[var(--phb-soft)]">
+      <a href="#sectionSearch" class="hover:text-[var(--phb-text)] transition-colors">Search Console</a>
+      <a href="#sectionHow" class="hover:text-[var(--phb-text)] transition-colors">How it Works</a>
+      <a href="#sectionBrowse" class="hover:text-[var(--phb-text)] transition-colors">Categories</a>
+      <a href="#sectionKB" class="hover:text-[var(--phb-text)] transition-colors">Articles (24)</a>
+      <a href="#sectionFaq" class="hover:text-[var(--phb-text)] transition-colors">FAQ</a>
+      <a id="navTicketsLink" href="#sectionTicketQueue" class="hidden text-[#007A5E] dark:text-emerald-400 hover:underline">Tickets</a>
+      <a id="navReportsLink" href="#sectionReports" class="hidden text-amber-600 dark:text-amber-400 hover:underline">Reports</a>
     </nav>
 
     <!-- Controls & User Menu -->
     <div class="flex items-center gap-2 sm:gap-3">
       
-      <!-- Theme Switcher -->
-      <button onclick="toggleDarkMode()" title="Toggle Theme" class="p-2 rounded-lg border border-[var(--phb-line)] hover:bg-[var(--phb-canvas)] text-[var(--phb-soft)] hover:text-[var(--phb-text)] transition-colors">
+      <!-- Dark Mode Switcher -->
+      <button onclick="toggleDarkMode()" title="Toggle Dark/Light Mode" class="p-2 rounded-xl border border-[var(--phb-line)] hover:bg-[var(--phb-bg)] text-[var(--phb-soft)] hover:text-[var(--phb-text)] transition-colors">
         <svg id="sunIcon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
         <svg id="moonIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
       </button>
 
-      <!-- Sign in / Submit -->
-      <button id="signInBtn" onclick="openLogin()" class="px-3 py-1.5 rounded-lg border border-[var(--phb-line)] hover:border-emerald-500 text-xs font-semibold text-[var(--phb-text)] transition-colors">Sign in</button>
-      <button id="headerSubmitBtn" onclick="openNewTicketModal()" class="hidden sm:flex px-3 py-1.5 rounded-lg bg-[#007A5E] hover:bg-[#005A4B] text-white text-xs font-semibold shadow-sm transition-colors items-center gap-1">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-        <span id="heroSubmitLabel">Sign in to submit a ticket</span>
+      <!-- Sign In Button -->
+      <button id="signInBtn" onclick="openLoginModal()" class="px-3.5 py-1.5 rounded-xl border border-[var(--phb-line)] hover:border-[#007A5E] text-xs font-bold text-[var(--phb-text)] transition-all bg-[var(--phb-card)] shadow-xs">
+        Sign in
+      </button>
+
+      <!-- Quick Submit Button -->
+      <button onclick="openNewTicketModal()" class="px-3.5 py-1.5 rounded-xl bg-[#007A5E] hover:bg-[#005A4B] text-white text-xs font-bold shadow-sm transition-all flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+        <span>Submit Ticket</span>
       </button>
 
       <!-- User Profile Chip -->
       <div id="userChipArea" class="hidden relative">
-        <button onclick="toggleUserDropdown()" class="flex items-center gap-2 p-1 pr-2.5 rounded-full border border-[var(--phb-line)] hover:border-emerald-500 transition-all bg-[var(--phb-card)]">
-          <div id="chipAvatar" class="w-7 h-7 rounded-full bg-emerald-600 text-white font-bold text-xs flex items-center justify-center">
+        <button onclick="toggleUserDropdown()" class="flex items-center gap-2 p-1 pr-3 rounded-full border border-[var(--phb-line)] hover:border-[#007A5E] transition-all bg-[var(--phb-card)]">
+          <div id="chipAvatar" class="w-7 h-7 rounded-full bg-[#007A5E] text-white font-extrabold text-xs flex items-center justify-center font-mono">
             PH
           </div>
-          <span id="chipName" class="text-xs font-semibold text-[var(--phb-text)] hidden sm:inline">User</span>
+          <div class="text-left hidden sm:block leading-tight">
+            <span id="chipName" class="text-xs font-bold text-[var(--phb-text)] block truncate max-w-[110px]">User</span>
+            <span id="chipRoleBadge" class="text-[9px] font-extrabold text-[#007A5E] dark:text-emerald-400 uppercase tracking-wider block">STAFF</span>
+          </div>
         </button>
 
-        <div id="userDropdown" class="hidden absolute right-0 mt-2 w-60 rounded-xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-xl py-2 z-50">
-          <div class="px-4 py-2 border-b border-[var(--phb-line)]">
-            <p id="menuRoleTitle" class="text-[10px] font-bold uppercase tracking-wider text-emerald-600">Role</p>
-            <p id="menuName" class="text-xs font-bold text-[var(--phb-text)] truncate">Full Name</p>
-            <p id="menuEmail" class="text-[11px] text-[var(--phb-soft)] truncate">email@phb.com.my</p>
-            <p id="menuDept" class="text-[11px] text-emerald-700 dark:text-emerald-400 font-semibold mt-0.5">Dept</p>
+        <!-- Dropdown Menu -->
+        <div id="userDropdown" class="hidden absolute right-0 mt-2 w-64 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-2xl py-2 z-50">
+          <div class="px-4 py-3 border-b border-[var(--phb-line)] bg-[var(--phb-bg)]/50">
+            <p id="menuRoleTitle" class="text-[10px] font-extrabold uppercase tracking-wider text-[#007A5E] dark:text-emerald-400">Staff View</p>
+            <p id="menuName" class="text-xs font-bold text-[var(--phb-text)] truncate mt-0.5">User Name</p>
+            <p id="menuEmail" class="text-[11px] text-[var(--phb-soft)] truncate font-mono">user@phb.com.my</p>
+            <p id="menuDept" class="text-[11px] text-slate-600 dark:text-slate-400 font-semibold mt-1">Dept: General</p>
           </div>
-          <button onclick="logout()" class="w-full text-left flex items-center gap-2 px-4 py-2 text-xs text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-            Sign Out
-          </button>
+          <div class="py-1">
+            <button onclick="logout()" class="w-full text-left flex items-center gap-2 px-4 py-2.5 text-xs font-bold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+              Sign Out
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </header>
 
-<!-- ==================== LOGIN MODAL (opens only when needed) ==================== -->
-<div id="loginScreen" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/75 backdrop-blur-sm" onclick="if(event.target===this)closeModal('loginScreen')">
-  <div class="max-w-md w-full bg-[var(--phb-card)] rounded-2xl shadow-2xl border border-[var(--phb-line)] overflow-hidden">
-    <div class="p-6 bg-gradient-to-r from-[#007A5E] to-[#0B2545] text-white">
+<!-- ==================== LOGIN / ROLE SIMULATOR MODAL ==================== -->
+<div id="loginScreen" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-sm" onclick="if(event.target===this)closeModal('loginScreen')">
+  <div class="max-w-md w-full bg-[var(--phb-card)] rounded-3xl shadow-2xl border border-[var(--phb-line)] overflow-hidden">
+    <div class="p-6 bg-gradient-to-r from-[#007A5E] via-[#005A4B] to-[#0B2545] text-white relative">
+      <button onclick="closeModal('loginScreen')" class="absolute top-4 right-4 text-emerald-100 hover:text-white p-1">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
       <img src="https://www.phb.com.my/clients/asset_E5316276-9983-47F1-A6C2-76D0C7985656/contentms/img/logo/logo-phb.svg"
-           alt="PHB Logo" class="h-9 w-auto mb-3 brightness-200"
+           alt="PHB Logo" class="h-8 w-auto mb-3 brightness-200"
            onerror="this.src='https://placehold.co/160x40/ffffff/007A5E?text=PHB+Logo'">
-      <h2 class="text-xl font-bold tracking-tight">Sign in to ORBIT</h2>
-      <p class="text-xs text-emerald-100 opacity-90 mt-1">Use your PHB Microsoft 365 account to submit and track tickets.</p>
+      <h2 class="text-xl font-extrabold tracking-tight">Sign in to ORBIT Portal</h2>
+      <p class="text-xs text-emerald-100 opacity-90 mt-1">Authenticate with your PHB Microsoft 365 account to load your role permissions from SharePoint <code class="font-mono bg-white/20 px-1 rounded">ORBITUsers</code>.</p>
     </div>
-    <div class="p-6 space-y-3">
-      <button onclick="startSSO()" class="w-full flex items-center justify-center gap-3 px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 font-semibold text-xs text-[var(--phb-text)] transition-colors">
+    <div class="p-6 space-y-4">
+      <button onclick="startSSO()" class="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-2xl border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 font-bold text-xs text-[var(--phb-text)] shadow-sm transition-all">
         <svg class="w-4 h-4" viewBox="0 0 21 21" fill="none"><rect x="1" y="1" width="9" height="9" fill="#F25022"/><rect x="11" y="1" width="9" height="9" fill="#7FBA00"/><rect x="1" y="11" width="9" height="9" fill="#00A4EF"/><rect x="11" y="11" width="9" height="9" fill="#FFB900"/></svg>
         <span>Sign in with Microsoft 365</span>
       </button>
-      <p class="text-[11px] text-[var(--phb-soft)] text-center">A small sign-in window will open. Please allow pop-ups for this page.</p>
-      <button onclick="closeModal('loginScreen')" class="w-full text-[11px] font-semibold text-[var(--phb-soft)] hover:text-[var(--phb-text)]">Continue browsing without signing in</button>
+
+      <!-- Role Selector Quick Test for Demo -->
+      <div id="demoRoleSelectorArea" class="pt-3 border-t border-[var(--phb-line)]">
+        <label class="block text-[10px] font-extrabold uppercase tracking-wider text-[var(--phb-soft)] mb-2">Instant Role Simulation (ORBITUsers List)</label>
+        <div class="grid grid-cols-2 gap-2 font-mono text-[11px]">
+          <button onclick="simulateRoleLogin('hod_it')" class="p-2.5 rounded-xl border border-emerald-300 bg-emerald-50 text-emerald-800 dark:bg-emerald-950 dark:border-emerald-800 dark:text-emerald-300 font-bold text-left hover:brightness-95">
+            1. HOD IT
+            <span class="block text-[9px] font-normal text-emerald-700 dark:text-emerald-400 font-sans mt-0.5">All tickets, Assignee controls, Dept filter, Full Reports</span>
+          </button>
+          <button onclick="simulateRoleLogin('it_admin')" class="p-2.5 rounded-xl border border-blue-300 bg-blue-50 text-blue-800 dark:bg-blue-950 dark:border-blue-800 dark:text-blue-300 font-bold text-left hover:brightness-95">
+            2. IT Admin
+            <span class="block text-[9px] font-normal text-blue-700 dark:text-blue-400 font-sans mt-0.5">All tickets, Assignee controls, Dept filter, Dashboard</span>
+          </button>
+          <button onclick="simulateRoleLogin('hod_dept')" class="p-2.5 rounded-xl border border-amber-300 bg-amber-50 text-amber-800 dark:bg-amber-950 dark:border-amber-800 dark:text-amber-300 font-bold text-left hover:brightness-95">
+            3. HOD Dept
+            <span class="block text-[9px] font-normal text-amber-700 dark:text-amber-400 font-sans mt-0.5">Own + Dept tickets, Scoped Dashboard</span>
+          </button>
+          <button onclick="simulateRoleLogin('staff')" class="p-2.5 rounded-xl border border-slate-300 bg-slate-50 text-slate-800 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 font-bold text-left hover:brightness-95">
+            4. Staff (User)
+            <span class="block text-[9px] font-normal text-slate-600 dark:text-slate-400 font-sans mt-0.5">Own tickets only, Submit ticket, 24 KB Articles</span>
+          </button>
+        </div>
+      </div>
+
+      <button onclick="closeModal('loginScreen')" class="w-full text-center text-xs font-semibold text-[var(--phb-soft)] hover:text-[var(--phb-text)] pt-1">
+        Continue browsing articles without signing in
+      </button>
     </div>
   </div>
 </div>
 
-<!-- ==================== MAIN CONTENT AREA ==================== -->
-<main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+<!-- ==================== MAIN CONTENT CONTAINER ==================== -->
+<main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-10">
 
-  <!-- DEMO MODE BANNER (only when flow URLs are empty in CONFIG) -->
-  <div id="demoBanner" class="hidden p-3 rounded-xl border border-amber-200 bg-amber-50/80 dark:bg-amber-950/30 dark:border-amber-900 text-xs text-amber-900 dark:text-amber-200">
-    <span class="font-bold">Demo mode:</span> the flow URLs in <code class="font-mono">CONFIG</code> are empty, so sample data is shown and nothing is saved. Add <code class="font-mono">?role=hod</code>, <code class="font-mono">?role=it</code> or <code class="font-mono">?role=user</code> to the page address to preview each view.
+  <!-- DEMO MODE BANNER -->
+  <div id="demoBanner" class="p-3.5 rounded-2xl border border-amber-200 bg-amber-50/90 dark:bg-amber-950/40 dark:border-amber-900 text-xs text-amber-900 dark:text-amber-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-xs">
+    <div class="flex items-center gap-2">
+      <span class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
+      <span><strong>Live Power Automate Endpoint Ready:</strong> Connect your HTTP Flow URLs in <code class="font-mono bg-amber-100 dark:bg-amber-900/60 px-1.5 py-0.5 rounded">CONFIG.flows</code>. Switch role preview in URL: <code class="font-mono bg-amber-100 dark:bg-amber-900/60 px-1.5 py-0.5 rounded">?role=hod_it</code>, <code class="font-mono bg-amber-100 dark:bg-amber-900/60 px-1.5 py-0.5 rounded">?role=it_admin</code>, <code class="font-mono bg-amber-100 dark:bg-amber-900/60 px-1.5 py-0.5 rounded">?role=hod_dept</code>, or <code class="font-mono bg-amber-100 dark:bg-amber-900/60 px-1.5 py-0.5 rounded">?role=staff</code>.</span>
+    </div>
   </div>
 
-  <!-- HOD / IT EXECUTIVE OVERVIEW HEADER -->
-  <section id="sectionExecutiveOverview" class="hidden space-y-4">
-    <div class="p-6 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
-      <div>
-        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-xs font-bold border border-emerald-200 dark:border-emerald-800 mb-2">
-          <span id="roleOverviewBadge">HOD Executive Dashboard</span>
-        </div>
-        <h1 class="text-2xl font-bold tracking-tight text-[var(--phb-text)]">
-          IT Service Queue & Department Performance
-        </h1>
-        <p class="text-xs text-[var(--phb-soft)] mt-1">
-          Real-time oversight of PHB IT support requests, SLA response tracking, and departmental issue distribution.
-        </p>
-      </div>
-
-      <!-- KPI Cards Strip -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 min-w-[320px]">
-        <div class="p-3 rounded-xl bg-[var(--phb-canvas)] border border-[var(--phb-line)] text-center">
-          <div id="kpiTotal" class="text-xl font-bold text-emerald-600 dark:text-emerald-400">0</div>
-          <div class="text-[11px] text-[var(--phb-soft)] font-medium">Total Tickets</div>
-        </div>
-        <div class="p-3 rounded-xl bg-[var(--phb-canvas)] border border-[var(--phb-line)] text-center">
-          <div id="kpiOpen" class="text-xl font-bold text-amber-600 dark:text-amber-400">0</div>
-          <div class="text-[11px] text-[var(--phb-soft)] font-medium">Open / Active</div>
-        </div>
-        <div class="p-3 rounded-xl bg-[var(--phb-canvas)] border border-[var(--phb-line)] text-center">
-          <div id="kpiPending" class="text-xl font-bold text-rose-600 dark:text-rose-400">0</div>
-          <div class="text-[11px] text-[var(--phb-soft)] font-medium">Pending Review</div>
-        </div>
-        <div class="p-3 rounded-xl bg-[var(--phb-canvas)] border border-[var(--phb-line)] text-center">
-          <div id="kpiResolved" class="text-xl font-bold text-blue-600 dark:text-blue-400">0</div>
-          <div class="text-[11px] text-[var(--phb-soft)] font-medium">Resolved</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- STAFF SELF-SERVICE HERO & HOD CARD -->
-  <section id="sectionStaffHero" class="space-y-4">
+  <!-- ==================== SEARCH CONSOLE & DIAGNOSTICS HERO ==================== -->
+  <section id="sectionSearch" class="space-y-6">
     
-    <!-- HOD Contact / Leadership Oversight Card -->
-    <div id="staffHodBanner" class="p-4 rounded-xl bg-[var(--phb-card)] border border-[var(--phb-line)] border-l-4 border-l-[#007A5E] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <!-- Leadership Oversight Banner -->
+    <div id="staffHodBanner" class="p-4 sm:p-5 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] border-l-4 border-l-[#007A5E] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
-        <div class="text-[10px] font-bold uppercase tracking-wider text-[#007A5E] dark:text-emerald-400">Department Leadership & IT Oversight</div>
-        <div class="text-base font-bold text-[var(--phb-text)] mt-0.5">
-          Nur Haliza Binti Haron <span class="text-xs font-normal text-[var(--phb-soft)]">— Head of IT Division (HOD)</span>
+        <div class="text-[10px] font-extrabold uppercase tracking-widest text-[#007A5E] dark:text-emerald-400">Department Leadership & IT Oversight</div>
+        <div class="text-base font-extrabold text-[var(--phb-text)] mt-0.5">
+          Nur Haliza Binti Haron <span class="text-xs font-semibold text-[var(--phb-soft)]">— Head of IT Division (HOD IT)</span>
         </div>
-        <div class="text-xs text-[var(--phb-soft)] mt-0.5">
-          Division: Information Technology (ITD) · Email: <a href="mailto:nurhaliza@phb.com.my" class="text-emerald-700 dark:text-emerald-400 font-medium underline">nurhaliza@phb.com.my</a>
+        <div class="text-xs text-[var(--phb-soft)] mt-0.5 font-mono">
+          Division: Information Technology (ITD) &middot; Direct Email: <a href="mailto:nurhaliza@phb.com.my" class="text-[#007A5E] dark:text-emerald-400 font-bold underline">nurhaliza@phb.com.my</a>
         </div>
       </div>
       <div class="flex items-center gap-2">
-        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 text-xs font-semibold border border-emerald-200 dark:border-emerald-800">
+        <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-800 dark:bg-emerald-950/70 dark:text-emerald-300 text-xs font-bold border border-emerald-200 dark:border-emerald-800">
           <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span>On Duty / Escalations Active</span>
+          <span>HelpDesk Active &middot; SLA Monitored</span>
         </span>
       </div>
     </div>
 
-    <!-- Staff Banner Hero -->
-    <div class="p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-[#007A5E] via-[#005A4B] to-[#0B2545] text-white shadow-lg relative overflow-hidden">
-      <div class="max-w-2xl">
-        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">
-          Welcome to ORBIT, <span id="staffHeroName" class="text-emerald-300">colleague</span> 👋
+    <!-- Hero Diagnostic Search Box -->
+    <div class="p-6 sm:p-10 rounded-3xl bg-gradient-to-r from-[#007A5E] via-[#005A4B] to-[#0B2545] text-white shadow-xl relative overflow-hidden">
+      <div class="relative z-10 max-w-3xl">
+        <div class="font-mono text-xs text-emerald-300 font-bold tracking-widest uppercase mb-2">
+          &gt; PHB IT DIAGNOSTIC CONSOLE READY
+        </div>
+        <h1 class="font-display text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
+          Fix technical issues in <span class="text-emerald-300 underline decoration-emerald-400/50 underline-offset-4">under 5 minutes.</span>
         </h1>
-        <p class="text-xs sm:text-sm text-emerald-100 opacity-90 mt-1">
-          Search instant technical guides or submit a ticket directly to the PHB IT Support team.
+        <p class="text-xs sm:text-sm text-emerald-100 opacity-90 mt-3 leading-relaxed max-w-2xl">
+          Search 24 verified IT guides covering hardware, software, FortiClient VPN, password resets, Outlook, and cybersecurity — maintained directly by PHB IT Division.
         </p>
 
-        <!-- Search Bar -->
-        <div class="mt-5 flex flex-col sm:flex-row items-center gap-2">
-          <div class="relative flex-1 w-full">
-            <svg class="w-4 h-4 absolute left-3.5 top-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            <input id="staffSearchInput" type="text" oninput="handleKBSearch(this.value)" onkeydown="if(event.key==='Enter')document.getElementById('sectionKB').scrollIntoView()" placeholder="Search KB guides (e.g., 'VPN', 'Password Reset', 'Outlook')" 
-                   class="w-full pl-9 pr-4 py-2.5 rounded-xl text-slate-900 dark:text-white bg-white dark:bg-slate-800 border-none text-xs focus:ring-2 focus:ring-emerald-400 focus:outline-none shadow-sm">
+        <!-- Live Search Console Input -->
+        <div class="mt-6 space-y-3">
+          <div class="relative flex items-center">
+            <svg class="w-5 h-5 absolute left-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <input id="searchInput" type="text" oninput="handleSearch(this.value)" placeholder="Search 24 guides (e.g., 'VPN', 'Password Reset', 'Printer', 'Phishing')" 
+                   class="w-full pl-12 pr-16 py-3.5 rounded-2xl text-slate-900 dark:text-white bg-white dark:bg-slate-900 border-none text-xs sm:text-sm focus:ring-4 focus:ring-emerald-400 focus:outline-none shadow-lg font-medium">
+            <span class="hidden sm:inline-block absolute right-4 text-[10px] font-mono font-bold text-slate-400 border border-slate-300 dark:border-slate-700 px-2 py-1 rounded-md">/ SEARCH</span>
           </div>
-          <button onclick="openNewTicketModal()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition-colors flex items-center justify-center gap-1.5 shadow-sm">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-            <span>Submit Ticket</span>
-          </button>
+
+          <!-- Quick Suggestion Chips -->
+          <div class="flex flex-wrap items-center gap-2 pt-1">
+            <span class="text-[11px] text-emerald-200 font-bold uppercase tracking-wider">Quick:</span>
+            <button onclick="applyQuickChip('vpn')" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold backdrop-blur-xs transition-colors">VPN connection</button>
+            <button onclick="applyQuickChip('password reset')" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold backdrop-blur-xs transition-colors">Password reset</button>
+            <button onclick="applyQuickChip('printer')" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold backdrop-blur-xs transition-colors">Printer offline</button>
+            <button onclick="applyQuickChip('slow')" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold backdrop-blur-xs transition-colors">Computer slow</button>
+            <button onclick="applyQuickChip('phishing')" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold backdrop-blur-xs transition-colors">Phishing report</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Performance Counters -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+      <div class="p-4 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-xs text-center">
+        <div class="font-display text-2xl sm:text-3xl font-extrabold text-[#007A5E] dark:text-emerald-400">24</div>
+        <div class="text-xs font-semibold text-[var(--phb-soft)] mt-0.5">Verified KB Articles</div>
+      </div>
+      <div class="p-4 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-xs text-center">
+        <div class="font-display text-2xl sm:text-3xl font-extrabold text-[#007A5E] dark:text-emerald-400">6</div>
+        <div class="text-xs font-semibold text-[var(--phb-soft)] mt-0.5">Core Categories</div>
+      </div>
+      <div class="p-4 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-xs text-center">
+        <div class="font-display text-2xl sm:text-3xl font-extrabold text-amber-600 dark:text-amber-400">~4 min</div>
+        <div class="text-xs font-semibold text-[var(--phb-soft)] mt-0.5">Avg Resolution Time</div>
+      </div>
+      <div class="p-4 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-xs text-center">
+        <div class="font-display text-2xl sm:text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">92%</div>
+        <div class="text-xs font-semibold text-[var(--phb-soft)] mt-0.5">First Contact Resolution</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== EXECUTIVE DASHBOARD KPI OVERVIEW ==================== -->
+  <section id="sectionExecutiveOverview" class="hidden space-y-4">
+    <div class="p-6 rounded-3xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+      <div>
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-emerald-50 dark:bg-emerald-950/60 text-[#007A5E] dark:text-emerald-300 text-xs font-extrabold border border-emerald-200 dark:border-emerald-800 mb-2">
+          <span id="roleOverviewBadge">Dashboard Overview</span>
+        </div>
+        <h2 class="font-display text-2xl font-extrabold tracking-tight text-[var(--phb-text)]">
+          IT Service Queue & SLA Performance
+        </h2>
+        <p id="roleOverviewDesc" class="text-xs text-[var(--phb-soft)] mt-1">
+          Real-time oversight of PHB IT support requests, response SLAs, and departmental ticket scoping.
+        </p>
+      </div>
+
+      <!-- Live KPI Cards -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 min-w-[320px]">
+        <div class="p-3.5 rounded-2xl bg-[var(--phb-bg)] border border-[var(--phb-line)] text-center">
+          <div id="kpiTotal" class="font-display text-2xl font-extrabold text-[#007A5E] dark:text-emerald-400">0</div>
+          <div class="text-[11px] text-[var(--phb-soft)] font-bold uppercase tracking-wider">Total Tickets</div>
+        </div>
+        <div class="p-3.5 rounded-2xl bg-[var(--phb-bg)] border border-[var(--phb-line)] text-center">
+          <div id="kpiOpen" class="font-display text-2xl font-extrabold text-amber-600 dark:text-amber-400">0</div>
+          <div class="text-[11px] text-[var(--phb-soft)] font-bold uppercase tracking-wider">Open / Active</div>
+        </div>
+        <div class="p-3.5 rounded-2xl bg-[var(--phb-bg)] border border-[var(--phb-line)] text-center">
+          <div id="kpiPending" class="font-display text-2xl font-extrabold text-rose-600 dark:text-rose-400">0</div>
+          <div class="text-[11px] text-[var(--phb-soft)] font-bold uppercase tracking-wider">Pending Review</div>
+        </div>
+        <div class="p-3.5 rounded-2xl bg-[var(--phb-bg)] border border-[var(--phb-line)] text-center">
+          <div id="kpiResolved" class="font-display text-2xl font-extrabold text-blue-600 dark:text-blue-400">0</div>
+          <div class="text-[11px] text-[var(--phb-soft)] font-bold uppercase tracking-wider">Resolved</div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ==================== TICKET MANAGEMENT SECTION ==================== -->
+  <!-- ==================== TICKET QUEUE SECTION ==================== -->
   <section id="sectionTicketQueue" class="hidden space-y-4 scroll-mt-20">
     
-    <!-- Controls Header & Department Selector -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 p-4 rounded-xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-sm">
+    <!-- Queue Toolbar -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-sm">
       
-      <!-- Title & Dept Dropdown -->
       <div class="flex flex-wrap items-center gap-3">
-        <h2 class="font-bold text-base text-[var(--phb-text)] flex items-center gap-2">
+        <h2 class="font-display font-extrabold text-lg text-[var(--phb-text)] flex items-center gap-2">
           <span>Ticket Queue</span>
-          <span id="ticketBadgeCount" class="text-xs font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">0</span>
+          <span id="ticketBadgeCount" class="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">0</span>
         </h2>
 
-        <!-- Staff Tab Filters (Visible for Staff only) -->
-        <div id="staffTabGroup" class="hidden flex items-center p-0.5 rounded-lg bg-[var(--phb-canvas)] border border-[var(--phb-line)] text-xs font-semibold">
-          <button id="tabStaffAll" onclick="setStaffTicketTab('all')" class="px-2.5 py-1 rounded-md bg-[var(--phb-card)] text-[var(--phb-text)] shadow-xs">All Visible</button>
-          <button id="tabStaffMine" onclick="setStaffTicketTab('mine')" class="px-2.5 py-1 rounded-md text-[var(--phb-soft)] hover:text-[var(--phb-text)]">My Tickets</button>
-          <button id="tabStaffDept" onclick="setStaffTicketTab('dept')" class="px-2.5 py-1 rounded-md text-[var(--phb-soft)] hover:text-[var(--phb-text)]">My Department</button>
-        </div>
-
-        <!-- Department Filter Dropdown (Visible for HOD & IT Admin) -->
-        <div id="deptFilterArea" class="flex items-center gap-1.5">
-          <label for="deptSelect" class="text-xs font-semibold text-[var(--phb-soft)]">Dept:</label>
-          <select id="deptSelect" onchange="filterAndRenderTickets()" class="px-2.5 py-1.5 rounded-lg border border-[var(--phb-line)] bg-[var(--phb-canvas)] text-xs font-semibold text-[var(--phb-text)] focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+        <!-- Department Filter Dropdown (Enabled for HOD IT & IT Admin) -->
+        <div id="deptFilterArea" class="flex items-center gap-2">
+          <label for="deptSelect" class="text-xs font-bold text-[var(--phb-soft)] uppercase tracking-wider">Dept Filter:</label>
+          <select id="deptSelect" onchange="filterAndRenderTickets()" class="px-3 py-1.5 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-xs font-bold text-[var(--phb-text)] focus:ring-2 focus:ring-[#007A5E] focus:outline-none">
             <option value="ALL">All Departments (Executive View)</option>
-            <option value="ITD">Information Technology (ITD)</option>
-            <option value="Finance">Finance & Accounting</option>
-            <option value="Human Resources">Human Resources (HR)</option>
-            <option value="Property Management">Property Management</option>
-            <option value="Investment">Investment & Treasury</option>
-            <option value="Legal & Secretarial">Legal & Secretarial</option>
-            <option value="Corporate Communications">Corporate Communications</option>
+            <!-- Populated dynamically by JS with 16 PHB Departments -->
           </select>
         </div>
       </div>
 
-      <!-- Search, View Switcher, Export, New Button -->
+      <!-- Controls: Filter & Exports -->
       <div class="flex flex-wrap items-center gap-2">
-        
-        <!-- View Switcher (List vs Grouped by Dept) -->
-        <div id="viewToggleGroup" class="flex items-center p-0.5 rounded-lg bg-[var(--phb-canvas)] border border-[var(--phb-line)] text-xs font-semibold">
-          <button id="btnViewList" onclick="switchTicketView('list')" class="px-2.5 py-1 rounded-md bg-[var(--phb-card)] text-[var(--phb-text)] shadow-sm">List View</button>
-          <button id="btnViewGrouped" onclick="switchTicketView('grouped')" class="px-2.5 py-1 rounded-md text-[var(--phb-soft)] hover:text-[var(--phb-text)]">Grouped View</button>
-        </div>
-
-        <!-- Search Input -->
         <div class="relative">
-          <input id="ticketSearchInput" type="text" oninput="filterAndRenderTickets()" placeholder="Search tickets..." 
-                 class="w-36 sm:w-44 pl-8 pr-2.5 py-1.5 rounded-lg border border-[var(--phb-line)] bg-[var(--phb-canvas)] text-xs text-[var(--phb-text)] focus:outline-none focus:ring-2 focus:ring-emerald-500">
+          <input id="ticketSearchInput" type="text" oninput="filterAndRenderTickets()" placeholder="Search queue..." 
+                 class="w-36 sm:w-48 pl-8 pr-3 py-1.5 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-xs text-[var(--phb-text)] focus:outline-none focus:ring-2 focus:ring-[#007A5E]">
           <svg class="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-[var(--phb-soft)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
         </div>
 
-        <!-- Exports (HOD / IT Only) -->
-        <div id="exportBtnArea" class="hidden flex items-center gap-1">
-          <button onclick="exportToPDF()" title="PDF Export" class="px-2.5 py-1.5 rounded-lg border border-red-200 bg-red-50 text-red-700 dark:bg-red-950/40 dark:border-red-900 dark:text-red-300 text-xs font-semibold hover:bg-red-100">PDF</button>
-          <button onclick="exportToExcel()" title="Excel Export" class="px-2.5 py-1.5 rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:border-emerald-900 dark:text-emerald-300 text-xs font-semibold hover:bg-emerald-100">Excel</button>
+        <!-- PDF & Excel Exports -->
+        <div id="exportBtnArea" class="hidden flex items-center gap-1.5">
+          <button onclick="exportToPDF()" title="Export PDF Report" class="px-3 py-1.5 rounded-xl border border-rose-200 bg-rose-50 text-rose-700 dark:bg-rose-950/50 dark:border-rose-900 dark:text-rose-300 text-xs font-bold hover:bg-rose-100 transition-colors">PDF</button>
+          <button onclick="exportToExcel()" title="Export Excel Sheet" class="px-3 py-1.5 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:border-emerald-900 dark:text-emerald-300 text-xs font-bold hover:bg-emerald-100 transition-colors">Excel</button>
         </div>
 
-        <button onclick="openNewTicketModal()" class="px-3 py-1.5 rounded-lg bg-[#007A5E] hover:bg-[#005A4B] text-white text-xs font-semibold shadow-sm transition-colors flex items-center gap-1">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        <button onclick="openNewTicketModal()" class="px-3.5 py-1.5 rounded-xl bg-[#007A5E] hover:bg-[#005A4B] text-white text-xs font-bold shadow-sm transition-colors flex items-center gap-1">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
           <span>New Ticket</span>
         </button>
       </div>
     </div>
 
-    <!-- LIST VIEW TABLE -->
-    <div id="ticketViewList" class="rounded-xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-sm overflow-hidden">
+    <!-- Ticket Table -->
+    <div id="ticketViewList" class="rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-sm overflow-hidden">
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse text-xs">
           <thead>
-            <tr class="bg-[var(--phb-canvas)] border-b border-[var(--phb-line)] text-[var(--phb-soft)] font-semibold uppercase tracking-wider text-[10px]">
-              <th class="py-3 px-4">Ticket ID</th>
-              <th class="py-3 px-4">Subject & Requester</th>
-              <th class="py-3 px-4">Department</th>
-              <th class="py-3 px-4">Category</th>
-              <th class="py-3 px-4">Priority</th>
-              <th class="py-3 px-4">Status</th>
-              <th class="py-3 px-4">Assignee</th>
-              <th class="py-3 px-4 text-right">Action</th>
+            <tr class="bg-[var(--phb-bg)] border-b border-[var(--phb-line)] text-[var(--phb-soft)] font-bold uppercase tracking-wider text-[10px]">
+              <th class="py-3.5 px-4">Ticket ID</th>
+              <th class="py-3.5 px-4">Subject & Requester</th>
+              <th class="py-3.5 px-4">Department</th>
+              <th class="py-3.5 px-4">Category</th>
+              <th class="py-3.5 px-4">Priority</th>
+              <th class="py-3.5 px-4">Status</th>
+              <th class="py-3.5 px-4">Assignee</th>
+              <th class="py-3.5 px-4 text-right">Action</th>
             </tr>
           </thead>
           <tbody id="ticketTableBody" class="divide-y divide-[var(--phb-line)]">
@@ -381,216 +461,241 @@ html { scroll-behavior: smooth; }
         </table>
       </div>
     </div>
+  </section>
 
-    <!-- GROUPED VIEW BY DEPARTMENT -->
-    <div id="ticketViewGrouped" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+  <!-- ==================== HOME SECTION 1: HOW TO USE ==================== -->
+  <section id="sectionHow" class="space-y-4 scroll-mt-20">
+    <div class="flex items-center gap-3 border-l-4 border-[#007A5E] pl-3 py-1">
+      <div>
+        <h2 class="font-display text-xl sm:text-2xl font-extrabold text-[var(--phb-text)] tracking-tight">
+          How to use ORBIT
+        </h2>
+        <p class="text-xs font-semibold text-[var(--phb-soft)]">
+          Four simple steps from encountering an issue to resolution
+        </p>
+      </div>
+    </div>
+    <div id="howGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       <!-- Rendered by JS -->
     </div>
   </section>
 
-  <!-- ==================== HOME: HOW TO USE ==================== -->
-  <section id="sectionHow" class="space-y-4 scroll-mt-20">
-    <div>
-      <h2 class="font-bold text-base text-[var(--phb-text)]">How to use ORBIT</h2>
-      <p class="text-xs text-[var(--phb-soft)]">Four steps from &ldquo;something is broken&rdquo; to &ldquo;fixed&rdquo;</p>
-    </div>
-    <div id="howGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
-  </section>
-
-  <!-- ==================== HOME: BROWSE BY CATEGORY ==================== -->
+  <!-- ==================== HOME SECTION 2: BROWSE BY CATEGORY ==================== -->
   <section id="sectionBrowse" class="space-y-4 scroll-mt-20">
-    <div>
-      <h2 class="font-bold text-base text-[var(--phb-text)]">Browse by category</h2>
-      <p class="text-xs text-[var(--phb-soft)]">Jump straight to the area you are troubleshooting</p>
-    </div>
-    <div id="browseGrid" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
-  </section>
-
-  <!-- ==================== HOME: ARTICLES ==================== -->
-  <section id="sectionKB" class="space-y-4 scroll-mt-20">
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <div class="flex items-center gap-3 border-l-4 border-[#007A5E] pl-3 py-1">
       <div>
-        <h2 class="font-bold text-base text-[var(--phb-text)]">Self-Service Knowledge Base</h2>
-        <p class="text-xs text-[var(--phb-soft)]">Verified technical resolution guides maintained by PHB IT Division</p>
+        <h2 class="font-display text-xl sm:text-2xl font-extrabold text-[var(--phb-text)] tracking-tight">
+          Browse by category
+        </h2>
+        <p class="text-xs font-semibold text-[var(--phb-soft)]">
+          Jump directly to the technical domain you are troubleshooting
+        </p>
       </div>
+    </div>
+    <div id="browseGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <!-- 6 Categories rendered by JS -->
+    </div>
+  </section>
+
+  <!-- ==================== HOME SECTION 3: ALL 24 ARTICLES ==================== -->
+  <section id="sectionKB" class="space-y-4 scroll-mt-20">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-l-4 border-[#007A5E] pl-3 py-1">
+      <div>
+        <h2 class="font-display text-xl sm:text-2xl font-extrabold text-[var(--phb-text)] tracking-tight flex items-center gap-3">
+          <span>Self-Service Knowledge Base</span>
+          <span id="articleCountBadge" class="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">24 Articles</span>
+        </h2>
+        <p class="text-xs font-semibold text-[var(--phb-soft)]">
+          Verified technical resolution guides maintained directly by PHB IT Division
+        </p>
+      </div>
+
       <div class="flex items-center gap-2">
-        <span id="kbFilterLabel" class="hidden text-[11px] font-semibold px-2 py-1 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300"></span>
-        <button id="kbShowAll" onclick="filterKBByCategory('All')" class="hidden text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 hover:underline">Show all</button>
-        <input id="kbSearchInput" type="text" oninput="handleKBSearch(this.value)" placeholder="Search guides..."
-               class="w-44 px-3 py-1.5 rounded-lg border border-[var(--phb-line)] bg-[var(--phb-canvas)] text-xs text-[var(--phb-text)] focus:outline-none focus:ring-2 focus:ring-emerald-500">
+        <span id="kbFilterBadge" class="hidden text-[11px] font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300"></span>
+        <button id="kbShowAllBtn" onclick="filterKBByCategory('All')" class="hidden text-xs font-bold text-[#007A5E] dark:text-emerald-400 hover:underline">Show all 24 guides</button>
       </div>
     </div>
-    <div id="kbGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+
+    <!-- Articles Grid -->
+    <div id="kbGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <!-- Rendered by JS -->
+    </div>
   </section>
 
-  <!-- ==================== HOME: FAQ ==================== -->
+  <!-- ==================== REPORTS & ANALYTICS SECTION ==================== -->
+  <section id="sectionReports" class="hidden space-y-6 scroll-mt-20">
+    <div class="flex items-center gap-3 border-l-4 border-amber-500 pl-3 py-1">
+      <div>
+        <h2 class="font-display text-xl sm:text-2xl font-extrabold text-[var(--phb-text)] tracking-tight">
+          Reports & Analytical Overview
+        </h2>
+        <p class="text-xs font-semibold text-[var(--phb-soft)]">
+          Operational metrics, category ratios, and resolution trends
+        </p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Bar Chart -->
+      <div class="p-5 rounded-3xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-sm space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-[var(--phb-line)]">
+          <h3 class="font-display font-bold text-sm text-[var(--phb-text)]">Ticket Volume &mdash; Monthly Trend</h3>
+          <span class="text-[10px] font-mono font-bold text-[#007A5E]">REAL-TIME</span>
+        </div>
+        <div id="barChart" class="flex items-end justify-between gap-3 h-44 pt-4">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- Category Distribution -->
+      <div class="p-5 rounded-3xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-sm space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-[var(--phb-line)]">
+          <h3 class="font-display font-bold text-sm text-[var(--phb-text)]">Category Ratio Breakdown</h3>
+          <span class="text-[10px] font-mono font-bold text-[var(--phb-soft)]">24 TOTAL GUIDES</span>
+        </div>
+        <div id="catDistributionList" class="space-y-3 pt-1">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== HOME SECTION 4: FAQ ==================== -->
   <section id="sectionFaq" class="space-y-4 scroll-mt-20">
-    <div>
-      <h2 class="font-bold text-base text-[var(--phb-text)]">Frequently asked questions</h2>
-      <p class="text-xs text-[var(--phb-soft)]">Quick answers about using ORBIT</p>
+    <div class="flex items-center gap-3 border-l-4 border-[#007A5E] pl-3 py-1">
+      <div>
+        <h2 class="font-display text-xl sm:text-2xl font-extrabold text-[var(--phb-text)] tracking-tight">
+          Frequently asked questions
+        </h2>
+        <p class="text-xs font-semibold text-[var(--phb-soft)]">
+          Quick answers about using ORBIT
+        </p>
+      </div>
     </div>
-    <div id="faqList" class="space-y-2"></div>
+    <div id="faqList" class="space-y-2.5">
+      <!-- Rendered by JS -->
+    </div>
   </section>
 
-  <!-- ==================== HOME: NEED A HUMAN ==================== -->
+  <!-- ==================== HOME SECTION 5: NEED A HUMAN ==================== -->
   <section id="sectionSupport" class="space-y-4 scroll-mt-20">
-    <div>
-      <h2 class="font-bold text-base text-[var(--phb-text)]">Need a human instead?</h2>
-      <p class="text-xs text-[var(--phb-soft)]">Reach the IT support team directly</p>
+    <div class="flex items-center gap-3 border-l-4 border-[#007A5E] pl-3 py-1">
+      <div>
+        <h2 class="font-display text-xl sm:text-2xl font-extrabold text-[var(--phb-text)] tracking-tight">
+          Need a human instead?
+        </h2>
+        <p class="text-xs font-semibold text-[var(--phb-soft)]">
+          Reach out directly to the PHB IT support team
+        </p>
+      </div>
     </div>
-    <div id="supportGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-4"></div>
+    <div id="supportGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <!-- Rendered by JS -->
+    </div>
   </section>
 
 </main>
 
 <!-- ==================== CORPORATE FOOTER ==================== -->
-<footer class="mt-auto bg-[var(--phb-card)] border-t border-[var(--phb-line)] py-5 text-xs text-[var(--phb-soft)]">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+<footer class="mt-auto bg-[var(--phb-card)] border-t border-[var(--phb-line)] py-6 text-xs text-[var(--phb-soft)]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
     <div class="flex items-center gap-3">
       <img src="https://www.phb.com.my/clients/asset_E5316276-9983-47F1-A6C2-76D0C7985656/contentms/img/logo/logo-phb.svg" 
-           alt="PHB" class="h-5 w-auto opacity-75">
-      <span>Pelaburan Hartanah Berhad · Controlled by Power Automate</span>
+           alt="PHB" class="h-6 w-auto opacity-80"
+           onerror="this.src='https://placehold.co/120x30/007A5E/ffffff?text=PHB'">
+      <span>Pelaburan Hartanah Berhad &middot; Controlled via Power Automate HTTP</span>
     </div>
-    <div class="font-bold tracking-wider uppercase text-[11px] text-emerald-700 dark:text-emerald-400">
-      WE ARE PHB — PROFESSIONAL | HARMONIOUS | BOLD
+    <div class="font-display font-bold tracking-wider uppercase text-[11px] text-[#007A5E] dark:text-emerald-400">
+      WE ARE PHB &mdash; PROFESSIONAL | HARMONIOUS | BOLD
     </div>
   </div>
 </footer>
 
-<!-- ==================== MODALS & SLIDE-OVER DRAWERS ==================== -->
+<!-- ==================== MODALS & DRAWERS ==================== -->
 
-<!-- 1. TICKET DETAIL & ACTION SLIDE-OVER DRAWER -->
-<div id="drawerTicket" class="fixed inset-0 z-50 hidden">
-  <div class="drawer-overlay absolute inset-0 bg-slate-900/50 backdrop-blur-xs" onclick="closeDrawer('drawerTicket')"></div>
-  <div class="drawer-content absolute right-0 top-0 bottom-0 w-full max-w-lg bg-[var(--phb-card)] border-l border-[var(--phb-line)] shadow-2xl flex flex-col overflow-hidden">
+<!-- 1. KB ARTICLE READER MODAL -->
+<div id="modalArticle" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs" onclick="if(event.target===this)closeModal('modalArticle')">
+  <div class="max-w-2xl w-full bg-[var(--phb-card)] rounded-3xl shadow-2xl border border-[var(--phb-line)] overflow-hidden max-h-[90vh] flex flex-col">
     
-    <div class="p-5 border-b border-[var(--phb-line)] bg-[var(--phb-canvas)] flex items-center justify-between">
-      <div>
-        <span id="drwTicketID" class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">TK-0000</span>
-        <h3 id="drwSubject" class="font-bold text-sm text-[var(--phb-text)] mt-1">Ticket Subject</h3>
+    <div class="px-6 py-4 border-b border-[var(--phb-line)] bg-[var(--phb-bg)] flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span id="artId" class="font-mono text-xs font-bold text-[#007A5E] dark:text-emerald-400 px-2.5 py-1 rounded-md bg-emerald-50 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-800">KB-0000</span>
+        <span id="artCat" class="text-xs font-bold text-[var(--phb-soft)] uppercase tracking-wider">Category</span>
       </div>
-      <button onclick="closeDrawer('drawerTicket')" class="text-[var(--phb-soft)] hover:text-red-500 p-1">
+      <button onclick="closeModal('modalArticle')" class="text-[var(--phb-soft)] hover:text-rose-500 p-1">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
 
-    <div class="p-5 overflow-y-auto flex-1 space-y-4 text-xs">
-      
-      <!-- Metadata Grid -->
-      <div class="grid grid-cols-2 gap-3 p-3 rounded-xl bg-[var(--phb-canvas)] border border-[var(--phb-line)]">
-        <div>
-          <span class="text-[var(--phb-soft)] font-medium block">Requester</span>
-          <span id="drwRequester" class="font-bold text-[var(--phb-text)]">Name</span>
-        </div>
-        <div>
-          <span class="text-[var(--phb-soft)] font-medium block">Department</span>
-          <span id="drwDepartment" class="font-bold text-[var(--phb-text)]">Dept</span>
-        </div>
-        <div>
-          <span class="text-[var(--phb-soft)] font-medium block">Category</span>
-          <span id="drwCategory" class="font-bold text-[var(--phb-text)]">Cat</span>
-        </div>
-        <div>
-          <span class="text-[var(--phb-soft)] font-medium block">Priority</span>
-          <span id="drwPriority" class="font-bold text-[var(--phb-text)]">Priority</span>
-        </div>
+    <div class="p-6 overflow-y-auto space-y-5 text-xs sm:text-sm flex-1">
+      <h3 id="artTitle" class="font-display text-xl font-extrabold text-[var(--phb-text)] leading-snug">Article Title</h3>
+      <p id="artDesc" class="text-[var(--phb-soft)] leading-relaxed"></p>
+
+      <div class="p-4 rounded-2xl bg-[var(--phb-bg)] border border-[var(--phb-line)] space-y-3">
+        <span class="font-extrabold text-[#007A5E] dark:text-emerald-400 uppercase text-[11px] tracking-widest block">Step-by-Step Resolution</span>
+        <ol id="artSteps" class="step-list text-[var(--phb-text)] leading-relaxed"></ol>
       </div>
 
-      <!-- Description -->
-      <div>
-        <span class="font-semibold text-[var(--phb-soft)] block mb-1">Issue Details / Steps to Reproduce</span>
-        <div id="drwDetails" class="p-3 rounded-xl bg-[var(--phb-canvas)] border border-[var(--phb-line)] text-[var(--phb-text)] whitespace-pre-wrap leading-relaxed">
-          Details content...
-        </div>
+      <div id="artTags" class="flex flex-wrap gap-1.5 pt-1">
+        <!-- Tags -->
       </div>
+    </div>
 
-      <!-- Action Panel for HOD / IT Admin -->
-      <div id="drwActionPanel" class="p-4 rounded-xl border border-emerald-200 bg-emerald-50/50 dark:bg-emerald-950/20 dark:border-emerald-900 space-y-3">
-        <h4 class="font-bold text-xs uppercase tracking-wider text-emerald-800 dark:text-emerald-300">Update Ticket</h4>
-        
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block font-semibold text-[var(--phb-soft)] mb-1">Update Status</label>
-            <select id="drwStatusSelect" class="w-full px-2.5 py-1.5 rounded-lg border border-[var(--phb-line)] bg-[var(--phb-card)] font-semibold text-[var(--phb-text)]">
-              <option value="Open">Open</option>
-              <option value="In Progress">In Progress</option>
-              <option value="Pending">Pending</option>
-              <option value="Resolved">Resolved</option>
-            </select>
-          </div>
-          <div>
-            <label class="block font-semibold text-[var(--phb-soft)] mb-1">Assign Officer</label>
-            <select id="drwAssigneeSelect" class="w-full px-2.5 py-1.5 rounded-lg border border-[var(--phb-line)] bg-[var(--phb-card)] font-semibold text-[var(--phb-text)]">
-              <option value="Haq (ITD)">Haq (ITD)</option>
-              <option value="Fahmi (ITD)">Fahmi (ITD)</option>
-              <option value="Nur Haliza (HOD)">Nur Haliza (HOD)</option>
-              <option value="Unassigned">Unassigned</option>
-            </select>
-          </div>
-        </div>
-
-        <div>
-          <label class="block font-semibold text-[var(--phb-soft)] mb-1">Resolution Remarks / Notes</label>
-          <textarea id="drwRemarks" rows="2" placeholder="Add resolution details or escalation notes..." class="w-full px-2.5 py-1.5 rounded-lg border border-[var(--phb-line)] bg-[var(--phb-card)] text-[var(--phb-text)]"></textarea>
-        </div>
-
-        <button onclick="saveTicketChangesFromDrawer()" class="w-full py-2 rounded-lg bg-[#007A5E] hover:bg-[#005A4B] text-white font-bold text-xs transition-colors shadow-sm">
-          Save & Notify Requester
-        </button>
+    <!-- Article Feedback Footer -->
+    <div class="p-4 px-6 border-t border-[var(--phb-line)] bg-[var(--phb-bg)]/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+      <div class="flex items-center gap-2">
+        <span class="font-semibold text-[var(--phb-soft)]">Was this guide helpful?</span>
+        <button onclick="markHelpful(true)" class="px-3 py-1 rounded-lg border border-[var(--phb-line)] bg-[var(--phb-card)] hover:border-emerald-500 font-bold text-[var(--phb-text)] transition-colors">Yes 👍</button>
+        <button onclick="markHelpful(false)" class="px-3 py-1 rounded-lg border border-[var(--phb-line)] bg-[var(--phb-card)] hover:border-rose-500 font-bold text-[var(--phb-text)] transition-colors">No, escalate</button>
       </div>
+      <button onclick="closeModal('modalArticle');openNewTicketModal()" class="w-full sm:w-auto px-4 py-2 rounded-xl bg-[#007A5E] hover:bg-[#005A4B] text-white font-bold transition-colors">Submit Support Ticket</button>
     </div>
   </div>
 </div>
 
 <!-- 2. SUBMIT TICKET MODAL -->
-<div id="modalNewTicket" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-  <div class="max-w-lg w-full bg-[var(--phb-card)] rounded-2xl shadow-2xl border border-[var(--phb-line)] overflow-hidden">
-    <div class="px-5 py-3.5 border-b border-[var(--phb-line)] bg-[var(--phb-canvas)] flex items-center justify-between">
-      <h3 class="font-bold text-sm text-[var(--phb-text)]">Submit Support Request</h3>
-      <button onclick="closeModal('modalNewTicket')" class="text-[var(--phb-soft)] hover:text-red-500">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+<div id="modalNewTicket" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs" onclick="if(event.target===this)closeModal('modalNewTicket')">
+  <div class="max-w-xl w-full bg-[var(--phb-card)] rounded-3xl shadow-2xl border border-[var(--phb-line)] overflow-hidden">
+    <div class="px-6 py-4 border-b border-[var(--phb-line)] bg-[var(--phb-bg)] flex items-center justify-between">
+      <h3 class="font-display font-extrabold text-base text-[var(--phb-text)]">Submit IT Support Request</h3>
+      <button onclick="closeModal('modalNewTicket')" class="text-[var(--phb-soft)] hover:text-rose-500">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
     
-    <form onsubmit="handleNewTicketSubmit(event)" class="p-5 space-y-3 text-xs">
-      <div class="grid grid-cols-2 gap-3">
+    <form onsubmit="handleNewTicketSubmit(event)" class="p-6 space-y-4 text-xs">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label class="block font-semibold text-[var(--phb-soft)] mb-1">Requester Name</label>
-          <input id="formReqName" type="text" readonly required class="w-full px-2.5 py-1.5 rounded-lg border border-[var(--phb-line)] bg-[var(--phb-canvas)] text-[var(--phb-text)]">
+          <label class="block font-bold text-[var(--phb-soft)] uppercase tracking-wider text-[10px] mb-1">Requester Name</label>
+          <input id="formReqName" type="text" readonly required class="w-full px-3 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-[var(--phb-text)] font-semibold">
         </div>
         <div>
-          <label class="block font-semibold text-[var(--phb-soft)] mb-1">Email</label>
-          <input id="formReqEmail" type="email" readonly required class="w-full px-2.5 py-1.5 rounded-lg border border-[var(--phb-line)] bg-[var(--phb-canvas)] text-[var(--phb-text)]">
+          <label class="block font-bold text-[var(--phb-soft)] uppercase tracking-wider text-[10px] mb-1">Requester Email</label>
+          <input id="formReqEmail" type="email" readonly required class="w-full px-3 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-[var(--phb-text)] font-mono">
         </div>
       </div>
 
-      <div class="grid grid-cols-3 gap-3">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div>
-          <label class="block font-semibold text-[var(--phb-soft)] mb-1">Department</label>
-          <select id="formDept" required class="w-full px-2 py-1.5 rounded-lg border border-[var(--phb-line)] bg-[var(--phb-canvas)] text-[var(--phb-text)]">
-            <option value="ITD">ITD</option>
-            <option value="Finance">Finance</option>
-            <option value="Human Resources">HR</option>
-            <option value="Property Management">Property Mgmt</option>
-            <option value="Investment">Investment</option>
-            <option value="Legal & Secretarial">Legal</option>
-            <option value="Corporate Communications">Corporate</option>
+          <label class="block font-bold text-[var(--phb-soft)] uppercase tracking-wider text-[10px] mb-1">Department</label>
+          <select id="formDept" required class="w-full px-3 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-[var(--phb-text)] font-semibold">
+            <!-- 16 PHB Departments populated by JS -->
           </select>
         </div>
         <div>
-          <label class="block font-semibold text-[var(--phb-soft)] mb-1">Category</label>
-          <select id="formCategory" required class="w-full px-2 py-1.5 rounded-lg border border-[var(--phb-line)] bg-[var(--phb-canvas)] text-[var(--phb-text)]">
+          <label class="block font-bold text-[var(--phb-soft)] uppercase tracking-wider text-[10px] mb-1">Category</label>
+          <select id="formCategory" required class="w-full px-3 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-[var(--phb-text)] font-semibold">
             <option value="Hardware">Hardware</option>
             <option value="Software">Software</option>
-            <option value="Network">Network</option>
-            <option value="Account">Account</option>
-            <option value="Email">Email</option>
+            <option value="Network & VPN">Network & VPN</option>
+            <option value="Account & Access">Account & Access</option>
+            <option value="Email & Calendar">Email & Calendar</option>
             <option value="Security">Security</option>
           </select>
         </div>
         <div>
-          <label class="block font-semibold text-[var(--phb-soft)] mb-1">Priority</label>
-          <select id="formPriority" required class="w-full px-2 py-1.5 rounded-lg border border-[var(--phb-line)] bg-[var(--phb-canvas)] text-[var(--phb-text)]">
+          <label class="block font-bold text-[var(--phb-soft)] uppercase tracking-wider text-[10px] mb-1">Priority</label>
+          <select id="formPriority" required class="w-full px-3 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-[var(--phb-text)] font-bold">
             <option value="Low">Low</option>
             <option value="Medium" selected>Medium</option>
             <option value="High">High</option>
@@ -600,129 +705,250 @@ html { scroll-behavior: smooth; }
       </div>
 
       <div>
-        <label class="block font-semibold text-[var(--phb-soft)] mb-1">Subject</label>
-        <input id="formSubject" type="text" required placeholder="Short description of the problem" class="w-full px-2.5 py-1.5 rounded-lg border border-[var(--phb-line)] bg-[var(--phb-canvas)] text-[var(--phb-text)]">
+        <label class="block font-bold text-[var(--phb-soft)] uppercase tracking-wider text-[10px] mb-1">Subject</label>
+        <input id="formSubject" type="text" required placeholder="Short description of the problem" class="w-full px-3 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-[var(--phb-text)] font-medium">
       </div>
 
       <div>
-        <label class="block font-semibold text-[var(--phb-soft)] mb-1">Details</label>
-        <textarea id="formDetail" rows="3" required placeholder="Describe error messages or steps to reproduce..." class="w-full px-2.5 py-1.5 rounded-lg border border-[var(--phb-line)] bg-[var(--phb-canvas)] text-[var(--phb-text)]"></textarea>
+        <label class="block font-bold text-[var(--phb-soft)] uppercase tracking-wider text-[10px] mb-1">Details & Steps to Reproduce</label>
+        <textarea id="formDetail" rows="3" required placeholder="Describe error messages or steps taken..." class="w-full px-3 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-[var(--phb-text)] font-medium"></textarea>
       </div>
 
-      <div class="flex items-center justify-end gap-2 pt-2 border-t border-[var(--phb-line)]">
-        <button type="button" onclick="closeModal('modalNewTicket')" class="px-3 py-1.5 rounded-lg border border-[var(--phb-line)] font-semibold text-[var(--phb-soft)]">Cancel</button>
-        <button type="submit" id="formSubmitBtn" class="px-4 py-1.5 rounded-lg bg-[#007A5E] hover:bg-[#005A4B] text-white font-bold shadow-sm">Submit Ticket</button>
+      <div class="flex items-center justify-end gap-2 pt-3 border-t border-[var(--phb-line)]">
+        <button type="button" onclick="closeModal('modalNewTicket')" class="px-4 py-2 rounded-xl border border-[var(--phb-line)] font-bold text-[var(--phb-soft)]">Cancel</button>
+        <button type="submit" id="formSubmitBtn" class="px-5 py-2 rounded-xl bg-[#007A5E] hover:bg-[#005A4B] text-white font-extrabold shadow-sm">Submit Ticket</button>
       </div>
     </form>
   </div>
 </div>
 
-<!-- 3. ARTICLE MODAL -->
-<div id="modalArticle" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-  <div class="max-w-lg w-full bg-[var(--phb-card)] rounded-2xl shadow-2xl border border-[var(--phb-line)] overflow-hidden">
-    <div class="px-5 py-3.5 border-b border-[var(--phb-line)] bg-[var(--phb-canvas)] flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <span id="artId" class="font-mono text-xs font-bold text-emerald-600">KB-0000</span>
-        <span id="artCat" class="text-xs font-medium text-[var(--phb-soft)]">Cat</span>
+<!-- 3. TICKET ACTION DRAWER FOR HOD / IT ADMIN -->
+<div id="drawerTicket" class="fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-xs" onclick="closeDrawer('drawerTicket')"></div>
+  <div class="absolute right-0 top-0 bottom-0 w-full max-w-md bg-[var(--phb-card)] border-l border-[var(--phb-line)] shadow-2xl flex flex-col overflow-hidden">
+    
+    <div class="p-5 border-b border-[var(--phb-line)] bg-[var(--phb-bg)] flex items-center justify-between">
+      <div>
+        <span id="drwTicketID" class="text-xs font-mono font-bold px-2.5 py-0.5 rounded bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">TK-0000</span>
+        <h3 id="drwSubject" class="font-display font-bold text-sm text-[var(--phb-text)] mt-1">Ticket Subject</h3>
       </div>
-      <button onclick="closeModal('modalArticle')" class="text-[var(--phb-soft)] hover:text-red-500">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      <button onclick="closeDrawer('drawerTicket')" class="text-[var(--phb-soft)] hover:text-rose-500 p-1">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
-    
-    <div class="p-5 space-y-3 text-xs">
-      <h3 id="artTitle" class="text-base font-bold text-[var(--phb-text)]">Title</h3>
-      <p id="artDesc" class="text-[var(--phb-soft)]"></p>
-      <div class="p-3 rounded-xl bg-[var(--phb-canvas)] border border-[var(--phb-line)] space-y-2">
-        <span class="font-bold text-emerald-700 dark:text-emerald-400 block uppercase text-[10px] tracking-wider">Troubleshooting Steps</span>
-        <ol id="artSteps" class="list-decimal pl-4 space-y-1 text-[var(--phb-text)] leading-relaxed"></ol>
+
+    <div class="p-5 overflow-y-auto flex-1 space-y-4 text-xs">
+      
+      <!-- Metadata Grid -->
+      <div class="grid grid-cols-2 gap-3 p-3.5 rounded-2xl bg-[var(--phb-bg)] border border-[var(--phb-line)]">
+        <div>
+          <span class="text-[var(--phb-soft)] font-bold block uppercase text-[9px]">Requester</span>
+          <span id="drwRequester" class="font-bold text-[var(--phb-text)]">Name</span>
+        </div>
+        <div>
+          <span class="text-[var(--phb-soft)] font-bold block uppercase text-[9px]">Department</span>
+          <span id="drwDepartment" class="font-bold text-[var(--phb-text)]">Dept</span>
+        </div>
+        <div>
+          <span class="text-[var(--phb-soft)] font-bold block uppercase text-[9px]">Category</span>
+          <span id="drwCategory" class="font-bold text-[var(--phb-text)]">Cat</span>
+        </div>
+        <div>
+          <span class="text-[var(--phb-soft)] font-bold block uppercase text-[9px]">Priority</span>
+          <span id="drwPriority" class="font-bold text-[var(--phb-text)]">Priority</span>
+        </div>
       </div>
-      <button onclick="closeModal('modalArticle');openNewTicketModal()" class="w-full py-2 rounded-lg border border-emerald-300 bg-emerald-50 text-emerald-800 dark:bg-emerald-950 dark:border-emerald-800 dark:text-emerald-200 font-bold text-xs hover:bg-emerald-100">Still not fixed? Submit a ticket</button>
+
+      <!-- Description -->
+      <div>
+        <span class="font-bold text-[var(--phb-soft)] uppercase text-[10px] block mb-1">Issue Details</span>
+        <div id="drwDetails" class="p-3.5 rounded-2xl bg-[var(--phb-bg)] border border-[var(--phb-line)] text-[var(--phb-text)] whitespace-pre-wrap leading-relaxed font-medium">
+          Details content...
+        </div>
+      </div>
+
+      <!-- Action Panel for Assigning & Updating Status -->
+      <div id="drwActionPanel" class="p-4 rounded-2xl border border-emerald-200 bg-emerald-50/60 dark:bg-emerald-950/30 dark:border-emerald-900 space-y-3">
+        <h4 class="font-extrabold text-xs uppercase tracking-wider text-[#007A5E] dark:text-emerald-300">Update Ticket & Assignee</h4>
+        
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-[var(--phb-soft)] mb-1">Status</label>
+            <select id="drwStatusSelect" class="w-full px-2.5 py-1.5 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-card)] font-bold text-[var(--phb-text)]">
+              <option value="Open">Open</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Pending">Pending</option>
+              <option value="Resolved">Resolved</option>
+            </select>
+          </div>
+          <div id="drwAssigneeWrapper">
+            <label class="block font-bold text-[var(--phb-soft)] mb-1">Assign Officer</label>
+            <select id="drwAssigneeSelect" class="w-full px-2.5 py-1.5 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-card)] font-bold text-[var(--phb-text)]">
+              <!-- Populated by JS -->
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-[var(--phb-soft)] mb-1">Resolution Remarks</label>
+          <textarea id="drwRemarks" rows="2" placeholder="Add resolution details..." class="w-full px-2.5 py-1.5 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-card)] text-[var(--phb-text)] font-medium"></textarea>
+        </div>
+
+        <button onclick="saveTicketChangesFromDrawer()" class="w-full py-2.5 rounded-xl bg-[#007A5E] hover:bg-[#005A4B] text-white font-extrabold text-xs transition-colors shadow-sm">
+          Save & Notify Requester
+        </button>
+      </div>
     </div>
   </div>
 </div>
 
 <!-- TOAST CONTAINER -->
-<div id="toastContainer" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+<div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-<!-- ==================== JAVASCRIPT LOGIC ==================== -->
+<!-- ==================== JAVASCRIPT CORE LOGIC ==================== -->
 <script>
-/* ==================== 1. POWER AUTOMATE & APP CONFIGURATION ==================== */
+/* ==================== 1. PRODUCTION & POWER AUTOMATE CONFIG ==================== */
 const CONFIG = {
-  msal: { clientId: '', tenantId: '' },       // Entra ID app registration (Single-page application)
-  flows: { load: '', save: '' },               // HTTP URLs of "ORBIT - Load Tickets" and "ORBIT - Save Ticket"
-  support: { email: '', phone: '', hours: '' } // shown under "Need a human?" (leave blank to hide)
+  msal: { 
+    clientId: 'cc9afa77-5900-4c38-8262-c226c4c2e27d', 
+    tenantId: '86a53736-4355-4cb2-98dd-0466f0426e2e' 
+  },
+  flows: { 
+    load: 'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/26/workflows/eaf49b60f83e47d48d86407219ecb944/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=9k6JGlDLpEgdR2BwpTi5PqgKyM-NL7E_S80pIrO4Cmk', 
+    save: 'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/01/workflows/eb61e2c74bb64ddc829c58e048b1e054/triggers/manual/paths/invoke?api-version=1' 
+  },
+  departments: [
+    'Finance Department (FD)',
+    'Investment Department (ID)',
+    'Property Development Department (PDD)',
+    'Internal Audit Department (IAD)',
+    'PHB Asset Management (PAM)',
+    'PHB Facility Management (PFM)',
+    'PHB Property Ventures (PPV)',
+    'Risk, Compliance & Integrity Management Department (RCIMD)',
+    'Human Resource Department (HRD)',
+    'Learning & Development Department (LDD)',
+    'Corporate Administration Department (CAD)',
+    'Contract Management Department (CMD)',
+    'Procurement & Vendor Management Department (PVMD)',
+    'Information Technology Department (ITD)',
+    'Portfolio Management Department (PMD)',
+    'Research Unit (RU)'
+  ]
 };
-// Notify is NOT called from the browser. The Save Ticket flow calls it on the server.
-// No flow URLs yet = demo mode (sample data, nothing saved, nothing sent anywhere).
+
 const DEMO = !CONFIG.flows.load || !CONFIG.flows.save;
 
-// Demo Users mapped to SharePoint ORBITUsers schema
+/* Pre-defined Demo Users matching SharePoint ORBITUsers schema */
 const DEMO_USERS = [
-  { id: 'u1', name: 'Nur Haliza Binti Haron', email: 'nurhaliza@phb.com.my', role: 'hod', roleTitle: 'Head of IT (HOD)', department: 'ITD' },
-  { id: 'u2', name: 'Eliza Yazmin', email: 'elizayazmin@phb.com.my', role: 'hod', roleTitle: 'Executive Director (HOD)', department: 'Executive' },
-  { id: 'u3', name: 'Haq', email: 'haq@phb.com.my', role: 'it', roleTitle: 'IT Support Admin', department: 'ITD' },
-  { id: 'u4', name: 'Fahmi', email: 'fahmi@phb.com.my', role: 'it', roleTitle: 'IT Officer', department: 'ITD' },
-  { id: 'u5', name: 'Siti Rahayu', email: 'siti.rahayu@phb.com.my', role: 'user', roleTitle: 'Senior Executive', department: 'Finance' },
-  { id: 'u6', name: 'Amir Hassan', email: 'amir.hassan@phb.com.my', role: 'user', roleTitle: 'Property Officer', department: 'Property Management' }
+  { id: 'u1', name: 'Nur Haliza Binti Haron', email: 'nurhaliza@phb.com.my', role: 'hod_it', roleTitle: 'Head of IT Division (HOD IT)', department: 'Information Technology Department (ITD)' },
+  { id: 'u2', name: 'Haq', email: 'haq@phb.com.my', role: 'it_admin', roleTitle: 'IT Support Admin (IT Officer)', department: 'Information Technology Department (ITD)' },
+  { id: 'u3', name: 'Eliza Yazmin', email: 'elizayazmin@phb.com.my', role: 'hod_dept', roleTitle: 'Head of Department (Finance HOD)', department: 'Finance Department (FD)' },
+  { id: 'u4', name: 'Siti Rahayu', email: 'siti.rahayu@phb.com.my', role: 'staff', roleTitle: 'Staff Member / Senior Executive', department: 'Finance Department (FD)' }
 ];
 
-// Sample preview tickets used ONLY when user clicks "Preview Sample Data" button
+/* Sample Tickets */
 const SAMPLE_TICKETS = [
-  { TicketID: 'TK-1001', Subject: 'VPN connection drops during peak office hours', Department: 'Finance', Category: 'Network', Priority: 'High', Status: 'In Progress', RequesterName: 'Siti Rahayu', RequesterEmail: 'siti.rahayu@phb.com.my', Assignee: 'Haq (ITD)', Submitted: '2026-11-21 09:30', Detail: 'Unable to maintain persistent VPN tunnel to PHB financial servers.' },
-  { TicketID: 'TK-1002', Subject: 'Dual monitor USB-C dock setup', Department: 'Property Management', Category: 'Hardware', Priority: 'Medium', Status: 'Open', RequesterName: 'Amir Hassan', RequesterEmail: 'amir.hassan@phb.com.my', Assignee: 'Fahmi (ITD)', Submitted: '2026-11-21 11:15', Detail: 'New monitor delivered. Needs cable setup at desk.' },
-  { TicketID: 'TK-1003', Subject: 'Outlook shared mailbox access permission', Department: 'Human Resources', Category: 'Email', Priority: 'Medium', Status: 'Resolved', RequesterName: 'Zainab Omar', RequesterEmail: 'zainab@phb.com.my', Assignee: 'Haq (ITD)', Submitted: '2026-11-20 14:00', Detail: 'Requested delegate access for HR shared mailbox.' },
-  { TicketID: 'TK-1004', Subject: 'Suspicious email with urgent wire request', Department: 'Investment', Category: 'Security', Priority: 'Critical', Status: 'In Progress', RequesterName: 'Farid Ahmad', RequesterEmail: 'farid@phb.com.my', Assignee: 'Nur Haliza (HOD)', Submitted: '2026-11-22 08:05', Detail: 'Received external email requesting bank account changes.' },
-  { TicketID: 'TK-1005', Subject: 'ERP financial ledger module crash on export', Department: 'Finance', Category: 'Software', Priority: 'High', Status: 'Open', RequesterName: 'Siti Rahayu', RequesterEmail: 'siti.rahayu@phb.com.my', Assignee: 'Haq (ITD)', Submitted: '2026-11-22 09:10', Detail: 'Exporting monthly reports produces error 504 on screen.' }
+  { TicketID: 'TK-1001', Subject: 'VPN client disconnects during peak office hours', Department: 'Finance Department (FD)', Category: 'Network & VPN', Priority: 'High', Status: 'In Progress', RequesterName: 'Siti Rahayu', RequesterEmail: 'siti.rahayu@phb.com.my', Assignee: 'Haq (ITD)', Submitted: '2026-11-21 09:30', Detail: 'Unable to maintain persistent VPN tunnel to PHB financial servers.' },
+  { TicketID: 'TK-1002', Subject: 'Dual monitor USB-C dock setup', Department: 'Property Development Department (PDD)', Category: 'Hardware', Priority: 'Medium', Status: 'Open', RequesterName: 'Amir Hassan', RequesterEmail: 'amir.hassan@phb.com.my', Assignee: 'Fahmi (ITD)', Submitted: '2026-11-21 11:15', Detail: 'New monitor delivered. Needs cable setup at desk.' },
+  { TicketID: 'TK-1003', Subject: 'Outlook shared mailbox access permission', Department: 'Human Resource Department (HRD)', Category: 'Email & Calendar', Priority: 'Medium', Status: 'Resolved', RequesterName: 'Zainab Omar', RequesterEmail: 'zainab@phb.com.my', Assignee: 'Haq (ITD)', Submitted: '2026-11-20 14:00', Detail: 'Requested delegate access for HR shared mailbox.' },
+  { TicketID: 'TK-1004', Subject: 'Suspicious email with urgent wire request', Department: 'Investment Department (ID)', Category: 'Security', Priority: 'Critical', Status: 'In Progress', RequesterName: 'Farid Ahmad', RequesterEmail: 'farid@phb.com.my', Assignee: 'Nur Haliza (HOD IT)', Submitted: '2026-11-22 08:05', Detail: 'Received external email requesting bank account changes.' },
+  { TicketID: 'TK-1005', Subject: 'ERP financial ledger module crash on export', Department: 'Finance Department (FD)', Category: 'Software', Priority: 'High', Status: 'Open', RequesterName: 'Siti Rahayu', RequesterEmail: 'siti.rahayu@phb.com.my', Assignee: 'Haq (ITD)', Submitted: '2026-11-22 09:10', Detail: 'Exporting monthly reports produces error 504 on screen.' }
 ];
 
+/* 24 ARTICLES FROM INDEX (31).HTML */
 const KB_ARTICLES = [
-  { id: 'KB-0101', cat: 'Network', title: 'VPN Client Disconnections & Tunnel Reset', desc: 'Fix intermittent FortiClient / Cisco VPN drops.', steps: ['Quit client completely', 'Flush DNS: ipconfig /flushdns', 'Reconnect to Region 1 Gateway'] },
-  { id: 'KB-0102', cat: 'Account', title: 'Self-Service Password Reset Walkthrough', desc: 'Reset your PHB Active Directory password via MFA.', steps: ['Visit password.phb.com.my', 'Verify 2FA on Mobile', 'Enter 12-char mixed password'] },
-  { id: 'KB-0103', cat: 'Email', title: 'Adding Shared Mailbox in Microsoft Outlook', desc: 'How to map team mailboxes into desktop Outlook.', steps: ['File > Account Settings', 'Double click account > More Settings', 'Advanced > Add Mailbox Name'] },
-  { id: 'KB-0104', cat: 'Hardware', title: 'External Monitor & USB-C Docking Fix', desc: 'Resolve screen detection issues on Windows 11.', steps: ['Press Win + P select Extend', 'Unplug Dock power for 10s', 'Reconnect USB-C cable firmly'] },
-  { id: 'KB-0105', cat: 'Software', title: 'Installing Approved Apps via Software Center', desc: 'Download pre-approved company software without admin rights.', steps: ['Open Start > Software Center', 'Search application title', 'Click Install'] },
-  { id: 'KB-0106', cat: 'Security', title: 'Reporting Phishing & Suspicious Emails', desc: 'Use Outlook Report Phishing button to notify IT Security.', steps: ['Select email in Outlook', 'Click Report Phishing icon', 'Confirm quarantine'] }
+  { id: 'KB-0101', cat: 'Network & VPN', sev: 'crit', title: "VPN won't connect or keeps dropping", desc: "Fix the most common VPN client errors and dropped tunnels.", tags: ['vpn', 'remote access', 'connection'], steps: ["Confirm you have an active internet connection.", "Fully quit the VPN client (not just close window) and reopen.", "Restart computer if client was open before update.", "Switch to nearest server region.", "Flush DNS via command prompt: ipconfig /flushdns"] },
+  { id: 'KB-0102', cat: 'Network & VPN', sev: 'warn', title: "Wi-Fi keeps disconnecting", desc: "Stabilize a flaky office or home Wi-Fi connection.", tags: ['wifi', 'wireless', 'connectivity'], steps: ["Move closer to access point — office Wi-Fi range drops past 2 walls.", "Forget the network and rejoin with fresh password.", "Toggle Wi-Fi off and back on; or toggle Airplane mode for 5s.", "Update network adapter driver via Device Manager."] },
+  { id: 'KB-0103', cat: 'Network & VPN', sev: 'ok', title: "How to set up VPN on a new device", desc: "First-time VPN client install and configuration.", tags: ['vpn', 'setup', 'onboarding'], steps: ["Download approved client from Software Center.", "Install and launch client, sign in with PHB email.", "Complete MFA approval on mobile phone.", "Select primary server region and click Connect."] },
+  { id: 'KB-0104', cat: 'Network & VPN', sev: 'warn', title: "Slow internet on company network", desc: "Diagnose and resolve sluggish browsing or downloads.", tags: ['speed', 'bandwidth', 'wifi'], steps: ["Run speed test and note baseline result.", "Close bandwidth-heavy apps (video calls, large background syncs).", "Disconnect from VPN briefly to check if speed improves.", "Switch from Wi-Fi to ethernet cable if available."] },
+
+  { id: 'KB-0201', cat: 'Hardware', sev: 'crit', title: "Laptop won't turn on", desc: "Troubleshoot a completely unresponsive laptop.", tags: ['laptop', 'power', 'boot'], steps: ["Plug directly into wall outlet (not power strip) and check charging light.", "Hold power button for 15 seconds to force hard reset.", "Try a different charging cable or adapter.", "Remove battery (if removable), wait 30s, reinsert."] },
+  { id: 'KB-0202', cat: 'Hardware', sev: 'warn', title: "External monitor not detected", desc: "Fix dual or external display connection issues.", tags: ['monitor', 'display', 'dock'], steps: ["Confirm cable is firmly seated at both ends.", "Press Win + P and select Extend or Duplicate.", "On Mac: System Settings > Displays > Detect Displays.", "Unplug and replug docking station USB-C cable."] },
+  { id: 'KB-0203', cat: 'Hardware', sev: 'ok', title: "Connecting to a docking station", desc: "Set up a single-cable docking station correctly.", tags: ['dock', 'setup', 'monitors'], steps: ["Connect dock to wall power first.", "Connect USB-C cable to laptop.", "Wait 10s for monitors and peripherals to initialize.", "If peripheral fails, reinsert its specific cable into dock."] },
+  { id: 'KB-0204', cat: 'Hardware', sev: 'warn', title: "Printer shows offline or won't print", desc: "Get a networked office printer working again.", tags: ['printer', 'offline', 'spooler'], steps: ["Confirm printer screen shows Ready and has paper/toner.", "Remove printer in Printers & Scanners, then re-add.", "Restart print spooler: Services > Print Spooler > Restart."] },
+  { id: 'KB-0205', cat: 'Hardware', sev: 'ok', title: "Requesting a loaner laptop", desc: "Process for getting temporary hardware during repairs.", tags: ['loaner', 'replacement', 'equipment'], steps: ["Submit ticket with manager approval.", "Back up local files to OneDrive.", "Collect loaner from ITD desk within 1 business day."] },
+
+  { id: 'KB-0301', cat: 'Software', sev: 'warn', title: "Computer running slow", desc: "Speed up a sluggish Windows or Mac machine.", tags: ['performance', 'slow', 'ram'], steps: ["Restart computer to clear memory buildup.", "Open Task Manager and close high-CPU background apps.", "Ensure at least 10% disk space is free.", "Pause OneDrive cloud sync temporarily."] },
+  { id: 'KB-0302', cat: 'Software', sev: 'crit', title: "Application keeps crashing", desc: "Resolve repeated crashes in a specific application.", tags: ['crash', 'app', 'error'], steps: ["Force close app via Task Manager.", "Check Software Center for pending app update.", "Restart computer to clear corrupted state.", "Reinstall app via Software Center."] },
+  { id: 'KB-0303', cat: 'Software', sev: 'ok', title: "Installing approved software", desc: "How to install applications without admin rights.", tags: ['install', 'software center', 'request'], steps: ["Open Start > Software Center.", "Browse pre-approved catalog.", "Click Install on required application."] },
+  { id: 'KB-0304', cat: 'Software', sev: 'ok', title: "Update is stuck or won't install", desc: "Unstick a frozen Windows or macOS update.", tags: ['update', 'windows update', 'patch'], steps: ["Leave laptop plugged in and connected for 30 min.", "Restart machine to resume update.", "Run Windows Update Troubleshooter.", "Ensure at least 15GB free disk space."] },
+
+  { id: 'KB-0401', cat: 'Account & Access', sev: 'crit', title: "Locked out of your account", desc: "Regain access after failed login attempts.", tags: ['lockout', 'login', 'password'], steps: ["Wait 15 minutes for automatic lockout cooldown.", "Use Forgot Password link on login screen.", "Verify identity via Authenticator app.", "If recovery fails, call IT HelpDesk with photo ID."] },
+  { id: 'KB-0402', cat: 'Account & Access', sev: 'ok', title: "How to reset your password", desc: "Self-service password reset walkthrough.", tags: ['password', 'reset', '2fa'], steps: ["Visit password.phb.com.my", "Verify 2FA via Authenticator.", "Create new 12+ char password with numbers/symbols.", "Update saved password on mobile devices."] },
+  { id: 'KB-0403', cat: 'Account & Access', sev: 'warn', title: "Setting up multi-factor authentication (MFA)", desc: "Configure or change your MFA method.", tags: ['mfa', '2fa', 'authenticator'], steps: ["Install Microsoft Authenticator on mobile phone.", "Go to Account Settings > Security.", "Scan displayed QR code with phone camera.", "Enter 6-digit confirmation code."] },
+  { id: 'KB-0404', cat: 'Account & Access', sev: 'warn', title: "Requesting access to shared drive", desc: "Get permission to a restricted team folder.", tags: ['access', 'permission', 'folder'], steps: ["Copy exact network folder path.", "Submit Access Request ticket naming manager.", "Wait for manager email approval flag."] },
+
+  { id: 'KB-0501', cat: 'Email & Calendar', sev: 'warn', title: "Email not syncing or sending", desc: "Fix Outlook sync and send failures.", tags: ['outlook', 'email', 'sync'], steps: ["Check internet connection.", "Confirm mailbox quota is not full.", "Restart Outlook client completely.", "Remove and re-add email profile."] },
+  { id: 'KB-0502', cat: 'Email & Calendar', sev: 'ok', title: "Setting up a shared mailbox", desc: "Add team mailbox to Microsoft Outlook.", tags: ['shared mailbox', 'outlook', 'team'], steps: ["Confirm access is granted by IT.", "In Outlook: File > Account Settings > Account Settings.", "Select account > More Settings > Advanced > Add.", "Type shared mailbox name and click OK."] },
+  { id: 'KB-0503', cat: 'Email & Calendar', sev: 'ok', title: "Calendar invites not showing up", desc: "Resolve missing or delayed meeting invites.", tags: ['calendar', 'invite', 'outlook'], steps: ["Check Junk/Clutter folder.", "Confirm sender used exact PHB address.", "Toggle calendar sync off and on in settings."] },
+
+  { id: 'KB-0601', cat: 'Security', sev: 'crit', title: "I clicked a suspicious link or attachment", desc: "Immediate steps after potential phishing click.", tags: ['phishing', 'security', 'incident'], steps: ["Disconnect Wi-Fi immediately or unplug ethernet cable.", "Do NOT enter credentials on any prompt.", "Change password from a separate trusted device.", "Submit Critical Security Incident ticket."] },
+  { id: 'KB-0602', cat: 'Security', sev: 'warn', title: "How to spot a phishing email", desc: "Common red flags in suspicious emails.", tags: ['phishing', 'security', 'email'], steps: ["Check sender email domain carefully.", "Look for urgent threats or wire transfer requests.", "Hover over links to verify destination URL.", "Use Outlook Report Phishing button."] },
+  { id: 'KB-0603', cat: 'Security', sev: 'ok', title: "Enabling full-disk encryption", desc: "Confirm BitLocker or FileVault protection.", tags: ['encryption', 'bitlocker', 'filevault'], steps: ["Windows: Settings > Privacy & Security > Device Encryption.", "Mac: System Settings > Privacy & Security > FileVault.", "Confirm status shows On."] },
+  { id: 'KB-0604', cat: 'Security', sev: 'warn', title: "Reporting a lost or stolen device", desc: "Steps to take if a PHB laptop goes missing.", tags: ['lost', 'stolen', 'device'], steps: ["Call IT HelpDesk immediately.", "Provide asset tag or serial number.", "IT will remotely lock and wipe device.", "File police report for insurance."] }
 ];
 
-/* App State */
+const FAQS = [
+  { q: "Do I need to sign in to read troubleshooting guides?", a: "No. All 24 guides, category diagnostics, FAQ, and contact details are open to everyone. Sign in with your PHB Microsoft 365 account only when submitting or tracking a ticket." },
+  { q: "Who can see support tickets?", a: "Staff members can see ONLY their own submitted tickets. Department HODs see their tickets and tickets from their department. HOD IT and IT Admins have overall visibility." },
+  { q: "Which priority level should I choose for a ticket?", a: "Low: minor issue with workaround. Medium: standard issue affecting daily work. High: prevents work completion. Critical: major outage, security incident, or multiple staff affected." },
+  { q: "How will I know when my ticket is updated?", a: "Status changes appear live in your Ticket Queue, and an automated email notification is sent to your inbox via Power Automate." },
+  { q: "What should I do if login fails?", a: "Ensure you use your official @phb.com.my Microsoft 365 credentials and allow pop-ups for this domain." }
+];
+
+const CATEGORIES = [
+  { key: 'Hardware', desc: 'Laptops, monitors, peripherals & docking stations', count: 5 },
+  { key: 'Software', desc: 'Installs, updates, crashes and software licenses', count: 4 },
+  { key: 'Network & VPN', desc: 'Wi-Fi, FortiClient VPN, remote access & connectivity', count: 4 },
+  { key: 'Account & Access', desc: 'Passwords, MFA, shared drive access & permissions', count: 4 },
+  { key: 'Email & Calendar', desc: 'Outlook desktop, sync issues, shared mailboxes', count: 3 },
+  { key: 'Security', desc: 'Phishing reports, lost laptops & full-disk encryption', count: 4 }
+];
+
+/* State Variables */
 let ticketsStore = [];
-let assigneeList = [];
+let assigneeList = ['Haq (ITD)', 'Fahmi (ITD)', 'Nur Haliza (HOD IT)', 'Unassigned'];
 let currentUser = null;
-let currentTicketView = 'list';
 let activeDrawerTicketId = null;
-let staffTicketFilterTab = 'all'; // 'all' | 'mine' | 'dept'
 let kbCategory = 'All';
 let kbQuery = '';
 let msalApp = null;
 
-const HOW_STEPS = [
-  { n: '01', t: 'Search or browse', d: 'Type your issue in the search box, or pick a category to see related guides.' },
-  { n: '02', t: 'Follow the steps', d: 'Each guide is a short, numbered fix. Most take only a few minutes.' },
-  { n: '03', t: 'Sign in and submit', d: 'Still stuck? Sign in with your PHB Microsoft account and submit a ticket.' },
-  { n: '04', t: 'Track it', d: 'Follow progress in the Ticket Queue. You will get an email when the status changes.' }
-];
-
-const FAQS = [
-  { q: 'Do I need to sign in to read the guides?', a: 'No. Guides, FAQ and contact details are open to everyone. Sign in only when you want to submit or track a ticket.' },
-  { q: 'Who can see my ticket?', a: 'You, colleagues in your department, the IT support team and Heads of Department.' },
-  { q: 'Which priority should I choose?', a: 'Low: a minor issue with a workaround. Medium: it slows your work. High: it stops you from working. Critical: a security incident or many people affected.' },
-  { q: 'How will I know my ticket was updated?', a: 'The status changes in the Ticket Queue and an email is sent to you when IT updates it.' },
-  { q: 'I cannot sign in. What should I do?', a: 'Use your PHB Microsoft 365 account and allow pop-ups for this page. If it still fails, contact IT using the details under "Need a human?".' },
-  { q: 'Can I attach a screenshot?', a: 'Not yet. Please copy the exact error message into the Details box and say what you were doing when it happened.' }
-];
-
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const roleOf = r => { const s = String(r || '').toLowerCase(); return s === 'hod' ? 'hod' : (s === 'it' || s === 'admin' || s === 'assignee') ? 'it' : 'user'; };
-const ROLE_TITLES = { hod: 'Head of Department (HOD)', it: 'IT Support', user: 'Staff' };
 const $ = id => document.getElementById(id);
+
+/* Precise 4-Tier Role Mapping */
+function resolveRole(r) {
+  const s = String(r || '').toLowerCase().replace('-', '_');
+  if (s === 'hod_it' || s === 'hodit') return { code: 'hod_it', title: 'Head of IT Division (HOD IT)' };
+  if (s === 'it_admin' || s === 'it' || s === 'admin') return { code: 'it_admin', title: 'IT Support Admin' };
+  if (s === 'hod_dept' || s === 'hoddept' || s === 'hod') return { code: 'hod_dept', title: 'Head of Department (HOD Dept)' };
+  return { code: 'staff', title: 'Staff View (User)' };
+}
 
 /* ==================== 2. INITIALIZATION & AUTH ==================== */
 window.addEventListener('DOMContentLoaded', async () => {
   $('demoBanner').classList.toggle('hidden', !DEMO);
-  renderHowSteps(); renderBrowseGrid(); renderKBGrid(); renderFaq(); renderSupport();
+  populateDepartmentDropdowns();
+  renderHowSteps();
+  renderBrowseGrid();
+  renderKBGrid();
+  renderFaq();
+  renderSupport();
+  renderReportsData();
+
   applyRoleView();
+
+  // Check URL query string for quick role preview (e.g. ?role=hod_it)
+  const urlRole = new URLSearchParams(location.search).get('role');
+  if (urlRole) {
+    simulateRoleLogin(urlRole);
+    return;
+  }
+
   if (DEMO) return;
+
   try {
     msalApp = new msal.PublicClientApplication({
       auth: { clientId: CONFIG.msal.clientId, authority: 'https://login.microsoftonline.com/' + CONFIG.msal.tenantId, redirectUri: location.origin + location.pathname },
@@ -733,43 +959,67 @@ window.addEventListener('DOMContentLoaded', async () => {
   } catch (e) { console.error('MSAL init failed', e); }
 });
 
-function openLogin() { $('loginScreen').classList.remove('hidden'); }
+function populateDepartmentDropdowns() {
+  const deptSelect = $('deptSelect');
+  const formDept = $('formDept');
+  
+  const optionsHTML = CONFIG.departments.map(d => `<option value="${esc(d)}">${esc(d)}</option>`).join('');
+  
+  deptSelect.innerHTML = '<option value="ALL">All Departments (Executive View)</option>' + optionsHTML;
+  formDept.innerHTML = optionsHTML;
+}
+
+function openLoginModal() { $('loginScreen').classList.remove('hidden'); }
 
 async function startSSO() {
   if (DEMO) {
-    const r = (new URLSearchParams(location.search).get('role') || 'hod').toLowerCase();
-    const u = DEMO_USERS.find(x => x.role === r) || DEMO_USERS[0];
-    setSession(u, [...SAMPLE_TICKETS], ['Haq (ITD)', 'Fahmi (ITD)']);
-    showToast('Demo sign-in as ' + u.roleTitle);
+    simulateRoleLogin('staff');
     return;
   }
-  if (!msalApp) { showToast('Sign-in is not configured yet (CONFIG.msal).', 'error'); return; }
+  if (!msalApp) { showToast('Sign-in not configured', 'error'); return; }
   try {
     const r = await msalApp.loginPopup({ scopes: ['User.Read'] });
     msalApp.setActiveAccount(r.account);
     await loadSession();
-  } catch (e) { showToast('Sign-in was cancelled or failed.', 'error'); }
+  } catch (e) { showToast('Sign-in cancelled or failed.', 'error'); }
+}
+
+function simulateRoleLogin(roleCode) {
+  const u = DEMO_USERS.find(x => x.role === roleCode) || DEMO_USERS[3]; // Default to Staff
+  setSession(u, [...SAMPLE_TICKETS], ['Haq (ITD)', 'Fahmi (ITD)', 'Nur Haliza (HOD IT)']);
+  showToast('Signed in as ' + u.name + ' (' + u.roleTitle + ')');
 }
 
 function logout() {
-  if (DEMO || !msalApp) { location.reload(); return; }
-  msalApp.logoutPopup({ account: msalApp.getActiveAccount() }).then(() => location.reload()).catch(() => location.reload());
+  currentUser = null;
+  ticketsStore = [];
+  applyRoleView();
+  showToast('Signed out successfully.');
 }
 
 function toggleUserDropdown() { $('userDropdown').classList.toggle('hidden'); }
 
 function setSession(u, rows, assignees) {
-  const role = roleOf(u.role);
-  currentUser = { name: u.name || u.email || 'User', email: u.email || '', role, roleTitle: u.roleTitle || ROLE_TITLES[role], department: u.department || '' };
+  const roleObj = resolveRole(u.role);
+  currentUser = { 
+    name: u.name || u.email || 'User', 
+    email: u.email || '', 
+    role: roleObj.code, 
+    roleTitle: u.roleTitle || roleObj.title, 
+    department: u.department || 'Finance Department (FD)' 
+  };
+  
   ticketsStore = rows || [];
-  assigneeList = assignees || [];
+  assigneeList = assignees || ['Haq (ITD)', 'Fahmi (ITD)', 'Nur Haliza (HOD IT)'];
 
   $('chipName').textContent = currentUser.name.split(' ')[0];
   $('chipAvatar').textContent = currentUser.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+  $('chipRoleBadge').textContent = currentUser.role.toUpperCase().replace('_', ' ');
+  
   $('menuRoleTitle').textContent = currentUser.roleTitle;
   $('menuName').textContent = currentUser.name;
   $('menuEmail').textContent = currentUser.email;
-  $('menuDept').textContent = 'Department: ' + (currentUser.department || '-');
+  $('menuDept').textContent = 'Dept: ' + (currentUser.department || '-');
 
   closeModal('loginScreen');
   applyRoleView();
@@ -777,38 +1027,59 @@ function setSession(u, rows, assignees) {
 }
 
 function applyRoleView() {
-  const u = currentUser, role = u && u.role;
-  const show = (id, on) => $(id).classList.toggle('hidden', !on);
-  const staff = role === 'hod' || role === 'it';
+  const u = currentUser;
+  const role = u ? u.role : 'guest';
+  const show = (id, on) => $(id) && $(id).classList.toggle('hidden', !on);
 
-  show('sectionExecutiveOverview', staff);
-  show('sectionStaffHero', !u || role === 'user');
+  // Scoping Visibility Matrix:
+  // HOD IT & IT Admin: Full Executive Dashboard, Reports, Export, Dept Selector Filter
+  // HOD Dept: Scoped Dashboard, Scoped Tickets
+  // Staff: Ticket Queue (Own tickets), No Dept Filter, No Export Reports
+
+  const canSeeReports = role === 'hod_it' || role === 'it_admin';
+  const canFilterDepts = role === 'hod_it' || role === 'it_admin';
+  const canSeeDashboard = role === 'hod_it' || role === 'it_admin' || role === 'hod_dept';
+  const canAssign = role === 'hod_it' || role === 'it_admin';
+
+  show('sectionExecutiveOverview', canSeeDashboard);
+  show('sectionReports', canSeeReports);
+  show('navReportsLink', canSeeReports);
+  show('exportBtnArea', canSeeReports);
+  show('deptFilterArea', canFilterDepts);
+  show('drwAssigneeWrapper', canAssign);
+
   show('sectionTicketQueue', !!u);
-  show('exportBtnArea', staff);
-  show('deptFilterArea', staff);
-  show('staffTabGroup', role === 'user');
+  show('navTicketsLink', !!u);
+  
   show('signInBtn', !u);
   show('userChipArea', !!u);
-  show('navTickets', !!u);
-  $('heroSubmitLabel').textContent = u ? 'Submit Ticket' : 'Sign in to submit a ticket';
 
   if (u) {
-    $('staffHeroName').textContent = u.name.split(' ')[0];
-    $('roleOverviewBadge').textContent = role === 'hod' ? 'HOD Executive Dashboard' : 'IT Support Operational Queue';
-    $('deptSelect').value = 'ALL';
+    if (role === 'hod_it') {
+      $('roleOverviewBadge').textContent = 'HOD IT Executive Dashboard';
+      $('roleOverviewDesc').textContent = 'Full enterprise oversight across all 16 PHB departments, SLA metrics, and IT officer assignments.';
+    } else if (role === 'it_admin') {
+      $('roleOverviewBadge').textContent = 'IT Support Operational Dashboard';
+      $('roleOverviewDesc').textContent = 'Operational ticket queue, SLA response times, and active officer assignments.';
+    } else if (role === 'hod_dept') {
+      $('roleOverviewBadge').textContent = 'Departmental Leadership Dashboard';
+      $('roleOverviewDesc').textContent = 'Departmental ticket queue scoped strictly to ' + currentUser.department + '.';
+    }
+    
+    if (canFilterDepts) {
+      $('deptSelect').value = 'ALL';
+    }
     fillAssigneeSelect();
   }
 }
 
-/* ==================== 3. POWER AUTOMATE FLOWS ==================== */
+/* ==================== 3. POWER AUTOMATE FLOW INTEGRATION ==================== */
 async function getToken() {
   const req = { scopes: ['User.Read'], account: msalApp.getActiveAccount() };
   try { return (await msalApp.acquireTokenSilent(req)).accessToken; }
   catch (e) { return (await msalApp.acquireTokenPopup(req)).accessToken; }
 }
 
-// The flow never trusts a name, email or role sent by the browser. It uses this token to ask
-// Microsoft Graph who is calling, then looks that email up in ORBITUsers.
 async function callFlow(url, payload) {
   const token = await getToken();
   const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...payload, token }) });
@@ -824,62 +1095,40 @@ async function loadSession(manual) {
   try {
     const d = await callFlow(CONFIG.flows.load, {});
     setSession(d.user || {}, d.tickets || d.value || [], d.assignees || []);
-    if (manual) showToast('Tickets refreshed.');
+    if (manual) showToast('Refreshed live tickets from SharePoint.');
   } catch (e) { showToast('Could not load tickets: ' + e.message, 'error'); }
 }
 
-/* ==================== 4. ROLE SCOPING & TICKET FILTERING ==================== */
-function setStaffTicketTab(tabKey) {
-  staffTicketFilterTab = tabKey;
-  ['All','Mine','Dept'].forEach(t => {
-    const btn = document.getElementById(`tabStaff${t}`);
-    if (btn) {
-      if (t.toLowerCase() === tabKey) {
-        btn.className = "px-2.5 py-1 rounded-md bg-[var(--phb-card)] text-[var(--phb-text)] shadow-xs";
-      } else {
-        btn.className = "px-2.5 py-1 rounded-md text-[var(--phb-soft)] hover:text-[var(--phb-text)]";
-      }
-    }
-  });
-  filterAndRenderTickets();
-}
-
+/* ==================== 4. TICKET SCOPING BY ROLE ==================== */
 function getFilteredTickets() {
   let list = [...ticketsStore];
-
   if (!currentUser) return list;
 
-  const role = currentUser.role.toLowerCase();
+  const role = currentUser.role;
   const userEmail = (currentUser.email || '').toLowerCase();
   const userDept = (currentUser.department || '').trim().toLowerCase();
 
-  // STAFF ROLE VISIBILITY RULES:
-  // Staff sees their own tickets AND tickets from their department
-  if (role === 'user' || role === 'staff') {
-    // 1. Scoped base list (Own tickets + Department tickets)
+  // STRICT ROLE ACCESS CONTROL RULES:
+  if (role === 'staff') {
+    // Staff sees ONLY their own submitted tickets
+    list = list.filter(t => (t.RequesterEmail || '').toLowerCase() === userEmail);
+  } else if (role === 'hod_dept') {
+    // HOD Dept sees their own tickets + tickets belonging to their department
     list = list.filter(t => {
       const reqEmail = (t.RequesterEmail || '').toLowerCase();
       const ticketDept = (t.Department || '').trim().toLowerCase();
       return reqEmail === userEmail || (userDept && ticketDept === userDept);
     });
-
-    // 2. Apply sub-tab filtering
-    if (staffTicketFilterTab === 'mine') {
-      list = list.filter(t => (t.RequesterEmail || '').toLowerCase() === userEmail);
-    } else if (staffTicketFilterTab === 'dept') {
-      list = list.filter(t => (t.Department || '').trim().toLowerCase() === userDept);
-    }
-  } else {
-    // HOD & IT ADMIN ROLE VISIBILITY:
-    // See ALL tickets by default, with optional department selector filter
-    const selectedDept = document.getElementById('deptSelect').value;
+  } else if (role === 'hod_it' || role === 'it_admin') {
+    // HOD IT & IT Admin see ALL tickets by default, with optional department dropdown filter
+    const selectedDept = $('deptSelect').value;
     if (selectedDept !== 'ALL') {
       list = list.filter(t => t.Department === selectedDept);
     }
   }
 
   // Search filter
-  const query = document.getElementById('ticketSearchInput').value.toLowerCase().trim();
+  const query = $('ticketSearchInput').value.toLowerCase().trim();
   if (query) {
     list = list.filter(t => 
       (t.TicketID && t.TicketID.toLowerCase().includes(query)) ||
@@ -894,47 +1143,24 @@ function getFilteredTickets() {
 
 function filterAndRenderTickets() {
   const tickets = getFilteredTickets();
-  document.getElementById('ticketBadgeCount').textContent = tickets.length;
+  $('ticketBadgeCount').textContent = tickets.length;
 
   // KPIs
-  document.getElementById('kpiTotal').textContent = ticketsStore.length;
-  document.getElementById('kpiOpen').textContent = ticketsStore.filter(t=>t.Status==='Open'||t.Status==='In Progress').length;
-  document.getElementById('kpiPending').textContent = ticketsStore.filter(t=>t.Status==='Pending').length;
-  document.getElementById('kpiResolved').textContent = ticketsStore.filter(t=>t.Status==='Resolved').length;
+  $('kpiTotal').textContent = tickets.length;
+  $('kpiOpen').textContent = tickets.filter(t => t.Status === 'Open' || t.Status === 'In Progress').length;
+  $('kpiPending').textContent = tickets.filter(t => t.Status === 'Pending').length;
+  $('kpiResolved').textContent = tickets.filter(t => t.Status === 'Resolved').length;
 
-  if (currentTicketView === 'list') {
-    renderListView(tickets);
-  } else {
-    renderGroupedView(tickets);
-  }
-}
-
-function switchTicketView(viewMode) {
-  currentTicketView = viewMode;
-  const btnList = document.getElementById('btnViewList');
-  const btnGrouped = document.getElementById('btnViewGrouped');
-
-  if (viewMode === 'list') {
-    btnList.className = "px-2.5 py-1 rounded-md bg-[var(--phb-card)] text-[var(--phb-text)] shadow-sm";
-    btnGrouped.className = "px-2.5 py-1 rounded-md text-[var(--phb-soft)] hover:text-[var(--phb-text)]";
-    document.getElementById('ticketViewList').classList.remove('hidden');
-    document.getElementById('ticketViewGrouped').classList.add('hidden');
-  } else {
-    btnGrouped.className = "px-2.5 py-1 rounded-md bg-[var(--phb-card)] text-[var(--phb-text)] shadow-sm";
-    btnList.className = "px-2.5 py-1 rounded-md text-[var(--phb-soft)] hover:text-[var(--phb-text)]";
-    document.getElementById('ticketViewList').classList.add('hidden');
-    document.getElementById('ticketViewGrouped').classList.remove('hidden');
-  }
-  filterAndRenderTickets();
+  renderListView(tickets);
 }
 
 function renderListView(tickets) {
-  const tbody = document.getElementById('ticketTableBody');
+  const tbody = $('ticketTableBody');
   if (!tickets.length) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="8" class="text-center py-10 text-[var(--phb-soft)]">
-          No tickets found for the current view.
+        <td colspan="8" class="text-center py-10 text-[var(--phb-soft)] font-medium">
+          No tickets found for your current role and filter settings.
         </td>
       </tr>`;
     return;
@@ -947,67 +1173,30 @@ function renderListView(tickets) {
       t.Status === 'Pending' ? 'badge-pending' : 'badge-resolved';
 
     return `
-      <tr onclick="openTicketDrawer('${esc(t.TicketID)}')" class="hover:bg-[var(--phb-canvas)] cursor-pointer transition-colors">
-        <td class="py-3 px-4 font-mono font-bold text-emerald-700 dark:text-emerald-400">${esc(t.TicketID)}</td>
-        <td class="py-3 px-4">
+      <tr onclick="openTicketDrawer('${esc(t.TicketID)}')" class="hover:bg-[var(--phb-bg)] cursor-pointer transition-colors">
+        <td class="py-3.5 px-4 font-mono font-bold text-[#007A5E] dark:text-emerald-400">${esc(t.TicketID)}</td>
+        <td class="py-3.5 px-4">
           <div class="font-bold text-[var(--phb-text)] line-clamp-1">${esc(t.Subject)}</div>
-          <div class="text-[11px] text-[var(--phb-soft)]">${esc(t.RequesterName)} (${esc(t.RequesterEmail)})</div>
+          <div class="text-[11px] text-[var(--phb-soft)] font-medium">${esc(t.RequesterName)} (${esc(t.RequesterEmail)})</div>
         </td>
-        <td class="py-3 px-4 font-semibold text-[var(--phb-soft)]">${esc(t.Department)}</td>
-        <td class="py-3 px-4 text-[var(--phb-text)]">${esc(t.Category)}</td>
-        <td class="py-3 px-4 font-bold ${t.Priority==='Critical'?'text-red-600':t.Priority==='High'?'text-amber-600':'text-slate-500'}">${esc(t.Priority)}</td>
-        <td class="py-3 px-4">
-          <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${statusClass}">${esc(t.Status)}</span>
+        <td class="py-3.5 px-4 font-semibold text-[var(--phb-soft)] truncate max-w-[140px]">${esc(t.Department)}</td>
+        <td class="py-3.5 px-4 font-semibold text-[var(--phb-text)]">${esc(t.Category)}</td>
+        <td class="py-3.5 px-4 font-bold ${t.Priority==='Critical'?'text-rose-600':t.Priority==='High'?'text-amber-600':'text-slate-500'}">${esc(t.Priority)}</td>
+        <td class="py-3.5 px-4">
+          <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${statusClass}">${esc(t.Status)}</span>
         </td>
-        <td class="py-3 px-4 text-[var(--phb-soft)] font-medium">${esc(t.Assignee || 'Unassigned')}</td>
-        <td class="py-3 px-4 text-right">
-          <button class="px-2 py-1 rounded border border-[var(--phb-line)] hover:bg-[var(--phb-card)] text-emerald-700 font-semibold text-[11px]">View</button>
+        <td class="py-3.5 px-4 text-[var(--phb-soft)] font-semibold">${esc(t.Assignee || 'Unassigned')}</td>
+        <td class="py-3.5 px-4 text-right">
+          <button class="px-2.5 py-1 rounded-lg border border-[var(--phb-line)] hover:bg-[var(--phb-card)] text-[#007A5E] font-bold text-[11px]">View</button>
         </td>
       </tr>`;
   }).join('');
 }
 
-function renderGroupedView(tickets) {
-  const container = document.getElementById('ticketViewGrouped');
-  const depts = ["ITD", "Finance", "Human Resources", "Property Management", "Investment", "Legal & Secretarial", "Corporate Communications"];
-
-  container.innerHTML = depts.map(dept => {
-    const deptTickets = tickets.filter(t => t.Department === dept);
-    return `
-      <div class="p-4 rounded-xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-sm space-y-3">
-        <div class="flex items-center justify-between pb-2 border-b border-[var(--phb-line)]">
-          <h3 class="font-bold text-xs text-[var(--phb-text)]">${dept}</h3>
-          <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">${deptTickets.length}</span>
-        </div>
-        <div class="space-y-2 max-h-64 overflow-y-auto pr-1">
-          ${deptTickets.length ? deptTickets.map(t => `
-            <div onclick="openTicketDrawer('${esc(t.TicketID)}')" class="p-2.5 rounded-lg bg-[var(--phb-canvas)] border border-[var(--phb-line)] hover:border-emerald-500 cursor-pointer transition-all space-y-1">
-              <div class="flex items-center justify-between text-[10px]">
-                <span class="font-mono font-bold text-emerald-700 dark:text-emerald-400">${esc(t.TicketID)}</span>
-                <span class="font-bold ${t.Priority==='Critical'?'text-red-600':'text-slate-500'}">${esc(t.Priority)}</span>
-              </div>
-              <div class="font-semibold text-xs text-[var(--phb-text)] truncate">${esc(t.Subject)}</div>
-              <div class="flex items-center justify-between text-[10px] text-[var(--phb-soft)] pt-1">
-                <span>${esc(t.Assignee)}</span>
-                <span class="font-bold text-emerald-700">${esc(t.Status)}</span>
-              </div>
-            </div>
-          `).join('') : '<p class="text-[11px] text-[var(--phb-soft)] py-2">No active tickets.</p>'}
-        </div>
-      </div>`;
-  }).join('');
-}
-
 /* ==================== 5. DRAWER & MODAL ACTIONS ==================== */
-function setSelectValue(sel, val) {
-  if (![...sel.options].some(o => o.value === val)) sel.add(new Option(val, val));
-  sel.value = val;
-}
-
 function fillAssigneeSelect() {
-  if (!assigneeList.length) return;
   const sel = $('drwAssigneeSelect');
-  sel.innerHTML = [...assigneeList, 'Unassigned'].map(n => `<option value="${esc(n)}">${esc(n)}</option>`).join('');
+  sel.innerHTML = assigneeList.map(n => `<option value="${esc(n)}">${esc(n)}</option>`).join('');
 }
 
 function openTicketDrawer(ticketId) {
@@ -1021,14 +1210,15 @@ function openTicketDrawer(ticketId) {
   $('drwDepartment').textContent = t.Department;
   $('drwCategory').textContent = t.Category;
   $('drwPriority').textContent = t.Priority;
-  $('drwDetails').textContent = t.Detail || 'No detailed notes provided.';
+  $('drwDetails').textContent = t.Detail || 'No detailed steps provided.';
 
-  setSelectValue($('drwStatusSelect'), t.Status || 'Open');
-  setSelectValue($('drwAssigneeSelect'), t.Assignee || 'Unassigned');
+  $('drwStatusSelect').value = t.Status || 'Open';
+  $('drwAssigneeSelect').value = t.Assignee || 'Unassigned';
   $('drwRemarks').value = t.Remarks || '';
 
-  const canEdit = currentUser && (currentUser.role === 'hod' || currentUser.role === 'it');
-  $('drwActionPanel').classList.toggle('hidden', !canEdit);
+  // HOD Dept, IT Admin, HOD IT can edit status. Only HOD IT and IT Admin can edit Assignee.
+  const isElevated = currentUser && (currentUser.role !== 'staff');
+  $('drwActionPanel').classList.toggle('hidden', !isElevated);
   $('drawerTicket').classList.remove('hidden');
 }
 
@@ -1036,23 +1226,34 @@ async function saveTicketChangesFromDrawer() {
   if (!activeDrawerTicketId) return;
   const t = ticketsStore.find(x => x.TicketID === activeDrawerTicketId);
   if (!t) return;
+  
   const payload = {
     action: 'update', ticketId: t.TicketID,
-    status: $('drwStatusSelect').value, assignee: $('drwAssigneeSelect').value, remarks: $('drwRemarks').value
+    status: $('drwStatusSelect').value, 
+    assignee: $('drwAssigneeSelect').value, 
+    remarks: $('drwRemarks').value
   };
+
   try {
-    if (DEMO) { t.Status = payload.status; t.Assignee = payload.assignee; t.Remarks = payload.remarks; filterAndRenderTickets(); }
-    else { await callFlow(CONFIG.flows.save, payload); await loadSession(); }
+    if (DEMO) { 
+      t.Status = payload.status; 
+      t.Assignee = payload.assignee; 
+      t.Remarks = payload.remarks; 
+      filterAndRenderTickets(); 
+    } else { 
+      await callFlow(CONFIG.flows.save, payload); 
+      await loadSession(); 
+    }
     showToast(`Ticket ${t.TicketID} updated.`);
     closeDrawer('drawerTicket');
   } catch (e) { showToast('Could not update: ' + e.message, 'error'); }
 }
 
 function openNewTicketModal() {
-  if (!currentUser) { openLogin(); showToast('Please sign in to submit a ticket.'); return; }
+  if (!currentUser) { openLoginModal(); showToast('Please sign in to submit a ticket.'); return; }
   $('formReqName').value = currentUser.name;
   $('formReqEmail').value = currentUser.email;
-  if (currentUser.department) setSelectValue($('formDept'), currentUser.department);
+  if (currentUser.department) $('formDept').value = currentUser.department;
   $('modalNewTicket').classList.remove('hidden');
   $('formSubject').focus();
 }
@@ -1061,66 +1262,124 @@ async function handleNewTicketSubmit(e) {
   e.preventDefault();
   const btn = $('formSubmitBtn');
   btn.disabled = true; btn.textContent = 'Submitting...';
+
   const payload = {
     action: 'create',
-    subject: $('formSubject').value.trim(), category: $('formCategory').value, priority: $('formPriority').value,
-    department: $('formDept').value, detail: $('formDetail').value.trim()
+    subject: $('formSubject').value.trim(), 
+    category: $('formCategory').value, 
+    priority: $('formPriority').value,
+    department: $('formDept').value, 
+    detail: $('formDetail').value.trim()
   };
+
   try {
     let id;
     if (DEMO) {
       id = 'TK-' + (1000 + ticketsStore.length + 1);
-      ticketsStore.unshift({ TicketID: id, Subject: payload.subject, Category: payload.category, Priority: payload.priority, Status: 'Open',
+      ticketsStore.unshift({ 
+        TicketID: id, Subject: payload.subject, Category: payload.category, Priority: payload.priority, Status: 'Open',
         Department: payload.department, RequesterName: currentUser.name, RequesterEmail: currentUser.email, Assignee: 'Unassigned',
-        Submitted: new Date().toISOString().slice(0, 16).replace('T', ' '), Detail: payload.detail });
+        Submitted: new Date().toISOString().slice(0, 16).replace('T', ' '), Detail: payload.detail 
+      });
       filterAndRenderTickets();
     } else {
-      // Ticket ID, requester name/email and status are all set by the flow, never by the browser.
       const r = await callFlow(CONFIG.flows.save, payload);
       id = r.ticketId || '';
       await loadSession();
     }
     closeModal('modalNewTicket');
     $('formSubject').value = ''; $('formDetail').value = '';
-    showToast(`Ticket ${id} submitted. You will get email updates.`);
+    showToast(`Ticket ${id} submitted! Automated email sent.`);
     $('sectionTicketQueue').scrollIntoView();
   } catch (err) { showToast('Could not submit: ' + err.message, 'error'); }
   btn.disabled = false; btn.textContent = 'Submit Ticket';
 }
 
-function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-function closeDrawer(id) { document.getElementById(id).classList.add('hidden'); }
+function closeModal(id) { $(id).classList.add('hidden'); }
+function closeDrawer(id) { $(id).classList.add('hidden'); }
 
-/* ==================== 6. KNOWLEDGE BASE & HOME SECTIONS ==================== */
-function kbCardHTML(a) {
-  return `
-    <div onclick="openKBModal('${a.id}')" class="p-4 rounded-xl bg-[var(--phb-card)] border border-[var(--phb-line)] hover:border-emerald-500 hover:shadow-sm cursor-pointer transition-all space-y-2">
+/* ==================== 6. HOME SCREEN & KB RENDERING ==================== */
+function renderHowSteps() {
+  const steps = [
+    { n: '01', t: 'Search or browse', d: 'Type your issue in the diagnostic console or select a category below.' },
+    { n: '02', t: 'Follow step-by-step', d: 'Each guide is a short, numbered resolution written by PHB IT Division.' },
+    { n: '03', t: 'Sign in & submit', d: 'If issue persists, sign in with PHB Microsoft 365 to raise a ticket.' },
+    { n: '04', t: 'Track to resolution', d: 'Monitor progress live in your queue with automated email updates.' }
+  ];
+
+  $('howGrid').innerHTML = steps.map(s => `
+    <div class="p-5 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-xs space-y-2 relative overflow-hidden">
+      <div class="font-mono text-xs font-extrabold text-[#007A5E] dark:text-emerald-400 tracking-wider">STEP ${s.n}</div>
+      <h3 class="font-display font-extrabold text-base text-[var(--phb-text)]">${s.t}</h3>
+      <p class="text-xs text-[var(--phb-soft)] leading-relaxed">${s.d}</p>
+    </div>`).join('');
+}
+
+function renderBrowseGrid() {
+  $('browseGrid').innerHTML = CATEGORIES.map(c => `
+    <div onclick="filterKBByCategory('${c.key}')" class="p-5 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] hover:border-[#007A5E] hover:shadow-md cursor-pointer transition-all space-y-2">
       <div class="flex items-center justify-between">
-        <span class="font-mono text-[10px] font-bold text-emerald-700 dark:text-emerald-400">${a.id}</span>
-        <span class="text-[10px] font-semibold text-[var(--phb-soft)]">${a.cat}</span>
+        <h3 class="font-display font-extrabold text-base text-[var(--phb-text)]">${c.key}</h3>
+        <span class="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950 text-[#007A5E]">${c.count} guides</span>
       </div>
-      <h3 class="font-bold text-xs text-[var(--phb-text)] truncate">${a.title}</h3>
-      <p class="text-[11px] text-[var(--phb-soft)] line-clamp-2">${a.desc}</p>
-    </div>`;
+      <p class="text-xs text-[var(--phb-soft)] leading-relaxed">${c.desc}</p>
+    </div>`).join('');
 }
 
 function renderKBGrid() {
   const q = kbQuery.toLowerCase().trim();
   const list = KB_ARTICLES.filter(a =>
     (kbCategory === 'All' || a.cat === kbCategory) &&
-    (!q || a.title.toLowerCase().includes(q) || a.desc.toLowerCase().includes(q) || a.cat.toLowerCase().includes(q)));
-  $('kbGrid').innerHTML = list.length ? list.map(kbCardHTML).join('') :
-    '<p class="text-xs text-[var(--phb-soft)] col-span-full py-6 text-center">No guides match. Try different words, or submit a ticket and IT will help.</p>';
-  const filtered = kbCategory !== 'All';
-  $('kbFilterLabel').textContent = 'Category: ' + kbCategory;
-  $('kbFilterLabel').classList.toggle('hidden', !filtered);
-  $('kbShowAll').classList.toggle('hidden', !filtered);
+    (!q || a.title.toLowerCase().includes(q) || a.desc.toLowerCase().includes(q) || a.cat.toLowerCase().includes(q) || a.tags.some(t => t.includes(q)))
+  );
+
+  $('articleCountBadge').textContent = list.length + ' Article' + (list.length === 1 ? '' : 's');
+
+  if (!list.length) {
+    $('kbGrid').innerHTML = `
+      <div class="col-span-full py-12 text-center text-xs text-[var(--phb-soft)]">
+        No articles match your search. Try different keywords or <button onclick="openNewTicketModal()" class="text-[#007A5E] underline font-bold">submit a ticket</button>.
+      </div>`;
+    return;
+  }
+
+  $('kbGrid').innerHTML = list.map(a => {
+    const sevBadge = a.sev === 'crit' ? 'text-rose-600 bg-rose-50 border-rose-200 dark:bg-rose-950 dark:border-rose-900' :
+                     a.sev === 'warn' ? 'text-amber-600 bg-amber-50 border-amber-200 dark:bg-amber-950 dark:border-amber-900' :
+                     'text-emerald-600 bg-emerald-50 border-emerald-200 dark:bg-emerald-950 dark:border-emerald-900';
+
+    return `
+      <div onclick="openKBModal('${a.id}')" class="p-5 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] hover:border-[#007A5E] hover:shadow-sm cursor-pointer transition-all space-y-3 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="font-mono text-xs font-bold text-[#007A5E] dark:text-emerald-400">${a.id}</span>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded border uppercase tracking-wider ${sevBadge}">${a.sev === 'crit' ? 'Critical' : a.sev === 'warn' ? 'Moderate' : 'Routine'}</span>
+          </div>
+          <h3 class="font-display font-extrabold text-sm text-[var(--phb-text)] line-clamp-1">${a.title}</h3>
+          <p class="text-xs text-[var(--phb-soft)] mt-1 line-clamp-2 leading-relaxed">${a.desc}</p>
+        </div>
+        <div class="pt-2 border-t border-[var(--phb-line)] flex items-center justify-between text-[11px] font-semibold text-[var(--phb-soft)]">
+          <span>${a.cat}</span>
+          <span class="text-[#007A5E] font-bold">Read &rarr;</span>
+        </div>
+      </div>`;
+  }).join('');
+
+  const isFiltered = kbCategory !== 'All';
+  $('kbFilterBadge').textContent = 'Category: ' + kbCategory;
+  $('kbFilterBadge').classList.toggle('hidden', !isFiltered);
+  $('kbShowAllBtn').classList.toggle('hidden', !isFiltered);
 }
 
-function handleKBSearch(q) {
+function handleSearch(q) {
   kbQuery = q;
-  ['staffSearchInput', 'kbSearchInput'].forEach(id => { const el = $(id); if (el && el !== document.activeElement) el.value = q; });
   renderKBGrid();
+}
+
+function applyQuickChip(term) {
+  $('searchInput').value = term;
+  handleSearch(term);
+  $('sectionKB').scrollIntoView();
 }
 
 function filterKBByCategory(cat) {
@@ -1136,62 +1395,80 @@ function openKBModal(id) {
   $('artCat').textContent = art.cat;
   $('artTitle').textContent = art.title;
   $('artDesc').textContent = art.desc;
-  $('artSteps').innerHTML = art.steps.map(s => `<li>${s}</li>`).join('');
+  
+  $('artSteps').innerHTML = art.steps.map(s => `<li>${esc(s)}</li>`).join('');
+  $('artTags').innerHTML = art.tags.map(t => `<span class="px-2.5 py-0.5 rounded-full bg-[var(--phb-bg)] border border-[var(--phb-line)] text-[10px] font-mono text-[var(--phb-soft)]">#${esc(t)}</span>`).join('');
+  
   $('modalArticle').classList.remove('hidden');
 }
 
-function renderHowSteps() {
-  $('howGrid').innerHTML = HOW_STEPS.map(s => `
-    <div class="p-4 rounded-xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-sm space-y-2">
-      <span class="font-mono text-[10px] font-bold text-emerald-700 dark:text-emerald-400 tracking-wider">STEP ${s.n}</span>
-      <h3 class="font-bold text-sm text-[var(--phb-text)]">${s.t}</h3>
-      <p class="text-[11px] text-[var(--phb-soft)] leading-relaxed">${s.d}</p>
-    </div>`).join('');
-}
-
-function renderBrowseGrid() {
-  const cats = [...new Set(KB_ARTICLES.map(a => a.cat))];
-  $('browseGrid').innerHTML = cats.map(c => {
-    const n = KB_ARTICLES.filter(a => a.cat === c).length;
-    return `
-    <div onclick="filterKBByCategory('${c}')" class="p-4 rounded-xl bg-[var(--phb-card)] border border-[var(--phb-line)] hover:border-emerald-500 hover:shadow-sm cursor-pointer transition-all">
-      <h3 class="font-bold text-sm text-[var(--phb-text)]">${c}</h3>
-      <p class="text-[11px] text-[var(--phb-soft)] mt-0.5">${n} guide${n === 1 ? '' : 's'}</p>
-    </div>`;
-  }).join('');
+function markHelpful(isHelpful) {
+  if (isHelpful) {
+    showToast('Thank you for your feedback! Guide rated helpful.');
+  } else {
+    closeModal('modalArticle');
+    openNewTicketModal();
+  }
 }
 
 function renderFaq() {
-  $('faqList').innerHTML = FAQS.map(f => `
-    <details class="group rounded-xl bg-[var(--phb-card)] border border-[var(--phb-line)] px-4 py-3">
-      <summary class="cursor-pointer list-none flex items-center justify-between gap-3 font-semibold text-xs text-[var(--phb-text)]">
-        <span>${f.q}</span><span class="text-emerald-700 dark:text-emerald-400 text-base leading-none group-open:rotate-45 transition-transform">+</span>
+  $('faqList').innerHTML = FAQS.map((f, i) => `
+    <details class="group rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] px-5 py-3.5 shadow-xs">
+      <summary class="cursor-pointer list-none flex items-center justify-between gap-3 font-extrabold text-xs sm:text-sm text-[var(--phb-text)]">
+        <span>${f.q}</span>
+        <span class="text-[#007A5E] dark:text-emerald-400 text-lg leading-none group-open:rotate-45 transition-transform">+</span>
       </summary>
-      <p class="mt-2 text-[11px] text-[var(--phb-soft)] leading-relaxed">${f.a}</p>
+      <p class="mt-2.5 text-xs text-[var(--phb-soft)] leading-relaxed font-medium">${f.a}</p>
     </details>`).join('');
 }
 
 function renderSupport() {
-  const s = CONFIG.support;
-  const cards = [`
-    <div onclick="openNewTicketModal()" class="p-4 rounded-xl bg-[#007A5E] text-white cursor-pointer hover:bg-[#005A4B] transition-colors space-y-1">
-      <h3 class="font-bold text-sm">Submit a ticket</h3>
-      <p class="text-[11px] opacity-90">For issues a guide cannot solve. Sign in required.</p>
-    </div>`];
-  if (s.email) cards.push(`
-    <a href="mailto:${esc(s.email)}" class="p-4 rounded-xl bg-[var(--phb-card)] border border-[var(--phb-line)] hover:border-emerald-500 transition-all space-y-1 block">
-      <h3 class="font-bold text-sm text-[var(--phb-text)]">Email IT support</h3>
-      <p class="text-[11px] text-[var(--phb-soft)]">${esc(s.email)}</p>
-    </a>`);
-  if (s.phone) cards.push(`
-    <a href="tel:${esc(s.phone)}" class="p-4 rounded-xl bg-[var(--phb-card)] border border-[var(--phb-line)] hover:border-emerald-500 transition-all space-y-1 block">
-      <h3 class="font-bold text-sm text-[var(--phb-text)]">Call the help desk</h3>
-      <p class="text-[11px] text-[var(--phb-soft)]">${esc(s.phone)}${s.hours ? ' &middot; ' + esc(s.hours) : ''}</p>
-    </a>`);
-  $('supportGrid').innerHTML = cards.join('');
+  $('supportGrid').innerHTML = `
+    <div onclick="openNewTicketModal()" class="p-5 rounded-2xl bg-[#007A5E] text-white cursor-pointer hover:bg-[#005A4B] transition-colors space-y-2 shadow-sm">
+      <h3 class="font-display font-extrabold text-base">Submit a Ticket</h3>
+      <p class="text-xs opacity-90 leading-relaxed">Direct routing to IT officers. Sign in required.</p>
+      <span class="inline-block text-xs font-bold underline pt-2">Open Form &rarr;</span>
+    </div>
+    <a href="mailto:ithelpdesk@phb.com.my" class="p-5 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] hover:border-[#007A5E] transition-all space-y-2 block">
+      <h3 class="font-display font-extrabold text-base text-[var(--phb-text)]">Email IT Support</h3>
+      <p class="text-xs font-mono text-[#007A5E] dark:text-emerald-400">ithelpdesk@phb.com.my</p>
+      <p class="text-[11px] text-[var(--phb-soft)]">Mon - Fri &middot; 8:00 AM - 5:30 PM</p>
+    </a>
+    <a href="tel:+60312345678" class="p-5 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] hover:border-[#007A5E] transition-all space-y-2 block">
+      <h3 class="font-display font-extrabold text-base text-[var(--phb-text)]">Call HelpDesk HotLine</h3>
+      <p class="text-xs font-mono text-[#007A5E] dark:text-emerald-400">ext. 4357 / +603-1234 5678</p>
+      <p class="text-[11px] text-[var(--phb-soft)]">Emergency escalations available 24/7</p>
+    </a>`;
 }
 
-/* ==================== 7. EXPORT REPORTS ==================== */
+/* ==================== 7. REPORTS & EXPORTS ==================== */
+function renderReportsData() {
+  const months = ['Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'];
+  const data = [12, 19, 14, 25, 22, 30];
+  const max = Math.max(...data);
+
+  $('barChart').innerHTML = months.map((m, i) => {
+    const h = Math.round((data[i] / max) * 100);
+    return `
+      <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+        <span class="text-[10px] font-mono font-bold text-[var(--phb-soft)]">${data[i]}</span>
+        <div class="w-full bg-[#007A5E] rounded-t-lg transition-all" style="height: ${h}%;"></div>
+        <span class="text-[10px] font-bold text-[var(--phb-soft)] uppercase">${m}</span>
+      </div>`;
+  }).join('');
+
+  $('catDistributionList').innerHTML = CATEGORIES.map(c => `
+    <div class="space-y-1">
+      <div class="flex items-center justify-between text-xs font-bold">
+        <span class="text-[var(--phb-text)]">${c.key}</span>
+        <span class="font-mono text-[#007A5E]">${c.count} guides</span>
+      </div>
+      <div class="h-2 w-full bg-[var(--phb-bg)] rounded-full overflow-hidden border border-[var(--phb-line)]">
+        <div class="h-full bg-[#007A5E]" style="width: ${(c.count / 24) * 100}%;"></div>
+      </div>
+    </div>`).join('');
+}
+
 function exportToPDF() {
   if (!window.jspdf) return;
   const { jsPDF } = window.jspdf;
@@ -1217,9 +1494,8 @@ function exportToPDF() {
     styles: { fontSize: 8 }
   });
 
-  doc.text('WE ARE PHB — PROFESSIONAL | HARMONIOUS | BOLD', 14, doc.internal.pageSize.height - 10);
-  doc.save(`PHB_ORBIT_Report_${new Date().toISOString().slice(0,10)}.pdf`);
-  showToast('PDF Report Exported!');
+  doc.save(`PHB_ORBIT_Report_${new Date().toISOString().slice(0, 10)}.pdf`);
+  showToast('PDF Export generated.');
 }
 
 function exportToExcel() {
@@ -1227,23 +1503,23 @@ function exportToExcel() {
   const ws = XLSX.utils.json_to_sheet(getFilteredTickets());
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, "ORBITTickets");
-  XLSX.writeFile(wb, `PHB_ORBIT_Tickets_${new Date().toISOString().slice(0,10)}.xlsx`);
-  showToast('Excel Sheet Exported!');
+  XLSX.writeFile(wb, `PHB_ORBIT_Tickets_${new Date().toISOString().slice(0, 10)}.xlsx`);
+  showToast('Excel Sheet exported.');
 }
 
-/* ==================== UTILS ==================== */
+/* ==================== UTILITY FUNCTIONS ==================== */
 function toggleDarkMode() {
   document.documentElement.classList.toggle('dark');
   const isDark = document.documentElement.classList.contains('dark');
-  document.getElementById('sunIcon').classList.toggle('hidden', !isDark);
-  document.getElementById('moonIcon').classList.toggle('hidden', isDark);
+  $('sunIcon').classList.toggle('hidden', !isDark);
+  $('moonIcon').classList.toggle('hidden', isDark);
 }
 
 function showToast(msg, type) {
-  const container = document.getElementById('toastContainer');
+  const container = $('toastContainer');
   const toast = document.createElement('div');
-  toast.className = 'px-3 py-2 rounded-xl bg-slate-900 text-white text-xs font-semibold shadow-xl border border-slate-700 flex items-center gap-2 pointer-events-auto transition-all';
-  toast.innerHTML = `<span class="w-2 h-2 rounded-full ${type === 'error' ? 'bg-red-400' : 'bg-emerald-400'}"></span><span>${esc(msg)}</span>`;
+  toast.className = 'px-4 py-2.5 rounded-2xl bg-slate-900 text-white text-xs font-bold shadow-2xl border border-slate-700 flex items-center gap-2 pointer-events-auto transition-all transform translate-y-2';
+  toast.innerHTML = `<span class="w-2.5 h-2.5 rounded-full ${type === 'error' ? 'bg-rose-500' : 'bg-emerald-400'}"></span><span>${esc(msg)}</span>`;
   container.appendChild(toast);
   setTimeout(() => toast.remove(), 3500);
 }

@@ -1037,7 +1037,7 @@ const KB_ARTICLES = [
 
 /* App State */
 let ticketsStore = [];
-let usersStore = DEMO_USERS;
+let usersStore = [];
 let currentUser = null;
 let currentTicketView = 'list';
 let activeDrawerTicketId = null;
@@ -1049,9 +1049,11 @@ let currentActiveQuickFixKey = null;
 
 /* ==================== 2. INITIALIZATION & ACCESSIBILITY ==================== */
 window.addEventListener('DOMContentLoaded', () => {
-  renderDemoAccountList();
-  loadPAConfigFromStorage();
-  fetchDataFromPowerAutomate();
+
+    loadPAConfigFromStorage();
+    fetchDataFromPowerAutomate();
+
+});
 
   const savedUser = sessionStorage.getItem('orbit_user_session');
   if (savedUser) {
@@ -1092,22 +1094,7 @@ function cycleTextSize() {
   showToast(`Senior Accessibility: Switched to ${labels[newSize]}`);
 }
 
-function renderDemoAccountList() {
-  const container = document.getElementById('demoAccountsContainer');
-  if (!container) return;
-  container.innerHTML = DEMO_USERS.map(u => `
-    <div onclick='loginUser(${JSON.stringify(u)})' class="flex items-center justify-between p-2.5 rounded-xl border border-[var(--phb-line)] hover:border-emerald-500 hover:bg-emerald-50/40 dark:hover:bg-emerald-950/20 cursor-pointer text-xs transition-all">
-      <div>
-        <div class="font-bold text-[var(--phb-text)]">${u.name}</div>
-        <div class="text-[11px] text-[var(--phb-soft)]">${u.roleTitle} · ${u.department}</div>
-      </div>
-      <span class="text-[9px] font-extrabold px-2 py-0.5 rounded uppercase ${
-        u.role === 'hod' ? 'bg-amber-100 text-amber-800' :
-        u.role === 'it' ? 'bg-purple-100 text-purple-800' : 'bg-slate-100 text-slate-700'
-      }">${u.role}</span>
-    </div>
-  `).join('');
-}
+
 
 async function startSSO(){
 

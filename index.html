@@ -5,14 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ORBIT // PHB IT HelpDesk & Knowledge Base</title>
 
-<!-- Fonts -->
+<!-- Fonts: DIN Alternate / Barlow Condensed + Plus Jakarta Sans -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
 <!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 
-<!-- Canvas Confetti & Export Libraries -->
+<!-- Libraries & MSAL -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
@@ -21,31 +21,26 @@
 
 <script>
   tailwind.config = {
-    darkMode: 'class',
     theme: {
       extend: {
         colors: {
           phb: {
-            green: '#4D9A2A',
-            lime: '#6BBF3B',
-            accentLime: '#C3CE1E',
-            darkGreen: '#2E6619',
-            tint: '#F0F9EB',
-            gold: '#F5B800',
-            teal: '#007A5E',
-            deepTeal: '#005A4B',
-            navy: '#0B2545',
-            darkNavy: '#07182D',
-            canvas: '#F8F9FA',
+            paleLime: '#D4E4AA',
+            lime: '#84C441',
+            green: '#51961D',
+            deepGreen: '#006837',
+            tealGreen: '#006B68',
+            surface: '#F4F8EE',
             card: '#FFFFFF',
-            line: '#E5E7EB',
+            line: '#D9E5C8',
             text: '#111827',
             soft: '#4B5563'
           }
         },
         fontFamily: {
-          sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
-          mono: ['JetBrains Mono', 'monospace']
+          display: ['"DIN Alternate"', '"Barlow Condensed"', 'sans-serif'],
+          sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+          mono: ['"JetBrains Mono"', 'monospace']
         }
       }
     }
@@ -54,163 +49,132 @@
 
 <style>
 :root {
-  --phb-green: #4D9A2A;
-  --phb-teal: #007A5E;
-  --phb-navy: #0B2545;
-  --phb-canvas: #F8F9FA;
+  --phb-pale-lime: #D4E4AA;
+  --phb-lime: #84C441;
+  --phb-green: #51961D;
+  --phb-deep-green: #006837;
+  --phb-teal-green: #006B68;
+  --phb-surface: #F4F8EE;
   --phb-card: #FFFFFF;
-  --phb-line: #E5E7EB;
+  --phb-line: #D9E5C8;
   --phb-text: #111827;
   --phb-soft: #4B5563;
-  --phb-grad: linear-gradient(90deg, #007A5E 0%, #005A4B 55%, #0B2545 100%);
 }
 
-.dark {
-  --phb-canvas: #090E17;
-  --phb-card: #111827;
-  --phb-line: #1F2937;
-  --phb-text: #F9FAFB;
-  --phb-soft: #9CA3AF;
+/* Official PHB Header & Footer Corporate Green Bar */
+.phb-header-footer-bar {
+  background: linear-gradient(90deg, #006837 0%, #008A5E 40%, #006B68 100%);
 }
 
-/* Senior-Friendly Font Sizing Classes */
-html.text-size-normal { font-size: 15px; }
-html.text-size-large { font-size: 17px; }
-html.text-size-xlarge { font-size: 19px; }
-
+/* Two-Color Canvas: Soft PHB Pale-Lime Green Family + Pure White Cards */
 body {
-  background-color: var(--phb-canvas);
+  background-color: #EEF5E4;
+  background-image: radial-gradient(rgba(81, 150, 29, 0.14) 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
   color: var(--phb-text);
   font-family: 'Plus Jakarta Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
-  transition: font-size 0.2s ease, background-color 0.25s ease, color 0.25s ease;
 }
 
-.phb-grid-bg {
-  background-image: radial-gradient(rgba(0,122,94,0.04) 1px, transparent 1px);
-  background-size: 24px 24px;
+.font-din {
+  font-family: 'DIN Alternate', 'Barlow Condensed', sans-serif;
+  letter-spacing: 0.02em;
 }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 999px; }
-.dark ::-webkit-scrollbar-thumb { background: #374151; }
+::-webkit-scrollbar-track { background: #EEF5E4; }
+::-webkit-scrollbar-thumb { background: #84C441; border-radius: 999px; }
 
-/* Senior-Friendly Status Badges */
-.badge-open { background-color: #FEF3C7; color: #92400E; border: 1px solid #FCD34D; }
-.badge-inprogress { background-color: #E0F2FE; color: #0369A1; border: 1px solid #BAE6FD; }
-.badge-pending { background-color: #FEE2E2; color: #B91C1C; border: 1px solid #FCA5A5; }
-.badge-resolved { background-color: #DCFCE7; color: #15803D; border: 1px solid #86EFAC; }
+/* Green-Family & Neutral Status Badges */
+.badge-open { background-color: #FEF9C3; color: #713F12; border: 1px solid #FDE047; }
+.badge-inprogress { background-color: #ECFCCB; color: #365314; border: 1px solid #A3E635; }
+.badge-pending { background-color: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5; }
+.badge-resolved { background-color: #DCFCE7; color: #14532D; border: 1px solid #4ADE80; }
 
-.dark .badge-open { background-color: #451A03; color: #FDE68A; border-color: #78350F; }
-.dark .badge-inprogress { background-color: #0C4A6E; color: #BAE6FD; border-color: #0369A1; }
-.dark .badge-pending { background-color: #450A0A; color: #FECACA; border-color: #7F1D1D; }
-.dark .badge-resolved { background-color: #064E3B; color: #A7F3D0; border-color: #047857; }
-
-/* Interactive Hover Lift & Pulse Effects */
 .card-hover-lift {
   transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, border-color 0.2s ease;
 }
 .card-hover-lift:hover {
-  transform: translateY(-4px) scale(1.01);
-}
-.card-hover-lift:active {
-  transform: translateY(-1px) scale(0.99);
-}
-
-@keyframes pulse-ring {
-  0% { transform: scale(0.95); opacity: 0.8; }
-  50% { transform: scale(1.1); opacity: 0.4; }
-  100% { transform: scale(0.95); opacity: 0.8; }
-}
-.live-pulse-ring {
-  animation: pulse-ring 2s infinite ease-in-out;
+  transform: translateY(-4px);
+  box-shadow: 0 14px 28px -10px rgba(0, 104, 55, 0.18);
 }
 
 .drawer-overlay { transition: opacity 0.25s ease-in-out; }
 .drawer-content { transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
 </style>
 </head>
-<body class="phb-grid-bg flex flex-col min-h-screen">
+<body class="flex flex-col min-h-screen">
 
-<!-- Corporate Top Gradient Bar -->
-<div class="h-1.5 w-full bg-gradient-to-r from-[#007A5E] via-[#005A4B] to-[#0B2545]"></div>
-
-<!-- ==================== STICKY TOP HEADER ==================== -->
-<header class="sticky top-0 z-30 bg-[var(--phb-card)]/95 border-b border-[var(--phb-line)] backdrop-blur-md">
+<!-- ==================== STICKY TOP HEADER (CORPORATE GREEN BAR + WHITE TEXT) ==================== -->
+<header class="sticky top-0 z-30 phb-header-footer-bar text-white shadow-md">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
     
-    <!-- Brand Title & Official Logo -->
+    <!-- Brand Title & White Official Logo -->
     <div class="flex items-center gap-3 sm:gap-4">
-      <img src="https://www.phb.com.my/clients/asset_E5316276-9983-47F1-A6C2-76D0C7985656/contentms/img/logo/logo-phb.svg" 
-           alt="Pelaburan Hartanah Berhad" class="h-8 sm:h-9 w-auto object-contain"
-           onerror="this.src='https://placehold.co/160x40/007A5E/ffffff?text=PHB+Logo'">
-      <div class="h-6 w-px bg-[var(--phb-line)] hidden sm:block"></div>
-      <div>
-        <div class="flex items-center gap-2">
-          <span class="font-extrabold text-base sm:text-lg tracking-tight text-[var(--phb-text)]">ORBIT</span>
-          <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 hidden md:inline-block">
-            One Repository for IT
-          </span>
-        </div>
+      <div class="bg-white px-2.5 py-1 rounded-lg shadow-xs flex items-center">
+        <img src="https://www.phb.com.my/clients/asset_E5316276-9983-47F1-A6C2-76D0C7985656/contentms/img/logo/logo-phb.svg" 
+             alt="Pelaburan Hartanah Berhad" class="h-7 sm:h-8 w-auto object-contain"
+             onerror="this.src='https://placehold.co/150x36/ffffff/006837?text=PHB'">
+      </div>
+      <div class="h-6 w-px bg-white/25 hidden sm:block"></div>
+      <div class="flex items-center gap-2">
+        <span class="font-din font-extrabold text-xl sm:text-2xl tracking-wide text-white">ORBIT</span>
+        <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-md bg-white/15 text-white border border-white/25 hidden md:inline-block">
+          One Repository for IT
+        </span>
       </div>
     </div>
 
     <!-- Right Control Bar -->
     <div class="flex items-center gap-2 sm:gap-3">
-      
 
       <!-- Power Automate Connection Status Pill -->
-      <div id="paSyncBadge" onclick="openPAConfigModal()" title="Click to configure Power Automate HTTP flows" 
-           class="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold cursor-pointer border transition-all bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800">
-        <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-        <span id="paSyncStatusText">Demo Mode</span>
+      <div id="paSyncBadge" onclick="openPAConfigModal()" title="Click to view or configure Power Automate HTTP flows" 
+           class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold cursor-pointer border transition-all bg-white/15 text-white border-white/30 hover:bg-white/25">
+        <span id="paSyncDot" class="w-2 h-2 rounded-full bg-[#84C441] animate-pulse"></span>
+        <span id="paSyncStatusText">Power Automate Live</span>
       </div>
 
       <!-- PA Config Settings Gear -->
-      <button onclick="openPAConfigModal()" title="Power Automate Flow Settings" class="p-2 rounded-xl border border-[var(--phb-line)] hover:bg-[var(--phb-canvas)] text-[var(--phb-soft)] hover:text-[var(--phb-text)] transition-colors">
+      <button onclick="openPAConfigModal()" title="Power Automate Flow Settings" class="p-2 rounded-xl border border-white/25 bg-white/10 hover:bg-white/20 text-white transition-colors">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
       </button>
 
-      <!-- Theme Switcher -->
-      <button onclick="toggleDarkMode()" title="Toggle Dark/Light Mode" class="p-2 rounded-xl border border-[var(--phb-line)] hover:bg-[var(--phb-canvas)] text-[var(--phb-soft)] hover:text-[var(--phb-text)] transition-colors">
-        <svg id="sunIcon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-        <svg id="moonIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      <!-- Header Sign-In CTA (White Button on Green Header) -->
+      <button id="headerSignInBtn" onclick="startSSO()" class="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white hover:bg-[#D4E4AA] text-[#006837] font-extrabold text-xs shadow-sm transition-all">
+        <svg class="w-4 h-4" viewBox="0 0 21 21" fill="none"><rect x="1" y="1" width="9" height="9" fill="#F25022"/><rect x="11" y="1" width="9" height="9" fill="#7FBA00"/><rect x="1" y="11" width="9" height="9" fill="#00A4EF"/><rect x="11" y="11" width="9" height="9" fill="#FFB900"/></svg>
+        <span class="hidden sm:inline">Sign In (M365)</span>
+        <span class="sm:hidden">Sign In</span>
       </button>
 
-      <!-- Clean User Profile Pill with Collapsible Dropdown Menu -->
+      <!-- User Profile Pill (Shown when signed in) -->
       <div id="userChipArea" class="hidden relative">
-        <button onclick="toggleUserDropdown()" class="flex items-center gap-2 p-1 pr-3 rounded-full border border-[var(--phb-line)] hover:border-emerald-500 transition-all bg-[var(--phb-card)] shadow-xs">
-          <div id="chipAvatar" class="w-8 h-8 rounded-full bg-[#007A5E] text-white font-bold text-xs flex items-center justify-center shadow-xs">
-            SR
+        <button onclick="toggleUserDropdown()" class="flex items-center gap-2 p-1 pr-3 rounded-full border border-white/30 bg-white text-[#111827] hover:bg-[#F4F8EE] transition-all shadow-xs">
+          <div id="chipAvatar" class="w-8 h-8 rounded-full bg-[#51961D] text-white font-bold text-xs flex items-center justify-center">
+            PH
           </div>
           <div class="text-left hidden sm:block">
-            <div id="chipName" class="text-xs font-bold text-[var(--phb-text)] leading-tight">Siti Rahayu</div>
-            <div id="chipRole" class="text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 leading-tight">Finance</div>
+            <div id="chipName" class="text-xs font-bold text-[#111827] leading-tight">Staff</div>
+            <div id="chipRole" class="text-[10px] font-bold text-[#51961D] leading-tight">Division</div>
           </div>
-          <svg class="w-3.5 h-3.5 text-[var(--phb-soft)] ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          <svg class="w-3.5 h-3.5 text-[#4B5563] ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
         </button>
 
         <!-- Dropdown Menu -->
-        <div id="userDropdown" class="hidden absolute right-0 mt-2 w-64 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-2xl py-2 z-50">
-          <div class="px-4 py-3 border-b border-[var(--phb-line)]">
-            <p id="menuRoleTitle" class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">Senior Executive</p>
-            <p id="menuName" class="text-sm font-bold text-[var(--phb-text)] truncate mt-0.5">Siti Rahayu</p>
-            <p id="menuEmail" class="text-xs text-[var(--phb-soft)] truncate">siti.rahayu@phb.com.my</p>
-            <p id="menuDept" class="text-xs font-semibold text-emerald-800 dark:text-emerald-300 mt-1">Department: Finance</p>
+        <div id="userDropdown" class="hidden absolute right-0 mt-2 w-64 rounded-2xl bg-white border border-[#D9E5C8] shadow-2xl py-2 z-50 text-[#111827]">
+          <div class="px-4 py-3 border-b border-[#D9E5C8]">
+            <p id="menuRoleTitle" class="text-[10px] font-extrabold uppercase tracking-wider text-[#51961D]">Role</p>
+            <p id="menuName" class="text-sm font-bold text-[#111827] truncate mt-0.5">Name</p>
+            <p id="menuEmail" class="text-xs text-[#4B5563] truncate">email@phb.com.my</p>
+            <p id="menuDept" class="text-xs font-bold text-[#006837] mt-1">Department: —</p>
           </div>
 
-          <!-- Demo Role Switcher Inside Profile Menu -->
-          <div id="demoRoleSwitcherInMenu" class="p-3 border-b border-[var(--phb-line)] bg-[var(--phb-canvas)]">
-            <p class="text-[10px] font-extrabold uppercase tracking-wider text-[var(--phb-soft)] mb-2">🧪 Switch Role (Demo Preview)</p>
-            <div class="grid grid-cols-3 gap-1 text-xs">
-              <button onclick="switchRolePreview('hod')" id="roleBtnHOD" class="px-2 py-1 rounded-lg border border-[var(--phb-line)] font-bold text-center hover:bg-emerald-50">HOD</button>
-              <button onclick="switchRolePreview('it')" id="roleBtnIT" class="px-2 py-1 rounded-lg border border-[var(--phb-line)] font-bold text-center hover:bg-emerald-50">IT Admin</button>
-              <button onclick="switchRolePreview('user')" id="roleBtnUser" class="px-2 py-1 rounded-lg border border-[var(--phb-line)] font-bold text-center hover:bg-emerald-50">Staff</button>
-            </div>
-          </div>
+          <button onclick="fetchDataFromPowerAutomate(); toggleUserDropdown();" class="w-full text-left flex items-center gap-2 px-4 py-2.5 text-xs font-bold text-[#111827] hover:bg-[#F4F8EE] transition-colors">
+            <svg class="w-4 h-4 text-[#51961D]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            Sync SharePoint Tickets
+          </button>
 
-          <button onclick="logout()" class="w-full text-left flex items-center gap-2 px-4 py-2.5 text-xs font-bold text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors">
+          <button onclick="logout()" class="w-full text-left flex items-center gap-2 px-4 py-2.5 text-xs font-bold text-red-600 hover:bg-red-50 transition-colors border-t border-[#D9E5C8]">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
             Sign Out
           </button>
@@ -220,340 +184,308 @@ body {
   </div>
 </header>
 
-<!-- ==================== SIGN IN MODAL ==================== -->
-<div id="loginScreen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/75 backdrop-blur-sm">
-  <div class="max-w-md w-full bg-[var(--phb-card)] rounded-2xl shadow-2xl border border-[var(--phb-line)] overflow-hidden">
-    
-    <div class="p-6 bg-gradient-to-r from-[#007A5E] to-[#0B2545] text-white">
-      <img src="https://www.phb.com.my/clients/asset_E5316276-9983-47F1-A6C2-76D0C7985656/contentms/img/logo/logo-phb.svg" 
-           alt="PHB Logo" class="h-9 w-auto mb-3 brightness-200"
-           onerror="this.src='https://placehold.co/160x40/ffffff/007A5E?text=PHB+Logo'">
-      <h2 class="text-xl font-extrabold tracking-tight">ORBIT Portal Sign In</h2>
-      <p class="text-xs text-emerald-100 opacity-90 mt-1">Pelaburan Hartanah Berhad · Controlled by Power Automate</p>
-    </div>
-
-    <div class="p-6 space-y-4">
-      <button onclick="startSSO()" class="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 font-bold text-xs text-[var(--phb-text)] transition-all shadow-xs">
-        <svg class="w-5 h-5" viewBox="0 0 21 21" fill="none"><rect x="1" y="1" width="9" height="9" fill="#F25022"/><rect x="11" y="1" width="9" height="9" fill="#7FBA00"/><rect x="1" y="11" width="9" height="9" fill="#00A4EF"/><rect x="11" y="11" width="9" height="9" fill="#FFB900"/></svg>
-        <span>Sign in with Microsoft 365 (Outlook)</span>
-      </button>
-<!-- 
-      <div class="flex items-center gap-3 my-2">
-        <div class="h-px flex-1 bg-[var(--phb-line)]"></div>
-        <span class="text-[10px] font-extrabold uppercase tracking-wider text-[var(--phb-soft)]">Select Demo Persona</span>
-        <div class="h-px flex-1 bg-[var(--phb-line)]"></div>
-      </div> -->
-
-      <div id="demoAccountsContainer" class="space-y-2 max-h-60 overflow-y-auto pr-1">
-        <!-- Rendered by JS -->
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- ==================== MAIN CONTENT AREA ==================== -->
-<main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+<main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
 
-  <!-- UNCONFIGURED POWER AUTOMATE ALERT BANNER -->
-  <div id="paUnconfiguredBanner" class="p-4 rounded-2xl border border-amber-200 bg-amber-50/80 dark:bg-amber-950/30 dark:border-amber-900 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-    <div class="flex items-start sm:items-center gap-3 text-amber-900 dark:text-amber-200">
-      <svg class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5 sm:mt-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-      <div>
-        <span class="font-bold">Power Automate Integration Ready:</span>
-        <span class="opacity-90">Paste your HTTP trigger flow URLs in settings to connect with SharePoint lists <code class="font-mono bg-amber-100 dark:bg-amber-900 px-1 py-0.5 rounded">ORBITTickets</code> and <code class="font-mono bg-amber-100 dark:bg-amber-900 px-1 py-0.5 rounded">ORBITUsers</code>.</span>
+  <!-- ==================== 1. INTERACTIVE CORPORATE HOME HERO (VISIBLE BEFORE LOGIN) ==================== -->
+  <section id="sectionPublicHome" class="space-y-6">
+    <div class="rounded-3xl bg-white border border-[#D9E5C8] shadow-md overflow-hidden">
+      <!-- Top Solid Green Strip -->
+      <div class="px-6 py-2.5 bg-[#51961D] text-white flex flex-wrap items-center justify-between gap-2 text-xs">
+        <div class="flex items-center gap-2 font-bold tracking-wide">
+          <span class="w-2 h-2 rounded-full bg-[#D4E4AA] animate-pulse"></span>
+          <span>PELABURAN HARTANAH BERHAD · IT SERVICE DESK & SELF-SERVICE PORTAL</span>
+        </div>
+        <span class="font-mono text-[11px] text-[#D4E4AA]">Power Automate Connected</span>
+      </div>
+
+      <div class="p-6 sm:p-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <!-- Left Welcome & Interactive Search -->
+        <div class="lg:col-span-7 space-y-5">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D4E4AA]/70 text-[#006837] text-xs font-extrabold border border-[#84C441]">
+            <span>WE ARE PHB</span>
+            <span>·</span>
+            <span>PROFESSIONAL | HARMONIOUS | BOLD</span>
+          </div>
+
+          <h1 class="font-din text-3xl sm:text-5xl font-extrabold text-[#006837] leading-tight uppercase">
+            How Can PHB IT Support You Today?
+          </h1>
+
+          <p class="text-xs sm:text-sm text-[#4B5563] leading-relaxed max-w-2xl">
+            Explore instant 3-step troubleshooting guides below without signing in, or sign in with your <strong>Microsoft 365 (Outlook)</strong> account to submit tickets and track live SLA updates.
+          </p>
+
+          <!-- Interactive Home Search Bar -->
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1">
+            <div class="relative flex-1">
+              <svg class="w-5 h-5 absolute left-3.5 top-3 text-[#51961D]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              <input id="homeSearchInput" type="text" oninput="handleKBSearch(this.value)" placeholder="Search instant guides (e.g. 'VPN', 'Password', 'Outlook', 'Printer')..." 
+                     class="w-full pl-11 pr-4 py-3 rounded-2xl border-2 border-[#D9E5C8] focus:border-[#51961D] bg-[#F4F8EE] text-xs sm:text-sm font-semibold text-[#111827] focus:outline-none">
+            </div>
+            <button id="heroSignInBtn" onclick="startSSO()" class="px-6 py-3 rounded-2xl bg-[#51961D] hover:bg-[#006837] text-white font-extrabold text-xs sm:text-sm shadow-sm transition-all flex items-center justify-center gap-2.5 flex-shrink-0">
+              <svg class="w-4 h-4 bg-white p-0.5 rounded-xs" viewBox="0 0 21 21" fill="none"><rect x="1" y="1" width="9" height="9" fill="#F25022"/><rect x="11" y="1" width="9" height="9" fill="#7FBA00"/><rect x="1" y="11" width="9" height="9" fill="#00A4EF"/><rect x="11" y="11" width="9" height="9" fill="#FFB900"/></svg>
+              <span>Sign in with Outlook</span>
+            </button>
+          </div>
+
+          <!-- Quick Symptom Chips -->
+          <div class="flex flex-wrap items-center gap-2 text-xs pt-1">
+            <span class="font-bold text-[#4B5563]">Popular Topics:</span>
+            <button onclick="openInlineQuickFix('wifi')" class="px-3 py-1 rounded-full bg-[#F4F8EE] hover:bg-[#D4E4AA] border border-[#D9E5C8] font-bold text-[#006837] transition-colors">🌐 Wi-Fi & VPN</button>
+            <button onclick="openInlineQuickFix('password')" class="px-3 py-1 rounded-full bg-[#F4F8EE] hover:bg-[#D4E4AA] border border-[#D9E5C8] font-bold text-[#006837] transition-colors">🔑 Password Reset</button>
+            <button onclick="openInlineQuickFix('email')" class="px-3 py-1 rounded-full bg-[#F4F8EE] hover:bg-[#D4E4AA] border border-[#D9E5C8] font-bold text-[#006837] transition-colors">📧 Outlook Sync</button>
+            <button onclick="openInlineQuickFix('laptop')" class="px-3 py-1 rounded-full bg-[#F4F8EE] hover:bg-[#D4E4AA] border border-[#D9E5C8] font-bold text-[#006837] transition-colors">💻 Dock & Monitor</button>
+          </div>
+        </div>
+
+        <!-- Right Corporate Workspace Card -->
+        <div class="lg:col-span-5">
+          <div class="p-6 rounded-2xl bg-[#F4F8EE] border-2 border-[#D9E5C8] space-y-4">
+            <div class="flex items-center justify-between border-b border-[#D9E5C8] pb-3">
+              <div>
+                <span class="text-[10px] font-extrabold uppercase tracking-wider text-[#51961D]">Microsoft 365 + Power Automate</span>
+                <h2 class="font-din text-xl font-extrabold text-[#006837] uppercase mt-0.5">Staff Workspace Access</h2>
+              </div>
+              <div class="w-10 h-10 rounded-xl bg-[#51961D] text-white flex items-center justify-center font-extrabold text-lg">
+                🔐
+              </div>
+            </div>
+
+            <div class="space-y-2.5 text-xs text-[#4B5563]">
+              <div class="flex items-start gap-2.5">
+                <span class="w-5 h-5 rounded-full bg-[#84C441] text-white font-extrabold flex items-center justify-center flex-shrink-0 text-[11px]">1</span>
+                <span><strong>Single Sign-On:</strong> Authenticates your <code class="font-mono font-bold text-[#006837]">@phb.com.my</code> Outlook account.</span>
+              </div>
+              <div class="flex items-start gap-2.5">
+                <span class="w-5 h-5 rounded-full bg-[#84C441] text-white font-extrabold flex items-center justify-center flex-shrink-0 text-[11px]">2</span>
+                <span><strong>Directory Role Sync:</strong> Resolves your Department & Role from SharePoint <code class="font-mono font-bold text-[#006837]">ORBITUsers</code>.</span>
+              </div>
+              <div class="flex items-start gap-2.5">
+                <span class="w-5 h-5 rounded-full bg-[#84C441] text-white font-extrabold flex items-center justify-center flex-shrink-0 text-[11px]">3</span>
+                <span><strong>Live Ticket Sync:</strong> Loads and saves requests directly to <code class="font-mono font-bold text-[#006837]">ORBITTickets</code>.</span>
+              </div>
+            </div>
+
+            <button id="cardSignInBtn" onclick="startSSO()" class="w-full py-3.5 px-4 rounded-xl bg-[#006837] hover:bg-[#51961D] text-white font-extrabold text-xs sm:text-sm shadow-sm transition-all flex items-center justify-center gap-3">
+              <svg class="w-5 h-5 bg-white p-0.5 rounded-xs" viewBox="0 0 21 21" fill="none"><rect x="1" y="1" width="9" height="9" fill="#F25022"/><rect x="11" y="1" width="9" height="9" fill="#7FBA00"/><rect x="1" y="11" width="9" height="9" fill="#00A4EF"/><rect x="11" y="11" width="9" height="9" fill="#FFB900"/></svg>
+              <span id="cardSignInLabel">Sign in with Microsoft 365 (Outlook)</span>
+            </button>
+
+            <div class="pt-2 border-t border-[#D9E5C8] flex items-center justify-between text-[11px] text-[#4B5563]">
+              <span>IT Division Escalations:</span>
+              <a href="mailto:nurhaliza@phb.com.my" class="font-bold text-[#006837] hover:underline">nurhaliza@phb.com.my</a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="flex items-center gap-2 flex-shrink-0">
-      <button onclick="toggleSamplePreview()" id="btnSamplePreview" class="px-3 py-1.5 rounded-xl border border-amber-300 dark:border-amber-700 hover:bg-amber-100 dark:hover:bg-amber-900 font-bold text-amber-900 dark:text-amber-200">
-        Preview Sample Data
-      </button>
-      <button onclick="openPAConfigModal()" class="px-3 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold shadow-xs">
-        Configure Flows
-      </button>
-    </div>
-  </div>
+  </section>
 
-
-
-  <!-- HOD / IT EXECUTIVE OVERVIEW HEADER -->
+  <!-- ==================== 2. HOD / IT EXECUTIVE OVERVIEW HEADER (AUTHENTICATED) ==================== -->
   <section id="sectionExecutiveOverview" class="hidden space-y-4">
-    <div class="p-6 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-6">
+    <div class="p-6 rounded-3xl bg-white border border-[#D9E5C8] shadow-md flex flex-col md:flex-row md:items-center justify-between gap-6">
       <div>
-        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-xs font-bold border border-emerald-200 dark:border-emerald-800 mb-2">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-[#D4E4AA] text-[#006837] text-xs font-extrabold border border-[#84C441] mb-2">
           <span id="roleOverviewBadge">HOD Executive Dashboard</span>
         </div>
-        <h1 class="text-2xl font-extrabold tracking-tight text-[var(--phb-text)]">
+        <h1 class="font-din text-2xl sm:text-3xl font-extrabold tracking-wide uppercase text-[#006837]">
           IT Service Queue & Department Performance
         </h1>
-        <p class="text-xs text-[var(--phb-soft)] mt-1">
+        <p class="text-xs text-[#4B5563] mt-1">
           Real-time oversight of PHB IT support requests, SLA response tracking, and departmental issue distribution.
         </p>
       </div>
 
       <!-- Executive KPI Strip -->
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 min-w-[320px]">
-        <div class="p-3 rounded-xl bg-[var(--phb-canvas)] border border-[var(--phb-line)] text-center">
-          <div id="kpiTotal" class="text-xl font-bold text-emerald-700 dark:text-emerald-400">0</div>
-          <div class="text-[11px] text-[var(--phb-soft)] font-semibold">Total Tickets</div>
+        <div class="p-3.5 rounded-2xl bg-[#F4F8EE] border border-[#D9E5C8] text-center">
+          <div id="kpiTotal" class="font-din text-2xl font-extrabold text-[#006837]">0</div>
+          <div class="text-[11px] text-[#4B5563] font-bold">Total Tickets</div>
         </div>
-        <div class="p-3 rounded-xl bg-[var(--phb-canvas)] border border-[var(--phb-line)] text-center">
-          <div id="kpiOpen" class="text-xl font-bold text-amber-600 dark:text-amber-400">0</div>
-          <div class="text-[11px] text-[var(--phb-soft)] font-semibold">Waiting / Active</div>
+        <div class="p-3.5 rounded-2xl bg-[#F4F8EE] border border-[#D9E5C8] text-center">
+          <div id="kpiOpen" class="font-din text-2xl font-extrabold text-[#51961D]">0</div>
+          <div class="text-[11px] text-[#4B5563] font-bold">Waiting / Active</div>
         </div>
-        <div class="p-3 rounded-xl bg-[var(--phb-canvas)] border border-[var(--phb-line)] text-center">
-          <div id="kpiPending" class="text-xl font-bold text-rose-600 dark:text-rose-400">0</div>
-          <div class="text-[11px] text-[var(--phb-soft)] font-semibold">Action Needed</div>
+        <div class="p-3.5 rounded-2xl bg-[#F4F8EE] border border-[#D9E5C8] text-center">
+          <div id="kpiPending" class="font-din text-2xl font-extrabold text-amber-700">0</div>
+          <div class="text-[11px] text-[#4B5563] font-bold">Action Needed</div>
         </div>
-        <div class="p-3 rounded-xl bg-[var(--phb-canvas)] border border-[var(--phb-line)] text-center">
-          <div id="kpiResolved" class="text-xl font-bold text-blue-600 dark:text-blue-400">0</div>
-          <div class="text-[11px] text-[var(--phb-soft)] font-semibold">Fixed / Resolved</div>
+        <div class="p-3.5 rounded-2xl bg-[#F4F8EE] border border-[#D9E5C8] text-center">
+          <div id="kpiResolved" class="font-din text-2xl font-extrabold text-[#006837]">0</div>
+          <div class="text-[11px] text-[#4B5563] font-bold">Fixed / Resolved</div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ==================== STAFF HERO BANNER WITH INTEGRATED HOD CARD ==================== -->
+  <!-- ==================== 3. STAFF HERO BANNER (AUTHENTICATED STAFF) ==================== -->
   <section id="sectionStaffHero" class="hidden space-y-6">
-    
-    <!-- Hero Banner with Integrated HOD Card -->
-    <div class="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-[#007A5E] via-[#005A4B] to-[#0B2545] text-white shadow-xl relative overflow-hidden space-y-6">
+    <div class="p-6 sm:p-8 rounded-3xl bg-white border border-[#D9E5C8] shadow-md space-y-6">
       
-      <!-- Integrated HOD Leadership Card Badge -->
-      <div class="p-3.5 sm:p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <!-- Top Leadership Strip (Solid PHB Green) -->
+      <div class="p-4 rounded-2xl bg-[#006837] text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-xl flex-shrink-0">
+          <div class="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center text-xl flex-shrink-0">
             👔
           </div>
           <div>
-            <div class="text-[10px] font-extrabold uppercase tracking-widest text-emerald-300">Department Leadership & IT Escalations</div>
+            <div class="text-[10px] font-extrabold uppercase tracking-widest text-[#D4E4AA]">Department Leadership & IT Escalations</div>
             <div class="text-xs sm:text-sm font-bold text-white">
-              Nur Haliza Binti Haron <span class="font-normal opacity-85 text-xs">— Head of IT Division (HOD)</span>
+              Nur Haliza Binti Haron <span class="font-normal opacity-90 text-xs">— Head of IT Division (HOD)</span>
             </div>
-            <div class="text-[11px] text-emerald-100 opacity-90">
+            <div class="text-[11px] text-[#D4E4AA]">
               Division: Information Technology (ITD) · Email: <a href="mailto:nurhaliza@phb.com.my" class="underline font-semibold hover:text-white">nurhaliza@phb.com.my</a>
             </div>
           </div>
         </div>
-        <div class="flex items-center gap-2 flex-shrink-0">
-          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-400/20 text-emerald-200 text-xs font-bold border border-emerald-300/30">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>Escalations Active</span>
-          </span>
-        </div>
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 text-white text-xs font-bold border border-white/25 self-start sm:self-auto">
+          <span class="w-2 h-2 rounded-full bg-[#84C441] animate-pulse"></span>
+          <span>Escalations Active</span>
+        </span>
       </div>
 
-      <!-- Welcome Greeting & Interactive Search Bar -->
-      <div class="max-w-3xl space-y-4">
-        <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-white">
-          Welcome to ORBIT, <span id="staffHeroName" class="text-[#C3CE1E]">Staff</span> 👋
+      <!-- Welcome Greeting & Search Console -->
+      <div class="space-y-4">
+        <h1 class="font-din text-3xl sm:text-4xl font-extrabold tracking-wide uppercase text-[#006837]">
+          Welcome to ORBIT, <span id="staffHeroName" class="text-[#51961D]">Staff</span> 👋
         </h1>
-        <p class="text-xs sm:text-sm text-emerald-100 opacity-95 max-w-xl leading-relaxed">
-          Need IT help? Search quick step-by-step guides or click a symptom tag below to auto-find the solution.
+        <p class="text-xs sm:text-sm text-[#4B5563] max-w-2xl leading-relaxed">
+          Search quick step-by-step guides below or submit a new support request directly to the IT HelpDesk queue.
         </p>
 
-        <!-- Big Search Console -->
         <div class="pt-1 flex flex-col sm:flex-row items-center gap-3">
           <div class="relative flex-1 w-full">
-            <svg class="w-5 h-5 absolute left-3.5 top-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <svg class="w-5 h-5 absolute left-3.5 top-3 text-[#51961D]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
             <input id="staffSearchInput" type="text" oninput="handleKBSearch(this.value)" placeholder="Search issues (e.g. 'VPN disconnects', 'Forgot password', 'Printer jam')" 
-                   class="w-full pl-11 pr-4 py-3 rounded-2xl text-slate-900 dark:text-white bg-white dark:bg-slate-800 text-xs sm:text-sm font-semibold focus:ring-2 focus:ring-emerald-400 focus:outline-none shadow-md">
+                   class="w-full pl-11 pr-4 py-3 rounded-2xl border-2 border-[#D9E5C8] focus:border-[#51961D] bg-[#F4F8EE] text-xs sm:text-sm font-semibold text-[#111827] focus:outline-none">
           </div>
-          <button onclick="openNewTicketModal()" class="w-full sm:w-auto px-6 py-3 rounded-2xl bg-[#C3CE1E] hover:bg-yellow-300 text-slate-950 font-extrabold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 shadow-md flex-shrink-0">
-            <span>+ Ask IT for Help (New Ticket)</span>
+          <button onclick="openNewTicketModal()" class="w-full sm:w-auto px-6 py-3 rounded-2xl bg-[#51961D] hover:bg-[#006837] text-white font-extrabold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 shadow-sm flex-shrink-0">
+            <span>+ Submit New IT Ticket</span>
           </button>
         </div>
-
-        <!-- Interactive Quick Symptom Tag Chips -->
-        <div class="pt-1 flex flex-wrap items-center gap-2 text-xs">
-          <span class="text-[11px] font-bold text-emerald-200">Quick Symptoms:</span>
-          <button onclick="quickSymptomSearch('Wi-Fi')" class="px-2.5 py-1 rounded-full bg-white/15 hover:bg-white/30 text-white font-semibold transition-all">📶 Wi-Fi Drop</button>
-          <button onclick="quickSymptomSearch('Password')" class="px-2.5 py-1 rounded-full bg-white/15 hover:bg-white/30 text-white font-semibold transition-all">🔒 Locked Out</button>
-          <button onclick="quickSymptomSearch('Printer')" class="px-2.5 py-1 rounded-full bg-white/15 hover:bg-white/30 text-white font-semibold transition-all">🖨️ Printer Jam</button>
-          <button onclick="quickSymptomSearch('Dock')" class="px-2.5 py-1 rounded-full bg-white/15 hover:bg-white/30 text-white font-semibold transition-all">🐢 Monitor / Dock</button>
-          <button onclick="quickSymptomSearch('Outlook')" class="px-2.5 py-1 rounded-full bg-white/15 hover:bg-white/30 text-white font-semibold transition-all">📧 Outlook Stuck</button>
-          <button onclick="quickSymptomSearch('Security')" class="px-2.5 py-1 rounded-full bg-white/15 hover:bg-white/30 text-white font-semibold transition-all">🎣 Suspicious Email</button>
-        </div>
       </div>
-    </div>
-
-    <!-- INTERACTIVE 3-STEP VISUAL JOURNEY -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      
-      <!-- Step 1 Card -->
-      <div id="stepCard1" onclick="activateJourneyStep(1)" 
-           class="p-4 rounded-2xl bg-[var(--phb-card)] border-2 border-emerald-500 shadow-xs cursor-pointer transition-all flex items-center gap-3.5 relative overflow-hidden group">
-        <div class="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 font-extrabold text-lg flex items-center justify-center flex-shrink-0 border border-emerald-200">
-          1️⃣
-        </div>
-        <div>
-          <div class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">Step 1</div>
-          <h4 class="font-extrabold text-sm text-[var(--phb-text)]">Tell Us What's Wrong</h4>
-          <p class="text-xs text-[var(--phb-soft)] mt-0.5">Click an emoji topic below or type in search.</p>
-        </div>
-      </div>
-
-      <!-- Step 2 Card -->
-      <div id="stepCard2" onclick="activateJourneyStep(2)" 
-           class="p-4 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] hover:border-blue-500 shadow-xs cursor-pointer transition-all flex items-center gap-3.5 relative overflow-hidden group">
-        <div class="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 font-extrabold text-lg flex items-center justify-center flex-shrink-0 border border-blue-200">
-          2️⃣
-        </div>
-        <div>
-          <div class="text-[10px] font-extrabold uppercase tracking-wider text-blue-700 dark:text-blue-400">Step 2</div>
-          <h4 class="font-extrabold text-sm text-[var(--phb-text)]">Instant Quick-Fix Check</h4>
-          <p class="text-xs text-[var(--phb-soft)] mt-0.5">Try a 3-step visual guide before sending ticket.</p>
-        </div>
-      </div>
-
-      <!-- Step 3 Card -->
-      <div id="stepCard3" onclick="activateJourneyStep(3)" 
-           class="p-4 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] hover:border-amber-500 shadow-xs cursor-pointer transition-all flex items-center gap-3.5 relative overflow-hidden group">
-        <div class="w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 font-extrabold text-lg flex items-center justify-center flex-shrink-0 border border-amber-200">
-          3️⃣
-        </div>
-        <div>
-          <div class="text-[10px] font-extrabold uppercase tracking-wider text-amber-700 dark:text-amber-400">Step 3</div>
-          <h4 class="font-extrabold text-sm text-[var(--phb-text)]">Live IT Tracking</h4>
-          <p class="text-xs text-[var(--phb-soft)] mt-0.5">Track ticket updates live in simple plain-English.</p>
-        </div>
-      </div>
-
     </div>
   </section>
 
-  <!-- ==================== INTERACTIVE QUICK HELP EMOJI GRID + INLINE PREVIEW DRAWER ==================== -->
-  <section id="sectionQuickHelp" class="space-y-4">
-    <div class="flex items-center justify-between">
+  <!-- ==================== 4. INTERACTIVE QUICK HELP GRID + INLINE PREVIEW DRAWER ==================== -->
+  <section id="sectionQuickHelp" class="p-6 rounded-3xl bg-white border border-[#D9E5C8] shadow-md space-y-5">
+    <div class="flex flex-wrap items-center justify-between gap-2">
       <div>
-        <h2 class="font-extrabold text-lg text-[var(--phb-text)] flex items-center gap-2">
-          <span>Need Help Fast? Click Your Issue</span>
-          <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">Instant Guides</span>
+        <h2 class="font-din text-xl sm:text-2xl font-extrabold uppercase text-[#006837] flex items-center gap-2">
+          <span>Quick Self-Service Troubleshooters</span>
+          <span class="font-sans text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#D4E4AA] text-[#006837]">Instant Guides</span>
         </h2>
-        <p class="text-xs text-[var(--phb-soft)]">Click an emoji topic to open the 3-step instant solution panel right below.</p>
+        <p class="text-xs text-[#4B5563]">Select an issue category below to view the 3-step visual fix immediately.</p>
       </div>
     </div>
 
-    <!-- 6 Interactive Senior-Friendly Emoji Cards with Tactile Bounce -->
+    <!-- 6 Interactive Cards -->
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-      
-      <!-- 1. Laptop / Screen -->
       <div id="quickCard-laptop" onclick="openInlineQuickFix('laptop')" 
-           class="card-hover-lift p-4 rounded-2xl bg-[var(--phb-card)] border-2 border-[var(--phb-line)] hover:border-[#007A5E] cursor-pointer text-center space-y-2 group select-none">
+           class="card-hover-lift p-4 rounded-2xl bg-[#F4F8EE] border-2 border-[#D9E5C8] hover:border-[#51961D] cursor-pointer text-center space-y-2 group select-none">
         <div class="text-3xl group-hover:scale-110 transition-transform">💻</div>
-        <h3 class="font-bold text-xs text-[var(--phb-text)]">Laptop & Display</h3>
-        <p class="text-[11px] text-[var(--phb-soft)] leading-snug">Monitor, dock, charger fix</p>
-        <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">Guide KB-0104</span>
+        <h3 class="font-bold text-xs text-[#111827]">Laptop & Display</h3>
+        <p class="text-[11px] text-[#4B5563] leading-snug">Monitor, dock, charger fix</p>
+        <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-[#D4E4AA] text-[#006837]">KB-0104</span>
       </div>
 
-      <!-- 2. Wi-Fi & VPN -->
       <div id="quickCard-wifi" onclick="openInlineQuickFix('wifi')" 
-           class="card-hover-lift p-4 rounded-2xl bg-[var(--phb-card)] border-2 border-[var(--phb-line)] hover:border-[#007A5E] cursor-pointer text-center space-y-2 group select-none">
+           class="card-hover-lift p-4 rounded-2xl bg-[#F4F8EE] border-2 border-[#D9E5C8] hover:border-[#51961D] cursor-pointer text-center space-y-2 group select-none">
         <div class="text-3xl group-hover:scale-110 transition-transform">🌐</div>
-        <h3 class="font-bold text-xs text-[var(--phb-text)]">Wi-Fi & VPN</h3>
-        <p class="text-[11px] text-[var(--phb-soft)] leading-snug">Office Wi-Fi, home VPN</p>
-        <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">Guide KB-0101</span>
+        <h3 class="font-bold text-xs text-[#111827]">Wi-Fi & VPN</h3>
+        <p class="text-[11px] text-[#4B5563] leading-snug">Office Wi-Fi, home VPN</p>
+        <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-[#D4E4AA] text-[#006837]">KB-0101</span>
       </div>
 
-      <!-- 3. Password Reset -->
       <div id="quickCard-password" onclick="openInlineQuickFix('password')" 
-           class="card-hover-lift p-4 rounded-2xl bg-[var(--phb-card)] border-2 border-[var(--phb-line)] hover:border-[#007A5E] cursor-pointer text-center space-y-2 group select-none">
+           class="card-hover-lift p-4 rounded-2xl bg-[#F4F8EE] border-2 border-[#D9E5C8] hover:border-[#51961D] cursor-pointer text-center space-y-2 group select-none">
         <div class="text-3xl group-hover:scale-110 transition-transform">🔑</div>
-        <h3 class="font-bold text-xs text-[var(--phb-text)]">Password & Access</h3>
-        <p class="text-[11px] text-[var(--phb-soft)] leading-snug">Locked account, MFA reset</p>
-        <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">Guide KB-0102</span>
+        <h3 class="font-bold text-xs text-[#111827]">Password & Access</h3>
+        <p class="text-[11px] text-[#4B5563] leading-snug">Locked account, MFA reset</p>
+        <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-[#D4E4AA] text-[#006837]">KB-0102</span>
       </div>
 
-      <!-- 4. Outlook Email -->
       <div id="quickCard-email" onclick="openInlineQuickFix('email')" 
-           class="card-hover-lift p-4 rounded-2xl bg-[var(--phb-card)] border-2 border-[var(--phb-line)] hover:border-[#007A5E] cursor-pointer text-center space-y-2 group select-none">
+           class="card-hover-lift p-4 rounded-2xl bg-[#F4F8EE] border-2 border-[#D9E5C8] hover:border-[#51961D] cursor-pointer text-center space-y-2 group select-none">
         <div class="text-3xl group-hover:scale-110 transition-transform">📧</div>
-        <h3 class="font-bold text-xs text-[var(--phb-text)]">Outlook & Mail</h3>
-        <p class="text-[11px] text-[var(--phb-soft)] leading-snug">Shared mailbox, sync</p>
-        <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">Guide KB-0103</span>
+        <h3 class="font-bold text-xs text-[#111827]">Outlook & Mail</h3>
+        <p class="text-[11px] text-[#4B5563] leading-snug">Shared mailbox, sync</p>
+        <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-[#D4E4AA] text-[#006837]">KB-0103</span>
       </div>
 
-      <!-- 5. Printer & Scanner -->
       <div id="quickCard-printer" onclick="openInlineQuickFix('printer')" 
-           class="card-hover-lift p-4 rounded-2xl bg-[var(--phb-card)] border-2 border-[var(--phb-line)] hover:border-[#007A5E] cursor-pointer text-center space-y-2 group select-none">
+           class="card-hover-lift p-4 rounded-2xl bg-[#F4F8EE] border-2 border-[#D9E5C8] hover:border-[#51961D] cursor-pointer text-center space-y-2 group select-none">
         <div class="text-3xl group-hover:scale-110 transition-transform">🖨️</div>
-        <h3 class="font-bold text-xs text-[var(--phb-text)]">Printer & Scanner</h3>
-        <p class="text-[11px] text-[var(--phb-soft)] leading-snug">Paper jam, printer offline</p>
-        <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">Guide KB-0105</span>
+        <h3 class="font-bold text-xs text-[#111827]">Printer & Scanner</h3>
+        <p class="text-[11px] text-[#4B5563] leading-snug">Paper jam, printer offline</p>
+        <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-[#D4E4AA] text-[#006837]">KB-0105</span>
       </div>
 
-      <!-- 6. Phishing & Security -->
       <div id="quickCard-security" onclick="openInlineQuickFix('security')" 
-           class="card-hover-lift p-4 rounded-2xl bg-[var(--phb-card)] border-2 border-[var(--phb-line)] hover:border-[#007A5E] cursor-pointer text-center space-y-2 group select-none">
+           class="card-hover-lift p-4 rounded-2xl bg-[#F4F8EE] border-2 border-[#D9E5C8] hover:border-[#51961D] cursor-pointer text-center space-y-2 group select-none">
         <div class="text-3xl group-hover:scale-110 transition-transform">🛡️</div>
-        <h3 class="font-bold text-xs text-[var(--phb-text)]">Report Security</h3>
-        <p class="text-[11px] text-[var(--phb-soft)] leading-snug">Suspicious email, virus</p>
-        <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">Guide KB-0106</span>
+        <h3 class="font-bold text-xs text-[#111827]">Report Security</h3>
+        <p class="text-[11px] text-[#4B5563] leading-snug">Suspicious email, virus</p>
+        <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-[#D4E4AA] text-[#006837]">KB-0106</span>
       </div>
-
     </div>
 
-    <!-- INLINE QUICK-FIX PREVIEW PANEL (Smooth Expanded Drawer) -->
-    <div id="inlineQuickFixPanel" class="hidden rounded-2xl bg-gradient-to-br from-emerald-900 via-[#005A4B] to-[#0B2545] text-white p-6 shadow-xl space-y-4 border border-emerald-500/30">
-      <div class="flex items-center justify-between border-b border-white/15 pb-3">
+    <!-- INLINE QUICK-FIX PREVIEW PANEL (SOLID DEEP GREEN + WHITE TEXT) -->
+    <div id="inlineQuickFixPanel" class="hidden rounded-2xl bg-[#006837] text-white p-6 shadow-md space-y-4 border border-[#84C441]">
+      <div class="flex items-center justify-between border-b border-white/20 pb-3">
         <div class="flex items-center gap-3">
           <span id="quickFixIcon" class="text-3xl">🌐</span>
           <div>
-            <div class="text-[10px] font-extrabold uppercase tracking-widest text-[#C3CE1E]">Instant 3-Step Visual Quick Fix</div>
-            <h3 id="quickFixTitle" class="text-base sm:text-lg font-extrabold text-white">Wi-Fi & VPN Connection Troubleshooter</h3>
+            <div class="text-[10px] font-extrabold uppercase tracking-widest text-[#D4E4AA]">Instant 3-Step Visual Quick Fix</div>
+            <h3 id="quickFixTitle" class="font-din text-lg sm:text-xl font-extrabold uppercase text-white">Wi-Fi & VPN Connection Troubleshooter</h3>
           </div>
         </div>
-        <button onclick="closeInlineQuickFix()" class="text-white/70 hover:text-white p-1 rounded-lg">
+        <button onclick="closeInlineQuickFix()" class="text-white/75 hover:text-white p-1 rounded-lg">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
       </div>
 
-      <!-- 3 Visual Step Cards -->
-      <div id="quickFixStepsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-        <!-- Rendered by JS -->
-      </div>
+      <div id="quickFixStepsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs"></div>
 
-      <!-- Action Buttons: "It Worked! 🎉" vs "Still Stuck? Send Ticket Now 🎫" -->
-      <div class="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-white/15">
-        <div class="text-xs text-emerald-100 font-semibold">
-          Did these steps solve your issue?
+      <div class="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-white/20">
+        <div class="text-xs text-[#D4E4AA] font-semibold">
+          Did these steps resolve your issue?
         </div>
         <div class="flex items-center gap-2 w-full sm:w-auto">
-          <button onclick="triggerCelebratorySuccess()" class="flex-1 sm:flex-initial px-5 py-2.5 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-extrabold text-xs transition-all shadow-md flex items-center justify-center gap-1.5">
-            <span>It Worked! 🎉</span>
+          <button onclick="triggerCelebratorySuccess()" class="flex-1 sm:flex-initial px-5 py-2.5 rounded-xl bg-[#84C441] hover:bg-[#D4E4AA] text-[#006837] font-extrabold text-xs transition-all">
+            It Worked! 🎉
           </button>
-          <button onclick="escalateQuickFixToTicket()" class="flex-1 sm:flex-initial px-5 py-2.5 rounded-xl bg-[#C3CE1E] hover:bg-yellow-300 text-slate-950 font-extrabold text-xs transition-all shadow-md flex items-center justify-center gap-1.5">
-            <span>Still Stuck? Send Ticket Now 🎫</span>
+          <button onclick="escalateQuickFixToTicket()" class="flex-1 sm:flex-initial px-5 py-2.5 rounded-xl bg-white hover:bg-[#F4F8EE] text-[#006837] font-extrabold text-xs transition-all">
+            Still Stuck? Submit Ticket 🎫
           </button>
         </div>
       </div>
     </div>
-
   </section>
 
-  <!-- ==================== TICKET QUEUE SECTION ==================== -->
-  <section id="sectionTicketQueue" class="space-y-4">
+  <!-- ==================== 5. TICKET QUEUE SECTION (SHOWN WHEN AUTHENTICATED) ==================== -->
+  <section id="sectionTicketQueue" class="hidden space-y-4">
     
-    <!-- Controls Header & Department Selector -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 p-4 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-xs">
-      
-      <!-- Title & Dept Dropdown -->
+    <!-- Controls Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 p-4 rounded-2xl bg-white border border-[#D9E5C8] shadow-md">
       <div class="flex flex-wrap items-center gap-3">
-        <h2 class="font-extrabold text-base text-[var(--phb-text)] flex items-center gap-2">
-          <span>Ticket Queue</span>
-          <span id="ticketBadgeCount" class="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">0</span>
+        <h2 class="font-din text-xl font-extrabold uppercase text-[#006837] flex items-center gap-2">
+          <span>Live Ticket Queue</span>
+          <span id="ticketBadgeCount" class="font-mono text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#D4E4AA] text-[#006837]">0</span>
         </h2>
 
-        <!-- Staff Tab Filters (Visible for Staff only) -->
-        <div id="staffTabGroup" class="hidden flex items-center p-0.5 rounded-xl bg-[var(--phb-canvas)] border border-[var(--phb-line)] text-xs font-bold">
-          <button id="tabStaffAll" onclick="setStaffTicketTab('all')" class="px-3 py-1.5 rounded-lg bg-[var(--phb-card)] text-[var(--phb-text)] shadow-xs">All Visible</button>
-          <button id="tabStaffMine" onclick="setStaffTicketTab('mine')" class="px-3 py-1.5 rounded-lg text-[var(--phb-soft)] hover:text-[var(--phb-text)]">My Tickets</button>
-          <button id="tabStaffDept" onclick="setStaffTicketTab('dept')" class="px-3 py-1.5 rounded-lg text-[var(--phb-soft)] hover:text-[var(--phb-text)]">My Department</button>
+        <!-- Staff Tab Filters -->
+        <div id="staffTabGroup" class="hidden flex items-center p-0.5 rounded-xl bg-[#F4F8EE] border border-[#D9E5C8] text-xs font-bold">
+          <button id="tabStaffAll" onclick="setStaffTicketTab('all')" class="px-3 py-1.5 rounded-lg bg-white text-[#111827] shadow-xs">All Visible</button>
+          <button id="tabStaffMine" onclick="setStaffTicketTab('mine')" class="px-3 py-1.5 rounded-lg text-[#4B5563] hover:text-[#111827]">My Tickets</button>
+          <button id="tabStaffDept" onclick="setStaffTicketTab('dept')" class="px-3 py-1.5 rounded-lg text-[#4B5563] hover:text-[#111827]">My Department</button>
         </div>
 
-        <!-- Department Filter Dropdown (Visible for HOD & IT Admin) -->
+        <!-- Department Filter Dropdown (HOD & IT Admin) -->
         <div id="deptFilterArea" class="flex items-center gap-1.5">
-          <label for="deptSelect" class="text-xs font-bold text-[var(--phb-soft)]">Dept:</label>
-          <select id="deptSelect" onchange="filterAndRenderTickets()" class="px-3 py-1.5 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-canvas)] text-xs font-bold text-[var(--phb-text)] focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+          <label for="deptSelect" class="text-xs font-bold text-[#4B5563]">Dept:</label>
+          <select id="deptSelect" onchange="filterAndRenderTickets()" class="px-3 py-1.5 rounded-xl border border-[#D9E5C8] bg-[#F4F8EE] text-xs font-bold text-[#111827] focus:ring-2 focus:ring-[#51961D] focus:outline-none">
             <option value="ALL">All Departments (Executive View)</option>
             <option value="ITD">Information Technology (ITD)</option>
             <option value="Finance">Finance & Accounting</option>
@@ -566,42 +498,31 @@ body {
         </div>
       </div>
 
-      <!-- Search, View Switcher, Accordion Controls, Export, New Button -->
+      <!-- Search, View Switcher, Export, New Ticket -->
       <div class="flex flex-wrap items-center gap-2">
-        
-        <!-- Accordion Controls for Grouped View -->
         <div id="accordionControlButtons" class="hidden flex items-center gap-1 text-xs font-bold">
-          <button onclick="toggleAllAccordions(true)" class="px-2.5 py-1.5 rounded-lg border border-[var(--phb-line)] hover:bg-[var(--phb-canvas)] text-[var(--phb-soft)]">
-            Expand All
-          </button>
-          <button onclick="toggleAllAccordions(false)" class="px-2.5 py-1.5 rounded-lg border border-[var(--phb-line)] hover:bg-[var(--phb-canvas)] text-[var(--phb-soft)]">
-            Collapse All
-          </button>
-          <button onclick="toggleHideEmptyDepts()" id="btnHideEmpty" class="px-2.5 py-1.5 rounded-lg border border-[var(--phb-line)] hover:bg-[var(--phb-canvas)] text-emerald-700">
-            Hide Empty (0)
-          </button>
+          <button onclick="toggleAllAccordions(true)" class="px-2.5 py-1.5 rounded-lg border border-[#D9E5C8] hover:bg-[#F4F8EE] text-[#4B5563]">Expand All</button>
+          <button onclick="toggleAllAccordions(false)" class="px-2.5 py-1.5 rounded-lg border border-[#D9E5C8] hover:bg-[#F4F8EE] text-[#4B5563]">Collapse All</button>
+          <button onclick="toggleHideEmptyDepts()" id="btnHideEmpty" class="px-2.5 py-1.5 rounded-lg border border-[#D9E5C8] hover:bg-[#F4F8EE] text-[#006837]">Hide Empty (0)</button>
         </div>
 
-        <!-- View Switcher (List vs Grouped Accordion) -->
-        <div id="viewToggleGroup" class="flex items-center p-0.5 rounded-xl bg-[var(--phb-canvas)] border border-[var(--phb-line)] text-xs font-bold">
-          <button id="btnViewList" onclick="switchTicketView('list')" class="px-3 py-1.5 rounded-lg bg-[var(--phb-card)] text-[var(--phb-text)] shadow-xs">List View</button>
-          <button id="btnViewGrouped" onclick="switchTicketView('grouped')" class="px-3 py-1.5 rounded-lg text-[var(--phb-soft)] hover:text-[var(--phb-text)]">Grouped View</button>
+        <div id="viewToggleGroup" class="flex items-center p-0.5 rounded-xl bg-[#F4F8EE] border border-[#D9E5C8] text-xs font-bold">
+          <button id="btnViewList" onclick="switchTicketView('list')" class="px-3 py-1.5 rounded-lg bg-white text-[#111827] shadow-xs">List View</button>
+          <button id="btnViewGrouped" onclick="switchTicketView('grouped')" class="px-3 py-1.5 rounded-lg text-[#4B5563] hover:text-[#111827]">Grouped View</button>
         </div>
 
-        <!-- Search Input -->
         <div class="relative">
           <input id="ticketSearchInput" type="text" oninput="filterAndRenderTickets()" placeholder="Search tickets..." 
-                 class="w-36 sm:w-44 pl-8 pr-2.5 py-1.5 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-canvas)] text-xs text-[var(--phb-text)] focus:outline-none focus:ring-2 focus:ring-emerald-500">
-          <svg class="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-[var(--phb-soft)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                 class="w-36 sm:w-44 pl-8 pr-2.5 py-1.5 rounded-xl border border-[#D9E5C8] bg-[#F4F8EE] text-xs text-[#111827] focus:outline-none focus:ring-2 focus:ring-[#51961D]">
+          <svg class="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-[#51961D]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
         </div>
 
-        <!-- Exports (HOD / IT Only) -->
         <div id="exportBtnArea" class="hidden flex items-center gap-1">
-          <button onclick="exportToPDF()" title="PDF Export" class="px-2.5 py-1.5 rounded-lg border border-red-200 bg-red-50 text-red-700 dark:bg-red-950/40 dark:border-red-900 dark:text-red-300 text-xs font-bold hover:bg-red-100">PDF</button>
-          <button onclick="exportToExcel()" title="Excel Export" class="px-2.5 py-1.5 rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:border-emerald-900 dark:text-emerald-300 text-xs font-bold hover:bg-emerald-100">Excel</button>
+          <button onclick="exportToPDF()" class="px-2.5 py-1.5 rounded-lg border border-[#84C441] bg-[#F4F8EE] text-[#006837] text-xs font-bold hover:bg-[#D4E4AA]">PDF</button>
+          <button onclick="exportToExcel()" class="px-2.5 py-1.5 rounded-lg border border-[#84C441] bg-[#D4E4AA] text-[#006837] text-xs font-bold hover:bg-[#84C441] hover:text-white">Excel</button>
         </div>
 
-        <button onclick="openNewTicketModal()" class="px-3.5 py-1.5 rounded-xl bg-[#007A5E] hover:bg-[#005A4B] text-white text-xs font-extrabold shadow-xs transition-colors flex items-center gap-1">
+        <button onclick="openNewTicketModal()" class="px-3.5 py-1.5 rounded-xl bg-[#51961D] hover:bg-[#006837] text-white text-xs font-extrabold shadow-xs transition-colors flex items-center gap-1">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
           <span>New Ticket</span>
         </button>
@@ -609,152 +530,121 @@ body {
     </div>
 
     <!-- LIST VIEW TABLE -->
-    <div id="ticketViewList" class="rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-xs overflow-hidden">
+    <div id="ticketViewList" class="rounded-2xl bg-white border border-[#D9E5C8] shadow-md overflow-hidden">
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse text-xs">
           <thead>
-            <tr class="bg-[var(--phb-canvas)] border-b border-[var(--phb-line)] text-[var(--phb-soft)] font-bold uppercase tracking-wider text-[10px]">
-              <th class="py-3 px-4">Ticket ID</th>
-              <th class="py-3 px-4">Subject & Requester</th>
-              <th class="py-3 px-4">Department</th>
-              <th class="py-3 px-4">Category</th>
-              <th class="py-3 px-4">Priority</th>
-              <th class="py-3 px-4">Status</th>
-              <th class="py-3 px-4">Assignee</th>
-              <th class="py-3 px-4 text-right">Action</th>
+            <tr class="bg-[#006837] text-white font-bold uppercase tracking-wider text-[10px]">
+              <th class="py-3.5 px-4">Ticket ID</th>
+              <th class="py-3.5 px-4">Subject & Requester</th>
+              <th class="py-3.5 px-4">Department</th>
+              <th class="py-3.5 px-4">Category</th>
+              <th class="py-3.5 px-4">Priority</th>
+              <th class="py-3.5 px-4">Status</th>
+              <th class="py-3.5 px-4">Assignee</th>
+              <th class="py-3.5 px-4 text-right">Action</th>
             </tr>
           </thead>
-          <tbody id="ticketTableBody" class="divide-y divide-[var(--phb-line)]">
-            <!-- Rendered by JS -->
-          </tbody>
+          <tbody id="ticketTableBody" class="divide-y divide-[#D9E5C8]"></tbody>
         </table>
       </div>
     </div>
 
-    <!-- CLEAN ACCORDION GROUPED VIEW BY DEPARTMENT -->
-    <div id="ticketViewGrouped" class="hidden space-y-3">
-      <!-- Rendered by JS -->
-    </div>
+    <!-- GROUPED ACCORDION VIEW -->
+    <div id="ticketViewGrouped" class="hidden space-y-3"></div>
   </section>
 
-  <!-- ==================== KNOWLEDGE BASE SECTION ==================== -->
-  <section id="sectionKB" class="space-y-4">
-    <div class="flex items-center justify-between">
+  <!-- ==================== 6. KNOWLEDGE BASE SECTION ==================== -->
+  <section id="sectionKB" class="p-6 rounded-3xl bg-white border border-[#D9E5C8] shadow-md space-y-4">
+    <div class="flex flex-wrap items-center justify-between gap-2">
       <div>
-        <h2 class="font-extrabold text-base text-[var(--phb-text)]">Self-Service Knowledge Base</h2>
-        <p class="text-xs text-[var(--phb-soft)]">Verified technical resolution guides maintained by PHB IT Division</p>
+        <h2 class="font-din text-xl sm:text-2xl font-extrabold uppercase text-[#006837]">Self-Service Knowledge Base</h2>
+        <p class="text-xs text-[#4B5563]">Verified technical resolution guides maintained by PHB IT Division</p>
       </div>
+      <span class="text-xs font-bold text-[#51961D]">6 Standard Operating Guides</span>
     </div>
 
-    <!-- KB Cards Grid -->
-    <div id="kbGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      <!-- Rendered by JS -->
-    </div>
+    <div id="kbGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
   </section>
 
 </main>
 
-<!-- ==================== CORPORATE FOOTER ==================== -->
-<footer class="mt-auto bg-[var(--phb-card)] border-t border-[var(--phb-line)] py-6 text-xs text-[var(--phb-soft)]">
+<!-- ==================== CORPORATE FOOTER (MATCHING GREEN BAR + WHITE TEXT) ==================== -->
+<footer class="mt-auto phb-header-footer-bar text-white py-5 text-xs">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
     <div class="flex items-center gap-3">
-      <img src="https://www.phb.com.my/clients/asset_E5316276-9983-47F1-A6C2-76D0C7985656/contentms/img/logo/logo-phb.svg" 
-           alt="PHB" class="h-5 w-auto opacity-75">
-      <span>Pelaburan Hartanah Berhad · Controlled by Power Automate</span>
+      <div class="bg-white px-2 py-0.5 rounded-md">
+        <img src="https://www.phb.com.my/clients/asset_E5316276-9983-47F1-A6C2-76D0C7985656/contentms/img/logo/logo-phb.svg" 
+             alt="PHB" class="h-4 w-auto">
+      </div>
+      <span class="text-white/95 font-medium">Pelaburan Hartanah Berhad · Controlled by Power Automate</span>
     </div>
-    <div class="font-extrabold tracking-wider uppercase text-[11px] text-emerald-700 dark:text-emerald-400">
+    <div class="font-din text-sm font-extrabold tracking-widest uppercase text-white">
       WE ARE PHB — PROFESSIONAL | HARMONIOUS | BOLD
     </div>
   </div>
 </footer>
 
-<!-- ==================== MODALS & SLIDE-OVER DRAWERS ==================== -->
+<!-- ==================== MODALS & DRAWERS ==================== -->
 
-<!-- SYSTEM STATUS DETAILS MODAL -->
-<div id="modalSystemStatus" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-  <div class="max-w-md w-full bg-[var(--phb-card)] rounded-2xl shadow-2xl border border-[var(--phb-line)] overflow-hidden">
-    <div class="px-5 py-4 border-b border-[var(--phb-line)] bg-[var(--phb-canvas)] flex items-center justify-between">
-      <h3 id="sysStatusTitle" class="font-extrabold text-sm text-[var(--phb-text)]">System Status Details</h3>
-      <button onclick="closeModal('modalSystemStatus')" class="text-[var(--phb-soft)] hover:text-red-500">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-      </button>
-    </div>
-    <div class="p-5 space-y-3 text-xs">
-      <div id="sysStatusBadge" class="font-bold text-xs"></div>
-      <p id="sysStatusDesc" class="text-[var(--phb-soft)] leading-relaxed"></p>
-      <div class="p-3.5 rounded-xl bg-[var(--phb-canvas)] border border-[var(--phb-line)] space-y-1">
-        <div class="font-bold text-[var(--phb-text)]">Scheduled Maintenance Window</div>
-        <div class="text-[11px] text-[var(--phb-soft)]">Sundays, 02:00 AM – 04:00 AM MYT (Routine backup & patch update)</div>
-      </div>
-      <div class="pt-2 flex justify-end">
-        <button onclick="closeModal('modalSystemStatus')" class="px-4 py-2 rounded-xl bg-[#007A5E] text-white font-bold">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- TICKET DETAIL & ACTION SLIDE-OVER DRAWER -->
+<!-- TICKET DETAIL SLIDE-OVER DRAWER -->
 <div id="drawerTicket" class="fixed inset-0 z-50 hidden">
-  <div class="drawer-overlay absolute inset-0 bg-slate-900/50 backdrop-blur-xs" onclick="closeDrawer('drawerTicket')"></div>
-  <div class="drawer-content absolute right-0 top-0 bottom-0 w-full max-w-lg bg-[var(--phb-card)] border-l border-[var(--phb-line)] shadow-2xl flex flex-col overflow-hidden">
-    
-    <div class="p-5 border-b border-[var(--phb-line)] bg-[var(--phb-canvas)] flex items-center justify-between">
+  <div class="drawer-overlay absolute inset-0 bg-black/50 backdrop-blur-xs" onclick="closeDrawer('drawerTicket')"></div>
+  <div class="drawer-content absolute right-0 top-0 bottom-0 w-full max-w-lg bg-white border-l border-[#D9E5C8] shadow-2xl flex flex-col overflow-hidden">
+    <div class="p-5 phb-header-footer-bar text-white flex items-center justify-between">
       <div>
-        <span id="drwTicketID" class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">TK-0000</span>
-        <h3 id="drwSubject" class="font-bold text-sm text-[var(--phb-text)] mt-1">Ticket Subject</h3>
+        <span id="drwTicketID" class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-white text-[#006837]">TK-0000</span>
+        <h3 id="drwSubject" class="font-bold text-sm text-white mt-1.5">Ticket Subject</h3>
       </div>
-      <button onclick="closeDrawer('drawerTicket')" class="text-[var(--phb-soft)] hover:text-red-500 p-1">
+      <button onclick="closeDrawer('drawerTicket')" class="text-white/80 hover:text-white p-1">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
 
     <div class="p-5 overflow-y-auto flex-1 space-y-4 text-xs">
-      
-      <!-- Metadata Grid -->
-      <div class="grid grid-cols-2 gap-3 p-3.5 rounded-xl bg-[var(--phb-canvas)] border border-[var(--phb-line)]">
+      <div class="grid grid-cols-2 gap-3 p-3.5 rounded-xl bg-[#F4F8EE] border border-[#D9E5C8]">
         <div>
-          <span class="text-[var(--phb-soft)] font-semibold block">Requester</span>
-          <span id="drwRequester" class="font-bold text-[var(--phb-text)]">Name</span>
+          <span class="text-[#4B5563] font-semibold block">Requester</span>
+          <span id="drwRequester" class="font-bold text-[#111827]">Name</span>
         </div>
         <div>
-          <span class="text-[var(--phb-soft)] font-semibold block">Department</span>
-          <span id="drwDepartment" class="font-bold text-[var(--phb-text)]">Dept</span>
+          <span class="text-[#4B5563] font-semibold block">Department</span>
+          <span id="drwDepartment" class="font-bold text-[#111827]">Dept</span>
         </div>
         <div>
-          <span class="text-[var(--phb-soft)] font-semibold block">Category</span>
-          <span id="drwCategory" class="font-bold text-[var(--phb-text)]">Cat</span>
+          <span class="text-[#4B5563] font-semibold block">Category</span>
+          <span id="drwCategory" class="font-bold text-[#111827]">Cat</span>
         </div>
         <div>
-          <span class="text-[var(--phb-soft)] font-semibold block">Priority</span>
-          <span id="drwPriority" class="font-bold text-[var(--phb-text)]">Priority</span>
+          <span class="text-[#4B5563] font-semibold block">Priority</span>
+          <span id="drwPriority" class="font-bold text-[#111827]">Priority</span>
         </div>
       </div>
 
-      <!-- Description -->
       <div>
-        <span class="font-bold text-[var(--phb-soft)] block mb-1">Issue Details / Steps to Reproduce</span>
-        <div id="drwDetails" class="p-3.5 rounded-xl bg-[var(--phb-canvas)] border border-[var(--phb-line)] text-[var(--phb-text)] whitespace-pre-wrap leading-relaxed">
+        <span class="font-bold text-[#4B5563] block mb-1">Issue Details / Steps to Reproduce</span>
+        <div id="drwDetails" class="p-3.5 rounded-xl bg-[#F4F8EE] border border-[#D9E5C8] text-[#111827] whitespace-pre-wrap leading-relaxed">
           Details content...
         </div>
       </div>
 
       <!-- Action Panel for HOD / IT Admin -->
-      <div id="drwActionPanel" class="p-4 rounded-2xl border border-emerald-200 bg-emerald-50/50 dark:bg-emerald-950/20 dark:border-emerald-900 space-y-3">
-        <h4 class="font-extrabold text-xs uppercase tracking-wider text-emerald-800 dark:text-emerald-300">Power Automate Action & Management</h4>
+      <div id="drwActionPanel" class="p-4 rounded-2xl border border-[#84C441] bg-[#F4F8EE] space-y-3">
+        <h4 class="font-extrabold text-xs uppercase tracking-wider text-[#006837]">Power Automate Action & Management</h4>
         
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block font-bold text-[var(--phb-soft)] mb-1">Update Status</label>
-            <select id="drwStatusSelect" class="w-full px-2.5 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-card)] font-bold text-[var(--phb-text)]">
+            <label class="block font-bold text-[#4B5563] mb-1">Update Status</label>
+            <select id="drwStatusSelect" class="w-full px-2.5 py-2 rounded-xl border border-[#D9E5C8] bg-white font-bold text-[#111827]">
               <option value="Open">🟡 Waiting for IT (Open)</option>
-              <option value="In Progress">🔵 IT Working On It</option>
+              <option value="In Progress">🟢 IT Working On It</option>
               <option value="Pending">🔴 Action Needed (Pending)</option>
-              <option value="Resolved">🟢 Fixed / Resolved</option>
+              <option value="Resolved">✅ Fixed / Resolved</option>
             </select>
           </div>
           <div>
-            <label class="block font-bold text-[var(--phb-soft)] mb-1">Assign Officer</label>
-            <select id="drwAssigneeSelect" class="w-full px-2.5 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-card)] font-bold text-[var(--phb-text)]">
+            <label class="block font-bold text-[#4B5563] mb-1">Assign Officer</label>
+            <select id="drwAssigneeSelect" class="w-full px-2.5 py-2 rounded-xl border border-[#D9E5C8] bg-white font-bold text-[#111827]">
               <option value="Haq (ITD)">Haq (ITD)</option>
               <option value="Fahmi (ITD)">Fahmi (ITD)</option>
               <option value="Nur Haliza (HOD)">Nur Haliza (HOD)</option>
@@ -764,11 +654,11 @@ body {
         </div>
 
         <div>
-          <label class="block font-bold text-[var(--phb-soft)] mb-1">Resolution Remarks / Notes</label>
-          <textarea id="drwRemarks" rows="2" placeholder="Add resolution details or escalation notes..." class="w-full px-2.5 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-card)] text-[var(--phb-text)]"></textarea>
+          <label class="block font-bold text-[#4B5563] mb-1">Resolution Remarks / Notes</label>
+          <textarea id="drwRemarks" rows="2" placeholder="Add resolution details or escalation notes..." class="w-full px-2.5 py-2 rounded-xl border border-[#D9E5C8] bg-white text-[#111827]"></textarea>
         </div>
 
-        <button onclick="saveTicketChangesFromDrawer()" class="w-full py-2.5 rounded-xl bg-[#007A5E] hover:bg-[#005A4B] text-white font-extrabold text-xs transition-colors shadow-xs">
+        <button onclick="saveTicketChangesFromDrawer()" class="w-full py-2.5 rounded-xl bg-[#51961D] hover:bg-[#006837] text-white font-extrabold text-xs transition-colors shadow-xs">
           Save & Trigger Power Automate Flow
         </button>
       </div>
@@ -777,11 +667,11 @@ body {
 </div>
 
 <!-- SUBMIT TICKET MODAL -->
-<div id="modalNewTicket" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-  <div class="max-w-lg w-full bg-[var(--phb-card)] rounded-2xl shadow-2xl border border-[var(--phb-line)] overflow-hidden">
-    <div class="px-5 py-4 border-b border-[var(--phb-line)] bg-[var(--phb-canvas)] flex items-center justify-between">
-      <h3 class="font-extrabold text-sm text-[var(--phb-text)]">Submit Support Request</h3>
-      <button onclick="closeModal('modalNewTicket')" class="text-[var(--phb-soft)] hover:text-red-500">
+<div id="modalNewTicket" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
+  <div class="max-w-lg w-full bg-white rounded-2xl shadow-2xl border border-[#D9E5C8] overflow-hidden">
+    <div class="px-5 py-4 phb-header-footer-bar text-white flex items-center justify-between">
+      <h3 class="font-din text-lg font-extrabold uppercase tracking-wide">Submit Support Request</h3>
+      <button onclick="closeModal('modalNewTicket')" class="text-white/80 hover:text-white">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
@@ -789,19 +679,19 @@ body {
     <form onsubmit="handleNewTicketSubmit(event)" class="p-5 space-y-3.5 text-xs">
       <div class="grid grid-cols-2 gap-3">
         <div>
-          <label class="block font-bold text-[var(--phb-soft)] mb-1">Requester Name</label>
-          <input id="formReqName" type="text" required class="w-full px-3 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-canvas)] text-[var(--phb-text)]">
+          <label class="block font-bold text-[#4B5563] mb-1">Requester Name</label>
+          <input id="formReqName" type="text" required class="w-full px-3 py-2 rounded-xl border border-[#D9E5C8] bg-[#F4F8EE] text-[#111827]">
         </div>
         <div>
-          <label class="block font-bold text-[var(--phb-soft)] mb-1">Email</label>
-          <input id="formReqEmail" type="email" required class="w-full px-3 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-canvas)] text-[var(--phb-text)]">
+          <label class="block font-bold text-[#4B5563] mb-1">Email</label>
+          <input id="formReqEmail" type="email" required class="w-full px-3 py-2 rounded-xl border border-[#D9E5C8] bg-[#F4F8EE] text-[#111827]">
         </div>
       </div>
 
       <div class="grid grid-cols-3 gap-3">
         <div>
-          <label class="block font-bold text-[var(--phb-soft)] mb-1">Department</label>
-          <select id="formDept" required class="w-full px-2.5 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-canvas)] text-[var(--phb-text)]">
+          <label class="block font-bold text-[#4B5563] mb-1">Department</label>
+          <select id="formDept" required class="w-full px-2.5 py-2 rounded-xl border border-[#D9E5C8] bg-[#F4F8EE] text-[#111827]">
             <option value="ITD">ITD</option>
             <option value="Finance">Finance</option>
             <option value="Human Resources">HR</option>
@@ -812,8 +702,8 @@ body {
           </select>
         </div>
         <div>
-          <label class="block font-bold text-[var(--phb-soft)] mb-1">Category</label>
-          <select id="formCategory" required class="w-full px-2.5 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-canvas)] text-[var(--phb-text)]">
+          <label class="block font-bold text-[#4B5563] mb-1">Category</label>
+          <select id="formCategory" required class="w-full px-2.5 py-2 rounded-xl border border-[#D9E5C8] bg-[#F4F8EE] text-[#111827]">
             <option value="Hardware">Hardware</option>
             <option value="Software">Software</option>
             <option value="Network">Network</option>
@@ -823,8 +713,8 @@ body {
           </select>
         </div>
         <div>
-          <label class="block font-bold text-[var(--phb-soft)] mb-1">Priority</label>
-          <select id="formPriority" required class="w-full px-2.5 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-canvas)] text-[var(--phb-text)]">
+          <label class="block font-bold text-[#4B5563] mb-1">Priority</label>
+          <select id="formPriority" required class="w-full px-2.5 py-2 rounded-xl border border-[#D9E5C8] bg-[#F4F8EE] text-[#111827]">
             <option value="Low">Low</option>
             <option value="Medium" selected>Medium</option>
             <option value="High">High</option>
@@ -834,45 +724,45 @@ body {
       </div>
 
       <div>
-        <label class="block font-bold text-[var(--phb-soft)] mb-1">Subject</label>
-        <input id="formSubject" type="text" required placeholder="Short summary of your issue" class="w-full px-3 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-canvas)] text-[var(--phb-text)]">
+        <label class="block font-bold text-[#4B5563] mb-1">Subject</label>
+        <input id="formSubject" type="text" required placeholder="Short summary of your issue" class="w-full px-3 py-2 rounded-xl border border-[#D9E5C8] bg-[#F4F8EE] text-[#111827]">
       </div>
 
       <div>
-        <label class="block font-bold text-[var(--phb-soft)] mb-1">Details</label>
-        <textarea id="formDetail" rows="3" required placeholder="Describe error messages or steps to reproduce..." class="w-full px-3 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-canvas)] text-[var(--phb-text)]"></textarea>
+        <label class="block font-bold text-[#4B5563] mb-1">Details</label>
+        <textarea id="formDetail" rows="3" required placeholder="Describe error messages or steps to reproduce..." class="w-full px-3 py-2 rounded-xl border border-[#D9E5C8] bg-[#F4F8EE] text-[#111827]"></textarea>
       </div>
 
-      <div class="flex items-center justify-end gap-2 pt-3 border-t border-[var(--phb-line)]">
-        <button type="button" onclick="closeModal('modalNewTicket')" class="px-3.5 py-2 rounded-xl border border-[var(--phb-line)] font-bold text-[var(--phb-soft)]">Cancel</button>
-        <button type="submit" class="px-4 py-2 rounded-xl bg-[#007A5E] hover:bg-[#005A4B] text-white font-extrabold shadow-xs">Submit to Power Automate</button>
+      <div class="flex items-center justify-end gap-2 pt-3 border-t border-[#D9E5C8]">
+        <button type="button" onclick="closeModal('modalNewTicket')" class="px-3.5 py-2 rounded-xl border border-[#D9E5C8] font-bold text-[#4B5563]">Cancel</button>
+        <button type="submit" class="px-4 py-2 rounded-xl bg-[#51961D] hover:bg-[#006837] text-white font-extrabold shadow-xs">Submit to Power Automate</button>
       </div>
     </form>
   </div>
 </div>
 
 <!-- ARTICLE MODAL -->
-<div id="modalArticle" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-  <div class="max-w-lg w-full bg-[var(--phb-card)] rounded-2xl shadow-2xl border border-[var(--phb-line)] overflow-hidden">
-    <div class="px-5 py-4 border-b border-[var(--phb-line)] bg-[var(--phb-canvas)] flex items-center justify-between">
+<div id="modalArticle" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
+  <div class="max-w-lg w-full bg-white rounded-2xl shadow-2xl border border-[#D9E5C8] overflow-hidden">
+    <div class="px-5 py-4 phb-header-footer-bar text-white flex items-center justify-between">
       <div class="flex items-center gap-2">
-        <span id="artId" class="font-mono text-xs font-bold text-emerald-700">KB-0000</span>
-        <span id="artCat" class="text-xs font-bold text-[var(--phb-soft)]">Cat</span>
+        <span id="artId" class="font-mono text-xs font-bold text-[#D4E4AA]">KB-0000</span>
+        <span id="artCat" class="text-xs font-bold text-white">Cat</span>
       </div>
-      <button onclick="closeModal('modalArticle')" class="text-[var(--phb-soft)] hover:text-red-500">
+      <button onclick="closeModal('modalArticle')" class="text-white/80 hover:text-white">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
     
     <div class="p-5 space-y-3 text-xs">
-      <h3 id="artTitle" class="text-base font-extrabold text-[var(--phb-text)]">Title</h3>
-      <p id="artDesc" class="text-[var(--phb-soft)] leading-relaxed"></p>
-      <div class="p-4 rounded-2xl bg-[var(--phb-canvas)] border border-[var(--phb-line)] space-y-2">
-        <span class="font-extrabold text-emerald-700 dark:text-emerald-400 block uppercase text-[10px] tracking-wider">Troubleshooting Steps</span>
-        <ol id="artSteps" class="list-decimal pl-4 space-y-1.5 text-[var(--phb-text)] leading-relaxed font-semibold"></ol>
+      <h3 id="artTitle" class="text-base font-extrabold text-[#111827]">Title</h3>
+      <p id="artDesc" class="text-[#4B5563] leading-relaxed"></p>
+      <div class="p-4 rounded-2xl bg-[#F4F8EE] border border-[#D9E5C8] space-y-2">
+        <span class="font-extrabold text-[#006837] block uppercase text-[10px] tracking-wider">Troubleshooting Steps</span>
+        <ol id="artSteps" class="list-decimal pl-4 space-y-1.5 text-[#111827] leading-relaxed font-semibold"></ol>
       </div>
       <div class="pt-2 flex justify-end">
-        <button onclick="openNewTicketModal();closeModal('modalArticle');" class="px-4 py-2 rounded-xl bg-emerald-50 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-800 font-bold">
+        <button onclick="closeModal('modalArticle'); openNewTicketModal();" class="px-4 py-2 rounded-xl bg-[#51961D] hover:bg-[#006837] text-white font-bold">
           Still Stuck? Send Ticket to IT →
         </button>
       </div>
@@ -880,43 +770,43 @@ body {
   </div>
 </div>
 
-<!-- POWER AUTOMATE CONFIGURATION DRAWER / MODAL -->
-<div id="modalPAConfig" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-  <div class="max-w-lg w-full bg-[var(--phb-card)] rounded-2xl shadow-2xl border border-[var(--phb-line)] overflow-hidden">
-    <div class="px-5 py-4 border-b border-[var(--phb-line)] bg-[var(--phb-canvas)] flex items-center justify-between">
-      <h3 class="font-extrabold text-sm text-[var(--phb-text)]">Power Automate HTTP Flows Setup</h3>
-      <button onclick="closeModal('modalPAConfig')" class="text-[var(--phb-soft)] hover:text-red-500">
+<!-- POWER AUTOMATE CONFIGURATION MODAL -->
+<div id="modalPAConfig" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
+  <div class="max-w-lg w-full bg-white rounded-2xl shadow-2xl border border-[#D9E5C8] overflow-hidden">
+    <div class="px-5 py-4 phb-header-footer-bar text-white flex items-center justify-between">
+      <h3 class="font-din text-lg font-extrabold uppercase tracking-wide">Power Automate HTTP Flows Setup</h3>
+      <button onclick="closeModal('modalPAConfig')" class="text-white/80 hover:text-white">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
     
     <div class="p-5 space-y-3.5 text-xs">
-      <p class="text-[var(--phb-soft)]">Enter your HTTP trigger flow URLs from Power Automate to sync SharePoint list items live.</p>
+      <p class="text-[#4B5563]">HTTP trigger flow endpoints connected to SharePoint <code class="font-mono font-bold text-[#006837]">ORBITTickets</code> and <code class="font-mono font-bold text-[#006837]">ORBITUsers</code>.</p>
 
       <div>
-        <label class="block font-bold text-[var(--phb-soft)] mb-1">1. ORBIT – Load Tickets Flow Endpoint</label>
-        <input id="cfgLoadUrl" type="url" placeholder="https://prod-xx.southeastasia.logic.azure.com:443/workflows/..." class="w-full px-3 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-canvas)] font-mono text-[10px]">
+        <label class="block font-bold text-[#4B5563] mb-1">1. ORBIT – Load Tickets Flow Endpoint</label>
+        <input id="cfgLoadUrl" type="url" class="w-full px-3 py-2 rounded-xl border border-[#D9E5C8] bg-[#F4F8EE] font-mono text-[10px]">
       </div>
       <div>
-        <label class="block font-bold text-[var(--phb-soft)] mb-1">2. ORBIT – Save Ticket Flow Endpoint</label>
-        <input id="cfgSaveUrl" type="url" placeholder="https://prod-xx.southeastasia.logic.azure.com:443/workflows/..." class="w-full px-3 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-canvas)] font-mono text-[10px]">
+        <label class="block font-bold text-[#4B5563] mb-1">2. ORBIT – Save Ticket Flow Endpoint</label>
+        <input id="cfgSaveUrl" type="url" class="w-full px-3 py-2 rounded-xl border border-[#D9E5C8] bg-[#F4F8EE] font-mono text-[10px]">
       </div>
       <div>
-        <label class="block font-bold text-[var(--phb-soft)] mb-1">3. ORBIT – Notify Flow Endpoint</label>
-        <input id="cfgNotifyUrl" type="url" placeholder="https://prod-xx.southeastasia.logic.azure.com:443/workflows/..." class="w-full px-3 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-canvas)] font-mono text-[10px]">
+        <label class="block font-bold text-[#4B5563] mb-1">3. ORBIT – Notify Flow Endpoint</label>
+        <input id="cfgNotifyUrl" type="url" class="w-full px-3 py-2 rounded-xl border border-[#D9E5C8] bg-[#F4F8EE] font-mono text-[10px]">
       </div>
       <div>
-        <label class="block font-bold text-[var(--phb-soft)] mb-1">4. ORBIT – Login & Track User Endpoint</label>
-        <input id="cfgLoginTrackUrl" type="url" placeholder="https://prod-xx.southeastasia.logic.azure.com:443/workflows/..." class="w-full px-3 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-canvas)] font-mono text-[10px]">
+        <label class="block font-bold text-[#4B5563] mb-1">4. ORBIT – Login & Track User Endpoint</label>
+        <input id="cfgLoginTrackUrl" type="url" class="w-full px-3 py-2 rounded-xl border border-[#D9E5C8] bg-[#F4F8EE] font-mono text-[10px]">
       </div>
 
-      <div class="flex items-center justify-between pt-3 border-t border-[var(--phb-line)]">
-        <button onclick="testPAConnection()" class="px-3.5 py-2 rounded-xl border border-emerald-300 bg-emerald-50 text-emerald-800 dark:bg-emerald-950 dark:border-emerald-800 dark:text-emerald-200 font-extrabold">
-          Test Connection
+      <div class="flex items-center justify-between pt-3 border-t border-[#D9E5C8]">
+        <button onclick="resetDefaultPAConfig()" class="px-3 py-2 rounded-xl border border-[#D9E5C8] text-[#4B5563] hover:text-[#111827] font-bold">
+          Restore Default URLs
         </button>
         <div class="flex items-center gap-2">
-          <button onclick="closeModal('modalPAConfig')" class="px-3.5 py-2 rounded-xl border border-[var(--phb-line)] font-bold text-[var(--phb-soft)]">Cancel</button>
-          <button onclick="savePAConfig()" class="px-4 py-2 rounded-xl bg-[#007A5E] hover:bg-[#005A4B] text-white font-extrabold shadow-xs">Save & Load</button>
+          <button onclick="closeModal('modalPAConfig')" class="px-3.5 py-2 rounded-xl border border-[#D9E5C8] font-bold text-[#4B5563]">Cancel</button>
+          <button onclick="savePAConfig()" class="px-4 py-2 rounded-xl bg-[#51961D] hover:bg-[#006837] text-white font-extrabold shadow-xs">Save & Sync</button>
         </div>
       </div>
     </div>
@@ -928,35 +818,36 @@ body {
 
 <!-- ==================== JAVASCRIPT LOGIC ==================== -->
 <script>
-/* ==================== 1. POWER AUTOMATE & APP CONFIGURATION ==================== */
-const PA_CONFIG = {
+/* ==================== 1. DEFAULT POWER AUTOMATE & MSAL CONFIGURATION ==================== */
+const DEFAULT_PA_CONFIG = {
   loadTicketsUrl: 'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/26/workflows/eaf49b60f83e47d48d86407219ecb944/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=9k6JGlDLpEgdR2BwpTi5PqgKyM-NL7E_S80pIrO4Cmk',
   saveTicketUrl: 'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/01/workflows/eb61e2c74bb64ddc829c58e048b1e054/triggers/manual/paths/invoke?api-version=1',
   notifyUrl: 'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/26/workflows/2ece387695584e40b7ab291f83fd67b8/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=U-lpNp1C-dR54r9R_USBFFapChNomovLGOQNU16xrPg',
   loginTrackUrl: 'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/18/workflows/11feb1f6a91d48328920d2bc31c3eced/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=6AzxL8WoQH6vlCFGbptMXOUZeZ-BiY9H7HO2xC9apQU'
 };
 
+const PA_CONFIG = { ...DEFAULT_PA_CONFIG };
 
-// Demo Users mapped to SharePoint ORBITUsers schema
-// const DEMO_USERS = [
-//   { id: 'u1', name: 'Nur Haliza Binti Haron', email: 'nurhaliza@phb.com.my', role: 'hod', roleTitle: 'Head of IT (HOD)', department: 'ITD' },
-//   { id: 'u2', name: 'Eliza Yazmin', email: 'elizayazmin@phb.com.my', role: 'hod', roleTitle: 'Executive Director (HOD)', department: 'Executive' },
-//   { id: 'u3', name: 'Haq', email: 'haq@phb.com.my', role: 'it', roleTitle: 'IT Support Admin', department: 'ITD' },
-//   { id: 'u4', name: 'Fahmi', email: 'fahmi@phb.com.my', role: 'it', roleTitle: 'IT Officer', department: 'ITD' },
-//   { id: 'u5', name: 'Siti Rahayu', email: 'siti.rahayu@phb.com.my', role: 'user', roleTitle: 'Senior Executive', department: 'Finance' },
-//   { id: 'u6', name: 'Amir Hassan', email: 'amir.hassan@phb.com.my', role: 'user', roleTitle: 'Property Officer', department: 'Property Management' }
-// ];
+/* Use current deployed origin/path when valid, fallback to GitHub Pages redirect URI */
+const CURRENT_REDIRECT_URI = window.location.origin.startsWith('http')
+  ? (window.location.origin + window.location.pathname)
+  : 'https://poduxiptv2021-hash.github.io/ORBIT/';
 
-// Sample preview tickets used ONLY when user clicks "Preview Sample Data" button
-const SAMPLE_TICKETS = [
-  { TicketID: 'TK-1001', Subject: 'VPN connection drops during peak office hours', Department: 'Finance', Category: 'Network', Priority: 'High', Status: 'In Progress', RequesterName: 'Siti Rahayu', RequesterEmail: 'siti.rahayu@phb.com.my', Assignee: 'Haq (ITD)', Submitted: '2026-11-21 09:30', Detail: 'Unable to maintain persistent VPN tunnel to PHB financial servers.' },
-  { TicketID: 'TK-1002', Subject: 'Dual monitor USB-C dock setup', Department: 'Property Management', Category: 'Hardware', Priority: 'Medium', Status: 'Open', RequesterName: 'Amir Hassan', RequesterEmail: 'amir.hassan@phb.com.my', Assignee: 'Fahmi (ITD)', Submitted: '2026-11-21 11:15', Detail: 'New monitor delivered. Needs cable setup at desk.' },
-  { TicketID: 'TK-1003', Subject: 'Outlook shared mailbox access permission', Department: 'Human Resources', Category: 'Email', Priority: 'Medium', Status: 'Resolved', RequesterName: 'Zainab Omar', RequesterEmail: 'zainab@phb.com.my', Assignee: 'Haq (ITD)', Submitted: '2026-11-20 14:00', Detail: 'Requested delegate access for HR shared mailbox.' },
-  { TicketID: 'TK-1004', Subject: 'Suspicious email with urgent wire request', Department: 'Investment', Category: 'Security', Priority: 'Critical', Status: 'In Progress', RequesterName: 'Farid Ahmad', RequesterEmail: 'farid@phb.com.my', Assignee: 'Nur Haliza (HOD)', Submitted: '2026-11-22 08:05', Detail: 'Received external email requesting bank account changes.' },
-  { TicketID: 'TK-1005', Subject: 'ERP financial ledger module crash on export', Department: 'Finance', Category: 'Software', Priority: 'High', Status: 'Open', RequesterName: 'Siti Rahayu', RequesterEmail: 'siti.rahayu@phb.com.my', Assignee: 'Haq (ITD)', Submitted: '2026-11-22 09:10', Detail: 'Exporting monthly reports produces error 504 on screen.' }
-];
+const msalConfig = {
+  auth: {
+    clientId: '86a53736-4355-4cb2-98dd-0466f0426e2e',
+    authority: 'https://login.microsoftonline.com/cc9afa77-5900-4c38-8262-c226c4c2e27d',
+    redirectUri: CURRENT_REDIRECT_URI
+  },
+  cache: {
+    cacheLocation: 'sessionStorage',
+    storeAuthStateInCookie: false
+  }
+};
 
-// Quick Fix Data for Inline Drawer
+const msalInstance = new msal.PublicClientApplication(msalConfig);
+
+/* Quick Fix Data */
 const QUICK_FIX_DATA = {
   laptop: {
     icon: '💻',
@@ -1037,34 +928,47 @@ const KB_ARTICLES = [
 
 /* App State */
 let ticketsStore = [];
-let usersStore = [];
 let currentUser = null;
 let currentTicketView = 'list';
 let activeDrawerTicketId = null;
-let isSamplePreviewActive = false;
 let staffTicketFilterTab = 'all';
 let departmentAccordionState = {};
 let hideEmptyDepartments = false;
 let currentActiveQuickFixKey = null;
+let isSigningIn = false;
 
-/* ==================== 2. INITIALIZATION & ACCESSIBILITY ==================== */
-window.addEventListener('DOMContentLoaded', () => {
+/* ==================== 2. INITIALIZATION ==================== */
+window.addEventListener('DOMContentLoaded', async () => {
+  loadPAConfigFromStorage();
+  renderKBGrid();
 
-    loadPAConfigFromStorage();
-    fetchDataFromPowerAutomate();
-
-});
-
-  const savedUser = sessionStorage.getItem('orbit_user_session');
-  if (savedUser) {
-    try { loginUser(JSON.parse(savedUser)); } catch (e) {}
+  // Handle any pending MSAL redirect responses
+  try {
+    const redirectResponse = await msalInstance.handleRedirectPromise();
+    if (redirectResponse && redirectResponse.account) {
+      const email = (redirectResponse.account.username || '').toLowerCase();
+      const name = redirectResponse.account.name || email.split('@')[0];
+      await loadUserDirectory(email, name);
+      return;
+    }
+  } catch (e) {
+    console.warn('MSAL redirect handling:', e);
   }
 
-  // Close dropdown when clicking outside
+  // Restore saved session
+  const savedUser = sessionStorage.getItem('orbit_user_session');
+  if (savedUser) {
+    try {
+      loginUser(JSON.parse(savedUser), true);
+    } catch (e) {
+      sessionStorage.removeItem('orbit_user_session');
+    }
+  }
+
   document.addEventListener('click', (e) => {
     const dropdown = document.getElementById('userDropdown');
     const chipArea = document.getElementById('userChipArea');
-    if (dropdown && !dropdown.classList.contains('hidden') && !chipArea.contains(e.target)) {
+    if (dropdown && !dropdown.classList.contains('hidden') && chipArea && !chipArea.contains(e.target)) {
       dropdown.classList.add('hidden');
     }
   });
@@ -1076,143 +980,210 @@ window.addEventListener('DOMContentLoaded', () => {
       closeModal('modalNewTicket');
       closeModal('modalArticle');
       closeModal('modalPAConfig');
-      closeModal('modalSystemStatus');
       closeDrawer('drawerTicket');
     }
   });
-
-
-function cycleTextSize() {
-  currentTextSizeIdx = (currentTextSizeIdx + 1) % TEXT_SIZES.length;
-  const newSize = TEXT_SIZES[currentTextSizeIdx];
-  
-  document.documentElement.className = document.documentElement.className.replace(/text-size-\w+/g, '');
-  document.documentElement.classList.add(`text-size-${newSize}`);
-  
-  const labels = { normal: 'Text: Normal', large: 'Text: Large (Senior)', xlarge: 'Text: Extra Large' };
-  document.getElementById('textSizeLabel').textContent = labels[newSize];
-  showToast(`Senior Accessibility: Switched to ${labels[newSize]}`);
-}
-
-
-
-async function startSSO(){
-
-  const msalConfig = {
-    auth: {
-        clientId: "86a53736-4355-4cb2-98dd-0466f0426e2e",
-        authority:
-        "https://login.microsoftonline.com/cc9afa77-5900-4c38-8262-c226c4c2e27d",
-        redirectUri: "https://poduxiptv2021-hash.github.io/ORBIT/"
-    }
-};
-
-const msalInstance =
-new msal.PublicClientApplication(msalConfig);
-
-    try{
-
-        const loginResponse =
-        await msalInstance.loginPopup({
-            scopes:["User.Read"]
-        });
-
-        const email =
-        loginResponse.account.username;
-
-        loadUserDirectory(email);
-
-    }
-    catch(error){
-
-        console.error(error);
-
-        showToast("Microsoft Login Failed");
-
-    }
-}
-
-async function loadUserDirectory(email){
-
-    const response =
-    await fetch(
-        PA_CONFIG.loginTrackUrl,
-        {
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
-            },
-            body:JSON.stringify({
-                email:email
-            })
-        }
-    );
-
-    const user =
-        await response.json();
-
-    let role = "user";
-
-if(user.role === "HOD"){
-    role = "hod";
-}
-else if(user.role === "Admin"){
-    role = "it";
-}
-else if(user.role === "Assignee"){
-    role = "it";
-}
-
-loginUser({
-    name:user.name,
-    email:user.email,
-    department:user.department,
-    role: role,
-    roleTitle:user.role
 });
+
+/* ==================== 3. FIXED MICROSOFT 365 LOGIN + POWER AUTOMATE FLOW ==================== */
+function setSignInButtonLoading(loading) {
+  isSigningIn = loading;
+  const cardLabel = document.getElementById('cardSignInLabel');
+  const cardBtn = document.getElementById('cardSignInBtn');
+  if (cardLabel) {
+    cardLabel.textContent = loading ? 'Signing in with Microsoft 365...' : 'Sign in with Microsoft 365 (Outlook)';
+  }
+  if (cardBtn) {
+    cardBtn.disabled = loading;
+    cardBtn.classList.toggle('opacity-70', loading);
+  }
 }
 
-function loginUser(userObj) {
+async function startSSO() {
+  if (isSigningIn) return;
+
+  if (!PA_CONFIG.loginTrackUrl) {
+    showToast('Please configure the Login & Track Power Automate URL first.');
+    openPAConfigModal();
+    return;
+  }
+
+  setSignInButtonLoading(true);
+  showToast('Opening Microsoft 365 (Outlook) sign-in...');
+
+  try {
+    // Check if an MSAL account is already cached first
+    const accounts = msalInstance.getAllAccounts();
+    let account = null;
+
+    if (accounts.length > 0) {
+      try {
+        const silentRes = await msalInstance.acquireTokenSilent({
+          scopes: ['User.Read'],
+          account: accounts[0]
+        });
+        account = silentRes.account;
+      } catch (silentErr) {
+        const popupRes = await msalInstance.loginPopup({
+          scopes: ['User.Read'],
+          prompt: 'select_account'
+        });
+        account = popupRes.account;
+      }
+    } else {
+      const loginResponse = await msalInstance.loginPopup({
+        scopes: ['User.Read'],
+        prompt: 'select_account'
+      });
+      account = loginResponse.account;
+    }
+
+    if (!account) {
+      throw new Error('No Microsoft 365 account returned.');
+    }
+
+    const email = (account.username || '').toLowerCase();
+    const displayName = account.name || email.split('@')[0];
+
+    await loadUserDirectory(email, displayName);
+  } catch (error) {
+    console.error('MSAL Login Error:', error);
+    if (error.errorCode === 'popup_window_error' || error.errorCode === 'empty_window_error') {
+      showToast('Browser blocked the sign-in popup. Please allow popups for this site and try again.');
+    } else if (error.errorCode === 'user_cancelled') {
+      showToast('Sign-in was cancelled.');
+    } else {
+      showToast('Microsoft 365 sign-in failed: ' + (error.errorMessage || error.message || 'Check Entra Redirect URI'));
+    }
+  } finally {
+    setSignInButtonLoading(false);
+  }
+}
+
+async function loadUserDirectory(email, fallbackName = '') {
+  showToast('Checking ORBITUsers via Power Automate...');
+  try {
+    const response = await fetch(PA_CONFIG.loginTrackUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: email,
+        name: fallbackName,
+        eventType: 'Login',
+        clientInfo: navigator.userAgent
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Power Automate HTTP ${response.status}`);
+    }
+
+    const rawData = await response.json();
+    // Support direct object, { user: {...} }, { value: [...] }, or array [...]
+    const user = Array.isArray(rawData)
+      ? (rawData[0] || {})
+      : (rawData.user || (Array.isArray(rawData.value) ? (rawData.value[0] || {}) : rawData));
+
+    const rawRole = (user.role || user.Role || 'Staff').toString().trim();
+
+    let normalizedRole = 'user';
+    if (rawRole.toLowerCase() === 'hod') {
+      normalizedRole = 'hod';
+    } else if (['admin', 'itadmin', 'it', 'assignee'].includes(rawRole.toLowerCase())) {
+      normalizedRole = 'it';
+    }
+
+    loginUser({
+      name: user.name || user.Name || user.Title || fallbackName || email,
+      email: (user.email || user.Email || email).toLowerCase(),
+      department: user.department || user.Department || 'ITD',
+      role: normalizedRole,
+      roleTitle: rawRole
+    }, false);
+  } catch (err) {
+    console.error('Power Automate Login Flow Error:', err);
+    // Fallback to authenticated M365 profile as Staff so user is never locked out if PA CORS/network hiccups
+    loginUser({
+      name: fallbackName || email,
+      email: email.toLowerCase(),
+      department: 'ITD',
+      role: 'user',
+      roleTitle: 'Staff (M365 Verified)'
+    }, false);
+    showToast('Signed in via M365 (Directory sync warning: ' + err.message + ')');
+  }
+}
+
+function loginUser(userObj, isSessionRestore = false) {
   currentUser = userObj;
   sessionStorage.setItem('orbit_user_session', JSON.stringify(userObj));
 
-  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('sectionPublicHome').classList.add('hidden');
+  document.getElementById('headerSignInBtn').classList.add('hidden');
   document.getElementById('userChipArea').classList.remove('hidden');
+  document.getElementById('sectionTicketQueue').classList.remove('hidden');
+
+  const initials = (userObj.name || 'PH')
+    .split(' ')
+    .filter(Boolean)
+    .map(n => n[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
 
   document.getElementById('chipName').textContent = userObj.name.split(' ')[0];
   document.getElementById('chipRole').textContent = userObj.department;
-  document.getElementById('chipAvatar').textContent = userObj.name.split(' ').map(n=>n[0]).join('').slice(0,2);
-  
+  document.getElementById('chipAvatar').textContent = initials;
+
   document.getElementById('menuRoleTitle').textContent = userObj.roleTitle;
   document.getElementById('menuName').textContent = userObj.name;
   document.getElementById('menuEmail').textContent = userObj.email;
   document.getElementById('menuDept').textContent = 'Department: ' + userObj.department;
 
   applyRoleView();
-  filterAndRenderTickets();
-  renderKBGrid();
+  fetchDataFromPowerAutomate();
 
-  // Trigger PA login audit tracking
-  triggerPALoginAudit(userObj, 'Login');
+  if (!isSessionRestore) {
+    showToast(`Welcome, ${userObj.name} (${userObj.roleTitle})`);
+  }
 }
 
 function logout() {
-  if (currentUser) {
-    triggerPALoginAudit(currentUser, 'Logout');
+  if (currentUser && PA_CONFIG.loginTrackUrl) {
+    try {
+      fetch(PA_CONFIG.loginTrackUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: currentUser.email,
+          name: currentUser.name,
+          role: currentUser.roleTitle,
+          department: currentUser.department,
+          eventType: 'Logout',
+          clientInfo: navigator.userAgent
+        })
+      });
+    } catch (e) {}
   }
+
   currentUser = null;
+  ticketsStore = [];
   sessionStorage.removeItem('orbit_user_session');
+
   document.getElementById('userChipArea').classList.add('hidden');
   document.getElementById('userDropdown').classList.add('hidden');
-  document.getElementById('loginScreen').classList.remove('hidden');
+  document.getElementById('headerSignInBtn').classList.remove('hidden');
+  document.getElementById('sectionExecutiveOverview').classList.add('hidden');
+  document.getElementById('sectionStaffHero').classList.add('hidden');
+  document.getElementById('sectionTicketQueue').classList.add('hidden');
+  document.getElementById('sectionPublicHome').classList.remove('hidden');
+
+  showToast('Signed out of ORBIT Portal.');
 }
 
 function toggleUserDropdown() {
   document.getElementById('userDropdown').classList.toggle('hidden');
 }
-
-
-
 
 function applyRoleView() {
   if (!currentUser) return;
@@ -1223,29 +1194,23 @@ function applyRoleView() {
   const staffTabGroup = document.getElementById('staffTabGroup');
   const deptSelect = document.getElementById('deptSelect');
 
-  ['HOD','Admin','Assignee', 'User'].forEach(r => {
-    const btn = document.getElementById(`roleBtn${r}`);
-    if (btn) btn.className = `px-2 py-1 rounded-lg border text-center font-bold text-xs ${currentUser.role === r.toLowerCase() ? 'bg-[#007A5E] text-white border-[#007A5E]' : 'border-[var(--phb-line)] text-[var(--phb-soft)] hover:bg-emerald-50'}`;
-  });
-
   if (currentUser.role === 'hod') {
     secExec.classList.remove('hidden');
     secStaff.classList.add('hidden');
     exportArea.classList.remove('hidden');
     deptFilterArea.classList.remove('hidden');
     staffTabGroup.classList.add('hidden');
-    document.getElementById('roleOverviewBadge').textContent = "HOD Executive Dashboard";
-    deptSelect.value = "ALL";
-  } else if (currentUser.role === 'Admin') {
+    document.getElementById('roleOverviewBadge').textContent = 'HOD Executive Dashboard';
+    deptSelect.value = 'ALL';
+  } else if (currentUser.role === 'it') {
     secExec.classList.remove('hidden');
     secStaff.classList.add('hidden');
     exportArea.classList.remove('hidden');
     deptFilterArea.classList.remove('hidden');
     staffTabGroup.classList.add('hidden');
-    document.getElementById('roleOverviewBadge').textContent = "IT Support Operational Queue";
-    deptSelect.value = "ALL";
+    document.getElementById('roleOverviewBadge').textContent = 'IT Support Operational Queue';
+    deptSelect.value = 'ALL';
   } else {
-    // Staff View
     secExec.classList.add('hidden');
     secStaff.classList.remove('hidden');
     exportArea.classList.add('hidden');
@@ -1255,20 +1220,13 @@ function applyRoleView() {
   }
 }
 
-function switchRolePreview(roleKey) {
-  const target = DEMO_USERS.find(u => u.role === roleKey) || DEMO_USERS[0];
-  loginUser(target);
-  showToast(`Switched view to ${target.roleTitle}`);
-}
-
-/* ==================== 3. POWER AUTOMATE FLOW INTEGRATION ==================== */
+/* ==================== 4. POWER AUTOMATE FLOW SYNC ==================== */
 function loadPAConfigFromStorage() {
-  const cfg = JSON.parse(localStorage.getItem('orbit_pa_config') || '{}');
-  PA_CONFIG.loadTicketsUrl = cfg.loadTicketsUrl || '';
-  PA_CONFIG.saveTicketUrl = cfg.saveTicketUrl || '';
-  PA_CONFIG.notifyUrl = cfg.notifyUrl || '';
-  PA_CONFIG.loginTrackUrl = cfg.loginTrackUrl || '';
-
+  const saved = JSON.parse(localStorage.getItem('orbit_pa_config') || '{}');
+  PA_CONFIG.loadTicketsUrl = saved.loadTicketsUrl || DEFAULT_PA_CONFIG.loadTicketsUrl;
+  PA_CONFIG.saveTicketUrl = saved.saveTicketUrl || DEFAULT_PA_CONFIG.saveTicketUrl;
+  PA_CONFIG.notifyUrl = saved.notifyUrl || DEFAULT_PA_CONFIG.notifyUrl;
+  PA_CONFIG.loginTrackUrl = saved.loginTrackUrl || DEFAULT_PA_CONFIG.loginTrackUrl;
   updatePAStatusPill();
 }
 
@@ -1280,9 +1238,17 @@ function savePAConfig() {
 
   localStorage.setItem('orbit_pa_config', JSON.stringify(PA_CONFIG));
   closeModal('modalPAConfig');
-  showToast('Power Automate Flow Endpoints Saved!');
   updatePAStatusPill();
-  fetchDataFromPowerAutomate();
+  showToast('Power Automate Flow Endpoints Saved!');
+  if (currentUser) fetchDataFromPowerAutomate();
+}
+
+function resetDefaultPAConfig() {
+  localStorage.removeItem('orbit_pa_config');
+  Object.assign(PA_CONFIG, DEFAULT_PA_CONFIG);
+  openPAConfigModal();
+  updatePAStatusPill();
+  showToast('Restored default Power Automate endpoints.');
 }
 
 function openPAConfigModal() {
@@ -1295,51 +1261,44 @@ function openPAConfigModal() {
 
 function updatePAStatusPill() {
   const badge = document.getElementById('paSyncBadge');
+  const dot = document.getElementById('paSyncDot');
   const text = document.getElementById('paSyncStatusText');
-  const banner = document.getElementById('paUnconfiguredBanner');
 
-  if (PA_CONFIG.loadTicketsUrl) {
-    badge.className = "flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold cursor-pointer border bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800";
-    text.textContent = "Power Automate Live";
-    if (banner) banner.classList.add('hidden');
+  if (PA_CONFIG.loadTicketsUrl && PA_CONFIG.loginTrackUrl) {
+    badge.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold cursor-pointer border transition-all bg-white/15 text-white border-white/30 hover:bg-white/25';
+    dot.className = 'w-2 h-2 rounded-full bg-[#84C441] animate-pulse';
+    text.textContent = 'Power Automate Live';
   } else {
-    badge.className = "flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold cursor-pointer border bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800";
-    text.textContent = isSamplePreviewActive ? "Sample Preview" : "Flows Not Configured";
-    if (banner && !isSamplePreviewActive) banner.classList.remove('hidden');
+    badge.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold cursor-pointer border transition-all bg-white text-[#006837] border-white';
+    dot.className = 'w-2 h-2 rounded-full bg-[#51961D] animate-pulse';
+    text.textContent = 'Configure Flows';
   }
 }
 
 async function fetchDataFromPowerAutomate() {
-  if (!PA_CONFIG.loadTicketsUrl) {
-    if (!isSamplePreviewActive) {
-      ticketsStore = [];
-      filterAndRenderTickets();
-    }
-    return;
-  }
+  if (!PA_CONFIG.loadTicketsUrl || !currentUser) return;
 
-  showToast('Pulling data from Power Automate Flow...');
   try {
     const res = await fetch(PA_CONFIG.loadTicketsUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        email: currentUser ? currentUser.email : '',
-        role: currentUser ? currentUser.role : 'user',
-        department: currentUser ? currentUser.department : ''
+        email: currentUser.email,
+        role: currentUser.role,
+        department: currentUser.department
       })
     });
+
     if (res.ok) {
       const data = await res.json();
       ticketsStore = data.tickets || data.value || (Array.isArray(data) ? data : []);
-      if (data.users) usersStore = data.users;
-      showToast('Live SharePoint Data Synchronized!');
+      showToast('SharePoint tickets synced via Power Automate.');
     } else {
-      showToast('Power Automate HTTP response error: ' + res.status);
+      showToast('Load Tickets flow returned HTTP ' + res.status);
     }
   } catch (err) {
-    console.error('PA Fetch error:', err);
-    showToast('Failed to reach Power Automate URL.');
+    console.error('PA Load Tickets error:', err);
+    showToast('Unable to reach Load Tickets Power Automate flow.');
   }
   filterAndRenderTickets();
 }
@@ -1348,19 +1307,22 @@ async function triggerPASaveTicket(ticketObj, actionType = 'create') {
   if (!PA_CONFIG.saveTicketUrl) return;
 
   try {
-    await fetch(PA_CONFIG.saveTicketUrl, {
+    const res = await fetch(PA_CONFIG.saveTicketUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: actionType, ticket: ticketObj })
     });
-    showToast(`Power Automate: Ticket ${ticketObj.TicketID} saved!`);
+    if (res.ok) {
+      showToast(`Power Automate: Ticket ${ticketObj.TicketID} synced!`);
+    }
   } catch (e) {
     console.error('PA Save error:', e);
+    showToast('Error saving ticket to Power Automate.');
   }
 
   if (PA_CONFIG.notifyUrl) {
     try {
-      fetch(PA_CONFIG.notifyUrl, {
+      await fetch(PA_CONFIG.notifyUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ event: actionType, ticket: ticketObj })
@@ -1369,74 +1331,7 @@ async function triggerPASaveTicket(ticketObj, actionType = 'create') {
   }
 }
 
-async function triggerPALoginAudit(userObj, eventType = 'Login') {
-  if (!PA_CONFIG.loginTrackUrl) return;
-  try {
-    fetch(PA_CONFIG.loginTrackUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email: userObj.email,
-        name: userObj.name,
-        role: userObj.role,
-        department: userObj.department,
-        eventType,
-        clientInfo: navigator.userAgent
-      })
-    });
-  } catch (e) {}
-}
-
-function testPAConnection() {
-  showToast('Testing Power Automate connection...');
-  savePAConfig();
-}
-
-function toggleSamplePreview() {
-  isSamplePreviewActive = !isSamplePreviewActive;
-  const btn = document.getElementById('btnSamplePreview');
-  if (isSamplePreviewActive) {
-    ticketsStore = [...SAMPLE_TICKETS];
-    btn.textContent = "Hide Sample Data";
-    showToast('Sample Preview Active!');
-  } else {
-    ticketsStore = [];
-    btn.textContent = "Preview Sample Data";
-  }
-  updatePAStatusPill();
-  filterAndRenderTickets();
-}
-
-/* ==================== 4. SYSTEM STATUS DETAILS MODAL ==================== */
-function showSystemStatusDetails(title, badge, desc) {
-  document.getElementById('sysStatusTitle').textContent = title + ' Status';
-  document.getElementById('sysStatusBadge').textContent = badge;
-  document.getElementById('sysStatusDesc').textContent = desc;
-  document.getElementById('modalSystemStatus').classList.remove('hidden');
-}
-
-/* ==================== 5. INTERACTIVE 3-STEP JOURNEY ==================== */
-function activateJourneyStep(stepNum) {
-  for (let i = 1; i <= 3; i++) {
-    const card = document.getElementById(`stepCard${i}`);
-    if (i === stepNum) {
-      card.className = "p-4 rounded-2xl bg-[var(--phb-card)] border-2 border-emerald-500 shadow-md cursor-pointer transition-all flex items-center gap-3.5 relative overflow-hidden group";
-    } else {
-      card.className = "p-4 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] hover:border-emerald-500 shadow-xs cursor-pointer transition-all flex items-center gap-3.5 relative overflow-hidden group";
-    }
-  }
-
-  if (stepNum === 1) {
-    document.getElementById('sectionQuickHelp').scrollIntoView({ behavior: 'smooth' });
-  } else if (stepNum === 2) {
-    openInlineQuickFix('wifi');
-    document.getElementById('sectionQuickHelp').scrollIntoView({ behavior: 'smooth' });
-  } else if (stepNum === 3) {
-    document.getElementById('sectionTicketQueue').scrollIntoView({ behavior: 'smooth' });
-  }
-}
-
-/* ==================== 6. INTERACTIVE INLINE QUICK-FIX PANEL ==================== */
+/* ==================== 5. INTERACTIVE QUICK-FIX DRAWER ==================== */
 function openInlineQuickFix(key) {
   const data = QUICK_FIX_DATA[key];
   if (!data) return;
@@ -1447,24 +1342,21 @@ function openInlineQuickFix(key) {
 
   const stepsGrid = document.getElementById('quickFixStepsGrid');
   stepsGrid.innerHTML = data.steps.map(s => `
-    <div class="p-3.5 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 space-y-1">
-      <div class="font-extrabold text-xs text-[#C3CE1E]">${s.step}</div>
-      <div class="text-[11px] text-emerald-100 font-medium leading-relaxed">${s.desc}</div>
+    <div class="p-4 rounded-xl bg-white/10 border border-white/25 space-y-1">
+      <div class="font-extrabold text-xs text-[#D4E4AA]">${s.step}</div>
+      <div class="text-[11px] text-white/95 font-medium leading-relaxed">${s.desc}</div>
     </div>
   `).join('');
 
   const panel = document.getElementById('inlineQuickFixPanel');
   panel.classList.remove('hidden');
 
-  // Highlight active quick card
   Object.keys(QUICK_FIX_DATA).forEach(k => {
     const card = document.getElementById(`quickCard-${k}`);
     if (card) {
-      if (k === key) {
-        card.className = "card-hover-lift p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border-2 border-[#007A5E] shadow-md cursor-pointer text-center space-y-2 group select-none";
-      } else {
-        card.className = "card-hover-lift p-4 rounded-2xl bg-[var(--phb-card)] border-2 border-[var(--phb-line)] hover:border-[#007A5E] cursor-pointer text-center space-y-2 group select-none";
-      }
+      card.className = k === key
+        ? 'card-hover-lift p-4 rounded-2xl bg-[#D4E4AA]/60 border-2 border-[#51961D] shadow-sm cursor-pointer text-center space-y-2 group select-none'
+        : 'card-hover-lift p-4 rounded-2xl bg-[#F4F8EE] border-2 border-[#D9E5C8] hover:border-[#51961D] cursor-pointer text-center space-y-2 group select-none';
     }
   });
 
@@ -1476,26 +1368,26 @@ function closeInlineQuickFix() {
   currentActiveQuickFixKey = null;
   Object.keys(QUICK_FIX_DATA).forEach(k => {
     const card = document.getElementById(`quickCard-${k}`);
-    if (card) card.className = "card-hover-lift p-4 rounded-2xl bg-[var(--phb-card)] border-2 border-[var(--phb-line)] hover:border-[#007A5E] cursor-pointer text-center space-y-2 group select-none";
+    if (card) card.className = 'card-hover-lift p-4 rounded-2xl bg-[#F4F8EE] border-2 border-[#D9E5C8] hover:border-[#51961D] cursor-pointer text-center space-y-2 group select-none';
   });
 }
 
 function triggerCelebratorySuccess() {
   if (window.confetti) {
-    confetti({
-      particleCount: 90,
-      spread: 70,
-      origin: { y: 0.6 }
-    });
+    confetti({ particleCount: 90, spread: 70, origin: { y: 0.6 }, colors: ['#006837', '#51961D', '#84C441', '#D4E4AA'] });
   }
   showToast('Great news! Glad your issue was resolved 🎉');
-  setTimeout(() => closeInlineQuickFix(), 1800);
+  setTimeout(() => closeInlineQuickFix(), 1600);
 }
 
 function escalateQuickFixToTicket() {
+  if (!currentUser) {
+    showToast('Please sign in with Microsoft 365 (Outlook) first to submit a ticket.');
+    startSSO();
+    return;
+  }
   const data = currentActiveQuickFixKey ? QUICK_FIX_DATA[currentActiveQuickFixKey] : null;
   openNewTicketModal();
-
   if (data) {
     document.getElementById('formCategory').value = data.category;
     document.getElementById('formSubject').value = data.title;
@@ -1503,23 +1395,15 @@ function escalateQuickFixToTicket() {
   closeInlineQuickFix();
 }
 
-function quickSymptomSearch(term) {
-  document.getElementById('staffSearchInput').value = term;
-  handleKBSearch(term);
-  document.getElementById('sectionKB').scrollIntoView({ behavior: 'smooth' });
-}
-
-/* ==================== 7. ROLE SCOPING & TICKET FILTERING ==================== */
+/* ==================== 6. ROLE SCOPING & TICKET RENDERING ==================== */
 function setStaffTicketTab(tabKey) {
   staffTicketFilterTab = tabKey;
-  ['All','Mine','Dept'].forEach(t => {
+  ['All', 'Mine', 'Dept'].forEach(t => {
     const btn = document.getElementById(`tabStaff${t}`);
     if (btn) {
-      if (t.toLowerCase() === tabKey) {
-        btn.className = "px-3 py-1.5 rounded-lg bg-[var(--phb-card)] text-[var(--phb-text)] shadow-xs font-bold";
-      } else {
-        btn.className = "px-3 py-1.5 rounded-lg text-[var(--phb-soft)] hover:text-[var(--phb-text)] font-semibold";
-      }
+      btn.className = t.toLowerCase() === tabKey
+        ? 'px-3 py-1.5 rounded-lg bg-white text-[#111827] shadow-xs font-bold'
+        : 'px-3 py-1.5 rounded-lg text-[#4B5563] hover:text-[#111827] font-semibold';
     }
   });
   filterAndRenderTickets();
@@ -1527,14 +1411,12 @@ function setStaffTicketTab(tabKey) {
 
 function getFilteredTickets() {
   let list = [...ticketsStore];
-
   if (!currentUser) return list;
 
   const role = currentUser.role.toLowerCase();
   const userEmail = (currentUser.email || '').toLowerCase();
   const userDept = (currentUser.department || '').trim().toLowerCase();
 
-  // STAFF ROLE VISIBILITY RULES:
   if (role === 'user' || role === 'staff') {
     list = list.filter(t => {
       const reqEmail = (t.RequesterEmail || '').toLowerCase();
@@ -1548,24 +1430,21 @@ function getFilteredTickets() {
       list = list.filter(t => (t.Department || '').trim().toLowerCase() === userDept);
     }
   } else {
-    // HOD & IT ADMIN ROLE VISIBILITY
     const selectedDept = document.getElementById('deptSelect').value;
     if (selectedDept !== 'ALL') {
       list = list.filter(t => t.Department === selectedDept);
     }
   }
 
-  // Search filter
   const query = document.getElementById('ticketSearchInput').value.toLowerCase().trim();
   if (query) {
-    list = list.filter(t => 
+    list = list.filter(t =>
       (t.TicketID && t.TicketID.toLowerCase().includes(query)) ||
       (t.Subject && t.Subject.toLowerCase().includes(query)) ||
       (t.RequesterName && t.RequesterName.toLowerCase().includes(query)) ||
       (t.Category && t.Category.toLowerCase().includes(query))
     );
   }
-
   return list;
 }
 
@@ -1573,11 +1452,10 @@ function filterAndRenderTickets() {
   const tickets = getFilteredTickets();
   document.getElementById('ticketBadgeCount').textContent = tickets.length;
 
-  // KPIs
   document.getElementById('kpiTotal').textContent = ticketsStore.length;
-  document.getElementById('kpiOpen').textContent = ticketsStore.filter(t=>t.Status==='Open'||t.Status==='In Progress').length;
-  document.getElementById('kpiPending').textContent = ticketsStore.filter(t=>t.Status==='Pending').length;
-  document.getElementById('kpiResolved').textContent = ticketsStore.filter(t=>t.Status==='Resolved').length;
+  document.getElementById('kpiOpen').textContent = ticketsStore.filter(t => t.Status === 'Open' || t.Status === 'In Progress').length;
+  document.getElementById('kpiPending').textContent = ticketsStore.filter(t => t.Status === 'Pending').length;
+  document.getElementById('kpiResolved').textContent = ticketsStore.filter(t => t.Status === 'Resolved').length;
 
   if (currentTicketView === 'list') {
     renderListView(tickets);
@@ -1593,14 +1471,14 @@ function switchTicketView(viewMode) {
   const accordionBtns = document.getElementById('accordionControlButtons');
 
   if (viewMode === 'list') {
-    btnList.className = "px-3 py-1.5 rounded-lg bg-[var(--phb-card)] text-[var(--phb-text)] shadow-xs font-bold";
-    btnGrouped.className = "px-3 py-1.5 rounded-lg text-[var(--phb-soft)] hover:text-[var(--phb-text)] font-semibold";
+    btnList.className = 'px-3 py-1.5 rounded-lg bg-white text-[#111827] shadow-xs font-bold';
+    btnGrouped.className = 'px-3 py-1.5 rounded-lg text-[#4B5563] hover:text-[#111827] font-semibold';
     document.getElementById('ticketViewList').classList.remove('hidden');
     document.getElementById('ticketViewGrouped').classList.add('hidden');
     accordionBtns.classList.add('hidden');
   } else {
-    btnGrouped.className = "px-3 py-1.5 rounded-lg bg-[var(--phb-card)] text-[var(--phb-text)] shadow-xs font-bold";
-    btnList.className = "px-3 py-1.5 rounded-lg text-[var(--phb-soft)] hover:text-[var(--phb-text)] font-semibold";
+    btnGrouped.className = 'px-3 py-1.5 rounded-lg bg-white text-[#111827] shadow-xs font-bold';
+    btnList.className = 'px-3 py-1.5 rounded-lg text-[#4B5563] hover:text-[#111827] font-semibold';
     document.getElementById('ticketViewList').classList.add('hidden');
     document.getElementById('ticketViewGrouped').classList.remove('hidden');
     accordionBtns.classList.remove('hidden');
@@ -1609,16 +1487,16 @@ function switchTicketView(viewMode) {
 }
 
 function getSeniorStatusBadge(status) {
-  switch(status) {
+  switch (status) {
     case 'Open':
-      return `<span class="px-2.5 py-1 rounded-full text-[11px] font-bold badge-open flex items-center gap-1">🟡 Waiting for IT</span>`;
+      return `<span class="px-2.5 py-1 rounded-full text-[11px] font-bold badge-open inline-flex items-center gap-1">🟡 Waiting for IT</span>`;
     case 'In Progress':
-      return `<span class="px-2.5 py-1 rounded-full text-[11px] font-bold badge-inprogress flex items-center gap-1">🔵 IT Working On It</span>`;
+      return `<span class="px-2.5 py-1 rounded-full text-[11px] font-bold badge-inprogress inline-flex items-center gap-1">🟢 IT Working On It</span>`;
     case 'Pending':
-      return `<span class="px-2.5 py-1 rounded-full text-[11px] font-bold badge-pending flex items-center gap-1">🔴 Action Needed</span>`;
+      return `<span class="px-2.5 py-1 rounded-full text-[11px] font-bold badge-pending inline-flex items-center gap-1">🔴 Action Needed</span>`;
     case 'Resolved':
     default:
-      return `<span class="px-2.5 py-1 rounded-full text-[11px] font-bold badge-resolved flex items-center gap-1">🟢 Fixed / Resolved</span>`;
+      return `<span class="px-2.5 py-1 rounded-full text-[11px] font-bold badge-resolved inline-flex items-center gap-1">✅ Fixed / Resolved</span>`;
   }
 }
 
@@ -1627,43 +1505,39 @@ function renderListView(tickets) {
   if (!tickets.length) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="8" class="text-center py-12 text-[var(--phb-soft)] font-semibold">
-          ${PA_CONFIG.loadTicketsUrl ? 'No tickets found matching current view filters.' : 'No Live Tickets Loaded. Configure Power Automate URLs above or click "Preview Sample Data".'}
+        <td colspan="8" class="text-center py-12 text-[#4B5563] font-semibold">
+          No tickets found in SharePoint for your current view filter. Click "+ New Ticket" to submit one.
         </td>
       </tr>`;
     return;
   }
 
-  tbody.innerHTML = tickets.map(t => {
-    return `
-      <tr onclick="openTicketDrawer('${t.TicketID}')" class="hover:bg-[var(--phb-canvas)] cursor-pointer transition-colors">
-        <td class="py-3.5 px-4 font-mono font-bold text-emerald-700 dark:text-emerald-400 text-xs">${t.TicketID}</td>
-        <td class="py-3.5 px-4">
-          <div class="font-bold text-[var(--phb-text)] text-xs sm:text-sm line-clamp-1">${t.Subject}</div>
-          <div class="text-[11px] text-[var(--phb-soft)] font-medium mt-0.5">${t.RequesterName} (${t.RequesterEmail})</div>
-        </td>
-        <td class="py-3.5 px-4 font-bold text-[var(--phb-soft)] text-xs">${t.Department}</td>
-        <td class="py-3.5 px-4 text-[var(--phb-text)] text-xs font-semibold">${t.Category}</td>
-        <td class="py-3.5 px-4 font-bold text-xs ${t.Priority==='Critical'?'text-red-600':t.Priority==='High'?'text-amber-600':'text-slate-500'}">${t.Priority}</td>
-        <td class="py-3.5 px-4">
-          ${getSeniorStatusBadge(t.Status)}
-        </td>
-        <td class="py-3.5 px-4 text-[var(--phb-soft)] font-semibold text-xs">${t.Assignee || 'Unassigned'}</td>
-        <td class="py-3.5 px-4 text-right">
-          <button class="px-3 py-1 rounded-lg border border-[var(--phb-line)] hover:bg-[var(--phb-card)] text-emerald-700 dark:text-emerald-400 font-bold text-xs">View</button>
-        </td>
-      </tr>`;
-  }).join('');
+  tbody.innerHTML = tickets.map(t => `
+    <tr onclick="openTicketDrawer('${t.TicketID}')" class="hover:bg-[#F4F8EE] cursor-pointer transition-colors">
+      <td class="py-3.5 px-4 font-mono font-bold text-[#006837] text-xs">${t.TicketID}</td>
+      <td class="py-3.5 px-4">
+        <div class="font-bold text-[#111827] text-xs sm:text-sm line-clamp-1">${t.Subject}</div>
+        <div class="text-[11px] text-[#4B5563] font-medium mt-0.5">${t.RequesterName} (${t.RequesterEmail})</div>
+      </td>
+      <td class="py-3.5 px-4 font-bold text-[#4B5563] text-xs">${t.Department}</td>
+      <td class="py-3.5 px-4 text-[#111827] text-xs font-semibold">${t.Category}</td>
+      <td class="py-3.5 px-4 font-bold text-xs ${t.Priority === 'Critical' ? 'text-red-600' : t.Priority === 'High' ? 'text-amber-700' : 'text-[#4B5563]'}">${t.Priority}</td>
+      <td class="py-3.5 px-4">${getSeniorStatusBadge(t.Status)}</td>
+      <td class="py-3.5 px-4 text-[#4B5563] font-semibold text-xs">${t.Assignee || 'Unassigned'}</td>
+      <td class="py-3.5 px-4 text-right">
+        <button class="px-3 py-1 rounded-lg border border-[#D9E5C8] hover:bg-[#D4E4AA] text-[#006837] font-bold text-xs">View</button>
+      </td>
+    </tr>
+  `).join('');
 }
 
-/* ==================== CLEAN ACCORDION GROUPED VIEW BY DEPARTMENT ==================== */
 function toggleAccordion(deptName) {
   departmentAccordionState[deptName] = !departmentAccordionState[deptName];
   filterAndRenderTickets();
 }
 
 function toggleAllAccordions(expand) {
-  const depts = ["ITD", "Finance", "Human Resources", "Property Management", "Investment", "Legal & Secretarial", "Corporate Communications"];
+  const depts = ['ITD', 'Finance', 'Human Resources', 'Property Management', 'Investment', 'Legal & Secretarial', 'Corporate Communications'];
   depts.forEach(d => departmentAccordionState[d] = expand);
   filterAndRenderTickets();
 }
@@ -1671,66 +1545,53 @@ function toggleAllAccordions(expand) {
 function toggleHideEmptyDepts() {
   hideEmptyDepartments = !hideEmptyDepartments;
   const btn = document.getElementById('btnHideEmpty');
-  if (btn) btn.className = hideEmptyDepartments ? "px-2.5 py-1.5 rounded-lg border border-emerald-300 bg-emerald-50 text-emerald-800 font-bold" : "px-2.5 py-1.5 rounded-lg border border-[var(--phb-line)] text-emerald-700 font-bold";
+  if (btn) btn.className = hideEmptyDepartments ? 'px-2.5 py-1.5 rounded-lg border border-[#51961D] bg-[#D4E4AA] text-[#006837] font-bold' : 'px-2.5 py-1.5 rounded-lg border border-[#D9E5C8] text-[#006837] font-bold';
   filterAndRenderTickets();
 }
 
 function renderGroupedView(tickets) {
   const container = document.getElementById('ticketViewGrouped');
-  const depts = ["ITD", "Finance", "Human Resources", "Property Management", "Investment", "Legal & Secretarial", "Corporate Communications"];
+  const depts = ['ITD', 'Finance', 'Human Resources', 'Property Management', 'Investment', 'Legal & Secretarial', 'Corporate Communications'];
 
   container.innerHTML = depts.map(dept => {
     const deptTickets = tickets.filter(t => t.Department === dept);
-    
-    if (hideEmptyDepartments && deptTickets.length === 0) {
-      return '';
-    }
-
-    if (departmentAccordionState[dept] === undefined) {
-      departmentAccordionState[dept] = deptTickets.length > 0;
-    }
+    if (hideEmptyDepartments && deptTickets.length === 0) return '';
+    if (departmentAccordionState[dept] === undefined) departmentAccordionState[dept] = deptTickets.length > 0;
     const isExpanded = departmentAccordionState[dept];
 
     return `
-      <div class="rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-xs overflow-hidden transition-all">
-        
-        <!-- Accordion Header Bar -->
-        <div onclick="toggleAccordion('${dept}')" class="p-4 flex items-center justify-between cursor-pointer hover:bg-[var(--phb-canvas)] transition-colors select-none">
+      <div class="rounded-2xl bg-white border border-[#D9E5C8] shadow-sm overflow-hidden">
+        <div onclick="toggleAccordion('${dept}')" class="p-4 flex items-center justify-between cursor-pointer hover:bg-[#F4F8EE] transition-colors select-none">
           <div class="flex items-center gap-3">
-            <svg class="w-4 h-4 text-[var(--phb-soft)] transition-transform ${isExpanded ? 'rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-            <h3 class="font-extrabold text-sm text-[var(--phb-text)]">${dept}</h3>
+            <svg class="w-4 h-4 text-[#51961D] transition-transform ${isExpanded ? 'rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            <h3 class="font-extrabold text-sm text-[#111827]">${dept}</h3>
           </div>
-          <div class="flex items-center gap-2">
-            <span class="text-xs font-mono font-bold px-3 py-0.5 rounded-full ${deptTickets.length > 0 ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' : 'bg-slate-100 text-slate-500'}">
-              ${deptTickets.length} ${deptTickets.length === 1 ? 'Ticket' : 'Tickets'}
-            </span>
-          </div>
+          <span class="text-xs font-mono font-bold px-3 py-0.5 rounded-full ${deptTickets.length > 0 ? 'bg-[#D4E4AA] text-[#006837]' : 'bg-[#F4F8EE] text-[#4B5563]'}">
+            ${deptTickets.length} ${deptTickets.length === 1 ? 'Ticket' : 'Tickets'}
+          </span>
         </div>
-
-        <!-- Collapsible Content Body -->
         ${isExpanded ? `
-          <div class="p-4 pt-0 border-t border-[var(--phb-line)] bg-[var(--phb-canvas)]/50 divide-y divide-[var(--phb-line)]">
+          <div class="p-4 pt-0 border-t border-[#D9E5C8] bg-[#F4F8EE]/60 divide-y divide-[#D9E5C8]">
             ${deptTickets.length ? deptTickets.map(t => `
-              <div onclick="openTicketDrawer('${t.TicketID}')" class="py-3 first:pt-3 hover:bg-[var(--phb-card)] p-3 rounded-xl cursor-pointer transition-all space-y-1">
+              <div onclick="openTicketDrawer('${t.TicketID}')" class="py-3 hover:bg-white p-3 rounded-xl cursor-pointer transition-all space-y-1">
                 <div class="flex items-center justify-between text-xs">
-                  <span class="font-mono font-bold text-emerald-700 dark:text-emerald-400">${t.TicketID}</span>
-                  <span class="font-bold ${t.Priority==='Critical'?'text-red-600':'text-slate-500'}">${t.Priority}</span>
+                  <span class="font-mono font-bold text-[#006837]">${t.TicketID}</span>
+                  <span class="font-bold ${t.Priority === 'Critical' ? 'text-red-600' : 'text-[#4B5563]'}">${t.Priority}</span>
                 </div>
-                <div class="font-bold text-sm text-[var(--phb-text)]">${t.Subject}</div>
-                <div class="flex items-center justify-between text-xs text-[var(--phb-soft)] pt-1">
+                <div class="font-bold text-sm text-[#111827]">${t.Subject}</div>
+                <div class="flex items-center justify-between text-xs text-[#4B5563] pt-1">
                   <span class="font-medium">${t.RequesterName} (${t.Assignee || 'Unassigned'})</span>
                   ${getSeniorStatusBadge(t.Status)}
                 </div>
               </div>
-            `).join('') : '<p class="text-xs text-[var(--phb-soft)] py-3 font-semibold text-center">No active tickets for this department.</p>'}
+            `).join('') : '<p class="text-xs text-[#4B5563] py-3 font-semibold text-center">No active tickets for this department.</p>'}
           </div>
         ` : ''}
-
       </div>`;
   }).join('');
 }
 
-/* ==================== 8. DRAWER & MODAL ACTIONS ==================== */
+/* ==================== 7. DRAWER & MODAL ACTIONS ==================== */
 function openTicketDrawer(ticketId) {
   activeDrawerTicketId = ticketId;
   const t = ticketsStore.find(x => x.TicketID === ticketId);
@@ -1768,17 +1629,19 @@ function saveTicketChangesFromDrawer() {
 
     filterAndRenderTickets();
     triggerPASaveTicket(t, 'update');
-    showToast(`Updated ${t.TicketID} & triggered Power Automate!`);
   }
   closeDrawer('drawerTicket');
 }
 
 function openNewTicketModal() {
-  if (currentUser) {
-    document.getElementById('formReqName').value = currentUser.name;
-    document.getElementById('formReqEmail').value = currentUser.email;
-    document.getElementById('formDept').value = currentUser.department || 'ITD';
+  if (!currentUser) {
+    showToast('Please sign in with Microsoft 365 (Outlook) first.');
+    startSSO();
+    return;
   }
+  document.getElementById('formReqName').value = currentUser.name;
+  document.getElementById('formReqEmail').value = currentUser.email;
+  document.getElementById('formDept').value = currentUser.department || 'ITD';
   document.getElementById('modalNewTicket').classList.remove('hidden');
 }
 
@@ -1795,38 +1658,36 @@ function handleNewTicketSubmit(e) {
     RequesterName: document.getElementById('formReqName').value,
     RequesterEmail: document.getElementById('formReqEmail').value,
     Assignee: 'Unassigned',
-    Submitted: new Date().toISOString().slice(0,16).replace('T',' '),
+    Submitted: new Date().toISOString().slice(0, 16).replace('T', ' '),
     Detail: document.getElementById('formDetail').value
   };
 
   ticketsStore.unshift(newTicket);
   closeModal('modalNewTicket');
   filterAndRenderTickets();
-  showToast(`Ticket ${newId} created!`);
-
   triggerPASaveTicket(newTicket, 'create');
 }
 
 function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 function closeDrawer(id) { document.getElementById(id).classList.add('hidden'); }
 
-/* ==================== 9. KNOWLEDGE BASE ==================== */
+/* ==================== 8. KNOWLEDGE BASE ==================== */
 function renderKBGrid() {
   const container = document.getElementById('kbGrid');
   container.innerHTML = KB_ARTICLES.map(a => `
-    <div onclick="openKBModal('${a.id}')" class="p-4 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] hover:border-emerald-500 hover:shadow-md cursor-pointer transition-all space-y-2">
+    <div onclick="openKBModal('${a.id}')" class="p-4 rounded-2xl bg-[#F4F8EE] border border-[#D9E5C8] hover:border-[#51961D] hover:shadow-sm cursor-pointer transition-all space-y-2">
       <div class="flex items-center justify-between">
-        <span class="font-mono text-xs font-bold text-emerald-700 dark:text-emerald-400">${a.id}</span>
-        <span class="text-xs font-bold text-[var(--phb-soft)]">${a.cat}</span>
+        <span class="font-mono text-xs font-bold text-[#006837]">${a.id}</span>
+        <span class="text-xs font-bold text-[#51961D]">${a.cat}</span>
       </div>
-      <h3 class="font-extrabold text-xs sm:text-sm text-[var(--phb-text)] truncate">${a.title}</h3>
-      <p class="text-xs text-[var(--phb-soft)] line-clamp-2">${a.desc}</p>
+      <h3 class="font-extrabold text-xs sm:text-sm text-[#111827] truncate">${a.title}</h3>
+      <p class="text-xs text-[#4B5563] line-clamp-2">${a.desc}</p>
     </div>
   `).join('');
 }
 
 function openKBModal(id) {
-  const art = KB_ARTICLES.find(x=>x.id===id);
+  const art = KB_ARTICLES.find(x => x.id === id);
   if (!art) return;
   document.getElementById('artId').textContent = art.id;
   document.getElementById('artCat').textContent = art.cat;
@@ -1840,29 +1701,31 @@ function handleKBSearch(q) {
   const query = q.toLowerCase().trim();
   if (!query) { renderKBGrid(); return; }
   const matches = KB_ARTICLES.filter(a => a.title.toLowerCase().includes(query) || a.desc.toLowerCase().includes(query) || a.cat.toLowerCase().includes(query));
-  document.getElementById('kbGrid').innerHTML = matches.map(a => `
-    <div onclick="openKBModal('${a.id}')" class="p-4 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] hover:border-emerald-500 cursor-pointer space-y-2">
-      <span class="font-mono text-xs font-bold text-emerald-700">${a.id}</span>
-      <h3 class="font-extrabold text-xs sm:text-sm text-[var(--phb-text)]">${a.title}</h3>
-      <p class="text-xs text-[var(--phb-soft)]">${a.desc}</p>
-    </div>
-  `).join('');
+  document.getElementById('kbGrid').innerHTML = matches.length
+    ? matches.map(a => `
+      <div onclick="openKBModal('${a.id}')" class="p-4 rounded-2xl bg-[#F4F8EE] border border-[#D9E5C8] hover:border-[#51961D] cursor-pointer space-y-2">
+        <span class="font-mono text-xs font-bold text-[#006837]">${a.id}</span>
+        <h3 class="font-extrabold text-xs sm:text-sm text-[#111827]">${a.title}</h3>
+        <p class="text-xs text-[#4B5563]">${a.desc}</p>
+      </div>
+    `).join('')
+    : '<p class="col-span-full text-xs text-[#4B5563] py-4 text-center font-semibold">No matching guides found. Sign in with Outlook to submit a custom IT support ticket.</p>';
 }
 
-/* ==================== 10. EXPORT REPORTS ==================== */
+/* ==================== 9. EXPORT REPORTS ==================== */
 function exportToPDF() {
   if (!window.jspdf) return;
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
-  doc.setFillColor(0, 122, 94);
+  doc.setFillColor(0, 104, 55);
   doc.rect(0, 0, 210, 18, 'F');
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(12);
   doc.setFont('helvetica', 'bold');
   doc.text('Pelaburan Hartanah Berhad — ORBIT IT Queue Report', 14, 12);
 
-  doc.setTextColor(30, 41, 59);
+  doc.setTextColor(17, 24, 39);
   doc.setFontSize(9);
   doc.text(`Generated: ${new Date().toLocaleString()} by ${currentUser ? currentUser.name : 'System'}`, 14, 25);
 
@@ -1870,12 +1733,13 @@ function exportToPDF() {
   doc.autoTable({
     startY: 30,
     head: [['ID', 'Subject', 'Department', 'Priority', 'Status', 'Assignee']],
-    headStyles: { fillColor: [0, 122, 94] },
+    body: rows,
+    headStyles: { fillColor: [81, 150, 29] },
     styles: { fontSize: 8 }
   });
 
   doc.text('WE ARE PHB — PROFESSIONAL | HARMONIOUS | BOLD', 14, doc.internal.pageSize.height - 10);
-  doc.save(`PHB_ORBIT_Report_${new Date().toISOString().slice(0,10)}.pdf`);
+  doc.save(`PHB_ORBIT_Report_${new Date().toISOString().slice(0, 10)}.pdf`);
   showToast('PDF Report Exported!');
 }
 
@@ -1883,26 +1747,19 @@ function exportToExcel() {
   if (!window.XLSX) return;
   const ws = XLSX.utils.json_to_sheet(getFilteredTickets());
   const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "ORBITTickets");
-  XLSX.writeFile(wb, `PHB_ORBIT_Tickets_${new Date().toISOString().slice(0,10)}.xlsx`);
+  XLSX.utils.book_append_sheet(wb, ws, 'ORBITTickets');
+  XLSX.writeFile(wb, `PHB_ORBIT_Tickets_${new Date().toISOString().slice(0, 10)}.xlsx`);
   showToast('Excel Sheet Exported!');
 }
 
-/* ==================== UTILS ==================== */
-function toggleDarkMode() {
-  document.documentElement.classList.toggle('dark');
-  const isDark = document.documentElement.classList.contains('dark');
-  document.getElementById('sunIcon').classList.toggle('hidden', !isDark);
-  document.getElementById('moonIcon').classList.toggle('hidden', isDark);
-}
-
+/* ==================== 10. TOAST NOTIFICATIONS ==================== */
 function showToast(msg) {
   const container = document.getElementById('toastContainer');
   const toast = document.createElement('div');
-  toast.className = 'px-3.5 py-2.5 rounded-2xl bg-slate-900 text-white text-xs font-bold shadow-xl border border-slate-700 flex items-center gap-2 pointer-events-auto transition-all';
-  toast.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400"></span><span>${msg}</span>`;
+  toast.className = 'px-4 py-2.5 rounded-2xl bg-[#006837] text-white text-xs font-bold shadow-xl border border-[#84C441] flex items-center gap-2 pointer-events-auto transition-all';
+  toast.innerHTML = `<span class="w-2 h-2 rounded-full bg-[#D4E4AA]"></span><span>${msg}</span>`;
   container.appendChild(toast);
-  setTimeout(() => toast.remove(), 3200);
+  setTimeout(() => toast.remove(), 3800);
 }
 </script>
 </body>

@@ -821,7 +821,8 @@ const CONFIG = {
   },
   flows: { 
     load: 'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/26/workflows/eaf49b60f83e47d48d86407219ecb944/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=9k6JGlDLpEgdR2BwpTi5PqgKyM-NL7E_S80pIrO4Cmk', 
-    save: 'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/01/workflows/eb61e2c74bb64ddc829c58e048b1e054/triggers/manual/paths/invoke?api-version=1' 
+    save: 'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/01/workflows/eb61e2c74bb64ddc829c58e048b1e054/triggers/manual/paths/invoke?api-version=1',
+    create:'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/11/workflows/9bb69e06bbda4b6c80a2d1670a89de05/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=KDbFdzw_1aY-1p5uPJ-UhtD7JCAfn9d_F_wmzKJule0'
   },
   departments: [
     'Finance Department (FD)',
@@ -1338,14 +1339,20 @@ async function handleNewTicketSubmit(e) {
   const btn = $('formSubmitBtn');
   btn.disabled = true; btn.textContent = 'Submitting...';
 
-  const payload = {
-    action: 'create',
-    subject: $('formSubject').value.trim(), 
-    category: $('formCategory').value, 
-    priority: $('formPriority').value,
-    department: $('formDept').value, 
-    detail: $('formDetail').value.trim()
-  };
+const payload = {
+  action: 'create',
+  requesterName: document.getElementById('formReqName').value.trim(),
+  requesterEmail: document.getElementById('formReqEmail').value.trim(),
+  department: document.getElementById('formDept').value,
+  category: document.getElementById('formCategory').value,
+  priority: document.getElementById('formPriority').value,
+  subject: document.getElementById('formSubject').value.trim(),
+  detail: document.getElementById('formDetail').value.trim(),
+  notifyViaOutlook: true
+};
+
+const createUrl = CONFIG.flows.create || CONFIG.flows.save;
+await callFlow(createUrl, payload);
 
   try {
     let id;

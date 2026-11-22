@@ -1111,6 +1111,18 @@ function renderDemoAccountList() {
 
 async function startSSO(){
 
+  const msalConfig = {
+    auth: {
+        clientId: "86a53736-4355-4cb2-98dd-0466f0426e2e",
+        authority:
+        "https://login.microsoftonline.com/cc9afa77-5900-4c38-8262-c226c4c2e27d",
+        redirectUri: window.location.origin
+    }
+};
+
+const msalInstance =
+new msal.PublicClientApplication(msalConfig);
+
     try{
 
         const loginResponse =

@@ -100,7 +100,7 @@ body {
 .dark .badge-pending { background-color: #450A0A; color: #FECACA; border-color: #7F1D1D; }
 .dark .badge-resolved { background-color: #064E3B; color: #A7F3D0; border-color: #047857; }
 
-/* Custom Step List for KB Modal */
+/* Custom Step List for KB Reader Modal */
 .step-list { list-style: none; counter-reset: step; padding: 0; margin: 0; }
 .step-list li { counter-increment: step; position: relative; padding-left: 2.25rem; margin-bottom: 1rem; }
 .step-list li::before {
@@ -221,7 +221,7 @@ html { scroll-behavior: smooth; }
   </div>
 </header>
 
-<!-- ==================== LOGIN / ROLE SIMULATOR MODAL ==================== -->
+<!-- ==================== LOGIN / ROLE MODAL ==================== -->
 <div id="loginScreen" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-sm" onclick="if(event.target===this)closeModal('loginScreen')">
   <div class="max-w-md w-full bg-[var(--phb-card)] rounded-3xl shadow-2xl border border-[var(--phb-line)] overflow-hidden">
     <div class="p-6 bg-gradient-to-r from-[#007A5E] via-[#005A4B] to-[#0B2545] text-white relative">
@@ -232,7 +232,7 @@ html { scroll-behavior: smooth; }
            alt="PHB Logo" class="h-8 w-auto mb-3 brightness-200"
            onerror="this.src='https://placehold.co/160x40/ffffff/007A5E?text=PHB+Logo'">
       <h2 class="text-xl font-extrabold tracking-tight">Sign in to ORBIT Portal</h2>
-      <p class="text-xs text-emerald-100 opacity-90 mt-1">Authenticate with your PHB Microsoft 365 account to load your role permissions from SharePoint <code class="font-mono bg-white/20 px-1 rounded">ORBITUsers</code>.</p>
+      <p class="text-xs text-emerald-100 opacity-90 mt-1">Authenticate with your PHB Microsoft 365 account to load permissions from <code class="font-mono bg-white/20 px-1 rounded">ORBITUsers</code>.</p>
     </div>
     <div class="p-6 space-y-4">
       <button onclick="startSSO()" class="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-2xl border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 font-bold text-xs text-[var(--phb-text)] shadow-sm transition-all">
@@ -240,9 +240,9 @@ html { scroll-behavior: smooth; }
         <span>Sign in with Microsoft 365</span>
       </button>
 
-      <!-- Role Selector Quick Test for Demo -->
+      <!-- Role Selector Simulator (Useful for local testing) -->
       <div id="demoRoleSelectorArea" class="pt-3 border-t border-[var(--phb-line)]">
-        <label class="block text-[10px] font-extrabold uppercase tracking-wider text-[var(--phb-soft)] mb-2">Instant Role Simulation (ORBITUsers List)</label>
+        <label class="block text-[10px] font-extrabold uppercase tracking-wider text-[var(--phb-soft)] mb-2">Simulate Role (SharePoint ORBITUsers)</label>
         <div class="grid grid-cols-2 gap-2 font-mono text-[11px]">
           <button onclick="simulateRoleLogin('hod_it')" class="p-2.5 rounded-xl border border-emerald-300 bg-emerald-50 text-emerald-800 dark:bg-emerald-950 dark:border-emerald-800 dark:text-emerald-300 font-bold text-left hover:brightness-95">
             1. HOD IT
@@ -273,11 +273,11 @@ html { scroll-behavior: smooth; }
 <!-- ==================== MAIN CONTENT CONTAINER ==================== -->
 <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-10">
 
-  <!-- DEMO MODE BANNER -->
-  <div id="demoBanner" class="p-3.5 rounded-2xl border border-amber-200 bg-amber-50/90 dark:bg-amber-950/40 dark:border-amber-900 text-xs text-amber-900 dark:text-amber-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-xs">
+  <!-- LIVE PRODUCTION STATUS BANNER -->
+  <div id="prodBanner" class="p-3.5 rounded-2xl border border-emerald-300 bg-emerald-50/90 dark:bg-emerald-950/40 dark:border-emerald-900 text-xs text-emerald-900 dark:text-emerald-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-xs">
     <div class="flex items-center gap-2">
-      <span class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
-      <span><strong>Live Power Automate Endpoint Ready:</strong> Connect your HTTP Flow URLs in <code class="font-mono bg-amber-100 dark:bg-amber-900/60 px-1.5 py-0.5 rounded">CONFIG.flows</code>. Switch role preview in URL: <code class="font-mono bg-amber-100 dark:bg-amber-900/60 px-1.5 py-0.5 rounded">?role=hod_it</code>, <code class="font-mono bg-amber-100 dark:bg-amber-900/60 px-1.5 py-0.5 rounded">?role=it_admin</code>, <code class="font-mono bg-amber-100 dark:bg-amber-900/60 px-1.5 py-0.5 rounded">?role=hod_dept</code>, or <code class="font-mono bg-amber-100 dark:bg-amber-900/60 px-1.5 py-0.5 rounded">?role=staff</code>.</span>
+      <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+      <span><strong>Live Production Mode:</strong> Connected to Power Automate flows & Entra ID Tenant <code class="font-mono bg-emerald-100 dark:bg-emerald-900/60 px-1.5 py-0.5 rounded">86a53736-...</code>. Authenticated requests route to SharePoint.</span>
     </div>
   </div>
 
@@ -425,6 +425,12 @@ html { scroll-behavior: smooth; }
                  class="w-36 sm:w-48 pl-8 pr-3 py-1.5 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-xs text-[var(--phb-text)] focus:outline-none focus:ring-2 focus:ring-[#007A5E]">
           <svg class="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-[var(--phb-soft)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
         </div>
+
+        <!-- Refresh Button -->
+        <button onclick="loadSession(true)" title="Refresh Tickets from SharePoint" class="px-3 py-1.5 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-xs font-bold hover:bg-[var(--phb-card)] transition-colors flex items-center gap-1">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          <span>Refresh</span>
+        </button>
 
         <!-- PDF & Excel Exports -->
         <div id="exportBtnArea" class="hidden flex items-center gap-1.5">
@@ -807,7 +813,7 @@ html { scroll-behavior: smooth; }
 
 <!-- ==================== JAVASCRIPT CORE LOGIC ==================== -->
 <script>
-/* ==================== 1. PRODUCTION & POWER AUTOMATE CONFIG ==================== */
+/* ==================== 1. PRODUCTION CONFIGURATION ==================== */
 const CONFIG = {
   msal: { 
     clientId: 'cc9afa77-5900-4c38-8262-c226c4c2e27d', 
@@ -837,26 +843,18 @@ const CONFIG = {
   ]
 };
 
+// DEMO is false when Power Automate URLs are present
 const DEMO = !CONFIG.flows.load || !CONFIG.flows.save;
 
-/* Pre-defined Demo Users matching SharePoint ORBITUsers schema */
-const DEMO_USERS = [
+/* Simulation Users (for quick testing when role code specified) */
+const SIMULATED_USERS = [
   { id: 'u1', name: 'Nur Haliza Binti Haron', email: 'nurhaliza@phb.com.my', role: 'hod_it', roleTitle: 'Head of IT Division (HOD IT)', department: 'Information Technology Department (ITD)' },
   { id: 'u2', name: 'Haq', email: 'haq@phb.com.my', role: 'it_admin', roleTitle: 'IT Support Admin (IT Officer)', department: 'Information Technology Department (ITD)' },
   { id: 'u3', name: 'Eliza Yazmin', email: 'elizayazmin@phb.com.my', role: 'hod_dept', roleTitle: 'Head of Department (Finance HOD)', department: 'Finance Department (FD)' },
   { id: 'u4', name: 'Siti Rahayu', email: 'siti.rahayu@phb.com.my', role: 'staff', roleTitle: 'Staff Member / Senior Executive', department: 'Finance Department (FD)' }
 ];
 
-/* Sample Tickets */
-const SAMPLE_TICKETS = [
-  { TicketID: 'TK-1001', Subject: 'VPN client disconnects during peak office hours', Department: 'Finance Department (FD)', Category: 'Network & VPN', Priority: 'High', Status: 'In Progress', RequesterName: 'Siti Rahayu', RequesterEmail: 'siti.rahayu@phb.com.my', Assignee: 'Haq (ITD)', Submitted: '2026-11-21 09:30', Detail: 'Unable to maintain persistent VPN tunnel to PHB financial servers.' },
-  { TicketID: 'TK-1002', Subject: 'Dual monitor USB-C dock setup', Department: 'Property Development Department (PDD)', Category: 'Hardware', Priority: 'Medium', Status: 'Open', RequesterName: 'Amir Hassan', RequesterEmail: 'amir.hassan@phb.com.my', Assignee: 'Fahmi (ITD)', Submitted: '2026-11-21 11:15', Detail: 'New monitor delivered. Needs cable setup at desk.' },
-  { TicketID: 'TK-1003', Subject: 'Outlook shared mailbox access permission', Department: 'Human Resource Department (HRD)', Category: 'Email & Calendar', Priority: 'Medium', Status: 'Resolved', RequesterName: 'Zainab Omar', RequesterEmail: 'zainab@phb.com.my', Assignee: 'Haq (ITD)', Submitted: '2026-11-20 14:00', Detail: 'Requested delegate access for HR shared mailbox.' },
-  { TicketID: 'TK-1004', Subject: 'Suspicious email with urgent wire request', Department: 'Investment Department (ID)', Category: 'Security', Priority: 'Critical', Status: 'In Progress', RequesterName: 'Farid Ahmad', RequesterEmail: 'farid@phb.com.my', Assignee: 'Nur Haliza (HOD IT)', Submitted: '2026-11-22 08:05', Detail: 'Received external email requesting bank account changes.' },
-  { TicketID: 'TK-1005', Subject: 'ERP financial ledger module crash on export', Department: 'Finance Department (FD)', Category: 'Software', Priority: 'High', Status: 'Open', RequesterName: 'Siti Rahayu', RequesterEmail: 'siti.rahayu@phb.com.my', Assignee: 'Haq (ITD)', Submitted: '2026-11-22 09:10', Detail: 'Exporting monthly reports produces error 504 on screen.' }
-];
-
-/* 24 ARTICLES FROM INDEX (31).HTML */
+/* 24 ARTICLES LIBRARIES */
 const KB_ARTICLES = [
   { id: 'KB-0101', cat: 'Network & VPN', sev: 'crit', title: "VPN won't connect or keeps dropping", desc: "Fix the most common VPN client errors and dropped tunnels.", tags: ['vpn', 'remote access', 'connection'], steps: ["Confirm you have an active internet connection.", "Fully quit the VPN client (not just close window) and reopen.", "Restart computer if client was open before update.", "Switch to nearest server region.", "Flush DNS via command prompt: ipconfig /flushdns"] },
   { id: 'KB-0102', cat: 'Network & VPN', sev: 'warn', title: "Wi-Fi keeps disconnecting", desc: "Stabilize a flaky office or home Wi-Fi connection.", tags: ['wifi', 'wireless', 'connectivity'], steps: ["Move closer to access point — office Wi-Fi range drops past 2 walls.", "Forget the network and rejoin with fresh password.", "Toggle Wi-Fi off and back on; or toggle Airplane mode for 5s.", "Update network adapter driver via Device Manager."] },
@@ -894,7 +892,7 @@ const FAQS = [
   { q: "Who can see support tickets?", a: "Staff members can see ONLY their own submitted tickets. Department HODs see their tickets and tickets from their department. HOD IT and IT Admins have overall visibility." },
   { q: "Which priority level should I choose for a ticket?", a: "Low: minor issue with workaround. Medium: standard issue affecting daily work. High: prevents work completion. Critical: major outage, security incident, or multiple staff affected." },
   { q: "How will I know when my ticket is updated?", a: "Status changes appear live in your Ticket Queue, and an automated email notification is sent to your inbox via Power Automate." },
-  { q: "What should I do if login fails?", a: "Ensure you use your official @phb.com.my Microsoft 365 credentials and allow pop-ups for this domain." }
+  { q: "What should I do if login fails?", a: "Ensure you use your official @phb.com.my Microsoft 365 credentials, allow pop-ups for this domain, or complete the redirect sign-in flow." }
 ];
 
 const CATEGORIES = [
@@ -927,9 +925,9 @@ function resolveRole(r) {
   return { code: 'staff', title: 'Staff View (User)' };
 }
 
-/* ==================== 2. INITIALIZATION & AUTH ==================== */
+/* ==================== 2. INITIALIZATION & RESILIENT MSAL AUTH ==================== */
 window.addEventListener('DOMContentLoaded', async () => {
-  $('demoBanner').classList.toggle('hidden', !DEMO);
+  $('prodBanner').classList.toggle('hidden', DEMO);
   populateDepartmentDropdowns();
   renderHowSteps();
   renderBrowseGrid();
@@ -940,23 +938,49 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   applyRoleView();
 
-  // Check URL query string for quick role preview (e.g. ?role=hod_it)
+  // Initialize MSAL with popup + redirect fallback support
+  try {
+    if (window.msal && CONFIG.msal.clientId) {
+      msalApp = new msal.PublicClientApplication({
+        auth: { 
+          clientId: CONFIG.msal.clientId, 
+          authority: 'https://login.microsoftonline.com/' + CONFIG.msal.tenantId, 
+          redirectUri: window.location.origin + window.location.pathname 
+        },
+        cache: { 
+          cacheLocation: 'localStorage',
+          storeAuthStateInCookie: true 
+        }
+      });
+
+      // Handle redirect promise when coming back from loginRedirect
+      const redirectResponse = await msalApp.handleRedirectPromise().catch(err => {
+        console.error("MSAL Redirect Handle Error:", err);
+        showToast("Redirect Auth Error: " + (err.errorMessage || err.message), "error");
+      });
+
+      if (redirectResponse && redirectResponse.account) {
+        msalApp.setActiveAccount(redirectResponse.account);
+        await loadSession();
+        return;
+      }
+
+      const activeAcc = msalApp.getAllAccounts()[0];
+      if (activeAcc) {
+        msalApp.setActiveAccount(activeAcc);
+        await loadSession();
+        return;
+      }
+    }
+  } catch (e) {
+    console.error("MSAL Initialization Error:", e);
+  }
+
+  // Check URL query string for quick role simulation testing (e.g. ?role=hod_it)
   const urlRole = new URLSearchParams(location.search).get('role');
   if (urlRole) {
     simulateRoleLogin(urlRole);
-    return;
   }
-
-  if (DEMO) return;
-
-  try {
-    msalApp = new msal.PublicClientApplication({
-      auth: { clientId: CONFIG.msal.clientId, authority: 'https://login.microsoftonline.com/' + CONFIG.msal.tenantId, redirectUri: location.origin + location.pathname },
-      cache: { cacheLocation: 'localStorage' }
-    });
-    const acc = msalApp.getAllAccounts()[0];
-    if (acc) { msalApp.setActiveAccount(acc); await loadSession(); }
-  } catch (e) { console.error('MSAL init failed', e); }
 });
 
 function populateDepartmentDropdowns() {
@@ -976,25 +1000,63 @@ async function startSSO() {
     simulateRoleLogin('staff');
     return;
   }
-  if (!msalApp) { showToast('Sign-in not configured', 'error'); return; }
+
+  if (!msalApp) {
+    showToast('MSAL library is not initialized or invalid Client ID.', 'error');
+    return;
+  }
+
+  showToast('Connecting to Microsoft 365...', 'info');
+
   try {
-    const r = await msalApp.loginPopup({ scopes: ['User.Read'] });
-    msalApp.setActiveAccount(r.account);
+    // 1. Primary Attempt: Popup sign-in
+    const loginResponse = await msalApp.loginPopup({
+      scopes: ['User.Read'],
+      prompt: 'select_account'
+    });
+    msalApp.setActiveAccount(loginResponse.account);
     await loadSession();
-  } catch (e) { showToast('Sign-in cancelled or failed.', 'error'); }
+  } catch (popupErr) {
+    console.warn("MSAL loginPopup failed or blocked:", popupErr);
+    
+    const errStr = String(popupErr && (popupErr.errorMessage || popupErr.message || popupErr));
+    if (errStr.includes("user_cancelled") || errStr.includes("User cancelled")) {
+      showToast("Sign-in cancelled by user.", "error");
+      return;
+    }
+
+    // 2. Fallback Attempt: Redirect sign-in (for iframe or popup blocked scenarios)
+    showToast("Popup blocked/failed. Redirecting to Microsoft Login...", "info");
+    try {
+      await msalApp.loginRedirect({
+        scopes: ['User.Read'],
+        prompt: 'select_account'
+      });
+    } catch (redirectErr) {
+      console.error("MSAL loginRedirect failed:", redirectErr);
+      const msg = redirectErr ? (redirectErr.errorMessage || redirectErr.message || "Redirect auth failed") : "Unknown Error";
+      showToast("Sign-in failed: " + msg, "error");
+    }
+  }
 }
 
 function simulateRoleLogin(roleCode) {
-  const u = DEMO_USERS.find(x => x.role === roleCode) || DEMO_USERS[3]; // Default to Staff
-  setSession(u, [...SAMPLE_TICKETS], ['Haq (ITD)', 'Fahmi (ITD)', 'Nur Haliza (HOD IT)']);
-  showToast('Signed in as ' + u.name + ' (' + u.roleTitle + ')');
+  const u = SIMULATED_USERS.find(x => x.role === roleCode) || SIMULATED_USERS[3]; // Default to Staff
+  setSession(u, [], ['Haq (ITD)', 'Fahmi (ITD)', 'Nur Haliza (HOD IT)']);
+  showToast('Simulated Sign-in as ' + u.name + ' (' + u.roleTitle + ')');
 }
 
 function logout() {
-  currentUser = null;
-  ticketsStore = [];
-  applyRoleView();
-  showToast('Signed out successfully.');
+  if (msalApp && msalApp.getActiveAccount()) {
+    msalApp.logoutPopup({ account: msalApp.getActiveAccount() })
+      .then(() => location.reload())
+      .catch(() => location.reload());
+  } else {
+    currentUser = null;
+    ticketsStore = [];
+    applyRoleView();
+    showToast('Signed out successfully.');
+  }
 }
 
 function toggleUserDropdown() { $('userDropdown').classList.toggle('hidden'); }
@@ -1030,11 +1092,6 @@ function applyRoleView() {
   const u = currentUser;
   const role = u ? u.role : 'guest';
   const show = (id, on) => $(id) && $(id).classList.toggle('hidden', !on);
-
-  // Scoping Visibility Matrix:
-  // HOD IT & IT Admin: Full Executive Dashboard, Reports, Export, Dept Selector Filter
-  // HOD Dept: Scoped Dashboard, Scoped Tickets
-  // Staff: Ticket Queue (Own tickets), No Dept Filter, No Export Reports
 
   const canSeeReports = role === 'hod_it' || role === 'it_admin';
   const canFilterDepts = role === 'hod_it' || role === 'it_admin';
@@ -1075,14 +1132,35 @@ function applyRoleView() {
 
 /* ==================== 3. POWER AUTOMATE FLOW INTEGRATION ==================== */
 async function getToken() {
-  const req = { scopes: ['User.Read'], account: msalApp.getActiveAccount() };
-  try { return (await msalApp.acquireTokenSilent(req)).accessToken; }
-  catch (e) { return (await msalApp.acquireTokenPopup(req)).accessToken; }
+  if (DEMO) return '';
+  const account = msalApp.getActiveAccount() || msalApp.getAllAccounts()[0];
+  if (!account) {
+    throw new Error("No active Microsoft 365 account found. Please sign in.");
+  }
+
+  const req = { scopes: ['User.Read'], account: account };
+  try {
+    const r = await msalApp.acquireTokenSilent(req);
+    return r.accessToken;
+  } catch (e) {
+    console.warn("acquireTokenSilent failed, trying popup/redirect token:", e);
+    try {
+      const r = await msalApp.acquireTokenPopup(req);
+      return r.accessToken;
+    } catch (popupErr) {
+      await msalApp.acquireTokenRedirect(req);
+    }
+  }
 }
 
 async function callFlow(url, payload) {
   const token = await getToken();
-  const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...payload, token }) });
+  const res = await fetch(url, { 
+    method: 'POST', 
+    headers: { 'Content-Type': 'application/json' }, 
+    body: JSON.stringify({ ...payload, token }) 
+  });
+  
   if (!res.ok) {
     let msg = 'HTTP ' + res.status;
     try { const j = await res.json(); if (j && j.message) msg = j.message; } catch (e) {}
@@ -1093,10 +1171,14 @@ async function callFlow(url, payload) {
 
 async function loadSession(manual) {
   try {
+    showToast("Fetching live tickets from SharePoint...", "info");
     const d = await callFlow(CONFIG.flows.load, {});
     setSession(d.user || {}, d.tickets || d.value || [], d.assignees || []);
     if (manual) showToast('Refreshed live tickets from SharePoint.');
-  } catch (e) { showToast('Could not load tickets: ' + e.message, 'error'); }
+  } catch (e) { 
+    console.error("loadSession failed:", e);
+    showToast('Could not load tickets: ' + e.message, 'error'); 
+  }
 }
 
 /* ==================== 4. TICKET SCOPING BY ROLE ==================== */
@@ -1108,26 +1190,21 @@ function getFilteredTickets() {
   const userEmail = (currentUser.email || '').toLowerCase();
   const userDept = (currentUser.department || '').trim().toLowerCase();
 
-  // STRICT ROLE ACCESS CONTROL RULES:
   if (role === 'staff') {
-    // Staff sees ONLY their own submitted tickets
     list = list.filter(t => (t.RequesterEmail || '').toLowerCase() === userEmail);
   } else if (role === 'hod_dept') {
-    // HOD Dept sees their own tickets + tickets belonging to their department
     list = list.filter(t => {
       const reqEmail = (t.RequesterEmail || '').toLowerCase();
       const ticketDept = (t.Department || '').trim().toLowerCase();
       return reqEmail === userEmail || (userDept && ticketDept === userDept);
     });
   } else if (role === 'hod_it' || role === 'it_admin') {
-    // HOD IT & IT Admin see ALL tickets by default, with optional department dropdown filter
     const selectedDept = $('deptSelect').value;
     if (selectedDept !== 'ALL') {
       list = list.filter(t => t.Department === selectedDept);
     }
   }
 
-  // Search filter
   const query = $('ticketSearchInput').value.toLowerCase().trim();
   if (query) {
     list = list.filter(t => 
@@ -1145,7 +1222,6 @@ function filterAndRenderTickets() {
   const tickets = getFilteredTickets();
   $('ticketBadgeCount').textContent = tickets.length;
 
-  // KPIs
   $('kpiTotal').textContent = tickets.length;
   $('kpiOpen').textContent = tickets.filter(t => t.Status === 'Open' || t.Status === 'In Progress').length;
   $('kpiPending').textContent = tickets.filter(t => t.Status === 'Pending').length;
@@ -1160,7 +1236,7 @@ function renderListView(tickets) {
     tbody.innerHTML = `
       <tr>
         <td colspan="8" class="text-center py-10 text-[var(--phb-soft)] font-medium">
-          No tickets found for your current role and filter settings.
+          No tickets found for your role and current filter parameters.
         </td>
       </tr>`;
     return;
@@ -1216,7 +1292,6 @@ function openTicketDrawer(ticketId) {
   $('drwAssigneeSelect').value = t.Assignee || 'Unassigned';
   $('drwRemarks').value = t.Remarks || '';
 
-  // HOD Dept, IT Admin, HOD IT can edit status. Only HOD IT and IT Admin can edit Assignee.
   const isElevated = currentUser && (currentUser.role !== 'staff');
   $('drwActionPanel').classList.toggle('hidden', !isElevated);
   $('drawerTicket').classList.remove('hidden');
@@ -1244,9 +1319,9 @@ async function saveTicketChangesFromDrawer() {
       await callFlow(CONFIG.flows.save, payload); 
       await loadSession(); 
     }
-    showToast(`Ticket ${t.TicketID} updated.`);
+    showToast(`Ticket ${t.TicketID} updated successfully.`);
     closeDrawer('drawerTicket');
-  } catch (e) { showToast('Could not update: ' + e.message, 'error'); }
+  } catch (e) { showToast('Could not update ticket: ' + e.message, 'error'); }
 }
 
 function openNewTicketModal() {
@@ -1289,9 +1364,9 @@ async function handleNewTicketSubmit(e) {
     }
     closeModal('modalNewTicket');
     $('formSubject').value = ''; $('formDetail').value = '';
-    showToast(`Ticket ${id} submitted! Automated email sent.`);
+    showToast(`Ticket ${id} created! Automated email sent.`);
     $('sectionTicketQueue').scrollIntoView();
-  } catch (err) { showToast('Could not submit: ' + err.message, 'error'); }
+  } catch (err) { showToast('Could not submit ticket: ' + err.message, 'error'); }
   btn.disabled = false; btn.textContent = 'Submit Ticket';
 }
 
@@ -1521,7 +1596,7 @@ function showToast(msg, type) {
   toast.className = 'px-4 py-2.5 rounded-2xl bg-slate-900 text-white text-xs font-bold shadow-2xl border border-slate-700 flex items-center gap-2 pointer-events-auto transition-all transform translate-y-2';
   toast.innerHTML = `<span class="w-2.5 h-2.5 rounded-full ${type === 'error' ? 'bg-rose-500' : 'bg-emerald-400'}"></span><span>${esc(msg)}</span>`;
   container.appendChild(toast);
-  setTimeout(() => toast.remove(), 3500);
+  setTimeout(() => toast.remove(), 4000);
 }
 </script>
 </body>

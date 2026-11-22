@@ -828,32 +828,16 @@ const CONFIG = {
     tenantId: 'cc9afa77-5900-4c38-8262-c226c4c2e27d' 
   },
   flows: { 
-    load: 'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/18/workflows/11feb1f6a91d48328920d2bc31c3eced/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=6AzxL8WoQH6vlCFGbptMXOUZeZ-BiY9H7HO2xC9apQU', 
-    save: 'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/01/workflows/eb61e2c74bb64ddc829c58e048b1e054/triggers/manual/paths/invoke?api-version=1',
-    create:'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/11/workflows/9bb69e06bbda4b6c80a2d1670a89de05/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=KDbFdzw_1aY-1p5uPJ-UhtD7JCAfn9d_F_wmzKJule0'
+    load: 'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/26/workflows/eaf49b60f83e47d48d86407219ecb944/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=9k6JGlDLpEgdR2BwpTi5PqgKyM-NL7E_S80pIrO4Cmk', 
+    create: 'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/11/workflows/9bb69e06bbda4b6c80a2d1670a89de05/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=KDbFdzw_1aY-1p5uPJ-UhtD7JCAfn9d_F_wmzKJule0',
+    save: 'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/01/workflows/eb61e2c74bb64ddc829c58e048b1e054/triggers/manual/paths/invoke?api-version=1' 
   },
   departments: [
-    'Finance Department (FD)',
-    'Investment Department (ID)',
-    'Property Development Department (PDD)',
-    'Internal Audit Department (IAD)',
-    'PHB Asset Management (PAM)',
-    'PHB Facility Management (PFM)',
-    'PHB Property Ventures (PPV)',
-    'Risk, Compliance & Integrity Management Department (RCIMD)',
-    'Human Resource Department (HRD)',
-    'Learning & Development Department (LDD)',
-    'Corporate Administration Department (CAD)',
-    'Contract Management Department (CMD)',
-    'Procurement & Vendor Management Department (PVMD)',
-    'Information Technology Department (ITD)',
-    'Portfolio Management Department (PMD)',
-    'Research Unit (RU)'
   ]
 };
 
-// DEMO is false when Power Automate URLs are present
-const DEMO = !CONFIG.flows.load || !CONFIG.flows.save;
+// DEMO is false when load and create/save Power Automate URLs are present
+const DEMO = !CONFIG.flows.load || (!CONFIG.flows.create && !CONFIG.flows.save);
 
 /* Simulation Users (for quick testing when role code specified) */
 const SIMULATED_USERS = [
@@ -1391,7 +1375,8 @@ async function handleNewTicketSubmit(e) {
       });
       filterAndRenderTickets();
     } else {
-      const r = await callFlow(CONFIG.flows.save, payload);
+      const createUrl = CONFIG.flows.create || CONFIG.flows.save;
+      const r = await callFlow(createUrl, payload);
       id = r.ticketId || '';
       await loadSession();
     }

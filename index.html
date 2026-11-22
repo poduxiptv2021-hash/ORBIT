@@ -1063,25 +1063,33 @@ function logout() {
 function toggleUserDropdown() { $('userDropdown').classList.toggle('hidden'); }
 
 function setSession(u, rows, assignees) {
-  const roleObj = resolveRole(u.role);
-  currentUser = { 
-    name: u.name || u.email || 'User', 
-    email: u.email || '', 
-    role: roleObj.code, 
-    roleTitle: u.roleTitle || roleObj.title, 
-    department: u.department || 'Finance Department (FD)' 
+  const acc = (msalApp && (msalApp.getActiveAccount() || msalApp.getAllAccounts()[0])) || {};
+  const claims = acc.idTokenClaims || {};
+  const msalEmail = acc.username || claims.preferred_username || claims.email || '';
+  const msalName = acc.name || claims.name || (msalEmail ? msalEmail.split('@')[0] : 'User');
+  const resolvedName = (u && u.name) || msalName;
+  const resolvedEmail = (u && u.email) || msalEmail;
+  const roleObj = resolveRole(u && u.role);
+
+  currentUser = {
+    name: resolvedName,
+    email: resolvedEmail,
+    role: roleObj.code,
+    roleTitle: (u && u.roleTitle) || roleObj.title,
+    department: (u && u.department) || 'Finance Department (FD)'
   };
-  
+
   ticketsStore = rows || [];
-  assigneeList = assignees || ['Haq (ITD)', 'Fahmi (ITD)', 'Nur Haliza (HOD IT)'];
+  assigneeList = assignees && assignees.length
+    ? assignees
+    : ['Haq (ITD)', 'Fahmi (ITD)', 'Nur Haliza (HOD IT)'];
 
   $('chipName').textContent = currentUser.name.split(' ')[0];
   $('chipAvatar').textContent = currentUser.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
   $('chipRoleBadge').textContent = currentUser.role.toUpperCase().replace('_', ' ');
-  
   $('menuRoleTitle').textContent = currentUser.roleTitle;
   $('menuName').textContent = currentUser.name;
-  $('menuEmail').textContent = currentUser.email;
+  $('menuEmail').textContent = currentUser.email || 'No email returned';
   $('menuDept').textContent = 'Dept: ' + (currentUser.department || '-');
 
   closeModal('loginScreen');
@@ -1171,15 +1179,19 @@ async function callFlow(url, payload) {
 }
 
 async function loadSession(manual) {
-  try {
-    showToast("Fetching live tickets from SharePoint...", "info");
-    const d = await callFlow(CONFIG.flows.load, {});
-    setSession(d.user || {}, d.tickets || d.value || [], d.assignees || []);
-    if (manual) showToast('Refreshed live tickets from SharePoint.');
-  } catch (e) { 
-    console.error("loadSession failed:", e);
-    showToast('Could not load tickets: ' + e.message, 'error'); 
-  }
+try {
+showToast("Fetching live tickets from SharePoint...", "info");
+const acc = (msalApp && (msalApp.getActiveAccount() || msalApp.getAllAccounts()[0])) || {};
+const d = await callFlow(CONFIG.flows.load, {
+email: acc.username || '',
+name: acc.name || ''
+});
+setSession(d.user || {}, d.tickets || d.value || [], d.assignees || []);
+if (manual) showToast('Refreshed live tickets from SharePoint.');
+} catch (e) {
+console.error("loadSession failed:", e);
+showToast('Could not load tickets: ' + e.message, 'error');
+}
 }
 
 /* ==================== 4. TICKET SCOPING BY ROLE ==================== */

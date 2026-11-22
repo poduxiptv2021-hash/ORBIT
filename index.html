@@ -962,22 +962,35 @@ function logout() {
 
 function toggleUserDropdown() { $('userDropdown').classList.toggle('hidden'); }
 
-function setSession(u, rows, assignees) {
+function setSession(u, rows, assignees, rawData = {}) {
   const acc = (msalApp && (msalApp.getActiveAccount() || msalApp.getAllAccounts()[0])) || {};
   const claims = acc.idTokenClaims || {};
   const msalEmail = acc.username || claims.preferred_username || claims.email || '';
   const msalName = acc.name || claims.name || (msalEmail ? msalEmail.split('@')[0] : 'User');
 
-  const resolvedName = (u && u.name) || msalName;
-  const resolvedEmail = (u && u.email) || msalEmail;
-  const roleObj = resolveRole(u && u.role);
+  const userObj = (u && typeof u === 'object') ? u : {};
+  const resolvedName = userObj.name || userObj.Name || userObj.displayName || msalName;
+  const resolvedEmail = userObj.email || userObj.Email || userObj.mail || msalEmail;
+
+  // Read department from Power Automate user object (or top-level response if placed there)
+  const paDept =
+    userObj.department ||
+    userObj.Department ||
+    userObj.dept ||
+    userObj.Dept ||
+    userObj.departmentName ||
+    rawData.department ||
+    rawData.Department ||
+    '';
+
+  const roleObj = resolveRole(userObj.role || userObj.Role || rawData.role);
 
   currentUser = {
     name: resolvedName,
     email: resolvedEmail,
     role: roleObj.code,
-    roleTitle: (u && u.roleTitle) || roleObj.title,
-    department: (u && u.department) || 'Finance Department (FD)'
+    roleTitle: userObj.roleTitle || roleObj.title,
+    department: String(paDept).trim() || 'General'
   };
 
   ticketsStore = rows || [];
@@ -1095,7 +1108,7 @@ async function loadSession(manual) {
       email: msalEmail,
       name: msalName
     });
-    setSession(d.user || {}, d.tickets || d.value || [], d.assignees || []);
+  setSession(d.user || d, d.tickets || d.value || [], d.assignees || [], d);
     if (manual) showToast('Refreshed live tickets from SharePoint.');
   } catch (e) {
     console.error("loadSession failed:", e);
@@ -1248,10 +1261,14 @@ async function saveTicketChangesFromDrawer() {
 }
 
 function openNewTicketModal() {
-  if (!currentUser) { openLoginModal(); showToast('Please sign in to submit a ticket.'); return; }
-  $('formReqName').value = currentUser.name;
-  $('formReqEmail').value = currentUser.email;
-  if (currentUser.department) $('formDept').value = currentUser.department;
+  if (!currentUser) {
+    openLoginModal();
+    showToast('Please sign in to submit a ticket.');
+    return;
+  }
+  $('formReqName').value = currentUser.name || '';
+  $('formReqEmail').value = currentUser.email || '';
+  $('formDept').value = currentUser.department || 'General';
   $('modalNewTicket').classList.remove('hidden');
   $('formSubject').focus();
 }

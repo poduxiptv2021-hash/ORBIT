@@ -191,7 +191,7 @@ html { scroll-behavior: smooth; }
       </a>
     </nav>
 
-    <!-- Controls & User Menu -->
+    <!-- Controls & User Menu (Single Submit Ticket Button beside Login) -->
     <div class="flex items-center gap-2 sm:gap-3">
       <button onclick="toggleDarkMode()" title="Toggle Dark/Light Mode" class="p-2 rounded-xl border border-[var(--phb-line)] hover:border-[#007A5E] hover:bg-[var(--phb-bg)] text-[var(--phb-soft)] hover:text-[var(--phb-text)] transition-all">
         <svg id="sunIcon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
@@ -219,7 +219,7 @@ html { scroll-behavior: smooth; }
           </div>
         </button>
 
-        <div id="userDropdown" class="hidden absolute right-0 mt-2 w-64 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-2xl py-2 z-50">
+        <div id="userDropdown" class="hidden absolute right-0 mt-2 w-72 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-2xl py-2 z-50">
           <div class="px-4 py-3 border-b border-[var(--phb-line)] bg-[var(--phb-bg)]/50">
             <p id="menuRoleTitle" class="text-[10px] font-extrabold uppercase tracking-wider text-[#007A5E] dark:text-emerald-400">Staff View</p>
             <p id="menuName" class="text-xs font-bold text-[var(--phb-text)] truncate mt-0.5">User Name</p>
@@ -370,7 +370,7 @@ html { scroll-behavior: smooth; }
 
         <div id="deptFilterArea" class="flex items-center gap-2">
           <label for="deptSelect" class="text-xs font-bold text-[var(--phb-soft)] uppercase tracking-wider">Department:</label>
-          <select id="deptSelect" onchange="filterAndRenderTickets()" class="px-3 py-1.5 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-xs font-bold text-[var(--phb-text)] focus:ring-2 focus:ring-[#007A5E] focus:outline-none">
+          <select id="deptSelect" onchange="filterAndRenderTickets()" class="min-w-[230px] max-w-xs px-3 py-1.5 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-xs font-bold text-[var(--phb-text)] focus:ring-2 focus:ring-[#007A5E] focus:outline-none">
             <option value="ALL">All Departments</option>
           </select>
         </div>
@@ -379,7 +379,7 @@ html { scroll-behavior: smooth; }
       <div class="flex flex-wrap items-center gap-2">
         <div class="relative">
           <input id="ticketSearchInput" type="text" oninput="filterAndRenderTickets()" placeholder="Filter queue..."
-                 class="w-36 sm:w-48 pl-8 pr-3 py-1.5 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-xs text-[var(--phb-text)] focus:outline-none focus:ring-2 focus:ring-[#007A5E]">
+                 class="w-40 sm:w-52 pl-8 pr-3 py-1.5 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-xs text-[var(--phb-text)] focus:outline-none focus:ring-2 focus:ring-[#007A5E]">
           <svg class="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-[var(--phb-soft)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
         </div>
 
@@ -392,11 +392,6 @@ html { scroll-behavior: smooth; }
           <button onclick="exportToPDF()" title="Export PDF Report" class="px-3 py-1.5 rounded-xl border border-rose-200 bg-rose-50 text-rose-700 dark:bg-rose-950/50 dark:border-rose-900 dark:text-rose-300 text-xs font-bold hover:bg-rose-100 transition-colors">PDF</button>
           <button onclick="exportToExcel()" title="Export Excel Sheet" class="px-3 py-1.5 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:border-emerald-900 dark:text-emerald-300 text-xs font-bold hover:bg-emerald-100 transition-colors">Excel</button>
         </div>
-
-        <button onclick="openNewTicketModal()" class="px-3.5 py-1.5 rounded-xl bg-[#007A5E] hover:bg-[#005A4B] text-white text-xs font-bold shadow-sm transition-colors flex items-center gap-1">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
-          <span>New Ticket</span>
-        </button>
       </div>
     </div>
 
@@ -405,14 +400,14 @@ html { scroll-behavior: smooth; }
         <table class="w-full text-left border-collapse text-xs">
           <thead>
             <tr class="bg-[var(--phb-bg)] border-b border-[var(--phb-line)] text-[var(--phb-soft)] font-bold uppercase tracking-wider text-[10px]">
-              <th class="py-3.5 px-4">Ticket ID</th>
-              <th class="py-3.5 px-4">Subject &amp; Requester</th>
-              <th class="py-3.5 px-4">Department</th>
-              <th class="py-3.5 px-4">Category</th>
-              <th class="py-3.5 px-4">Priority</th>
-              <th class="py-3.5 px-4">Status</th>
-              <th class="py-3.5 px-4">Assignee</th>
-              <th class="py-3.5 px-4 text-right">Action</th>
+              <th class="py-3.5 px-4 whitespace-nowrap">Ticket ID</th>
+              <th class="py-3.5 px-4 min-w-[200px]">Subject &amp; Requester</th>
+              <th class="py-3.5 px-4 min-w-[230px]">Department</th>
+              <th class="py-3.5 px-4 whitespace-nowrap">Category</th>
+              <th class="py-3.5 px-4 whitespace-nowrap">Priority</th>
+              <th class="py-3.5 px-4 whitespace-nowrap">Status</th>
+              <th class="py-3.5 px-4 min-w-[180px]">Assignee</th>
+              <th class="py-3.5 px-4 text-right whitespace-nowrap">Action</th>
             </tr>
           </thead>
           <tbody id="ticketTableBody" class="divide-y divide-[var(--phb-line)]"></tbody>
@@ -571,11 +566,13 @@ html { scroll-behavior: smooth; }
         </div>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div>
-          <label class="block font-bold text-[var(--phb-soft)] uppercase tracking-wider text-[10px] mb-1">Department</label>
-          <input id="formDept" type="text" readonly class="w-full px-3 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-[var(--phb-text)] font-semibold">
-        </div>
+      <!-- Full-width Department row so long Outlook department names never truncate -->
+      <div>
+        <label class="block font-bold text-[var(--phb-soft)] uppercase tracking-wider text-[10px] mb-1">Department</label>
+        <input id="formDept" type="text" readonly class="w-full px-3 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-[var(--phb-text)] font-semibold">
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="block font-bold text-[var(--phb-soft)] uppercase tracking-wider text-[10px] mb-1">Category</label>
           <select id="formCategory" required class="w-full px-3 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-[var(--phb-text)] font-semibold">
@@ -612,18 +609,6 @@ html { scroll-behavior: smooth; }
         <textarea id="formDetail" rows="3" required placeholder="Describe error messages or steps taken..." class="w-full px-3 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-[var(--phb-text)] font-medium"></textarea>
       </div>
 
-      <!-- SUBMISSION AUDIT TRAIL LOG -->
-      <div class="p-3.5 rounded-2xl bg-[var(--phb-bg)] border border-[var(--phb-line)] space-y-2">
-        <div class="flex items-center justify-between">
-          <span class="font-extrabold uppercase tracking-wider text-[10px] text-[#007A5E] dark:text-emerald-400 flex items-center gap-1.5">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            Submission Audit Trail
-          </span>
-          <span id="formTrailTimestamp" class="font-mono text-[10px] text-[var(--phb-soft)]"></span>
-        </div>
-        <ol id="formTrailList" class="space-y-1.5 text-[11px] text-[var(--phb-soft)] border-l-2 border-emerald-500 pl-3 ml-1"></ol>
-      </div>
-
       <div class="flex items-center justify-end gap-2 pt-3 border-t border-[var(--phb-line)]">
         <button type="button" onclick="closeModal('modalNewTicket')" class="px-4 py-2 rounded-xl border border-[var(--phb-line)] font-bold text-[var(--phb-soft)]">Cancel</button>
         <button type="submit" id="formSubmitBtn" class="px-5 py-2 rounded-xl bg-[#007A5E] hover:bg-[#005A4B] text-white font-extrabold shadow-sm">Submit Ticket</button>
@@ -632,7 +617,7 @@ html { scroll-behavior: smooth; }
   </div>
 </div>
 
-<!-- 3. TICKET ACTION DRAWER FOR HOD / IT ADMIN -->
+<!-- 3. TICKET ACTION & PROGRESS DRAWER -->
 <div id="drawerTicket" class="fixed inset-0 z-50 hidden">
   <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-xs" onclick="closeDrawer('drawerTicket')"></div>
   <div class="absolute right-0 top-0 bottom-0 w-full max-w-md bg-[var(--phb-card)] border-l border-[var(--phb-line)] shadow-2xl flex flex-col overflow-hidden">
@@ -674,18 +659,23 @@ html { scroll-behavior: smooth; }
         </div>
       </div>
 
-      <!-- TICKET ACTIVITY & AUDIT TRAIL -->
+      <!-- TICKET PROGRESS & SUBMISSION AUDIT TRAIL -->
       <div>
-        <span class="font-bold text-[var(--phb-soft)] uppercase text-[10px] block mb-1.5">Ticket Progress</span>
-        <div id="drwAuditTrail" class="p-3.5 rounded-2xl bg-[var(--phb-bg)] border border-[var(--phb-line)] space-y-2.5 text-[11px]"></div>
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="font-bold text-[#007A5E] dark:text-emerald-400 uppercase text-[10px] flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Ticket Progress &amp; Audit Trail
+          </span>
+        </div>
+        <div id="drwAuditTrail" class="p-3.5 rounded-2xl bg-[var(--phb-bg)] border border-[var(--phb-line)] space-y-3 text-[11px]"></div>
       </div>
 
       <div id="drwActionPanel" class="p-4 rounded-2xl border border-emerald-200 bg-emerald-50/60 dark:bg-emerald-950/30 dark:border-emerald-900 space-y-3">
         <div class="flex items-center justify-between">
-          <h4 class="font-extrabold text-xs uppercase tracking-wider text-[#007A5E] dark:text-emerald-300">Ticket Assign</h4>
+          <h4 id="drwActionTitle" class="font-extrabold text-xs uppercase tracking-wider text-[#007A5E] dark:text-emerald-300">Ticket Assign</h4>
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
+        <div id="drwControlsGrid" class="grid grid-cols-2 gap-3">
           <div>
             <label class="block font-bold text-[var(--phb-soft)] mb-1">Status</label>
             <select id="drwStatusSelect" class="w-full px-2.5 py-1.5 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-card)] font-bold text-[var(--phb-text)]">
@@ -1193,6 +1183,8 @@ function setSession(u, rows, usersListFromSP, rawData = {}) {
     Priority: extractChoice(t.Priority || '') || 'Medium',
     Status: extractChoice(t.Status || '') || 'Open',
     Assignee: normalizeAssignee(t.Assignee),
+    AssigneeEmail: extractChoice(t.AssigneeEmail || t.Assignee_x0020_Email || ''),
+    Submitted: extractChoice(t.Submitted || t.SubmittedAt || t.Created || ''),
     Detail: t.Detail || t.Details || t.Description || ''
   }));
 
@@ -1221,9 +1213,9 @@ function applyRoleView() {
   const show = (id, on) => $(id) && $(id).classList.toggle('hidden', !on);
 
   const canSeeReports = role === 'hod_it' || role === 'it_admin';
-  const canFilterDepts = role === 'hod_it' || role === 'it_admin';
+  const canFilterDepts = role === 'hod_it' || role === 'it_admin' || role === 'hod_dept';
   const canSeeDashboard = role === 'hod_it' || role === 'it_admin' || role === 'hod_dept';
-  const canAssign = role === 'hod_it' || role === 'it_admin';
+  const canAssign = role === 'hod_it'; // Only HOD IT can assign; IT Admin only adds remarks & changes status
 
   show('sectionExecutiveOverview', canSeeDashboard);
   show('sectionReports', canSeeReports);
@@ -1242,21 +1234,34 @@ function applyRoleView() {
   show('heroWelcomeHeading', !!u);
 
   if (u) {
+    const deptSelect = $('deptSelect');
     if (role === 'hod_it') {
       $('roleOverviewBadge').textContent = 'HOD IT Executive Dashboard';
-      $('roleOverviewDesc').textContent = 'Full enterprise oversight across PHB departments, SLA metrics, and IT officer assignments.';
-      $('deptSelect').value = 'ALL';
+      $('roleOverviewDesc').textContent = 'Full enterprise oversight across all PHB departments, SLA metrics, and IT officer assignments.';
+      deptSelect.disabled = false;
+      deptSelect.value = 'ALL';
     } else if (role === 'it_admin') {
-      $('roleOverviewBadge').textContent = 'IT Support Operational Dashboard';
-      $('roleOverviewDesc').textContent = 'Operational ticket queue, SLA response times, and active officer assignments.';
-      $('deptSelect').value = 'ALL';
+      $('roleOverviewBadge').textContent = 'IT Support Admin Dashboard';
+      $('roleOverviewDesc').textContent = 'Operational ticket queue grouped by department. Update ticket status and resolution remarks.';
+      deptSelect.disabled = false;
+      deptSelect.value = 'ALL';
     } else if (role === 'hod_dept') {
-      $('roleOverviewBadge').textContent = `Head of Department (${u.department || 'Department'})`;
-      $('roleOverviewDesc').textContent = `Viewing all tickets submitted by members of ${u.department || 'your department'} as well as your own tickets.`;
-      const matchingOption = Array.from($('deptSelect').options).find(
-        opt => opt.value.toLowerCase() === currentUser.department.toLowerCase()
+      const myDept = extractChoice(u.department) || 'My Department';
+      $('roleOverviewBadge').textContent = `Head of Department (${myDept})`;
+      $('roleOverviewDesc').textContent = `Tracking all tickets submitted by ${myDept} team members and your own requests.`;
+      const matchingOption = Array.from(deptSelect.options).find(
+        opt => opt.value.toLowerCase() === myDept.toLowerCase()
       );
-      $('deptSelect').value = matchingOption ? matchingOption.value : 'ALL';
+      if (matchingOption) {
+        deptSelect.value = matchingOption.value;
+      } else if (myDept) {
+        const opt = document.createElement('option');
+        opt.value = myDept;
+        opt.textContent = myDept;
+        deptSelect.appendChild(opt);
+        deptSelect.value = myDept;
+      }
+      deptSelect.disabled = true;
     }
 
     fillAssigneeSelect();
@@ -1428,27 +1433,27 @@ function renderListView(tickets) {
     const assigneeText = normalizeAssignee(t.Assignee);
     const isPendingHOD = assigneeText === DEFAULT_PENDING_ASSIGNEE;
     const assigneeBadge = isPendingHOD
-      ? `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800">
+      ? `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800 whitespace-nowrap">
            <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
            ${esc(assigneeText)}
          </span>`
-      : `<span class="text-[var(--phb-text)] font-bold">${esc(assigneeText)}</span>`;
+      : `<span class="text-[var(--phb-text)] font-bold whitespace-nowrap">${esc(assigneeText)}</span>`;
 
     return `
       <tr onclick="openTicketDrawer('${esc(t.TicketID)}')" class="hover:bg-[var(--phb-bg)] cursor-pointer transition-colors">
-        <td class="py-3.5 px-4 font-mono font-bold text-[#007A5E] dark:text-emerald-400">${esc(t.TicketID)}</td>
+        <td class="py-3.5 px-4 font-mono font-bold text-[#007A5E] dark:text-emerald-400 whitespace-nowrap">${esc(t.TicketID)}</td>
         <td class="py-3.5 px-4">
           <div class="font-bold text-[var(--phb-text)] line-clamp-1">${esc(t.Subject)}</div>
           <div class="text-[11px] text-[var(--phb-soft)] font-medium">${esc(t.RequesterName)} (${esc(t.RequesterEmail)})</div>
         </td>
-        <td class="py-3.5 px-4 font-semibold text-[var(--phb-soft)] truncate max-w-[160px]">${esc(extractChoice(t.Department))}</td>
-        <td class="py-3.5 px-4 font-semibold text-[var(--phb-text)]">${esc(t.Category)}</td>
-        <td class="py-3.5 px-4 font-bold ${t.Priority==='Critical'?'text-rose-600':t.Priority==='High'?'text-amber-600':'text-slate-500'}">${esc(t.Priority)}</td>
-        <td class="py-3.5 px-4">
+        <td class="py-3.5 px-4 font-semibold text-[var(--phb-soft)] min-w-[230px] whitespace-normal leading-snug">${esc(extractChoice(t.Department))}</td>
+        <td class="py-3.5 px-4 font-semibold text-[var(--phb-text)] whitespace-nowrap">${esc(t.Category)}</td>
+        <td class="py-3.5 px-4 font-bold whitespace-nowrap ${t.Priority==='Critical'?'text-rose-600':t.Priority==='High'?'text-amber-600':'text-slate-500'}">${esc(t.Priority)}</td>
+        <td class="py-3.5 px-4 whitespace-nowrap">
           <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${statusClass}">${esc(t.Status)}</span>
         </td>
         <td class="py-3.5 px-4">${assigneeBadge}</td>
-        <td class="py-3.5 px-4 text-right">
+        <td class="py-3.5 px-4 text-right whitespace-nowrap">
           <button class="px-2.5 py-1 rounded-lg border border-[var(--phb-line)] hover:bg-[var(--phb-card)] text-[#007A5E] font-bold text-[11px]">View</button>
         </td>
       </tr>`;
@@ -1457,52 +1462,75 @@ function renderListView(tickets) {
 
 /* ==================== 5. DRAWER & MODAL ACTIONS ==================== */
 function fillAssigneeSelect() {
-    const sel = $('drwAssigneeSelect');
-
-    sel.innerHTML =
-        assigneeDirectory.map(a => `
-            <option value="${a.label}"
-                    data-email="${a.email || ''}">
-                ${a.label}
-            </option>
-        `).join('');
+  const sel = $('drwAssigneeSelect');
+  sel.innerHTML = assigneeDirectory.map(a => `
+    <option value="${esc(a.label)}" data-email="${esc(a.email || '')}">
+      ${esc(a.label)}
+    </option>
+  `).join('');
 }
 
 function buildAuditEntries(t) {
+  // 1. Structured Trail array returned from Power Automate
+  if (Array.isArray(t.Trail) && t.Trail.length) {
+    return t.Trail.map(entry => ({
+      time: extractChoice(entry.ActionDate || entry.time || entry.Timestamp || ''),
+      text: [
+        extractChoice(entry.Action || entry.text || ''),
+        entry.Assignee ? `Assigned To: ${extractChoice(entry.Assignee)}` : '',
+        entry.UpdatedBy ? `Updated By: ${extractChoice(entry.UpdatedBy)}` : '',
+        entry.Remarks ? `Remarks: "${extractChoice(entry.Remarks)}"` : ''
+      ].filter(Boolean).join(' · ')
+    }));
+  }
+
+  // 2. Stored AuditTrail array or newline/JSON string from SharePoint
   if (Array.isArray(t.AuditTrail) && t.AuditTrail.length) {
     return t.AuditTrail;
   }
   if (typeof t.AuditTrail === 'string' && t.AuditTrail.trim()) {
-    return t.AuditTrail.split('\n').filter(Boolean).map(line => ({ text: line, time: '' }));
+    const trimmed = t.AuditTrail.trim();
+    if (trimmed.startsWith('[')) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (Array.isArray(parsed)) return parsed;
+      } catch (e) {}
+    }
+    return trimmed.split('\n').filter(Boolean).map(line => {
+      const m = line.match(/^\[([^\]]+)\]\s*(.*)$/);
+      return m ? { time: m[1], text: m[2] } : { time: '', text: line };
+    });
   }
 
+  // 3. Default Submission Audit Trail + current status/assignee timeline
+  const submittedTime = extractChoice(t.Submitted || t.SubmittedAt || t.Created || '') || 'Submitted';
   const entries = [
     {
-      time: t.Submitted,
-      text: `Ticket submitted by ${t.RequesterName || 'Requester'} (${extractChoice(t.Department) || 'PHB'})`
+      time: submittedTime,
+      text: `Ticket Created by ${t.RequesterName || 'Requester'} (${extractChoice(t.Department) || 'PHB'}) · ${t.Category || 'IT Support'}`
     },
     {
-      time: t.Submitted,
-      text: `${DEFAULT_PENDING_ASSIGNEE} (Status: Open)`
+      time: submittedTime,
+      text: `Status: Open · Routed to ${DEFAULT_PENDING_ASSIGNEE}`
     }
   ];
 
   const currentAssignee = normalizeAssignee(t.Assignee);
   if (currentAssignee !== DEFAULT_PENDING_ASSIGNEE) {
     entries.push({
-      time: 'HOD IT Assignment',
+      time: extractChoice(t.UpdatedAt || t.Modified || '') || 'HOD IT Assignment',
       text: `Assigned to ${currentAssignee} · Status: ${t.Status || 'In Progress'}`
     });
   } else if (t.Status && t.Status !== 'Open') {
     entries.push({
-      time: 'Status Update',
+      time: extractChoice(t.UpdatedAt || t.Modified || '') || 'Status Update',
       text: `Ticket status updated to ${t.Status}`
     });
   }
 
   if (t.Remarks) {
     entries.push({
-      time: 'Remarks',
+      time: extractChoice(t.UpdatedAt || t.Modified || '') || 'Remarks',
       text: `Remarks: "${t.Remarks}"`
     });
   }
@@ -1535,38 +1563,30 @@ function openTicketDrawer(ticketId) {
   $('drwAssigneeSelect').value = normalized;
   $('drwRemarks').value = t.Remarks || '';
 
-  const trailEntries = t.Trail || [];
-  $('drwAuditTrail').innerHTML =
-  trailEntries.map(entry => `
-     <div class="flex items-start gap-2">
-        <span class="w-2 h-2 rounded-full bg-[#007A5E] mt-1.5"></span>
-
-        <div>
-           <div class="font-bold">
-              ${entry.Action}
-           </div>
-
-           <div>
-              Assigned To: ${entry.Assignee || '-'}
-           </div>
-
-           <div>
-              Updated By: ${entry.UpdatedBy || '-'}
-           </div>
-
-           <div>
-              ${entry.Remarks || ''}
-           </div>
-
-           <div class="text-[10px] text-gray-500">
-              ${entry.ActionDate || ''}
-           </div>
+  // Render Submission Audit Trail & Progress timeline for Staff, HOD Dept, IT Admin, and HOD IT
+  const trailEntries = buildAuditEntries(t);
+  $('drwAuditTrail').innerHTML = trailEntries.length
+    ? trailEntries.map((entry, idx) => `
+        <div class="flex items-start gap-2.5">
+          <span class="w-2 h-2 rounded-full ${idx === 0 ? 'bg-emerald-500' : 'bg-[#007A5E]'} mt-1.5 shrink-0"></span>
+          <div class="flex-1">
+            <div class="font-semibold text-[var(--phb-text)] leading-snug">${esc(entry.text)}</div>
+            ${entry.time ? `<div class="text-[10px] font-mono text-[var(--phb-soft)] mt-0.5">${esc(entry.time)}</div>` : ''}
+          </div>
         </div>
-     </div>
-  `).join('');
+      `).join('')
+    : `<div class="text-[var(--phb-soft)] italic">No audit trail entries recorded yet.</div>`;
 
-  const canManageTicket = currentUser && (currentUser.role === 'hod_it' || currentUser.role === 'it_admin');
+  // Role-based drawer controls
+  const role = currentUser ? currentUser.role : 'guest';
+  const canManageTicket = role === 'hod_it' || role === 'it_admin';
+  const canAssign = role === 'hod_it';
+
   $('drwActionPanel').classList.toggle('hidden', !canManageTicket);
+  $('drwAssigneeWrapper').classList.toggle('hidden', !canAssign);
+  $('drwControlsGrid').className = canAssign ? 'grid grid-cols-2 gap-3' : 'grid grid-cols-1 gap-3';
+  $('drwActionTitle').textContent = role === 'hod_it' ? 'Ticket Assign & Status' : 'Update Status & Remarks';
+
   $('drawerTicket').classList.remove('hidden');
 }
 
@@ -1579,28 +1599,42 @@ async function saveTicketChangesFromDrawer() {
   saveBtn.disabled = true;
   saveBtn.textContent = 'Saving & Notifying...';
 
+  const role = currentUser ? currentUser.role : 'staff';
   const previousAssignee = normalizeAssignee(t.Assignee);
   const newStatus = $('drwStatusSelect').value;
-  const selEl = $('drwAssigneeSelect');
-  const newAssignee = selEl.value;
-  const selectedOption = selEl.options[selEl.selectedIndex];
-  const matchedDirEntry = assigneeDirectory.find(a => a.label === newAssignee);
-  const assigneeEmail = (selectedOption && selectedOption.dataset.email) || (matchedDirEntry && matchedDirEntry.email) || '';
+
+  // Only HOD IT can change Assignee; IT Admin preserves existing Assignee
+  let newAssignee = previousAssignee;
+  let assigneeEmail = extractChoice(t.AssigneeEmail || '');
+  if (role === 'hod_it') {
+    const selEl = $('drwAssigneeSelect');
+    newAssignee = selEl.value;
+    const selectedOption = selEl.options[selEl.selectedIndex];
+    const matchedDirEntry = assigneeDirectory.find(a => a.label === newAssignee);
+    assigneeEmail = (selectedOption && selectedOption.dataset.email) || (matchedDirEntry && matchedDirEntry.email) || '';
+  }
 
   const newRemarks = $('drwRemarks').value.trim();
-  const actorName = currentUser ? currentUser.name : 'HOD IT';
-  const actorRole = currentUser ? currentUser.role.toUpperCase().replace('_', ' ') : 'HOD IT';
+  const actorName = currentUser ? currentUser.name : 'IT Officer';
+  const actorRole = currentUser ? currentUser.role.toUpperCase().replace('_', ' ') : 'IT';
   const stamp = nowTimestamp();
 
   const isNewlyAssigned =
+    role === 'hod_it' &&
     newAssignee !== DEFAULT_PENDING_ASSIGNEE &&
     newAssignee !== previousAssignee;
 
   const trailLog = buildAuditEntries(t);
+  const actionSummary = role === 'hod_it'
+    ? `Updated by ${actorName} (HOD IT) → Status: ${newStatus}, Assigned To: ${newAssignee}${newRemarks ? ` · Remarks: "${newRemarks}"` : ''}`
+    : `Updated by ${actorName} (${actorRole}) → Status: ${newStatus}${newRemarks ? ` · Remarks: "${newRemarks}"` : ''}`;
+
   trailLog.push({
     time: stamp,
-    text: `Updated by ${actorName} (${actorRole}) → Status: ${newStatus}, Assignee: ${newAssignee}${assigneeEmail ? ` <${assigneeEmail}>` : ''}${newRemarks ? ` · Remarks: "${newRemarks}"` : ''}`
+    text: actionSummary
   });
+
+  const serializedTrail = trailLog.map(x => `${x.time ? `[${x.time}] ` : ''}${x.text}`).join('\n');
 
   const payload = {
     action: 'update',
@@ -1621,18 +1655,19 @@ async function saveTicketChangesFromDrawer() {
     remarks: newRemarks,
     updatedBy: currentUser ? currentUser.email : '',
     updatedAt: stamp,
-    auditTrail: trailLog.map(x => `${x.time ? `[${x.time}] ` : ''}${x.text}`).join('\n')
+    auditTrail: serializedTrail
   };
 
   try {
-    if (DEMO) {
-      t.Status = payload.status;
-      t.Assignee = payload.assignee;
-      t.AssigneeEmail = payload.assigneeEmail;
-      t.Remarks = payload.remarks;
-      t.AuditTrail = trailLog;
-      filterAndRenderTickets();
-    } else {
+    t.Status = payload.status;
+    t.Assignee = payload.assignee;
+    t.AssigneeEmail = payload.assigneeEmail;
+    t.Remarks = payload.remarks;
+    t.UpdatedAt = stamp;
+    t.AuditTrail = trailLog;
+    filterAndRenderTickets();
+
+    if (!DEMO) {
       await callFlow(CONFIG.flows.save, payload);
       await loadSession();
     }
@@ -1641,11 +1676,9 @@ async function saveTicketChangesFromDrawer() {
     if (!DEMO) {
       try {
         const notifRes = await sendTicketNotification(payload);
-        if (notifRes.skipped) {
-          notifyStatusText = ' (Add Notify flow URL in CONFIG.flows.notify to send Teams & Outlook alerts)';
-        } else {
-          notifyStatusText = ' Teams & Outlook notifications sent.';
-        }
+        notifyStatusText = notifRes.skipped
+          ? ' (Notify flow URL not configured)'
+          : ' Teams & Outlook notifications sent.';
       } catch (notifErr) {
         notifyStatusText = ` (Saved, but Notify flow failed: ${notifErr.message})`;
       }
@@ -1661,23 +1694,6 @@ async function saveTicketChangesFromDrawer() {
   }
 }
 
-function updateSubmitAuditTrailPreview() {
-  const ts = nowTimestamp();
-  if ($('formTrailTimestamp')) $('formTrailTimestamp').textContent = ts;
-
-  const reqName = (currentUser && currentUser.name) || 'Authenticated Staff';
-  const reqDept = (currentUser && extractChoice(currentUser.department)) || 'PHB';
-  const cat = $('formCategory') ? $('formCategory').value : 'General';
-
-  if ($('formTrailList')) {
-    $('formTrailList').innerHTML = `
-      <li><strong class="text-[var(--phb-text)]">1. Ticket Created:</strong> ${esc(reqName)} (${esc(reqDept)}) &middot; ${esc(cat)} </li>
-      <li><strong class="text-[var(--phb-text)]">2. Status:</strong> <span class="font-mono font-bold text-amber-700 dark:text-amber-300">Open</span></li>
-      <li><strong class="text-[var(--phb-text)]">3. Progress:</strong> Assigned to <span class="font-bold text-[#007A5E] dark:text-emerald-400">${esc(DEFAULT_PENDING_ASSIGNEE)}</span></li>
-    `;
-  }
-}
-
 function openNewTicketModal() {
   if (!currentUser) {
     openLoginModal();
@@ -1687,10 +1703,6 @@ function openNewTicketModal() {
   $('formReqName').value = currentUser.name || '';
   $('formReqEmail').value = currentUser.email || '';
   $('formDept').value = extractChoice(currentUser.department) || '';
-  updateSubmitAuditTrailPreview();
-
-  $('formCategory').onchange = updateSubmitAuditTrailPreview;
-  $('formPriority').onchange = updateSubmitAuditTrailPreview;
 
   $('modalNewTicket').classList.remove('hidden');
   $('formSubject').focus();
@@ -1703,9 +1715,10 @@ async function handleNewTicketSubmit(e) {
 
   const submittedAt = nowTimestamp();
   const initialTrail = [
-    { time: submittedAt, text: `Submitted by ${$('formReqName').value.trim()} (${$('formDept').value})` },
-    { time: submittedAt, text: `Status set to Open · Routed to ${DEFAULT_PENDING_ASSIGNEE}` }
+    { time: submittedAt, text: `Ticket Created by ${$('formReqName').value.trim()} (${$('formDept').value}) · ${$('formCategory').value}` },
+    { time: submittedAt, text: `Status: Open · Routed to ${DEFAULT_PENDING_ASSIGNEE}` }
   ];
+  const serializedTrail = initialTrail.map(x => `[${x.time}] ${x.text}`).join('\n');
 
   const payload = {
     action: 'create',
@@ -1718,8 +1731,9 @@ async function handleNewTicketSubmit(e) {
     detail: $('formDetail').value.trim(),
     status: 'Open',
     assignee: DEFAULT_PENDING_ASSIGNEE,
+    assigneeEmail: '',
     submittedAt: submittedAt,
-    auditTrail: initialTrail.map(x => `[${x.time}] ${x.text}`).join('\n')
+    auditTrail: serializedTrail
   };
 
   try {
@@ -1745,6 +1759,13 @@ async function handleNewTicketSubmit(e) {
       const createUrl = CONFIG.flows.create || CONFIG.flows.save;
       const r = await callFlow(createUrl, payload);
       id = r.ticketId || '';
+
+      try {
+        await sendTicketNotification({ ...payload, ticketId: id, action: 'create' });
+      } catch (notifErr) {
+        console.warn('Initial notify failed:', notifErr);
+      }
+
       await loadSession();
     }
     closeModal('modalNewTicket');

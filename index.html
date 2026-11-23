@@ -681,8 +681,8 @@ html { scroll-behavior: smooth; }
 
       <div id="drwActionPanel" class="p-4 rounded-2xl border border-emerald-200 bg-emerald-50/60 dark:bg-emerald-950/30 dark:border-emerald-900 space-y-3">
         <div class="flex items-center justify-between">
-          <h4 class="font-extrabold text-xs uppercase tracking-wider text-[#007A5E] dark:text-emerald-300">Ticket Assign To</h4>
-          <span class="text-[10px] font-semibold text-emerald-700 dark:text-emerald-400">Teams &amp; Outlook Notify</span>
+          <h4 class="font-extrabold text-xs uppercase tracking-wider text-[#007A5E] dark:text-emerald-300">Ticket Assign </h4>
+          
         </div>
 
         <div class="grid grid-cols-2 gap-3">
@@ -731,18 +731,7 @@ const CONFIG = {
     save: 'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/01/workflows/eb61e2c74bb64ddc829c58e048b1e054/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=9k6JGlDLpEgdR2BwpTi5PqgKyM-NL7E_S80pIrO4Cmk',
     // Paste your ORBIT – Notify HTTP trigger URL here (including ?api-version=1&sp=...&sv=1.0&sig=...)
     notify: 'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/26/workflows/2ece387695584e40b7ab291f83fd67b8/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=U-lpNp1C-dR54r9R_USBFFapChNomovLGOQNU16xrPg'
-  },
-  departments: [
-    'Information Technology Department',
-    'Finance Department',
-    'Human Capital & Administration',
-    'Legal & Secretarial',
-    'Investment & Asset Management',
-    'Property Management',
-    'Corporate Communications',
-    'Internal Audit Department',
-    'Risk Management & Compliance'
-  ]
+  }
 };
 
 const DEFAULT_PENDING_ASSIGNEE = 'Pending HOD IT To Assign';

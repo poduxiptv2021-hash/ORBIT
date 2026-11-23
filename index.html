@@ -814,17 +814,18 @@ function normalizeAssignee(val) {
 function isHeadOfDepartmentJobTitle(jobTitle, department) {
   const jt = String(jobTitle || '').toLowerCase().trim();
   if (!jt) return false;
-  const isHeadTitle =
-    jt === 'head' ||
-    jt === 'hod' ||
-    jt.startsWith('head of ') ||
-    jt.includes('head of department') ||
-    jt.includes('head,');
-  if (!isHeadTitle) return false;
 
   const dept = String(department || '').toLowerCase();
   if (dept.includes('information technology')) return false;
-  return true;
+
+  const hasHodWord = /\bhod\b/.test(jt);
+  const hasHeadWord =
+    jt === 'head' ||
+    jt.startsWith('head ') ||
+    jt.includes('head of') ||
+    jt.includes('head,');
+
+  return hasHodWord || hasHeadWord;
 }
 
 function resolveRole(r, jobTitle = '', department = '') {
@@ -976,7 +977,8 @@ async function fetchOutlookProfile() {
 
     const tokenResp = await msalApp.acquireTokenSilent({
       scopes: ['User.Read'],
-      account
+      account,
+      forceRefresh: true
     });
 
     const graphRes = await fetch('https://graph.microsoft.com/v1.0/me?$select=department,jobTitle', {
@@ -1118,7 +1120,7 @@ function setSession(u, rows, usersListFromSP, rawData = {}) {
   renderSimulateRoleButtons();
 
   const userObj = (u && typeof u === 'object') ? u : {};
-  const resolvedEmail = (extractChoice(userObj.email || userObj.Email || userObj.mail) || msalEmail).toLowerCase();
+  const resolvedEmail = (extractChoice(userObj.email || userObj.Email || userObj.mail) || msalEmail).toLowerCase().trim();
 
   const spMatchedUser = orbitUsersStore.find(x => x.email === resolvedEmail);
 
@@ -1127,18 +1129,28 @@ function setSession(u, rows, usersListFromSP, rawData = {}) {
     return;
   }
 
+  const flowName = extractChoice(userObj.name || userObj.Name || userObj.displayName).trim();
+  const flowDept = extractChoice(
+    userObj.department || userObj.Department || userObj.dept || userObj.Dept ||
+    rawData.department || rawData.Department
+  ).trim();
+  const flowJobTitle = extractChoice(
+    userObj.jobTitle || userObj.JobTitle || userObj.position || userObj.Position ||
+    rawData.jobTitle || rawData.position
+  ).trim();
+
   const resolvedName =
+    flowName ||
     (spMatchedUser && spMatchedUser.name) ||
-    extractChoice(userObj.name || userObj.Name || userObj.displayName) ||
     msalName;
 
   const resolvedDept =
+    flowDept ||
     (spMatchedUser && spMatchedUser.department) ||
-    extractChoice(userObj.department || userObj.Department || userObj.dept || userObj.Dept || rawData.department || rawData.Department) ||
     '';
 
   const resolvedJobTitle =
-    extractChoice(userObj.jobTitle || userObj.JobTitle || userObj.position || userObj.Position || rawData.jobTitle || rawData.position) ||
+    flowJobTitle ||
     (spMatchedUser && spMatchedUser.jobTitle) ||
     '';
 
@@ -1159,11 +1171,16 @@ function setSession(u, rows, usersListFromSP, rawData = {}) {
 
   ticketsStore = (rows || []).map(t => ({
     ...t,
-    Department: extractChoice(t.Department).trim(),
-    Category: extractChoice(t.Category).trim(),
-    Priority: extractChoice(t.Priority).trim() || 'Medium',
-    Status: extractChoice(t.Status).trim() || 'Open',
-    Assignee: normalizeAssignee(t.Assignee)
+    TicketID: t.TicketID || t.Ticket_x0020_ID || t.ID || '',
+    Subject: t.Subject || t.Title || '(No Subject)',
+    RequesterName: t.RequesterName || t.Requester_x0020_Name || '',
+    RequesterEmail: extractChoice(t.RequesterEmail || t.Requester_x0020_Email || '').trim(),
+    Department: extractChoice(t.Department || t.Dept || '').trim(),
+    Category: extractChoice(t.Category || '').trim(),
+    Priority: extractChoice(t.Priority || '').trim() || 'Medium',
+    Status: extractChoice(t.Status || '').trim() || 'Open',
+    Assignee: normalizeAssignee(t.Assignee),
+    Detail: t.Detail || t.Details || t.Description || ''
   }));
 
   populateDepartmentDropdowns();
@@ -1334,21 +1351,22 @@ function getFilteredTickets() {
   if (!currentUser) return list;
 
   const role = currentUser.role;
-  const userEmail = (currentUser.email || '').toLowerCase();
+  const userEmail = (currentUser.email || '').toLowerCase().trim();
   const userDept = (currentUser.department || '').toLowerCase().trim();
 
   if (role === 'staff') {
-    list = list.filter(t => (t.RequesterEmail || '').toLowerCase() === userEmail);
+    list = list.filter(t => (t.RequesterEmail || '').toLowerCase().trim() === userEmail);
   } else if (role === 'hod_dept') {
     list = list.filter(t => {
-      const isOwnTicket = (t.RequesterEmail || '').toLowerCase() === userEmail;
-      const isDeptTicket = userDept && (t.Department || '').toLowerCase().trim() === userDept;
+      const isOwnTicket = userEmail && (t.RequesterEmail || '').toLowerCase().trim() === userEmail;
+      const ticketDept = (t.Department || '').toLowerCase().trim();
+      const isDeptTicket = userDept && ticketDept === userDept;
       return isOwnTicket || isDeptTicket;
     });
   } else if (role === 'hod_it' || role === 'it_admin') {
     const selectedDept = $('deptSelect').value;
     if (selectedDept && selectedDept !== 'ALL') {
-      list = list.filter(t => (t.Department || '').toLowerCase() === selectedDept.toLowerCase());
+      list = list.filter(t => (t.Department || '').toLowerCase().trim() === selectedDept.toLowerCase().trim());
     }
   }
 
@@ -1622,9 +1640,9 @@ function updateSubmitAuditTrailPreview() {
 
   if ($('formTrailList')) {
     $('formTrailList').innerHTML = `
-      <li><strong class="text-[var(--phb-text)]">1. Created:</strong> ${esc(reqName)} (${esc(reqDept)}) &middot; ${esc(cat)} [${esc(prio)}]</li>
-      <li><strong class="text-[var(--phb-text)]">2. Initial Status:</strong> <span class="font-mono font-bold text-amber-700 dark:text-amber-300">Open</span></li>
-      <li><strong class="text-[var(--phb-text)]">3. Routing Queue:</strong> Assigned to <span class="font-bold text-[#007A5E] dark:text-emerald-400">${esc(DEFAULT_PENDING_ASSIGNEE)}</span></li>
+      <li><strong class="text-[var(--phb-text)]">1. Ticket Created:</strong> ${esc(reqName)} (${esc(reqDept)}) &middot; ${esc(cat)} </li>
+      <li><strong class="text-[var(--phb-text)]">2. Status:</strong> <span class="font-mono font-bold text-amber-700 dark:text-amber-300">Open</span></li>
+      <li><strong class="text-[var(--phb-text)]">3. Progress:</strong> Assigned to <span class="font-bold text-[#007A5E] dark:text-emerald-400">${esc(DEFAULT_PENDING_ASSIGNEE)}</span></li>
     `;
   }
 }

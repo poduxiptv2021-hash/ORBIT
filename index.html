@@ -1457,13 +1457,15 @@ function renderListView(tickets) {
 
 /* ==================== 5. DRAWER & MODAL ACTIONS ==================== */
 function fillAssigneeSelect() {
-  const sel = $('drwAssigneeSelect');
-  sel.innerHTML = assigneeDirectory.map(item =>
-    `<option value="${esc(item.label)}"
-             data-email="${esc(item.email)}">
-        ${esc(item.label)}
-     </option>`
-  ).join('');
+    const sel = $('drwAssigneeSelect');
+
+    sel.innerHTML =
+        assigneeDirectory.map(a => `
+            <option value="${a.label}"
+                    data-email="${a.email || ''}">
+                ${a.label}
+            </option>
+        `).join('');
 }
 
 function buildAuditEntries(t) {
@@ -1533,15 +1535,34 @@ function openTicketDrawer(ticketId) {
   $('drwAssigneeSelect').value = normalized;
   $('drwRemarks').value = t.Remarks || '';
 
-  const trailEntries = buildAuditEntries(t);
-  $('drwAuditTrail').innerHTML = trailEntries.map(entry => `
-    <div class="flex items-start gap-2.5">
-      <span class="w-2 h-2 rounded-full bg-[#007A5E] mt-1.5 shrink-0"></span>
-      <div class="flex-1">
-        <div class="font-semibold text-[var(--phb-text)]">${esc(entry.text)}</div>
-        ${entry.time ? `<div class="text-[10px] font-mono text-[var(--phb-soft)]">${esc(entry.time)}</div>` : ''}
-      </div>
-    </div>
+  const trailEntries = t.Trail || [];
+  $('drwAuditTrail').innerHTML =
+  trailEntries.map(entry => `
+     <div class="flex items-start gap-2">
+        <span class="w-2 h-2 rounded-full bg-[#007A5E] mt-1.5"></span>
+
+        <div>
+           <div class="font-bold">
+              ${entry.Action}
+           </div>
+
+           <div>
+              Assigned To: ${entry.Assignee || '-'}
+           </div>
+
+           <div>
+              Updated By: ${entry.UpdatedBy || '-'}
+           </div>
+
+           <div>
+              ${entry.Remarks || ''}
+           </div>
+
+           <div class="text-[10px] text-gray-500">
+              ${entry.ActionDate || ''}
+           </div>
+        </div>
+     </div>
   `).join('');
 
   const canManageTicket = currentUser && (currentUser.role === 'hod_it' || currentUser.role === 'it_admin');

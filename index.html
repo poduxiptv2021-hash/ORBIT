@@ -223,6 +223,7 @@ html { scroll-behavior: smooth; }
           <div class="px-4 py-3 border-b border-[var(--phb-line)] bg-[var(--phb-bg)]/50">
             <p id="menuRoleTitle" class="text-[10px] font-extrabold uppercase tracking-wider text-[#007A5E] dark:text-emerald-400">Staff View</p>
             <p id="menuName" class="text-xs font-bold text-[var(--phb-text)] truncate mt-0.5">User Name</p>
+            <p id="menuJobTitle" class="text-[11px] font-semibold text-emerald-700 dark:text-emerald-300 truncate"></p>
             <p id="menuEmail" class="text-[11px] text-[var(--phb-soft)] truncate font-mono">user@phb.com.my</p>
             <p id="menuDept" class="text-[11px] text-slate-600 dark:text-slate-400 font-semibold mt-1">Dept: General</p>
           </div>
@@ -249,7 +250,7 @@ html { scroll-behavior: smooth; }
            alt="PHB Logo" class="h-8 w-auto mb-3 brightness-200"
            onerror="this.src='https://placehold.co/160x40/ffffff/007A5E?text=PHB+Logo'">
       <h2 class="text-xl font-extrabold tracking-tight">Sign in to ORBIT Portal</h2>
-      <p class="text-xs text-emerald-100 opacity-90 mt-1">Authenticate with your PHB Microsoft 365 account to load permissions from <code class="font-mono bg-white/20 px-1 rounded">ORBITUsers</code>.</p>
+      <p class="text-xs text-emerald-100 opacity-90 mt-1">Authenticate with your PHB Microsoft 365 account to load permissions from <code class="font-mono bg-white/20 px-1 rounded">ORBITUsers</code> &amp; Entra ID.</p>
     </div>
     <div class="p-6 space-y-4">
       <button onclick="startSSO()" class="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-2xl border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 font-bold text-xs text-[var(--phb-text)] shadow-sm transition-all">
@@ -257,8 +258,8 @@ html { scroll-behavior: smooth; }
         <span>Sign in with Microsoft 365</span>
       </button>
 
-      <div id="demoRoleSelectorArea" class="pt-3 border-t border-[var(--phb-line)]">
-        <label class="block text-[10px] font-extrabold uppercase tracking-wider text-[var(--phb-soft)] mb-2">Simulate Role (SharePoint ORBITUsers)</label>
+      <div id="demoRoleSelectorArea" class="hidden pt-3 border-t border-[var(--phb-line)]">
+        <label class="block text-[10px] font-extrabold uppercase tracking-wider text-[var(--phb-soft)] mb-2">Loaded ORBITUsers Accounts</label>
         <div id="orbitUsersRoleGrid" class="grid grid-cols-2 gap-2 font-mono text-[11px]"></div>
       </div>
 
@@ -681,8 +682,7 @@ html { scroll-behavior: smooth; }
 
       <div id="drwActionPanel" class="p-4 rounded-2xl border border-emerald-200 bg-emerald-50/60 dark:bg-emerald-950/30 dark:border-emerald-900 space-y-3">
         <div class="flex items-center justify-between">
-          <h4 class="font-extrabold text-xs uppercase tracking-wider text-[#007A5E] dark:text-emerald-300">Ticket Assign </h4>
-          
+          <h4 class="font-extrabold text-xs uppercase tracking-wider text-[#007A5E] dark:text-emerald-300">Ticket Assign</h4>
         </div>
 
         <div class="grid grid-cols-2 gap-3">
@@ -729,15 +729,12 @@ const CONFIG = {
     load: 'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/26/workflows/eaf49b60f83e47d48d86407219ecb944/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=9k6JGlDLpEgdR2BwpTi5PqgKyM-NL7E_S80pIrO4Cmk',
     create: 'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/11/workflows/9bb69e06bbda4b6c80a2d1670a89de05/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=KDbFdzw_1aY-1p5uPJ-UhtD7JCAfn9d_F_wmzKJule0',
     save: 'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/01/workflows/eb61e2c74bb64ddc829c58e048b1e054/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=R39p07RJLqVOr7jUAdd1fpNImxnOqiykaYPmb4TMHl0',
-    // Paste your ORBIT – Notify HTTP trigger URL here (including ?api-version=1&sp=...&sv=1.0&sig=...)
     notify: 'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/26/workflows/2ece387695584e40b7ab291f83fd67b8/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=U-lpNp1C-dR54r9R_USBFFapChNomovLGOQNU16xrPg'
   }
 };
 
 const DEFAULT_PENDING_ASSIGNEE = 'Pending HOD IT To Assign';
 const DEMO = !CONFIG.flows.load || (!CONFIG.flows.create && !CONFIG.flows.save);
-
-
 
 const KB_ARTICLES = [
   { id: 'KB-0101', cat: 'Network & VPN', sev: 'crit', title: "VPN won't connect or keeps dropping", desc: "Fix the most common VPN client errors and dropped tunnels.", tags: ['vpn', 'remote access', 'connection'], steps: ["Confirm you have an active internet connection.", "Fully quit the VPN client (not just close window) and reopen.", "Restart computer if client was open before update.", "Switch to nearest server region.", "Flush DNS via command prompt: ipconfig /flushdns"] },
@@ -814,18 +811,40 @@ function normalizeAssignee(val) {
   return s;
 }
 
-function resolveRole(r) {
+function isHeadOfDepartmentJobTitle(jobTitle, department) {
+  const jt = String(jobTitle || '').toLowerCase().trim();
+  if (!jt) return false;
+  const isHeadTitle =
+    jt === 'head' ||
+    jt === 'hod' ||
+    jt.startsWith('head of ') ||
+    jt.includes('head of department') ||
+    jt.includes('head,');
+  if (!isHeadTitle) return false;
+
+  const dept = String(department || '').toLowerCase();
+  if (dept.includes('information technology')) return false;
+  return true;
+}
+
+function resolveRole(r, jobTitle = '', department = '') {
   const raw = extractChoice(r);
   const s = String(raw).toLowerCase().replace(/[\s-]+/g, '_').trim();
   if (s === 'hod_it' || s === 'hodit') return { code: 'hod_it', title: 'Head of IT Division (HOD IT)' };
   if (s === 'it_admin' || s === 'it' || s === 'admin') return { code: 'it_admin', title: 'IT Support Admin' };
   if (s === 'hod_dept' || s === 'hoddept' || s === 'hod') return { code: 'hod_dept', title: 'Head of Department (HOD Dept)' };
+
+  if (isHeadOfDepartmentJobTitle(jobTitle, department)) {
+    return { code: 'hod_dept', title: 'Head of Department (HOD Dept)' };
+  }
   return { code: 'staff', title: 'Staff View (User)' };
 }
 
 function normalizeOrbitUser(item) {
   const rawRole = extractChoice(item.Role || item.role);
-  const roleObj = resolveRole(rawRole);
+  const dept = extractChoice(item.Department || item.department || item.Dept || item.dept).trim();
+  const jt = extractChoice(item.JobTitle || item.jobTitle || item.Position || item.position).trim();
+  const roleObj = resolveRole(rawRole, jt, dept);
   const activeFlag = item.Active === undefined && item.active === undefined
     ? true
     : Boolean(item.Active ?? item.active);
@@ -836,7 +855,8 @@ function normalizeOrbitUser(item) {
     email: extractChoice(item.Email || item.email || item.mail).trim().toLowerCase(),
     role: roleObj.code,
     roleTitle: roleObj.title,
-    department: extractChoice(item.Department || item.department || item.Dept || item.dept).trim(),
+    department: dept,
+    jobTitle: jt,
     active: activeFlag
   };
 }
@@ -846,15 +866,20 @@ function rebuildAssigneeDirectory() {
     u.active && (u.role === 'hod_it' || u.role === 'it_admin')
   );
 
-  const mapped = itOfficers.map(u => {
-    const tag = u.role === 'hod_it' ? 'HOD IT' : 'ITD';
-    const shortName = u.name || (u.email ? u.email.split('@')[0] : 'IT Officer');
-    return {
-      label: `${shortName} (${tag})`,
-      email: u.email,
-      role: u.role
-    };
-  });
+  const mapped = itOfficers
+    .map(u => {
+      const baseName = (u.name || (u.email ? u.email.split('@')[0] : '')).trim();
+      if (!baseName) return null;
+      const alreadyTagged = /\((hod\s*it|itd|it\s*admin)\)$/i.test(baseName);
+      const tag = u.role === 'hod_it' ? 'HOD IT' : 'ITD';
+      const label = alreadyTagged ? baseName : `${baseName} (${tag})`;
+      return {
+        label,
+        email: u.email,
+        role: u.role
+      };
+    })
+    .filter(Boolean);
 
   assigneeDirectory = [
     { label: DEFAULT_PENDING_ASSIGNEE, email: '', role: 'pending' },
@@ -863,8 +888,9 @@ function rebuildAssigneeDirectory() {
 }
 
 function renderSimulateRoleButtons() {
+  const area = $('demoRoleSelectorArea');
   const grid = $('orbitUsersRoleGrid');
-  if (!grid) return;
+  if (!area || !grid) return;
 
   const badgeColors = {
     hod_it: 'border-emerald-300 bg-emerald-50 text-emerald-800 dark:bg-emerald-950 dark:border-emerald-800 dark:text-emerald-300',
@@ -874,7 +900,14 @@ function renderSimulateRoleButtons() {
   };
 
   const activeUsers = orbitUsersStore.filter(u => u.active);
-  grid.innerHTML = activeUsers.slice(0, 6).map((u, idx) => `
+  if (!activeUsers.length) {
+    area.classList.add('hidden');
+    grid.innerHTML = '';
+    return;
+  }
+
+  area.classList.remove('hidden');
+  grid.innerHTML = activeUsers.map((u, idx) => `
     <button onclick="simulateRoleLogin('${esc(u.email)}')" class="p-2.5 rounded-xl border ${badgeColors[u.role] || badgeColors.staff} font-bold text-left hover:brightness-95">
       ${idx + 1}. ${esc(u.role.toUpperCase().replace('_', ' '))}
       <span class="block text-[10px] font-semibold font-sans mt-0.5 truncate">${esc(u.name)}</span>
@@ -935,26 +968,29 @@ window.addEventListener('DOMContentLoaded', async () => {
   }
 });
 
-async function fetchOutlookDepartment() {
-  if (DEMO || !msalApp) return '';
+async function fetchOutlookProfile() {
+  if (DEMO || !msalApp) return { department: '', jobTitle: '' };
   try {
     const account = msalApp.getActiveAccount() || msalApp.getAllAccounts()[0];
-    if (!account) return '';
+    if (!account) return { department: '', jobTitle: '' };
 
     const tokenResp = await msalApp.acquireTokenSilent({
       scopes: ['User.Read'],
       account
     });
 
-    const graphRes = await fetch('https://graph.microsoft.com/v1.0/me?$select=department', {
+    const graphRes = await fetch('https://graph.microsoft.com/v1.0/me?$select=department,jobTitle', {
       headers: { Authorization: 'Bearer ' + tokenResp.accessToken }
     });
 
-    if (!graphRes.ok) return '';
+    if (!graphRes.ok) return { department: '', jobTitle: '' };
     const profile = await graphRes.json();
-    return (profile && profile.department) ? String(profile.department).trim() : '';
+    return {
+      department: (profile && profile.department) ? String(profile.department).trim() : '',
+      jobTitle: (profile && profile.jobTitle) ? String(profile.jobTitle).trim() : ''
+    };
   } catch (err) {
-    return '';
+    return { department: '', jobTitle: '' };
   }
 }
 
@@ -965,6 +1001,7 @@ function populateDepartmentDropdowns() {
   const deptSet = new Set(Array.isArray(CONFIG.departments) ? CONFIG.departments : []);
   orbitUsersStore.forEach(u => { if (u.department) deptSet.add(u.department); });
   ticketsStore.forEach(t => { if (t.Department) deptSet.add(extractChoice(t.Department).trim()); });
+  if (currentUser && currentUser.department) deptSet.add(currentUser.department);
 
   const sortedDepts = Array.from(deptSet).filter(Boolean).sort();
   const optionsHTML = sortedDepts.map(d =>
@@ -993,7 +1030,7 @@ function openLoginModal() {
 
 async function startSSO() {
   if (DEMO) {
-    simulateRoleLogin('hod_it');
+    showToast('Configure Power Automate flow URLs to sign in.', 'error');
     return;
   }
 
@@ -1032,7 +1069,11 @@ async function startSSO() {
 
 function simulateRoleLogin(identifier) {
   const key = String(identifier || '').toLowerCase().trim();
-  const u = orbitUsersStore.find(x => x.email === key || x.role === key) || orbitUsersStore[0];
+  const u = orbitUsersStore.find(x => x.email === key || x.role === key);
+  if (!u) {
+    showToast('No matching user loaded from ORBITUsers list.', 'error');
+    return;
+  }
   setSession(u, ticketsStore, orbitUsersStore);
   showToast('Signed in as ' + u.name + ' (' + u.roleTitle + ')');
 }
@@ -1058,24 +1099,23 @@ function setSession(u, rows, usersListFromSP, rawData = {}) {
   const msalEmail = (acc.username || claims.preferred_username || claims.email || '').toLowerCase();
   const msalName = acc.name || claims.name || (msalEmail ? msalEmail.split('@')[0] : 'User');
 
-
-if (Array.isArray(usersListFromSP) && usersListFromSP.length) {
+  if (Array.isArray(usersListFromSP)) {
     orbitUsersStore = usersListFromSP.map(normalizeOrbitUser);
-}
+  }
 
-if (Array.isArray(rawData.assignees) && rawData.assignees.length) {
-
-    assigneeDirectory = rawData.assignees.map(a => ({
-        label: a.name,
+  if (Array.isArray(rawData.assignees) && rawData.assignees.length) {
+    assigneeDirectory = [
+      { label: DEFAULT_PENDING_ASSIGNEE, email: '', role: 'pending' },
+      ...rawData.assignees.map(a => ({
+        label: a.name || a.label,
         email: a.email || '',
         role: a.role || ''
-    }));
-
-} else {
-
+      }))
+    ];
+  } else {
     rebuildAssigneeDirectory();
-
-}
+  }
+  renderSimulateRoleButtons();
 
   const userObj = (u && typeof u === 'object') ? u : {};
   const resolvedEmail = (extractChoice(userObj.email || userObj.Email || userObj.mail) || msalEmail).toLowerCase();
@@ -1092,23 +1132,29 @@ if (Array.isArray(rawData.assignees) && rawData.assignees.length) {
     extractChoice(userObj.name || userObj.Name || userObj.displayName) ||
     msalName;
 
+  const resolvedDept =
+    (spMatchedUser && spMatchedUser.department) ||
+    extractChoice(userObj.department || userObj.Department || userObj.dept || userObj.Dept || rawData.department || rawData.Department) ||
+    '';
+
+  const resolvedJobTitle =
+    extractChoice(userObj.jobTitle || userObj.JobTitle || userObj.position || userObj.Position || rawData.jobTitle || rawData.position) ||
+    (spMatchedUser && spMatchedUser.jobTitle) ||
+    '';
+
   const rawRole =
     (spMatchedUser && spMatchedUser.role) ||
     extractChoice(userObj.role || userObj.Role || rawData.role || rawData.Role);
 
-  const roleObj = resolveRole(rawRole);
-
-  const resolvedDept =
-    (spMatchedUser && spMatchedUser.department) ||
-    extractChoice(userObj.department || userObj.Department || userObj.dept || userObj.Dept || rawData.department || rawData.Department) ||
-    'Information Technology Department';
+  const roleObj = resolveRole(rawRole, resolvedJobTitle, resolvedDept);
 
   currentUser = {
     name: resolvedName,
     email: resolvedEmail,
     role: roleObj.code,
     roleTitle: roleObj.title,
-    department: String(resolvedDept).trim()
+    department: String(resolvedDept).trim(),
+    jobTitle: String(resolvedJobTitle).trim()
   };
 
   ticketsStore = (rows || []).map(t => ({
@@ -1129,8 +1175,9 @@ if (Array.isArray(rawData.assignees) && rawData.assignees.length) {
 
   $('menuRoleTitle').textContent = currentUser.roleTitle;
   $('menuName').textContent = currentUser.name;
+  $('menuJobTitle').textContent = currentUser.jobTitle ? `Title: ${currentUser.jobTitle}` : '';
   $('menuEmail').textContent = currentUser.email || 'No email returned';
-  $('menuDept').textContent = 'Dept: ' + currentUser.department;
+  $('menuDept').textContent = 'Dept: ' + (currentUser.department || 'General');
   $('staffHeroName').textContent = firstName;
 
   closeModal('loginScreen');
@@ -1144,7 +1191,7 @@ function applyRoleView() {
   const show = (id, on) => $(id) && $(id).classList.toggle('hidden', !on);
 
   const canSeeReports = role === 'hod_it' || role === 'it_admin';
-  const canFilterDepts = role === 'hod_it' || role === 'it_admin' || role === 'hod_dept';
+  const canFilterDepts = role === 'hod_it' || role === 'it_admin';
   const canSeeDashboard = role === 'hod_it' || role === 'it_admin' || role === 'hod_dept';
   const canAssign = role === 'hod_it' || role === 'it_admin';
 
@@ -1174,8 +1221,8 @@ function applyRoleView() {
       $('roleOverviewDesc').textContent = 'Operational ticket queue, SLA response times, and active officer assignments.';
       $('deptSelect').value = 'ALL';
     } else if (role === 'hod_dept') {
-      $('roleOverviewBadge').textContent = 'Departmental Leadership Dashboard';
-      $('roleOverviewDesc').textContent = 'Departmental ticket queue with department dropdown filter.';
+      $('roleOverviewBadge').textContent = `Head of Department (${u.department || 'Department'})`;
+      $('roleOverviewDesc').textContent = `Viewing all tickets submitted by members of ${u.department || 'your department'} as well as your own tickets.`;
       const matchingOption = Array.from($('deptSelect').options).find(
         opt => opt.value.toLowerCase() === currentUser.department.toLowerCase()
       );
@@ -1243,14 +1290,15 @@ async function loadSession(manual) {
   const msalEmail = acc.username || claims.preferred_username || claims.email || '';
   const msalName = acc.name || claims.name || '';
 
-  const outlookDept = await fetchOutlookDepartment();
+  const outlookProfile = await fetchOutlookProfile();
 
   try {
     if (manual) showToast("Refreshing from SharePoint...", "info");
     const d = await callFlow(CONFIG.flows.load, {
       email: msalEmail,
       name: msalName,
-      department: outlookDept
+      department: outlookProfile.department,
+      jobTitle: outlookProfile.jobTitle
     });
 
     const userPayload = {
@@ -1258,8 +1306,11 @@ async function loadSession(manual) {
       ...(d && d.user && typeof d.user === 'object' ? d.user : {})
     };
 
-    if (!userPayload.department && !userPayload.Department && !userPayload.dept && outlookDept) {
-      userPayload.department = outlookDept;
+    if (!userPayload.department && !userPayload.Department && !userPayload.dept && outlookProfile.department) {
+      userPayload.department = outlookProfile.department;
+    }
+    if (!userPayload.jobTitle && !userPayload.JobTitle && !userPayload.position && !userPayload.Position && outlookProfile.jobTitle) {
+      userPayload.jobTitle = outlookProfile.jobTitle;
     }
 
     const spUsers = d.users || d.orbitUsers || d.ORBITUsers || [];
@@ -1267,7 +1318,12 @@ async function loadSession(manual) {
     if (manual) showToast('Refreshed live tickets & ORBITUsers.');
   } catch (e) {
     console.error("loadSession failed:", e);
-    setSession({ name: msalName, email: msalEmail, department: outlookDept }, [], []);
+    setSession({
+      name: msalName,
+      email: msalEmail,
+      department: outlookProfile.department,
+      jobTitle: outlookProfile.jobTitle
+    }, [], []);
     showToast('Could not load tickets: ' + e.message, 'error');
   }
 }
@@ -1279,10 +1335,17 @@ function getFilteredTickets() {
 
   const role = currentUser.role;
   const userEmail = (currentUser.email || '').toLowerCase();
+  const userDept = (currentUser.department || '').toLowerCase().trim();
 
   if (role === 'staff') {
     list = list.filter(t => (t.RequesterEmail || '').toLowerCase() === userEmail);
-  } else if (role === 'hod_it' || role === 'it_admin' || role === 'hod_dept') {
+  } else if (role === 'hod_dept') {
+    list = list.filter(t => {
+      const isOwnTicket = (t.RequesterEmail || '').toLowerCase() === userEmail;
+      const isDeptTicket = userDept && (t.Department || '').toLowerCase().trim() === userDept;
+      return isOwnTicket || isDeptTicket;
+    });
+  } else if (role === 'hod_it' || role === 'it_admin') {
     const selectedDept = $('deptSelect').value;
     if (selectedDept && selectedDept !== 'ALL') {
       list = list.filter(t => (t.Department || '').toLowerCase() === selectedDept.toLowerCase());
@@ -1544,7 +1607,7 @@ async function saveTicketChangesFromDrawer() {
     showToast('Could not update ticket: ' + e.message, 'error');
   } finally {
     saveBtn.disabled = false;
-    saveBtn.textContent = 'Save & Notify Assignee / Requester';
+    saveBtn.textContent = 'Send Update';
   }
 }
 

@@ -300,7 +300,7 @@ html { scroll-behavior: smooth; }
     </div>
   </div>
 
-  <!-- QUICK FINDING BAR (NO SEARCH BOX) -->
+  <!-- QUICK FINDING BAR -->
   <div class="p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-[#007A5E] via-[#005A4B] to-[#0B2545] text-white shadow-lg">
     <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
       <div>
@@ -595,9 +595,9 @@ html { scroll-behavior: smooth; }
   </div>
 </div>
 
-<!-- 2. SUBMIT TICKET MODAL -->
+<!-- 2. SUBMIT TICKET MODAL (WITH LIVE AUDIT TRAIL PREVIEW) -->
 <div id="modalNewTicket" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs" onclick="if(event.target===this)closeModal('modalNewTicket')">
-  <div class="max-w-xl w-full bg-[var(--phb-card)] rounded-3xl shadow-2xl border border-[var(--phb-line)] overflow-hidden">
+  <div class="max-w-xl w-full bg-[var(--phb-card)] rounded-3xl shadow-2xl border border-[var(--phb-line)] overflow-hidden max-h-[92vh] flex flex-col">
     <div class="px-6 py-4 border-b border-[var(--phb-line)] bg-[var(--phb-bg)] flex items-center justify-between">
       <h3 class="font-display font-extrabold text-base text-[var(--phb-text)]">Submit IT Support Request</h3>
       <button onclick="closeModal('modalNewTicket')" class="text-[var(--phb-soft)] hover:text-rose-500">
@@ -605,7 +605,7 @@ html { scroll-behavior: smooth; }
       </button>
     </div>
 
-    <form onsubmit="handleNewTicketSubmit(event)" class="p-6 space-y-4 text-xs">
+    <form onsubmit="handleNewTicketSubmit(event)" class="p-6 space-y-4 text-xs overflow-y-auto">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="block font-bold text-[var(--phb-soft)] uppercase tracking-wider text-[10px] mb-1">Requester Name</label>
@@ -625,16 +625,16 @@ html { scroll-behavior: smooth; }
         <div>
           <label class="block font-bold text-[var(--phb-soft)] uppercase tracking-wider text-[10px] mb-1">Category</label>
           <select id="formCategory" required class="w-full px-3 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-[var(--phb-text)] font-semibold">
-             <option value="Hardware">User Management</option>
-            <option value="Software">Device Management</option>
-            <option value="Network & VPN">Software Support</option>
-            <option value="Account & Access">Network/ Connectivity</option>
-            <option value="Email & Calendar">Network Infrastructure</option>
-            <option value="Security">Access Management</option>
-            <option value="Security">Content Management</option>
-            <option value="Security">System Administrator</option>
-            <option value="Security">Training</option>
-            <option value="Security">Other</option>
+             <option value="User Management">User Management</option>
+            <option value="Device Management">Device Management</option>
+            <option value="Software Support">Software Support</option>
+            <option value="Network/ Connectivity">Network/ Connectivity</option>
+            <option value="Network Infrastructure">Network Infrastructure</option>
+            <option value="Access Management">Access Management</option>
+            <option value="Content Management">Content Management</option>
+            <option value="System Administrator">System Administrator</option>
+            <option value="Training">Training</option>
+            <option value="Other">Other</option>
           </select>
         </div>
         <div>
@@ -656,6 +656,20 @@ html { scroll-behavior: smooth; }
       <div>
         <label class="block font-bold text-[var(--phb-soft)] uppercase tracking-wider text-[10px] mb-1">Details & error messages</label>
         <textarea id="formDetail" rows="3" required placeholder="Describe error messages or steps taken..." class="w-full px-3 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-[var(--phb-text)] font-medium"></textarea>
+      </div>
+
+      <!-- SUBMISSION AUDIT TRAIL LOG -->
+      <div class="p-3.5 rounded-2xl bg-[var(--phb-bg)] border border-[var(--phb-line)] space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-extrabold uppercase tracking-wider text-[10px] text-[#007A5E] dark:text-emerald-400 flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Submission Audit Trail
+          </span>
+          <span id="formTrailTimestamp" class="font-mono text-[10px] text-[var(--phb-soft)]"></span>
+        </div>
+        <ol id="formTrailList" class="space-y-1.5 text-[11px] text-[var(--phb-soft)] border-l-2 border-emerald-500 pl-3 ml-1">
+          <!-- Populated dynamically when modal opens -->
+        </ol>
       </div>
 
       <div class="flex items-center justify-end gap-2 pt-3 border-t border-[var(--phb-line)]">
@@ -706,6 +720,12 @@ html { scroll-behavior: smooth; }
         <div id="drwDetails" class="p-3.5 rounded-2xl bg-[var(--phb-bg)] border border-[var(--phb-line)] text-[var(--phb-text)] whitespace-pre-wrap leading-relaxed font-medium">
           Details content...
         </div>
+      </div>
+
+      <!-- TICKET ACTIVITY & AUDIT TRAIL -->
+      <div>
+        <span class="font-bold text-[var(--phb-soft)] uppercase text-[10px] block mb-1.5">Ticket Audit Trail</span>
+        <div id="drwAuditTrail" class="p-3.5 rounded-2xl bg-[var(--phb-bg)] border border-[var(--phb-line)] space-y-2.5 text-[11px]"></div>
       </div>
 
       <div id="drwActionPanel" class="p-4 rounded-2xl border border-emerald-200 bg-emerald-50/60 dark:bg-emerald-950/30 dark:border-emerald-900 space-y-3">
@@ -759,6 +779,7 @@ const CONFIG = {
   departments: []
 };
 
+const DEFAULT_PENDING_ASSIGNEE = 'Pending HOD IT Assignment';
 const DEMO = !CONFIG.flows.load || (!CONFIG.flows.create && !CONFIG.flows.save);
 
 const SIMULATED_USERS = [
@@ -810,7 +831,7 @@ const CATEGORIES = [
 ];
 
 let ticketsStore = [];
-let assigneeList = ['Haq (ITD)', 'Fahmi (ITD)', 'Nur Haliza (HOD IT)', 'Unassigned'];
+let assigneeList = [DEFAULT_PENDING_ASSIGNEE, 'Haq (ITD)', 'Fahmi (ITD)', 'Nur Haliza (HOD IT)'];
 let currentUser = null;
 let activeDrawerTicketId = null;
 let kbCategory = 'All';
@@ -819,6 +840,19 @@ let msalApp = null;
 
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const $ = id => document.getElementById(id);
+
+function nowTimestamp() {
+  return new Date().toLocaleString('en-MY', {
+    day: '2-digit', month: 'short', year: 'numeric',
+    hour: '2-digit', minute: '2-digit'
+  });
+}
+
+function normalizeAssignee(val) {
+  const s = String(val || '').trim();
+  if (!s || s.toLowerCase() === 'unassigned') return DEFAULT_PENDING_ASSIGNEE;
+  return s;
+}
 
 function resolveRole(r) {
   const s = String(r || '').toLowerCase().replace('-', '_').trim();
@@ -977,7 +1011,7 @@ async function startSSO() {
 
 function simulateRoleLogin(roleCode) {
   const u = SIMULATED_USERS.find(x => x.role === roleCode) || SIMULATED_USERS[3];
-  setSession(u, [], ['Haq (ITD)', 'Fahmi (ITD)', 'Nur Haliza (HOD IT)']);
+  setSession(u, [], [DEFAULT_PENDING_ASSIGNEE, 'Haq (ITD)', 'Fahmi (ITD)', 'Nur Haliza (HOD IT)']);
   showToast('Simulated Sign-in as ' + u.name + ' (' + u.roleTitle + ')');
 }
 
@@ -1026,8 +1060,16 @@ function setSession(u, rows, assignees, rawData = {}) {
     department: String(resolvedDept).trim() || 'Not specified in Outlook'
   };
 
-  ticketsStore = rows || [];
-  assigneeList = (assignees && assignees.length) ? assignees : ['Haq (ITD)', 'Fahmi (ITD)', 'Nur Haliza (HOD IT)', 'Unassigned'];
+  ticketsStore = (rows || []).map(t => ({
+    ...t,
+    Assignee: normalizeAssignee(t.Assignee)
+  }));
+
+  const cleanedAssignees = (assignees && assignees.length)
+    ? assignees.filter(a => a && a.toLowerCase() !== 'unassigned')
+    : ['Haq (ITD)', 'Fahmi (ITD)', 'Nur Haliza (HOD IT)'];
+
+  assigneeList = [DEFAULT_PENDING_ASSIGNEE, ...cleanedAssignees];
 
   const firstName = currentUser.name.split(' ')[0];
   $('chipName').textContent = firstName;
@@ -1230,6 +1272,15 @@ function renderListView(tickets) {
       t.Status === 'In Progress' ? 'badge-inprogress' :
       t.Status === 'Pending' ? 'badge-pending' : 'badge-resolved';
 
+    const assigneeText = normalizeAssignee(t.Assignee);
+    const isPendingHOD = assigneeText === DEFAULT_PENDING_ASSIGNEE;
+    const assigneeBadge = isPendingHOD
+      ? `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800">
+           <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+           ${esc(assigneeText)}
+         </span>`
+      : `<span class="text-[var(--phb-text)] font-bold">${esc(assigneeText)}</span>`;
+
     return `
       <tr onclick="openTicketDrawer('${esc(t.TicketID)}')" class="hover:bg-[var(--phb-bg)] cursor-pointer transition-colors">
         <td class="py-3.5 px-4 font-mono font-bold text-[#007A5E] dark:text-emerald-400">${esc(t.TicketID)}</td>
@@ -1243,7 +1294,7 @@ function renderListView(tickets) {
         <td class="py-3.5 px-4">
           <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${statusClass}">${esc(t.Status)}</span>
         </td>
-        <td class="py-3.5 px-4 text-[var(--phb-soft)] font-semibold">${esc(t.Assignee || 'Unassigned')}</td>
+        <td class="py-3.5 px-4">${assigneeBadge}</td>
         <td class="py-3.5 px-4 text-right">
           <button class="px-2.5 py-1 rounded-lg border border-[var(--phb-line)] hover:bg-[var(--phb-card)] text-[#007A5E] font-bold text-[11px]">View</button>
         </td>
@@ -1255,6 +1306,48 @@ function renderListView(tickets) {
 function fillAssigneeSelect() {
   const sel = $('drwAssigneeSelect');
   sel.innerHTML = assigneeList.map(n => `<option value="${esc(n)}">${esc(n)}</option>`).join('');
+}
+
+function buildAuditEntries(t) {
+  if (Array.isArray(t.AuditTrail) && t.AuditTrail.length) {
+    return t.AuditTrail;
+  }
+  if (typeof t.AuditTrail === 'string' && t.AuditTrail.trim()) {
+    return t.AuditTrail.split('\n').filter(Boolean).map(line => ({ text: line, time: '' }));
+  }
+
+  const entries = [
+    {
+      time: t.Submitted || 'Initial Submission',
+      text: `Ticket submitted by ${t.RequesterName || 'Requester'} (${t.Department || 'PHB'})`
+    },
+    {
+      time: t.Submitted || 'Routing',
+      text: `Routed to ${DEFAULT_PENDING_ASSIGNEE} (Status: Open)`
+    }
+  ];
+
+  const currentAssignee = normalizeAssignee(t.Assignee);
+  if (currentAssignee !== DEFAULT_PENDING_ASSIGNEE) {
+    entries.push({
+      time: 'HOD IT Assignment',
+      text: `Assigned to ${currentAssignee} · Status: ${t.Status || 'In Progress'}`
+    });
+  } else if (t.Status && t.Status !== 'Open') {
+    entries.push({
+      time: 'Status Update',
+      text: `Ticket status updated to ${t.Status}`
+    });
+  }
+
+  if (t.Remarks) {
+    entries.push({
+      time: 'Remarks',
+      text: `Remarks: "${t.Remarks}"`
+    });
+  }
+
+  return entries;
 }
 
 function openTicketDrawer(ticketId) {
@@ -1271,8 +1364,19 @@ function openTicketDrawer(ticketId) {
   $('drwDetails').textContent = t.Detail || 'No detailed steps provided.';
 
   $('drwStatusSelect').value = t.Status || 'Open';
-  $('drwAssigneeSelect').value = t.Assignee || 'Unassigned';
+  $('drwAssigneeSelect').value = normalizeAssignee(t.Assignee);
   $('drwRemarks').value = t.Remarks || '';
+
+  const trailEntries = buildAuditEntries(t);
+  $('drwAuditTrail').innerHTML = trailEntries.map(entry => `
+    <div class="flex items-start gap-2.5">
+      <span class="w-2 h-2 rounded-full bg-[#007A5E] mt-1.5 shrink-0"></span>
+      <div class="flex-1">
+        <div class="font-semibold text-[var(--phb-text)]">${esc(entry.text)}</div>
+        ${entry.time ? `<div class="text-[10px] font-mono text-[var(--phb-soft)]">${esc(entry.time)}</div>` : ''}
+      </div>
+    </div>
+  `).join('');
 
   const isElevated = currentUser && (currentUser.role !== 'staff');
   $('drwActionPanel').classList.toggle('hidden', !isElevated);
@@ -1284,11 +1388,26 @@ async function saveTicketChangesFromDrawer() {
   const t = ticketsStore.find(x => x.TicketID === activeDrawerTicketId);
   if (!t) return;
 
+  const newStatus = $('drwStatusSelect').value;
+  const newAssignee = $('drwAssigneeSelect').value;
+  const newRemarks = $('drwRemarks').value.trim();
+  const actor = currentUser ? `${currentUser.name} (${currentUser.role.toUpperCase().replace('_', ' ')})` : 'IT Admin';
+  const stamp = nowTimestamp();
+
+  const trailLog = buildAuditEntries(t);
+  trailLog.push({
+    time: stamp,
+    text: `Updated by ${actor} → Status: ${newStatus}, Assignee: ${newAssignee}${newRemarks ? ` · Remarks: "${newRemarks}"` : ''}`
+  });
+
   const payload = {
-    action: 'update', ticketId: t.TicketID,
-    status: $('drwStatusSelect').value,
-    assignee: $('drwAssigneeSelect').value,
-    remarks: $('drwRemarks').value
+    action: 'update',
+    ticketId: t.TicketID,
+    status: newStatus,
+    assignee: newAssignee,
+    remarks: newRemarks,
+    updatedBy: currentUser ? currentUser.email : '',
+    auditTrail: trailLog.map(x => `${x.time ? `[${x.time}] ` : ''}${x.text}`).join('\n')
   };
 
   try {
@@ -1296,6 +1415,7 @@ async function saveTicketChangesFromDrawer() {
       t.Status = payload.status;
       t.Assignee = payload.assignee;
       t.Remarks = payload.remarks;
+      t.AuditTrail = trailLog;
       filterAndRenderTickets();
     } else {
       await callFlow(CONFIG.flows.save, payload);
@@ -1304,6 +1424,24 @@ async function saveTicketChangesFromDrawer() {
     showToast(`Ticket ${t.TicketID} updated successfully.`);
     closeDrawer('drawerTicket');
   } catch (e) { showToast('Could not update ticket: ' + e.message, 'error'); }
+}
+
+function updateSubmitAuditTrailPreview() {
+  const ts = nowTimestamp();
+  if ($('formTrailTimestamp')) $('formTrailTimestamp').textContent = ts;
+
+  const reqName = (currentUser && currentUser.name) || 'Authenticated Staff';
+  const reqDept = (currentUser && currentUser.department) || 'PHB';
+  const cat = $('formCategory') ? $('formCategory').value : 'General';
+  const prio = $('formPriority') ? $('formPriority').value : 'Medium';
+
+  if ($('formTrailList')) {
+    $('formTrailList').innerHTML = `
+      <li><strong class="text-[var(--phb-text)]">1. Created:</strong> ${esc(reqName)} (${esc(reqDept)}) &middot; ${esc(cat)} [${esc(prio)}]</li>
+      <li><strong class="text-[var(--phb-text)]">2. Initial Status:</strong> <span class="font-mono font-bold text-amber-700 dark:text-amber-300">Open</span></li>
+      <li><strong class="text-[var(--phb-text)]">3. Routing Queue:</strong> Assigned to <span class="font-bold text-[#007A5E] dark:text-emerald-400">${esc(DEFAULT_PENDING_ASSIGNEE)}</span></li>
+    `;
+  }
 }
 
 function openNewTicketModal() {
@@ -1315,6 +1453,11 @@ function openNewTicketModal() {
   $('formReqName').value = currentUser.name || '';
   $('formReqEmail').value = currentUser.email || '';
   $('formDept').value = currentUser.department || '';
+  updateSubmitAuditTrailPreview();
+
+  $('formCategory').onchange = updateSubmitAuditTrailPreview;
+  $('formPriority').onchange = updateSubmitAuditTrailPreview;
+
   $('modalNewTicket').classList.remove('hidden');
   $('formSubject').focus();
 }
@@ -1324,6 +1467,12 @@ async function handleNewTicketSubmit(e) {
   const btn = $('formSubmitBtn');
   btn.disabled = true; btn.textContent = 'Submitting...';
 
+  const submittedAt = nowTimestamp();
+  const initialTrail = [
+    { time: submittedAt, text: `Submitted by ${$('formReqName').value.trim()} (${$('formDept').value})` },
+    { time: submittedAt, text: `Status set to Open · Routed to ${DEFAULT_PENDING_ASSIGNEE}` }
+  ];
+
   const payload = {
     action: 'create',
     requesterName: $('formReqName').value.trim(),
@@ -1332,17 +1481,30 @@ async function handleNewTicketSubmit(e) {
     category: $('formCategory').value,
     priority: $('formPriority').value,
     department: $('formDept').value,
-    detail: $('formDetail').value.trim()
+    detail: $('formDetail').value.trim(),
+    status: 'Open',
+    assignee: DEFAULT_PENDING_ASSIGNEE,
+    submittedAt: submittedAt,
+    auditTrail: initialTrail.map(x => `[${x.time}] ${x.text}`).join('\n')
   };
 
   try {
     let id;
     if (DEMO) {
-      id = 'TK-' + (1000 + ticketsStore.length + 1);
+      id = 'ORB-' + String(27 + ticketsStore.length).padStart(5, '0');
       ticketsStore.unshift({
-        TicketID: id, Subject: payload.subject, Category: payload.category, Priority: payload.priority, Status: 'Open',
-        Department: payload.department, RequesterName: currentUser.name, RequesterEmail: currentUser.email, Assignee: 'Unassigned',
-        Submitted: new Date().toISOString().slice(0, 16).replace('T', ' '), Detail: payload.detail
+        TicketID: id,
+        Subject: payload.subject,
+        Category: payload.category,
+        Priority: payload.priority,
+        Status: 'Open',
+        Department: payload.department,
+        RequesterName: currentUser.name,
+        RequesterEmail: currentUser.email,
+        Assignee: DEFAULT_PENDING_ASSIGNEE,
+        Submitted: submittedAt,
+        Detail: payload.detail,
+        AuditTrail: initialTrail
       });
       filterAndRenderTickets();
     } else {
@@ -1353,7 +1515,7 @@ async function handleNewTicketSubmit(e) {
     }
     closeModal('modalNewTicket');
     $('formSubject').value = ''; $('formDetail').value = '';
-    showToast(`Ticket ${id} created! Automated email sent.`);
+    showToast(`Ticket ${id} created (${DEFAULT_PENDING_ASSIGNEE}).`);
     $('sectionTicketQueue').scrollIntoView();
   } catch (err) { showToast('Could not submit ticket: ' + err.message, 'error'); }
   btn.disabled = false; btn.textContent = 'Submit Ticket';
@@ -1364,18 +1526,18 @@ function closeDrawer(id) { $(id).classList.add('hidden'); }
 
 /* ==================== 6. HOME SCREEN (3 SECTIONS) & KB RENDERING ==================== */
 function renderHowSteps() {
-  const steps = [
-    { n: '01', t: 'Pick a Quick Finding', d: 'Use the quick-finding chips above or jump straight to a category below.' },
-    { n: '02', t: 'Follow Numbered Steps', d: 'Complete verified resolution steps written by PHB IT Division.' },
-    { n: '03', t: 'Sign In & Submit', d: 'Need hands-on help? Sign in with PHB Microsoft 365 to log a ticket.' },
-    { n: '04', t: 'Track Live Status', d: 'Check real-time ticket progress and email updates in your queue.' }
+   const steps = [
+    { n: '01', t: 'Search or browse', d: 'Type your issue in the diagnostic console or select a category below.' },
+    { n: '02', t: 'Follow step-by-step', d: 'Each guide is a short, numbered resolution written by PHB IT Division.' },
+    { n: '03', t: 'Sign in & submit', d: 'If issue persists, sign in with PHB Microsoft 365 to raise a ticket.' },
+    { n: '04', t: 'Track to resolution', d: 'Monitor progress live in your queue with automated email updates.' }
   ];
 
   $('howGrid').innerHTML = steps.map(s => `
-    <div class="card-interactive p-5 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-xs space-y-2">
+    <div class="p-5 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-xs space-y-2 relative overflow-hidden">
       <div class="font-mono text-xs font-extrabold text-[#007A5E] dark:text-emerald-400 tracking-wider">STEP ${s.n}</div>
-      <h3 class="font-display font-extrabold text-lg text-[var(--phb-text)]">${s.t}</h3>
-      <p class="text-xs font-semibold text-[var(--phb-soft)] leading-relaxed">${s.d}</p>
+      <h3 class="font-display font-extrabold text-base text-[var(--phb-text)]">${s.t}</h3>
+      <p class="text-xs text-[var(--phb-soft)] leading-relaxed">${s.d}</p>
     </div>`).join('');
 }
 
@@ -1519,7 +1681,7 @@ function exportToPDF() {
   doc.setFontSize(9);
   doc.text(`Generated: ${new Date().toLocaleString()} by ${currentUser ? currentUser.name : 'System'}`, 14, 25);
 
-  const rows = getFilteredTickets().map(t => [t.TicketID, t.Subject, t.Department, t.Priority, t.Status, t.Assignee]);
+  const rows = getFilteredTickets().map(t => [t.TicketID, t.Subject, t.Department, t.Priority, t.Status, normalizeAssignee(t.Assignee)]);
   doc.autoTable({
     startY: 30,
     head: [['ID', 'Subject', 'Department', 'Priority', 'Status', 'Assignee']],

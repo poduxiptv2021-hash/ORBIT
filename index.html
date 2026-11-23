@@ -155,13 +155,13 @@ html { scroll-behavior: smooth; }
 <!-- Top Gradient Corporate Accent Bar -->
 <div class="h-1.5 w-full bg-gradient-to-r from-[#007A5E] via-[#005A4B] to-[#0B2545]"></div>
 
-<!-- ==================== TOP NAVIGATION HEADER (3 HOME SECTIONS) ==================== -->
+<!-- ==================== TOP NAVIGATION HEADER (2 HOME SECTIONS) ==================== -->
 <header class="sticky top-0 z-40 bg-[var(--phb-card)]/95 border-b border-[var(--phb-line)] backdrop-blur-md shadow-xs">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
 
     <!-- Brand Title & PHB Logo -->
     <div class="flex items-center gap-3 sm:gap-4">
-      <a href="#sectionHow" class="flex items-center gap-3 group">
+      <a href="#sectionBrowse" class="flex items-center gap-3 group">
         <img src="https://www.phb.com.my/clients/asset_E5316276-9983-47F1-A6C2-76D0C7985656/contentms/img/logo/logo-phb.svg"
              alt="Pelaburan Hartanah Berhad Logo" class="h-8 sm:h-9 w-auto object-contain transition-transform group-hover:scale-105"
              onerror="this.src='https://placehold.co/160x40/007A5E/ffffff?text=PHB+Logo'">
@@ -175,16 +175,13 @@ html { scroll-behavior: smooth; }
       </a>
     </div>
 
-    <!-- 3 Home Navigation Links + Role-Scoped Links -->
+    <!-- 2 Home Navigation Links + Role-Scoped Links -->
     <nav class="hidden lg:flex items-center gap-2 text-xs font-extrabold text-[var(--phb-soft)]">
-      <a href="#sectionHow" class="nav-pill-hover px-3 py-1.5 rounded-xl hover:bg-emerald-50 dark:hover:bg-emerald-950/50 hover:text-[#007A5E] dark:hover:text-emerald-300">
-        1. How It Works
-      </a>
       <a href="#sectionBrowse" class="nav-pill-hover px-3 py-1.5 rounded-xl hover:bg-emerald-50 dark:hover:bg-emerald-950/50 hover:text-[#007A5E] dark:hover:text-emerald-300">
-        2. Categories
+        1. Categories
       </a>
       <a href="#sectionKB" class="nav-pill-hover px-3 py-1.5 rounded-xl hover:bg-emerald-50 dark:hover:bg-emerald-950/50 hover:text-[#007A5E] dark:hover:text-emerald-300">
-        3. Knowledge Base (24)
+        2. Knowledge Base (24)
       </a>
       <a id="navTicketsLink" href="#sectionTicketQueue" class="nav-pill-hover hidden px-3 py-1.5 rounded-xl text-[#007A5E] dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/50">
         Tickets
@@ -262,24 +259,7 @@ html { scroll-behavior: smooth; }
 
       <div id="demoRoleSelectorArea" class="pt-3 border-t border-[var(--phb-line)]">
         <label class="block text-[10px] font-extrabold uppercase tracking-wider text-[var(--phb-soft)] mb-2">Simulate Role (SharePoint ORBITUsers)</label>
-        <div class="grid grid-cols-2 gap-2 font-mono text-[11px]">
-          <button onclick="simulateRoleLogin('hod_it')" class="p-2.5 rounded-xl border border-emerald-300 bg-emerald-50 text-emerald-800 dark:bg-emerald-950 dark:border-emerald-800 dark:text-emerald-300 font-bold text-left hover:brightness-95">
-            1. HOD IT
-            <span class="block text-[9px] font-normal text-emerald-700 dark:text-emerald-400 font-sans mt-0.5">All tickets, Assignee controls, Dept filter, Full Reports</span>
-          </button>
-          <button onclick="simulateRoleLogin('it_admin')" class="p-2.5 rounded-xl border border-blue-300 bg-blue-50 text-blue-800 dark:bg-blue-950 dark:border-blue-800 dark:text-blue-300 font-bold text-left hover:brightness-95">
-            2. IT Admin
-            <span class="block text-[9px] font-normal text-blue-700 dark:text-blue-400 font-sans mt-0.5">All tickets, Assignee controls, Dept filter, Dashboard</span>
-          </button>
-          <button onclick="simulateRoleLogin('hod_dept')" class="p-2.5 rounded-xl border border-amber-300 bg-amber-50 text-amber-800 dark:bg-amber-950 dark:border-amber-800 dark:text-amber-300 font-bold text-left hover:brightness-95">
-            3. HOD Dept
-            <span class="block text-[9px] font-normal text-amber-700 dark:text-amber-400 font-sans mt-0.5">Own + Dept tickets, Scoped Dashboard</span>
-          </button>
-          <button onclick="simulateRoleLogin('staff')" class="p-2.5 rounded-xl border border-slate-300 bg-slate-50 text-slate-800 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 font-bold text-left hover:brightness-95">
-            4. Staff (User)
-            <span class="block text-[9px] font-normal text-slate-600 dark:text-slate-400 font-sans mt-0.5">Own tickets only, Submit ticket, 24 KB Articles</span>
-          </button>
-        </div>
+        <div id="orbitUsersRoleGrid" class="grid grid-cols-2 gap-2 font-mono text-[11px]"></div>
       </div>
 
       <button onclick="closeModal('loginScreen')" class="w-full text-center text-xs font-semibold text-[var(--phb-soft)] hover:text-[var(--phb-text)] pt-1">
@@ -292,20 +272,12 @@ html { scroll-behavior: smooth; }
 <!-- ==================== MAIN CONTENT CONTAINER ==================== -->
 <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-10">
 
-  <!-- LIVE PRODUCTION STATUS BANNER -->
-  <div id="prodBanner" class="p-3.5 rounded-2xl border border-emerald-300 bg-emerald-50/90 dark:bg-emerald-950/40 dark:border-emerald-900 text-xs text-emerald-900 dark:text-emerald-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-xs">
-    <div class="flex items-center gap-2">
-      <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-      <span><strong>Live Production Mode:</strong> Connected to Power Automate flows & Entra ID Tenant <code class="font-mono bg-emerald-100 dark:bg-emerald-900/60 px-1.5 py-0.5 rounded">cc9afa77-...</code>. Authenticated requests route to SharePoint.</span>
-    </div>
-  </div>
-
-  <!-- QUICK FINDING BAR -->
+  <!-- HERO & QUICK FINDING BAR -->
   <div class="p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-[#007A5E] via-[#005A4B] to-[#0B2545] text-white shadow-lg">
     <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
       <div>
         <div class="font-mono text-[11px] text-emerald-300 font-extrabold tracking-widest uppercase">
-          &gt; PHB IT QUICK FINDING
+          &gt; PHB IT SELF-SERVICE &amp; HELPDESK
         </div>
         <h1 id="heroGuestHeading" class="font-display text-2xl sm:text-4xl font-extrabold tracking-tight mt-1">
           Fix common IT issues <span class="text-emerald-300">in minutes.</span>
@@ -315,16 +287,13 @@ html { scroll-behavior: smooth; }
         </h1>
       </div>
 
-      <!-- 3-Section Quick Jump Bar -->
+      <!-- 2-Section Quick Jump Bar -->
       <div class="flex flex-wrap items-center gap-2 text-xs font-extrabold">
-        <a href="#sectionHow" class="px-3.5 py-2 rounded-xl bg-white/15 hover:bg-white/25 border border-white/20 transition-all">
-          1. How It Works
-        </a>
         <a href="#sectionBrowse" class="px-3.5 py-2 rounded-xl bg-white/15 hover:bg-white/25 border border-white/20 transition-all">
-          2. Categories
+          1. Categories
         </a>
         <a href="#sectionKB" class="px-3.5 py-2 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-slate-950 transition-all">
-          3. All 24 Guides
+          2. All 24 Guides
         </a>
       </div>
     </div>
@@ -399,9 +368,9 @@ html { scroll-behavior: smooth; }
         </h2>
 
         <div id="deptFilterArea" class="flex items-center gap-2">
-          <label for="deptSelect" class="text-xs font-bold text-[var(--phb-soft)] uppercase tracking-wider">Dept Filter:</label>
+          <label for="deptSelect" class="text-xs font-bold text-[var(--phb-soft)] uppercase tracking-wider">Department:</label>
           <select id="deptSelect" onchange="filterAndRenderTickets()" class="px-3 py-1.5 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-xs font-bold text-[var(--phb-text)] focus:ring-2 focus:ring-[#007A5E] focus:outline-none">
-            <option value="ALL">All Departments (Executive View)</option>
+            <option value="ALL">All Departments</option>
           </select>
         </div>
       </div>
@@ -451,43 +420,27 @@ html { scroll-behavior: smooth; }
     </div>
   </section>
 
-  <!-- ==================== HOME SECTION 1: HOW TO USE ==================== -->
-  <section id="sectionHow" class="space-y-4 scroll-mt-20">
+  <!-- ==================== HOME SECTION 1: BROWSE BY CATEGORY ==================== -->
+  <section id="sectionBrowse" class="space-y-4 scroll-mt-20">
     <div class="flex items-center justify-between gap-3 border-l-4 border-[#007A5E] pl-4 py-1">
       <div>
         <span class="text-[11px] font-mono font-extrabold uppercase tracking-widest text-[#007A5E] dark:text-emerald-400">Section 01</span>
         <h2 class="font-display text-2xl sm:text-3xl font-extrabold text-[var(--phb-text)] tracking-tight">
-          How to Use ORBIT
-        </h2>
-        <p class="text-xs sm:text-sm font-bold text-[var(--phb-soft)]">
-          Four fast steps from quick finding to resolution
-        </p>
-      </div>
-    </div>
-    <div id="howGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
-  </section>
-
-  <!-- ==================== HOME SECTION 2: BROWSE BY CATEGORY ==================== -->
-  <section id="sectionBrowse" class="space-y-4 scroll-mt-20">
-    <div class="flex items-center justify-between gap-3 border-l-4 border-[#007A5E] pl-4 py-1">
-      <div>
-        <span class="text-[11px] font-mono font-extrabold uppercase tracking-widest text-[#007A5E] dark:text-emerald-400">Section 02</span>
-        <h2 class="font-display text-2xl sm:text-3xl font-extrabold text-[var(--phb-text)] tracking-tight">
           Browse by Category
         </h2>
         <p class="text-xs sm:text-sm font-bold text-[var(--phb-soft)]">
-          Click any category card to filter guides immediately
+          Select a category to filter self-service guides immediately
         </p>
       </div>
     </div>
     <div id="browseGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
   </section>
 
-  <!-- ==================== HOME SECTION 3: ALL 24 ARTICLES ==================== -->
+  <!-- ==================== HOME SECTION 2: ALL 24 ARTICLES ==================== -->
   <section id="sectionKB" class="space-y-4 scroll-mt-20">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-l-4 border-[#007A5E] pl-4 py-1">
       <div>
-        <span class="text-[11px] font-mono font-extrabold uppercase tracking-widest text-[#007A5E] dark:text-emerald-400">Section 03</span>
+        <span class="text-[11px] font-mono font-extrabold uppercase tracking-widest text-[#007A5E] dark:text-emerald-400">Section 02</span>
         <h2 class="font-display text-2xl sm:text-3xl font-extrabold text-[var(--phb-text)] tracking-tight flex items-center gap-3">
           <span>Self-Service Knowledge Base</span>
           <span id="articleCountBadge" class="text-xs font-mono font-extrabold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">24 Articles</span>
@@ -549,7 +502,7 @@ html { scroll-behavior: smooth; }
       <img src="https://www.phb.com.my/clients/asset_E5316276-9983-47F1-A6C2-76D0C7985656/contentms/img/logo/logo-phb.svg"
            alt="PHB" class="h-6 w-auto opacity-80"
            onerror="this.src='https://placehold.co/120x30/007A5E/ffffff?text=PHB'">
-      <span class="font-semibold">Pelaburan Hartanah Berhad &middot; Controlled via Power Automate HTTP</span>
+      <span class="font-semibold">Pelaburan Hartanah Berhad &middot; Controlled via ORBITUsers</span>
     </div>
     <div class="font-display font-extrabold tracking-wider uppercase text-[11px] text-[#007A5E] dark:text-emerald-400">
       WE ARE PHB &mdash; PROFESSIONAL | HARMONIOUS | BOLD
@@ -595,7 +548,7 @@ html { scroll-behavior: smooth; }
   </div>
 </div>
 
-<!-- 2. SUBMIT TICKET MODAL (WITH LIVE AUDIT TRAIL PREVIEW) -->
+<!-- 2. SUBMIT TICKET MODAL -->
 <div id="modalNewTicket" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs" onclick="if(event.target===this)closeModal('modalNewTicket')">
   <div class="max-w-xl w-full bg-[var(--phb-card)] rounded-3xl shadow-2xl border border-[var(--phb-line)] overflow-hidden max-h-[92vh] flex flex-col">
     <div class="px-6 py-4 border-b border-[var(--phb-line)] bg-[var(--phb-bg)] flex items-center justify-between">
@@ -625,7 +578,7 @@ html { scroll-behavior: smooth; }
         <div>
           <label class="block font-bold text-[var(--phb-soft)] uppercase tracking-wider text-[10px] mb-1">Category</label>
           <select id="formCategory" required class="w-full px-3 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-[var(--phb-text)] font-semibold">
-             <option value="User Management">User Management</option>
+            <option value="User Management">User Management</option>
             <option value="Device Management">Device Management</option>
             <option value="Software Support">Software Support</option>
             <option value="Network/ Connectivity">Network/ Connectivity</option>
@@ -667,9 +620,7 @@ html { scroll-behavior: smooth; }
           </span>
           <span id="formTrailTimestamp" class="font-mono text-[10px] text-[var(--phb-soft)]"></span>
         </div>
-        <ol id="formTrailList" class="space-y-1.5 text-[11px] text-[var(--phb-soft)] border-l-2 border-emerald-500 pl-3 ml-1">
-          <!-- Populated dynamically when modal opens -->
-        </ol>
+        <ol id="formTrailList" class="space-y-1.5 text-[11px] text-[var(--phb-soft)] border-l-2 border-emerald-500 pl-3 ml-1"></ol>
       </div>
 
       <div class="flex items-center justify-end gap-2 pt-3 border-t border-[var(--phb-line)]">
@@ -729,7 +680,10 @@ html { scroll-behavior: smooth; }
       </div>
 
       <div id="drwActionPanel" class="p-4 rounded-2xl border border-emerald-200 bg-emerald-50/60 dark:bg-emerald-950/30 dark:border-emerald-900 space-y-3">
-        <h4 class="font-extrabold text-xs uppercase tracking-wider text-[#007A5E] dark:text-emerald-300">Update Ticket & Assignee</h4>
+        <div class="flex items-center justify-between">
+          <h4 class="font-extrabold text-xs uppercase tracking-wider text-[#007A5E] dark:text-emerald-300">Update Ticket &amp; Assignee</h4>
+          <span class="text-[10px] font-semibold text-emerald-700 dark:text-emerald-400">Emails Assignee &amp; Requester</span>
+        </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
@@ -742,7 +696,7 @@ html { scroll-behavior: smooth; }
             </select>
           </div>
           <div id="drwAssigneeWrapper">
-            <label class="block font-bold text-[var(--phb-soft)] mb-1">Assign Officer</label>
+            <label class="block font-bold text-[var(--phb-soft)] mb-1">Assign Officer (ORBITUsers)</label>
             <select id="drwAssigneeSelect" class="w-full px-2.5 py-1.5 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-card)] font-bold text-[var(--phb-text)]"></select>
           </div>
         </div>
@@ -752,8 +706,8 @@ html { scroll-behavior: smooth; }
           <textarea id="drwRemarks" rows="2" placeholder="Add resolution details..." class="w-full px-2.5 py-1.5 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-card)] text-[var(--phb-text)] font-medium"></textarea>
         </div>
 
-        <button onclick="saveTicketChangesFromDrawer()" class="w-full py-2.5 rounded-xl bg-[#007A5E] hover:bg-[#005A4B] text-white font-extrabold text-xs transition-colors shadow-sm">
-          Save & Notify Requester
+        <button id="drwSaveBtn" onclick="saveTicketChangesFromDrawer()" class="w-full py-2.5 rounded-xl bg-[#007A5E] hover:bg-[#005A4B] text-white font-extrabold text-xs transition-colors shadow-sm">
+          Save &amp; Notify Assignee / Requester
         </button>
       </div>
     </div>
@@ -774,19 +728,31 @@ const CONFIG = {
   flows: {
     load: 'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/26/workflows/eaf49b60f83e47d48d86407219ecb944/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=9k6JGlDLpEgdR2BwpTi5PqgKyM-NL7E_S80pIrO4Cmk',
     create: 'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/11/workflows/9bb69e06bbda4b6c80a2d1670a89de05/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=KDbFdzw_1aY-1p5uPJ-UhtD7JCAfn9d_F_wmzKJule0',
-    save: 'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/01/workflows/eb61e2c74bb64ddc829c58e048b1e054/triggers/manual/paths/invoke?api-version=1'
+    // IMPORTANT: Ensure your Save/Update flow URL includes &sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=YOUR_SAVE_FLOW_SIG to avoid HTTP 401
+    save: 'https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/01/workflows/eb61e2c74bb64ddc829c58e048b1e054/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=9k6JGlDLpEgdR2BwpTi5PqgKyM-NL7E_S80pIrO4Cmk'
   },
-  departments: []
+  departments: [
+    'Information Technology Department',
+    'Finance Department',
+    'Human Capital & Administration',
+    'Legal & Secretarial',
+    'Investment & Asset Management',
+    'Property Management',
+    'Corporate Communications',
+    'Internal Audit Department',
+    'Risk Management & Compliance'
+  ]
 };
 
 const DEFAULT_PENDING_ASSIGNEE = 'Pending HOD IT To Assign';
 const DEMO = !CONFIG.flows.load || (!CONFIG.flows.create && !CONFIG.flows.save);
 
-const SIMULATED_USERS = [
-  { id: 'u1', name: 'Nur Haliza Binti Haron', email: 'nurhaliza@phb.com.my', role: 'hod_it', roleTitle: 'Head of IT Division (HOD IT)', department: 'Information Technology Department (ITD)' },
-  { id: 'u2', name: 'Haq', email: 'haq@phb.com.my', role: 'it_admin', roleTitle: 'IT Support Admin (IT Officer)', department: 'Information Technology Department (ITD)' },
-  { id: 'u3', name: 'Eliza Yazmin', email: 'elizayazmin@phb.com.my', role: 'hod_dept', roleTitle: 'Head of Department (Finance HOD)', department: 'Finance Department (FD)' },
-  { id: 'u4', name: 'Siti Rahayu', email: 'siti.rahayu@phb.com.my', role: 'staff', roleTitle: 'Staff Member / Senior Executive', department: 'Finance Department (FD)' }
+// Fallback directory aligned with SharePoint ORBITUsers list
+const DEFAULT_ORBIT_USERS = [
+  { id: 'u1', name: 'Nur Haliza Binti Haron', email: 'haliza@phb.com.my', role: 'hod_it', roleTitle: 'Head of IT Division (HOD IT)', department: 'Information Technology Department', active: true },
+  { id: 'u2', name: 'Haq', email: 'haq@phb.com.my', role: 'it_admin', roleTitle: 'IT Support Admin (IT Officer)', department: 'Information Technology Department', active: true },
+  { id: 'u3', name: 'Eliza Yazmin', email: 'elizayazmin@phb.com.my', role: 'hod_dept', roleTitle: 'Head of Department (Finance HOD)', department: 'Finance Department', active: true },
+  { id: 'u4', name: 'Siti Rahayu', email: 'siti.rahayu@phb.com.my', role: 'staff', roleTitle: 'Staff Member / Senior Executive', department: 'Finance Department', active: true }
 ];
 
 const KB_ARTICLES = [
@@ -831,7 +797,8 @@ const CATEGORIES = [
 ];
 
 let ticketsStore = [];
-let assigneeList = [DEFAULT_PENDING_ASSIGNEE, 'Haq (ITD)', 'Fahmi (ITD)', 'Nur Haliza (HOD IT)'];
+let orbitUsersStore = [...DEFAULT_ORBIT_USERS];
+let assigneeDirectory = []; // [{ label, email, role }]
 let currentUser = null;
 let activeDrawerTicketId = null;
 let kbCategory = 'All';
@@ -841,6 +808,13 @@ let msalApp = null;
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const $ = id => document.getElementById(id);
 
+function extractChoice(val) {
+  if (val && typeof val === 'object') {
+    return val.Value || val.value || val.Title || val.label || '';
+  }
+  return val == null ? '' : String(val);
+}
+
 function nowTimestamp() {
   return new Date().toLocaleString('en-MY', {
     day: '2-digit', month: 'short', year: 'numeric',
@@ -849,24 +823,87 @@ function nowTimestamp() {
 }
 
 function normalizeAssignee(val) {
-  const s = String(val || '').trim();
-  if (!s || s.toLowerCase() === 'unassigned') return DEFAULT_PENDING_ASSIGNEE;
+  const s = extractChoice(val).trim();
+  if (!s || s.toLowerCase() === 'unassigned' || s.toLowerCase() === 'pending hod it assignment') {
+    return DEFAULT_PENDING_ASSIGNEE;
+  }
   return s;
 }
 
 function resolveRole(r) {
-  const s = String(r || '').toLowerCase().replace('-', '_').trim();
-  if (s === 'hod_it' || s === 'hodit' || s === 'hod it') return { code: 'hod_it', title: 'Head of IT Division (HOD IT)' };
-  if (s === 'it_admin' || s === 'it' || s === 'admin' || s === 'it admin') return { code: 'it_admin', title: 'IT Support Admin' };
-  if (s === 'hod_dept' || s === 'hoddept' || s === 'hod dept' || s === 'hod') return { code: 'hod_dept', title: 'Head of Department (HOD Dept)' };
+  const raw = extractChoice(r);
+  const s = String(raw).toLowerCase().replace(/[\s-]+/g, '_').trim();
+  if (s === 'hod_it' || s === 'hodit') return { code: 'hod_it', title: 'Head of IT Division (HOD IT)' };
+  if (s === 'it_admin' || s === 'it' || s === 'admin') return { code: 'it_admin', title: 'IT Support Admin' };
+  if (s === 'hod_dept' || s === 'hoddept' || s === 'hod') return { code: 'hod_dept', title: 'Head of Department (HOD Dept)' };
   return { code: 'staff', title: 'Staff View (User)' };
+}
+
+function normalizeOrbitUser(item) {
+  const rawRole = extractChoice(item.Role || item.role);
+  const roleObj = resolveRole(rawRole);
+  const activeFlag = item.Active === undefined && item.active === undefined
+    ? true
+    : Boolean(item.Active ?? item.active);
+
+  return {
+    id: item.ID || item.id || '',
+    name: extractChoice(item.Title || item.Name || item.name || item.displayName).trim(),
+    email: extractChoice(item.Email || item.email || item.mail).trim().toLowerCase(),
+    role: roleObj.code,
+    roleTitle: roleObj.title,
+    department: extractChoice(item.Department || item.department || item.Dept || item.dept).trim(),
+    active: activeFlag
+  };
+}
+
+function rebuildAssigneeDirectory() {
+  const itOfficers = orbitUsersStore.filter(u =>
+    u.active && (u.role === 'hod_it' || u.role === 'it_admin')
+  );
+
+  const mapped = itOfficers.map(u => {
+    const tag = u.role === 'hod_it' ? 'HOD IT' : 'ITD';
+    const shortName = u.name || (u.email ? u.email.split('@')[0] : 'IT Officer');
+    return {
+      label: `${shortName} (${tag})`,
+      email: u.email,
+      role: u.role
+    };
+  });
+
+  assigneeDirectory = [
+    { label: DEFAULT_PENDING_ASSIGNEE, email: '', role: 'pending' },
+    ...mapped
+  ];
+}
+
+function renderSimulateRoleButtons() {
+  const grid = $('orbitUsersRoleGrid');
+  if (!grid) return;
+
+  const badgeColors = {
+    hod_it: 'border-emerald-300 bg-emerald-50 text-emerald-800 dark:bg-emerald-950 dark:border-emerald-800 dark:text-emerald-300',
+    it_admin: 'border-blue-300 bg-blue-50 text-blue-800 dark:bg-blue-950 dark:border-blue-800 dark:text-blue-300',
+    hod_dept: 'border-amber-300 bg-amber-50 text-amber-800 dark:bg-amber-950 dark:border-amber-800 dark:text-amber-300',
+    staff: 'border-slate-300 bg-slate-50 text-slate-800 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300'
+  };
+
+  const activeUsers = orbitUsersStore.filter(u => u.active);
+  grid.innerHTML = activeUsers.slice(0, 6).map((u, idx) => `
+    <button onclick="simulateRoleLogin('${esc(u.email)}')" class="p-2.5 rounded-xl border ${badgeColors[u.role] || badgeColors.staff} font-bold text-left hover:brightness-95">
+      ${idx + 1}. ${esc(u.role.toUpperCase().replace('_', ' '))}
+      <span class="block text-[10px] font-semibold font-sans mt-0.5 truncate">${esc(u.name)}</span>
+      <span class="block text-[9px] font-normal opacity-80 font-sans truncate">${esc(u.department || 'PHB')}</span>
+    </button>
+  `).join('');
 }
 
 /* ==================== 2. INITIALIZATION & RESILIENT MSAL AUTH ==================== */
 window.addEventListener('DOMContentLoaded', async () => {
-  $('prodBanner').classList.toggle('hidden', DEMO);
+  rebuildAssigneeDirectory();
+  renderSimulateRoleButtons();
   populateDepartmentDropdowns();
-  renderHowSteps();
   renderBrowseGrid();
   renderKBGrid();
   renderReportsData();
@@ -906,7 +943,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
   } catch (e) {
     console.error("MSAL Initialization Error:", e);
-    showToast("MSAL init warning: " + (e.message || e), "error");
   }
 
   const urlRole = new URLSearchParams(location.search).get('role');
@@ -927,20 +963,13 @@ async function fetchOutlookDepartment() {
     });
 
     const graphRes = await fetch('https://graph.microsoft.com/v1.0/me?$select=department', {
-      headers: {
-        Authorization: 'Bearer ' + tokenResp.accessToken
-      }
+      headers: { Authorization: 'Bearer ' + tokenResp.accessToken }
     });
 
-    if (!graphRes.ok) {
-      console.warn('Graph /me department fetch status:', graphRes.status);
-      return '';
-    }
-
+    if (!graphRes.ok) return '';
     const profile = await graphRes.json();
     return (profile && profile.department) ? String(profile.department).trim() : '';
   } catch (err) {
-    console.warn('Could not read department from Microsoft Graph:', err);
     return '';
   }
 }
@@ -948,16 +977,24 @@ async function fetchOutlookDepartment() {
 function populateDepartmentDropdowns() {
   const deptSelect = $('deptSelect');
   const formDept = $('formDept');
-  const depts = Array.isArray(CONFIG.departments) ? CONFIG.departments : [];
 
-  const optionsHTML = depts.map(d =>
+  const deptSet = new Set(Array.isArray(CONFIG.departments) ? CONFIG.departments : []);
+  orbitUsersStore.forEach(u => { if (u.department) deptSet.add(u.department); });
+  ticketsStore.forEach(t => { if (t.Department) deptSet.add(extractChoice(t.Department).trim()); });
+
+  const sortedDepts = Array.from(deptSet).filter(Boolean).sort();
+  const optionsHTML = sortedDepts.map(d =>
     `<option value="${esc(d)}">${esc(d)}</option>`
   ).join('');
 
   if (deptSelect) {
+    const prevVal = deptSelect.value;
     deptSelect.innerHTML =
-      '<option value="ALL">All Departments (Executive View)</option>' +
+      '<option value="ALL">All Departments</option>' +
       optionsHTML;
+    if (prevVal && (prevVal === 'ALL' || sortedDepts.includes(prevVal))) {
+      deptSelect.value = prevVal;
+    }
   }
 
   if (formDept) {
@@ -965,11 +1002,14 @@ function populateDepartmentDropdowns() {
   }
 }
 
-function openLoginModal() { $('loginScreen').classList.remove('hidden'); }
+function openLoginModal() {
+  renderSimulateRoleButtons();
+  $('loginScreen').classList.remove('hidden');
+}
 
 async function startSSO() {
   if (DEMO) {
-    simulateRoleLogin('staff');
+    simulateRoleLogin('hod_it');
     return;
   }
 
@@ -988,31 +1028,29 @@ async function startSSO() {
     msalApp.setActiveAccount(loginResponse.account);
     await loadSession();
   } catch (popupErr) {
-    console.warn("MSAL loginPopup failed or blocked:", popupErr);
     const errStr = String(popupErr && (popupErr.errorMessage || popupErr.message || popupErr));
     if (errStr.includes("user_cancelled") || errStr.includes("User cancelled")) {
       showToast("Sign-in cancelled by user.", "error");
       return;
     }
 
-    showToast("Popup blocked/failed. Redirecting to Microsoft Login...", "info");
     try {
       await msalApp.loginRedirect({
         scopes: ['User.Read'],
         prompt: 'select_account'
       });
     } catch (redirectErr) {
-      console.error("MSAL loginRedirect failed:", redirectErr);
       const msg = redirectErr ? (redirectErr.errorMessage || redirectErr.message || "Redirect auth failed") : "Unknown Error";
       showToast("Sign-in failed: " + msg, "error");
     }
   }
 }
 
-function simulateRoleLogin(roleCode) {
-  const u = SIMULATED_USERS.find(x => x.role === roleCode) || SIMULATED_USERS[3];
-  setSession(u, [], [DEFAULT_PENDING_ASSIGNEE, 'Haq (ITD)', 'Fahmi (ITD)', 'Nur Haliza (HOD IT)']);
-  showToast('Simulated Sign-in as ' + u.name + ' (' + u.roleTitle + ')');
+function simulateRoleLogin(identifier) {
+  const key = String(identifier || '').toLowerCase().trim();
+  const u = orbitUsersStore.find(x => x.email === key || x.role === key) || orbitUsersStore[0];
+  setSession(u, ticketsStore, orbitUsersStore);
+  showToast('Signed in as ' + u.name + ' (' + u.roleTitle + ')');
 }
 
 function logout() {
@@ -1030,46 +1068,63 @@ function logout() {
 
 function toggleUserDropdown() { $('userDropdown').classList.toggle('hidden'); }
 
-function setSession(u, rows, assignees, rawData = {}) {
+function setSession(u, rows, usersListFromSP, rawData = {}) {
   const acc = (msalApp && (msalApp.getActiveAccount() || msalApp.getAllAccounts()[0])) || {};
   const claims = acc.idTokenClaims || {};
-  const msalEmail = acc.username || claims.preferred_username || claims.email || '';
+  const msalEmail = (acc.username || claims.preferred_username || claims.email || '').toLowerCase();
   const msalName = acc.name || claims.name || (msalEmail ? msalEmail.split('@')[0] : 'User');
 
+  // If SharePoint ORBITUsers list is returned, synchronize local directory
+  if (Array.isArray(usersListFromSP) && usersListFromSP.length) {
+    orbitUsersStore = usersListFromSP.map(normalizeOrbitUser);
+  }
+  rebuildAssigneeDirectory();
+
   const userObj = (u && typeof u === 'object') ? u : {};
-  const resolvedName = userObj.name || userObj.Name || userObj.displayName || msalName;
-  const resolvedEmail = userObj.email || userObj.Email || userObj.mail || msalEmail;
+  const resolvedEmail = (extractChoice(userObj.email || userObj.Email || userObj.mail) || msalEmail).toLowerCase();
+
+  // Cross-check user record in ORBITUsers list by email to guarantee exact Role & Department
+  const spMatchedUser = orbitUsersStore.find(x => x.email === resolvedEmail);
+
+  if (spMatchedUser && !spMatchedUser.active) {
+    showToast('Your account is marked Inactive in ORBITUsers. Contact ITD.', 'error');
+    return;
+  }
+
+  const resolvedName =
+    (spMatchedUser && spMatchedUser.name) ||
+    extractChoice(userObj.name || userObj.Name || userObj.displayName) ||
+    msalName;
+
+  const rawRole =
+    (spMatchedUser && spMatchedUser.role) ||
+    extractChoice(userObj.role || userObj.Role || rawData.role || rawData.Role);
+
+  const roleObj = resolveRole(rawRole);
 
   const resolvedDept =
-    userObj.department ||
-    userObj.Department ||
-    userObj.dept ||
-    userObj.Dept ||
-    userObj.departmentName ||
-    rawData.department ||
-    rawData.Department ||
-    '';
-
-  const roleObj = resolveRole(userObj.role || userObj.Role || rawData.role);
+    (spMatchedUser && spMatchedUser.department) ||
+    extractChoice(userObj.department || userObj.Department || userObj.dept || userObj.Dept || rawData.department || rawData.Department) ||
+    'Information Technology Department';
 
   currentUser = {
     name: resolvedName,
     email: resolvedEmail,
     role: roleObj.code,
-    roleTitle: userObj.roleTitle || roleObj.title,
-    department: String(resolvedDept).trim() || 'Not specified in Outlook'
+    roleTitle: roleObj.title,
+    department: String(resolvedDept).trim()
   };
 
   ticketsStore = (rows || []).map(t => ({
     ...t,
+    Department: extractChoice(t.Department).trim(),
+    Category: extractChoice(t.Category).trim(),
+    Priority: extractChoice(t.Priority).trim() || 'Medium',
+    Status: extractChoice(t.Status).trim() || 'Open',
     Assignee: normalizeAssignee(t.Assignee)
   }));
 
-  const cleanedAssignees = (assignees && assignees.length)
-    ? assignees.filter(a => a && a.toLowerCase() !== 'unassigned')
-    : ['Haq (ITD)', 'Fahmi (ITD)', 'Nur Haliza (HOD IT)'];
-
-  assigneeList = [DEFAULT_PENDING_ASSIGNEE, ...cleanedAssignees];
+  populateDepartmentDropdowns();
 
   const firstName = currentUser.name.split(' ')[0];
   $('chipName').textContent = firstName;
@@ -1093,7 +1148,7 @@ function applyRoleView() {
   const show = (id, on) => $(id) && $(id).classList.toggle('hidden', !on);
 
   const canSeeReports = role === 'hod_it' || role === 'it_admin';
-  const canFilterDepts = role === 'hod_it' || role === 'it_admin';
+  const canFilterDepts = role === 'hod_it' || role === 'it_admin' || role === 'hod_dept';
   const canSeeDashboard = role === 'hod_it' || role === 'it_admin' || role === 'hod_dept';
   const canAssign = role === 'hod_it' || role === 'it_admin';
 
@@ -1117,17 +1172,20 @@ function applyRoleView() {
     if (role === 'hod_it') {
       $('roleOverviewBadge').textContent = 'HOD IT Executive Dashboard';
       $('roleOverviewDesc').textContent = 'Full enterprise oversight across PHB departments, SLA metrics, and IT officer assignments.';
+      $('deptSelect').value = 'ALL';
     } else if (role === 'it_admin') {
       $('roleOverviewBadge').textContent = 'IT Support Operational Dashboard';
       $('roleOverviewDesc').textContent = 'Operational ticket queue, SLA response times, and active officer assignments.';
+      $('deptSelect').value = 'ALL';
     } else if (role === 'hod_dept') {
       $('roleOverviewBadge').textContent = 'Departmental Leadership Dashboard';
-      $('roleOverviewDesc').textContent = 'Departmental ticket queue scoped strictly to ' + currentUser.department + '.';
+      $('roleOverviewDesc').textContent = 'Departmental ticket queue with department dropdown filter.';
+      const matchingOption = Array.from($('deptSelect').options).find(
+        opt => opt.value.toLowerCase() === currentUser.department.toLowerCase()
+      );
+      $('deptSelect').value = matchingOption ? matchingOption.value : 'ALL';
     }
 
-    if (canFilterDepts) {
-      $('deptSelect').value = 'ALL';
-    }
     fillAssigneeSelect();
   }
 }
@@ -1145,7 +1203,6 @@ async function getToken() {
     const r = await msalApp.acquireTokenSilent(req);
     return r.accessToken;
   } catch (e) {
-    console.warn("acquireTokenSilent failed, trying popup/redirect token:", e);
     try {
       const r = await msalApp.acquireTokenPopup(req);
       return r.accessToken;
@@ -1165,10 +1222,14 @@ async function callFlow(url, payload) {
 
   if (!res.ok) {
     let msg = 'HTTP ' + res.status;
+    if (res.status === 401) {
+      msg = 'HTTP 401 (Verify Save Flow SAS signature & permissions in Power Automate)';
+    }
     try { const j = await res.json(); if (j && j.message) msg = j.message; } catch (e) {}
     throw new Error(msg);
   }
-  return res.json();
+  const text = await res.text();
+  return text ? JSON.parse(text) : {};
 }
 
 async function loadSession(manual) {
@@ -1180,7 +1241,7 @@ async function loadSession(manual) {
   const outlookDept = await fetchOutlookDepartment();
 
   try {
-    showToast("Fetching live tickets from SharePoint...", "info");
+    if (manual) showToast("Refreshing from SharePoint...", "info");
     const d = await callFlow(CONFIG.flows.load, {
       email: msalEmail,
       name: msalName,
@@ -1196,36 +1257,30 @@ async function loadSession(manual) {
       userPayload.department = outlookDept;
     }
 
-    setSession(userPayload, d.tickets || d.value || [], d.assignees || [], d);
-    if (manual) showToast('Refreshed live tickets from SharePoint.');
+    const spUsers = d.users || d.orbitUsers || d.ORBITUsers || [];
+    setSession(userPayload, d.tickets || d.value || [], spUsers, d);
+    if (manual) showToast('Refreshed live tickets & ORBITUsers.');
   } catch (e) {
     console.error("loadSession failed:", e);
     setSession({ name: msalName, email: msalEmail, department: outlookDept }, [], []);
-    showToast('Signed in, but could not load tickets: ' + e.message, 'error');
+    showToast('Could not load tickets: ' + e.message, 'error');
   }
 }
 
-/* ==================== 4. TICKET SCOPING BY ROLE ==================== */
+/* ==================== 4. TICKET SCOPING BY ROLE & DEPARTMENT DROPDOWN ==================== */
 function getFilteredTickets() {
   let list = [...ticketsStore];
   if (!currentUser) return list;
 
   const role = currentUser.role;
   const userEmail = (currentUser.email || '').toLowerCase();
-  const userDept = (currentUser.department || '').trim().toLowerCase();
 
   if (role === 'staff') {
     list = list.filter(t => (t.RequesterEmail || '').toLowerCase() === userEmail);
-  } else if (role === 'hod_dept') {
-    list = list.filter(t => {
-      const reqEmail = (t.RequesterEmail || '').toLowerCase();
-      const ticketDept = (t.Department || '').trim().toLowerCase();
-      return reqEmail === userEmail || (userDept && ticketDept === userDept);
-    });
-  } else if (role === 'hod_it' || role === 'it_admin') {
+  } else if (role === 'hod_it' || role === 'it_admin' || role === 'hod_dept') {
     const selectedDept = $('deptSelect').value;
-    if (selectedDept !== 'ALL') {
-      list = list.filter(t => t.Department === selectedDept);
+    if (selectedDept && selectedDept !== 'ALL') {
+      list = list.filter(t => (t.Department || '').toLowerCase() === selectedDept.toLowerCase());
     }
   }
 
@@ -1235,7 +1290,8 @@ function getFilteredTickets() {
       (t.TicketID && t.TicketID.toLowerCase().includes(query)) ||
       (t.Subject && t.Subject.toLowerCase().includes(query)) ||
       (t.RequesterName && t.RequesterName.toLowerCase().includes(query)) ||
-      (t.Category && t.Category.toLowerCase().includes(query))
+      (t.Category && t.Category.toLowerCase().includes(query)) ||
+      (t.Assignee && t.Assignee.toLowerCase().includes(query))
     );
   }
 
@@ -1260,7 +1316,7 @@ function renderListView(tickets) {
     tbody.innerHTML = `
       <tr>
         <td colspan="8" class="text-center py-10 text-[var(--phb-soft)] font-medium">
-          No tickets found for your role and current filter parameters.
+          No tickets found for your role and selected department filter.
         </td>
       </tr>`;
     return;
@@ -1288,7 +1344,7 @@ function renderListView(tickets) {
           <div class="font-bold text-[var(--phb-text)] line-clamp-1">${esc(t.Subject)}</div>
           <div class="text-[11px] text-[var(--phb-soft)] font-medium">${esc(t.RequesterName)} (${esc(t.RequesterEmail)})</div>
         </td>
-        <td class="py-3.5 px-4 font-semibold text-[var(--phb-soft)] truncate max-w-[140px]">${esc(t.Department)}</td>
+        <td class="py-3.5 px-4 font-semibold text-[var(--phb-soft)] truncate max-w-[160px]">${esc(t.Department)}</td>
         <td class="py-3.5 px-4 font-semibold text-[var(--phb-text)]">${esc(t.Category)}</td>
         <td class="py-3.5 px-4 font-bold ${t.Priority==='Critical'?'text-rose-600':t.Priority==='High'?'text-amber-600':'text-slate-500'}">${esc(t.Priority)}</td>
         <td class="py-3.5 px-4">
@@ -1305,7 +1361,9 @@ function renderListView(tickets) {
 /* ==================== 5. DRAWER & MODAL ACTIONS ==================== */
 function fillAssigneeSelect() {
   const sel = $('drwAssigneeSelect');
-  sel.innerHTML = assigneeList.map(n => `<option value="${esc(n)}">${esc(n)}</option>`).join('');
+  sel.innerHTML = assigneeDirectory.map(item =>
+    `<option value="${esc(item.label)}" data-email="${esc(item.email)}">${esc(item.label)}</option>`
+  ).join('');
 }
 
 function buildAuditEntries(t) {
@@ -1364,7 +1422,15 @@ function openTicketDrawer(ticketId) {
   $('drwDetails').textContent = t.Detail || 'No detailed steps provided.';
 
   $('drwStatusSelect').value = t.Status || 'Open';
-  $('drwAssigneeSelect').value = normalizeAssignee(t.Assignee);
+
+  const normalized = normalizeAssignee(t.Assignee);
+  if (!Array.from($('drwAssigneeSelect').options).some(o => o.value === normalized)) {
+    const opt = document.createElement('option');
+    opt.value = normalized;
+    opt.textContent = normalized;
+    $('drwAssigneeSelect').appendChild(opt);
+  }
+  $('drwAssigneeSelect').value = normalized;
   $('drwRemarks').value = t.Remarks || '';
 
   const trailEntries = buildAuditEntries(t);
@@ -1378,8 +1444,8 @@ function openTicketDrawer(ticketId) {
     </div>
   `).join('');
 
-  const isElevated = currentUser && (currentUser.role !== 'staff');
-  $('drwActionPanel').classList.toggle('hidden', !isElevated);
+  const canManageTicket = currentUser && (currentUser.role === 'hod_it' || currentUser.role === 'it_admin');
+  $('drwActionPanel').classList.toggle('hidden', !canManageTicket);
   $('drawerTicket').classList.remove('hidden');
 }
 
@@ -1388,23 +1454,48 @@ async function saveTicketChangesFromDrawer() {
   const t = ticketsStore.find(x => x.TicketID === activeDrawerTicketId);
   if (!t) return;
 
+  const saveBtn = $('drwSaveBtn');
+  saveBtn.disabled = true;
+  saveBtn.textContent = 'Saving & Sending Email...';
+
+  const previousAssignee = normalizeAssignee(t.Assignee);
   const newStatus = $('drwStatusSelect').value;
-  const newAssignee = $('drwAssigneeSelect').value;
+  const selEl = $('drwAssigneeSelect');
+  const newAssignee = selEl.value;
+  const selectedOption = selEl.options[selEl.selectedIndex];
+  const matchedDirEntry = assigneeDirectory.find(a => a.label === newAssignee);
+  const assigneeEmail = (selectedOption && selectedOption.dataset.email) || (matchedDirEntry && matchedDirEntry.email) || '';
+
   const newRemarks = $('drwRemarks').value.trim();
-  const actor = currentUser ? `${currentUser.name} (${currentUser.role.toUpperCase().replace('_', ' ')})` : 'IT Admin';
+  const actorName = currentUser ? currentUser.name : 'HOD IT';
+  const actorRole = currentUser ? currentUser.role.toUpperCase().replace('_', ' ') : 'HOD IT';
   const stamp = nowTimestamp();
+
+  const isNewlyAssigned =
+    newAssignee !== DEFAULT_PENDING_ASSIGNEE &&
+    newAssignee !== previousAssignee;
 
   const trailLog = buildAuditEntries(t);
   trailLog.push({
     time: stamp,
-    text: `Updated by ${actor} → Status: ${newStatus}, Assignee: ${newAssignee}${newRemarks ? ` · Remarks: "${newRemarks}"` : ''}`
+    text: `Updated by ${actorName} (${actorRole}) → Status: ${newStatus}, Assignee: ${newAssignee}${assigneeEmail ? ` <${assigneeEmail}>` : ''}${newRemarks ? ` · Remarks: "${newRemarks}"` : ''}`
   });
 
   const payload = {
     action: 'update',
     ticketId: t.TicketID,
+    subject: t.Subject,
+    department: t.Department,
+    category: t.Category,
+    priority: t.Priority,
+    requesterName: t.RequesterName,
+    requesterEmail: t.RequesterEmail,
     status: newStatus,
     assignee: newAssignee,
+    assigneeEmail: assigneeEmail,
+    notifyAssignee: isNewlyAssigned || Boolean(assigneeEmail),
+    assignedByName: actorName,
+    assignedByEmail: currentUser ? currentUser.email : '',
     remarks: newRemarks,
     updatedBy: currentUser ? currentUser.email : '',
     auditTrail: trailLog.map(x => `${x.time ? `[${x.time}] ` : ''}${x.text}`).join('\n')
@@ -1414,6 +1505,7 @@ async function saveTicketChangesFromDrawer() {
     if (DEMO) {
       t.Status = payload.status;
       t.Assignee = payload.assignee;
+      t.AssigneeEmail = payload.assigneeEmail;
       t.Remarks = payload.remarks;
       t.AuditTrail = trailLog;
       filterAndRenderTickets();
@@ -1421,9 +1513,18 @@ async function saveTicketChangesFromDrawer() {
       await callFlow(CONFIG.flows.save, payload);
       await loadSession();
     }
-    showToast(`Ticket ${t.TicketID} updated successfully.`);
+
+    const notifyNote = assigneeEmail
+      ? ` Email notification queued for ${newAssignee} (${assigneeEmail}).`
+      : '';
+    showToast(`Ticket ${t.TicketID} updated.${notifyNote}`);
     closeDrawer('drawerTicket');
-  } catch (e) { showToast('Could not update ticket: ' + e.message, 'error'); }
+  } catch (e) {
+    showToast('Could not update ticket: ' + e.message, 'error');
+  } finally {
+    saveBtn.disabled = false;
+    saveBtn.textContent = 'Save & Notify Assignee / Requester';
+  }
 }
 
 function updateSubmitAuditTrailPreview() {
@@ -1524,23 +1625,7 @@ async function handleNewTicketSubmit(e) {
 function closeModal(id) { $(id).classList.add('hidden'); }
 function closeDrawer(id) { $(id).classList.add('hidden'); }
 
-/* ==================== 6. HOME SCREEN (3 SECTIONS) & KB RENDERING ==================== */
-function renderHowSteps() {
-   const steps = [
-    { n: '01', t: 'Search or browse', d: 'Type your issue in the diagnostic console or select a category below.' },
-    { n: '02', t: 'Follow step-by-step', d: 'Each guide is a short, numbered resolution written by PHB IT Division.' },
-    { n: '03', t: 'Sign in & submit', d: 'If issue persists, sign in with PHB Microsoft 365 to raise a ticket.' },
-    { n: '04', t: 'Track to resolution', d: 'Monitor progress live in your queue with automated email updates.' }
-  ];
-
-  $('howGrid').innerHTML = steps.map(s => `
-    <div class="p-5 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] shadow-xs space-y-2 relative overflow-hidden">
-      <div class="font-mono text-xs font-extrabold text-[#007A5E] dark:text-emerald-400 tracking-wider">STEP ${s.n}</div>
-      <h3 class="font-display font-extrabold text-base text-[var(--phb-text)]">${s.t}</h3>
-      <p class="text-xs text-[var(--phb-soft)] leading-relaxed">${s.d}</p>
-    </div>`).join('');
-}
-
+/* ==================== 6. HOME SCREEN (2 SECTIONS) & KB RENDERING ==================== */
 function renderBrowseGrid() {
   $('browseGrid').innerHTML = CATEGORIES.map(c => `
     <div onclick="filterKBByCategory('${c.key}')" class="card-interactive group p-5 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] cursor-pointer space-y-2">

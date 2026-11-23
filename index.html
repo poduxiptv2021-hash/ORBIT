@@ -291,6 +291,15 @@ html { scroll-behavior: smooth; }
 
 <!-- ==================== MAIN CONTENT CONTAINER ==================== -->
 <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-10">
+
+  <!-- LIVE PRODUCTION STATUS BANNER -->
+  <div id="prodBanner" class="p-3.5 rounded-2xl border border-emerald-300 bg-emerald-50/90 dark:bg-emerald-950/40 dark:border-emerald-900 text-xs text-emerald-900 dark:text-emerald-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-xs">
+    <div class="flex items-center gap-2">
+      <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+      <span><strong>Live Production Mode:</strong> Connected to Power Automate flows & Entra ID Tenant <code class="font-mono bg-emerald-100 dark:bg-emerald-900/60 px-1.5 py-0.5 rounded">cc9afa77-...</code>. Authenticated requests route to SharePoint.</span>
+    </div>
+  </div>
+
   <!-- QUICK FINDING BAR (NO SEARCH BOX) -->
   <div class="p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-[#007A5E] via-[#005A4B] to-[#0B2545] text-white shadow-lg">
     <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
@@ -616,16 +625,16 @@ html { scroll-behavior: smooth; }
         <div>
           <label class="block font-bold text-[var(--phb-soft)] uppercase tracking-wider text-[10px] mb-1">Category</label>
           <select id="formCategory" required class="w-full px-3 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-[var(--phb-text)] font-semibold">
-             <option value="User Management">User Management</option>
-            <option value="Device Management">Device Management</option>
-            <option value="Software Suppor">Software Support</option>
-            <option value="Network/ Connectivity">Network/ Connectivity</option>
-            <option value="Network Infrastructure">Network Infrastructure</option>
-            <option value="Access Management">Access Management</option>
-            <option value="Content Management">Content Management</option>
-            <option value="System Administrator">System Administrator</option>
-            <option value="Training">Training</option>
-            <option value="Other">Other</option>
+             <option value="Hardware">User Management</option>
+            <option value="Software">Device Management</option>
+            <option value="Network & VPN">Software Support</option>
+            <option value="Account & Access">Network/ Connectivity</option>
+            <option value="Email & Calendar">Network Infrastructure</option>
+            <option value="Security">Access Management</option>
+            <option value="Security">Content Management</option>
+            <option value="Security">System Administrator</option>
+            <option value="Security">Training</option>
+            <option value="Security">Other</option>
           </select>
         </div>
         <div>

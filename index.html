@@ -331,7 +331,7 @@ html { scroll-behavior: smooth; }
           <span id="roleOverviewBadge">Dashboard Overview</span>
         </div>
         <h2 class="font-display text-2xl font-extrabold tracking-tight text-[var(--phb-text)]">
-          IT Service Queue & SLA Performance
+          IT Service Queue &amp; SLA Performance
         </h2>
         <p id="roleOverviewDesc" class="text-xs text-[var(--phb-soft)] mt-1">
           Real-time oversight of PHB IT support requests, response SLAs, and departmental ticket scoping.
@@ -406,7 +406,7 @@ html { scroll-behavior: smooth; }
           <thead>
             <tr class="bg-[var(--phb-bg)] border-b border-[var(--phb-line)] text-[var(--phb-soft)] font-bold uppercase tracking-wider text-[10px]">
               <th class="py-3.5 px-4">Ticket ID</th>
-              <th class="py-3.5 px-4">Subject & Requester</th>
+              <th class="py-3.5 px-4">Subject &amp; Requester</th>
               <th class="py-3.5 px-4">Department</th>
               <th class="py-3.5 px-4">Category</th>
               <th class="py-3.5 px-4">Priority</th>
@@ -467,7 +467,7 @@ html { scroll-behavior: smooth; }
     <div class="flex items-center gap-3 border-l-4 border-amber-500 pl-3 py-1">
       <div>
         <h2 class="font-display text-xl sm:text-2xl font-extrabold text-[var(--phb-text)] tracking-tight">
-          Reports & Analytical Overview
+          Reports &amp; Analytical Overview
         </h2>
         <p class="text-xs font-semibold text-[var(--phb-soft)]">
           Operational metrics, category ratios, and resolution trends
@@ -608,7 +608,7 @@ html { scroll-behavior: smooth; }
       </div>
 
       <div>
-        <label class="block font-bold text-[var(--phb-soft)] uppercase tracking-wider text-[10px] mb-1">Details & error messages</label>
+        <label class="block font-bold text-[var(--phb-soft)] uppercase tracking-wider text-[10px] mb-1">Details &amp; error messages</label>
         <textarea id="formDetail" rows="3" required placeholder="Describe error messages or steps taken..." class="w-full px-3 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-[var(--phb-text)] font-medium"></textarea>
       </div>
 
@@ -790,10 +790,24 @@ const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&a
 const $ = id => document.getElementById(id);
 
 function extractChoice(val) {
-  if (val && typeof val === 'object') {
-    return val.Value || val.value || val.Title || val.label || '';
+  if (val == null) return '';
+  if (typeof val === 'string') {
+    const trimmed = val.trim();
+    if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
+      try {
+        return extractChoice(JSON.parse(trimmed));
+      } catch (e) {
+        return trimmed;
+      }
+    }
+    return trimmed;
   }
-  return val == null ? '' : String(val);
+  if (typeof val === 'object') {
+    return String(
+      val.Value ?? val.value ?? val.Title ?? val.title ?? val.label ?? val.Name ?? val.name ?? ''
+    ).trim();
+  }
+  return String(val).trim();
 }
 
 function nowTimestamp() {
@@ -804,7 +818,7 @@ function nowTimestamp() {
 }
 
 function normalizeAssignee(val) {
-  const s = extractChoice(val).trim();
+  const s = extractChoice(val);
   if (!s || s.toLowerCase() === 'unassigned' || s.toLowerCase() === 'pending hod it assignment') {
     return DEFAULT_PENDING_ASSIGNEE;
   }
@@ -843,8 +857,8 @@ function resolveRole(r, jobTitle = '', department = '') {
 
 function normalizeOrbitUser(item) {
   const rawRole = extractChoice(item.Role || item.role);
-  const dept = extractChoice(item.Department || item.department || item.Dept || item.dept).trim();
-  const jt = extractChoice(item.JobTitle || item.jobTitle || item.Position || item.position).trim();
+  const dept = extractChoice(item.Department || item.department || item.Dept || item.dept);
+  const jt = extractChoice(item.JobTitle || item.jobTitle || item.Position || item.position);
   const roleObj = resolveRole(rawRole, jt, dept);
   const activeFlag = item.Active === undefined && item.active === undefined
     ? true
@@ -852,8 +866,8 @@ function normalizeOrbitUser(item) {
 
   return {
     id: item.ID || item.id || '',
-    name: extractChoice(item.Title || item.Name || item.name || item.displayName).trim(),
-    email: extractChoice(item.Email || item.email || item.mail).trim().toLowerCase(),
+    name: extractChoice(item.Title || item.Name || item.name || item.displayName),
+    email: extractChoice(item.Email || item.email || item.mail).toLowerCase(),
     role: roleObj.code,
     roleTitle: roleObj.title,
     department: dept,
@@ -988,8 +1002,8 @@ async function fetchOutlookProfile() {
     if (!graphRes.ok) return { department: '', jobTitle: '' };
     const profile = await graphRes.json();
     return {
-      department: (profile && profile.department) ? String(profile.department).trim() : '',
-      jobTitle: (profile && profile.jobTitle) ? String(profile.jobTitle).trim() : ''
+      department: extractChoice(profile && profile.department),
+      jobTitle: extractChoice(profile && profile.jobTitle)
     };
   } catch (err) {
     return { department: '', jobTitle: '' };
@@ -1000,10 +1014,10 @@ function populateDepartmentDropdowns() {
   const deptSelect = $('deptSelect');
   const formDept = $('formDept');
 
-  const deptSet = new Set(Array.isArray(CONFIG.departments) ? CONFIG.departments : []);
-  orbitUsersStore.forEach(u => { if (u.department) deptSet.add(u.department); });
-  ticketsStore.forEach(t => { if (t.Department) deptSet.add(extractChoice(t.Department).trim()); });
-  if (currentUser && currentUser.department) deptSet.add(currentUser.department);
+  const deptSet = new Set(Array.isArray(CONFIG.departments) ? CONFIG.departments.map(extractChoice) : []);
+  orbitUsersStore.forEach(u => { if (u.department) deptSet.add(extractChoice(u.department)); });
+  ticketsStore.forEach(t => { if (t.Department) deptSet.add(extractChoice(t.Department)); });
+  if (currentUser && currentUser.department) deptSet.add(extractChoice(currentUser.department));
 
   const sortedDepts = Array.from(deptSet).filter(Boolean).sort();
   const optionsHTML = sortedDepts.map(d =>
@@ -1021,7 +1035,7 @@ function populateDepartmentDropdowns() {
   }
 
   if (formDept) {
-    formDept.value = (currentUser && currentUser.department) ? currentUser.department : '';
+    formDept.value = (currentUser && currentUser.department) ? extractChoice(currentUser.department) : '';
   }
 }
 
@@ -1098,7 +1112,7 @@ function toggleUserDropdown() { $('userDropdown').classList.toggle('hidden'); }
 function setSession(u, rows, usersListFromSP, rawData = {}) {
   const acc = (msalApp && (msalApp.getActiveAccount() || msalApp.getAllAccounts()[0])) || {};
   const claims = acc.idTokenClaims || {};
-  const msalEmail = (acc.username || claims.preferred_username || claims.email || '').toLowerCase();
+  const msalEmail = (acc.username || claims.preferred_username || claims.email || '').toLowerCase().trim();
   const msalName = acc.name || claims.name || (msalEmail ? msalEmail.split('@')[0] : 'User');
 
   if (Array.isArray(usersListFromSP)) {
@@ -1109,9 +1123,9 @@ function setSession(u, rows, usersListFromSP, rawData = {}) {
     assigneeDirectory = [
       { label: DEFAULT_PENDING_ASSIGNEE, email: '', role: 'pending' },
       ...rawData.assignees.map(a => ({
-        label: a.name || a.label,
-        email: a.email || '',
-        role: a.role || ''
+        label: extractChoice(a.name || a.label),
+        email: extractChoice(a.email).toLowerCase(),
+        role: extractChoice(a.role)
       }))
     ];
   } else {
@@ -1129,15 +1143,15 @@ function setSession(u, rows, usersListFromSP, rawData = {}) {
     return;
   }
 
-  const flowName = extractChoice(userObj.name || userObj.Name || userObj.displayName).trim();
+  const flowName = extractChoice(userObj.name || userObj.Name || userObj.displayName);
   const flowDept = extractChoice(
     userObj.department || userObj.Department || userObj.dept || userObj.Dept ||
     rawData.department || rawData.Department
-  ).trim();
+  );
   const flowJobTitle = extractChoice(
     userObj.jobTitle || userObj.JobTitle || userObj.position || userObj.Position ||
     rawData.jobTitle || rawData.position
-  ).trim();
+  );
 
   const resolvedName =
     flowName ||
@@ -1154,9 +1168,8 @@ function setSession(u, rows, usersListFromSP, rawData = {}) {
     (spMatchedUser && spMatchedUser.jobTitle) ||
     '';
 
-  const rawRole =
-    (spMatchedUser && spMatchedUser.role) ||
-    extractChoice(userObj.role || userObj.Role || rawData.role || rawData.Role);
+  const explicitFlowRole = extractChoice(userObj.role || userObj.Role || rawData.role || rawData.Role);
+  const rawRole = spMatchedUser ? spMatchedUser.role : explicitFlowRole;
 
   const roleObj = resolveRole(rawRole, resolvedJobTitle, resolvedDept);
 
@@ -1165,20 +1178,20 @@ function setSession(u, rows, usersListFromSP, rawData = {}) {
     email: resolvedEmail,
     role: roleObj.code,
     roleTitle: roleObj.title,
-    department: String(resolvedDept).trim(),
-    jobTitle: String(resolvedJobTitle).trim()
+    department: extractChoice(resolvedDept),
+    jobTitle: extractChoice(resolvedJobTitle)
   };
 
   ticketsStore = (rows || []).map(t => ({
     ...t,
-    TicketID: t.TicketID || t.Ticket_x0020_ID || t.ID || '',
-    Subject: t.Subject || t.Title || '(No Subject)',
-    RequesterName: t.RequesterName || t.Requester_x0020_Name || '',
-    RequesterEmail: extractChoice(t.RequesterEmail || t.Requester_x0020_Email || '').trim(),
-    Department: extractChoice(t.Department || t.Dept || '').trim(),
-    Category: extractChoice(t.Category || '').trim(),
-    Priority: extractChoice(t.Priority || '').trim() || 'Medium',
-    Status: extractChoice(t.Status || '').trim() || 'Open',
+    TicketID: extractChoice(t.TicketID || t.Ticket_x0020_ID || t.ID || ''),
+    Subject: extractChoice(t.Subject || t.Title || '(No Subject)'),
+    RequesterName: extractChoice(t.RequesterName || t.Requester_x0020_Name || ''),
+    RequesterEmail: extractChoice(t.RequesterEmail || t.Requester_x0020_Email || '').toLowerCase(),
+    Department: extractChoice(t.Department || t.Dept || ''),
+    Category: extractChoice(t.Category || ''),
+    Priority: extractChoice(t.Priority || '') || 'Medium',
+    Status: extractChoice(t.Status || '') || 'Open',
     Assignee: normalizeAssignee(t.Assignee),
     Detail: t.Detail || t.Details || t.Description || ''
   }));
@@ -1318,20 +1331,18 @@ async function loadSession(manual) {
       jobTitle: outlookProfile.jobTitle
     });
 
+    const srcUser = (d && d.user && typeof d.user === 'object') ? d.user : {};
     const userPayload = {
-      ...(d && typeof d === 'object' ? d : {}),
-      ...(d && d.user && typeof d.user === 'object' ? d.user : {})
+      ...srcUser,
+      name: extractChoice(srcUser.name || srcUser.Name || (d && (d.name || d.Name)) || msalName),
+      email: extractChoice(srcUser.email || srcUser.Email || (d && (d.email || d.Email)) || msalEmail),
+      department: extractChoice(srcUser.department || srcUser.Department || (d && (d.department || d.Department)) || outlookProfile.department),
+      jobTitle: extractChoice(srcUser.jobTitle || srcUser.JobTitle || (d && (d.jobTitle || d.JobTitle)) || outlookProfile.jobTitle),
+      role: extractChoice(srcUser.role || srcUser.Role || (d && (d.role || d.Role)) || '')
     };
 
-    if (!userPayload.department && !userPayload.Department && !userPayload.dept && outlookProfile.department) {
-      userPayload.department = outlookProfile.department;
-    }
-    if (!userPayload.jobTitle && !userPayload.JobTitle && !userPayload.position && !userPayload.Position && outlookProfile.jobTitle) {
-      userPayload.jobTitle = outlookProfile.jobTitle;
-    }
-
-    const spUsers = d.users || d.orbitUsers || d.ORBITUsers || [];
-    setSession(userPayload, d.tickets || d.value || [], spUsers, d);
+    const spUsers = (d && (d.users || d.orbitUsers || d.ORBITUsers)) || [];
+    setSession(userPayload, (d && (d.tickets || d.value)) || [], spUsers, d || {});
     if (manual) showToast('Refreshed live tickets & ORBITUsers.');
   } catch (e) {
     console.error("loadSession failed:", e);
@@ -1352,21 +1363,21 @@ function getFilteredTickets() {
 
   const role = currentUser.role;
   const userEmail = (currentUser.email || '').toLowerCase().trim();
-  const userDept = (currentUser.department || '').toLowerCase().trim();
+  const userDept = extractChoice(currentUser.department).toLowerCase();
 
   if (role === 'staff') {
     list = list.filter(t => (t.RequesterEmail || '').toLowerCase().trim() === userEmail);
   } else if (role === 'hod_dept') {
     list = list.filter(t => {
       const isOwnTicket = userEmail && (t.RequesterEmail || '').toLowerCase().trim() === userEmail;
-      const ticketDept = (t.Department || '').toLowerCase().trim();
+      const ticketDept = extractChoice(t.Department).toLowerCase();
       const isDeptTicket = userDept && ticketDept === userDept;
       return isOwnTicket || isDeptTicket;
     });
   } else if (role === 'hod_it' || role === 'it_admin') {
-    const selectedDept = $('deptSelect').value;
+    const selectedDept = extractChoice($('deptSelect').value);
     if (selectedDept && selectedDept !== 'ALL') {
-      list = list.filter(t => (t.Department || '').toLowerCase().trim() === selectedDept.toLowerCase().trim());
+      list = list.filter(t => extractChoice(t.Department).toLowerCase() === selectedDept.toLowerCase());
     }
   }
 
@@ -1430,7 +1441,7 @@ function renderListView(tickets) {
           <div class="font-bold text-[var(--phb-text)] line-clamp-1">${esc(t.Subject)}</div>
           <div class="text-[11px] text-[var(--phb-soft)] font-medium">${esc(t.RequesterName)} (${esc(t.RequesterEmail)})</div>
         </td>
-        <td class="py-3.5 px-4 font-semibold text-[var(--phb-soft)] truncate max-w-[160px]">${esc(t.Department)}</td>
+        <td class="py-3.5 px-4 font-semibold text-[var(--phb-soft)] truncate max-w-[160px]">${esc(extractChoice(t.Department))}</td>
         <td class="py-3.5 px-4 font-semibold text-[var(--phb-text)]">${esc(t.Category)}</td>
         <td class="py-3.5 px-4 font-bold ${t.Priority==='Critical'?'text-rose-600':t.Priority==='High'?'text-amber-600':'text-slate-500'}">${esc(t.Priority)}</td>
         <td class="py-3.5 px-4">
@@ -1466,7 +1477,7 @@ function buildAuditEntries(t) {
   const entries = [
     {
       time: t.Submitted,
-      text: `Ticket submitted by ${t.RequesterName || 'Requester'} (${t.Department || 'PHB'})`
+      text: `Ticket submitted by ${t.RequesterName || 'Requester'} (${extractChoice(t.Department) || 'PHB'})`
     },
     {
       time: t.Submitted,
@@ -1505,7 +1516,7 @@ function openTicketDrawer(ticketId) {
   $('drwTicketID').textContent = t.TicketID;
   $('drwSubject').textContent = t.Subject;
   $('drwRequester').textContent = `${t.RequesterName} (${t.RequesterEmail})`;
-  $('drwDepartment').textContent = t.Department;
+  $('drwDepartment').textContent = extractChoice(t.Department);
   $('drwCategory').textContent = t.Category;
   $('drwPriority').textContent = t.Priority;
   $('drwDetails').textContent = t.Detail || 'No detailed steps provided.';
@@ -1575,7 +1586,7 @@ async function saveTicketChangesFromDrawer() {
     ticketId: t.TicketID,
     subject: t.Subject,
     detail: t.Detail || '',
-    department: t.Department,
+    department: extractChoice(t.Department),
     category: t.Category,
     priority: t.Priority,
     requesterName: t.RequesterName,
@@ -1634,9 +1645,8 @@ function updateSubmitAuditTrailPreview() {
   if ($('formTrailTimestamp')) $('formTrailTimestamp').textContent = ts;
 
   const reqName = (currentUser && currentUser.name) || 'Authenticated Staff';
-  const reqDept = (currentUser && currentUser.department) || 'PHB';
+  const reqDept = (currentUser && extractChoice(currentUser.department)) || 'PHB';
   const cat = $('formCategory') ? $('formCategory').value : 'General';
-  const prio = $('formPriority') ? $('formPriority').value : 'Medium';
 
   if ($('formTrailList')) {
     $('formTrailList').innerHTML = `
@@ -1655,7 +1665,7 @@ function openNewTicketModal() {
   }
   $('formReqName').value = currentUser.name || '';
   $('formReqEmail').value = currentUser.email || '';
-  $('formDept').value = currentUser.department || '';
+  $('formDept').value = extractChoice(currentUser.department) || '';
   updateSubmitAuditTrailPreview();
 
   $('formCategory').onchange = updateSubmitAuditTrailPreview;
@@ -1868,7 +1878,7 @@ function exportToPDF() {
   doc.setFontSize(9);
   doc.text(`Generated: ${new Date().toLocaleString()} by ${currentUser ? currentUser.name : 'System'}`, 14, 25);
 
-  const rows = getFilteredTickets().map(t => [t.TicketID, t.Subject, t.Department, t.Priority, t.Status, normalizeAssignee(t.Assignee)]);
+  const rows = getFilteredTickets().map(t => [t.TicketID, t.Subject, extractChoice(t.Department), t.Priority, t.Status, normalizeAssignee(t.Assignee)]);
   doc.autoTable({
     startY: 30,
     head: [['ID', 'Subject', 'Department', 'Priority', 'Status', 'Assignee']],

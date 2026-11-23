@@ -734,15 +734,10 @@ const CONFIG = {
   }
 };
 
-const DEFAULT_PENDING_ASSIGNEE = 'Pending HOD IT To Assign';
+
 const DEMO = !CONFIG.flows.load || (!CONFIG.flows.create && !CONFIG.flows.save);
 
-const DEFAULT_ORBIT_USERS = [
-  { id: 'u1', name: 'Nur Haliza Binti Haron', email: 'haliza@phb.com.my', role: 'hod_it', roleTitle: 'Head of IT Division (HOD IT)', department: 'Information Technology Department', active: true },
-  { id: 'u2', name: 'Haq', email: 'haq@phb.com.my', role: 'it_admin', roleTitle: 'IT Support Admin (IT Officer)', department: 'Information Technology Department', active: true },
-  { id: 'u3', name: 'Eliza Yazmin', email: 'elizayazmin@phb.com.my', role: 'hod_dept', roleTitle: 'Head of Department (Finance HOD)', department: 'Finance Department', active: true },
-  { id: 'u4', name: 'Siti Rahayu', email: 'siti.rahayu@phb.com.my', role: 'staff', roleTitle: 'Staff Member / Senior Executive', department: 'Finance Department', active: true }
-];
+
 
 const KB_ARTICLES = [
   { id: 'KB-0101', cat: 'Network & VPN', sev: 'crit', title: "VPN won't connect or keeps dropping", desc: "Fix the most common VPN client errors and dropped tunnels.", tags: ['vpn', 'remote access', 'connection'], steps: ["Confirm you have an active internet connection.", "Fully quit the VPN client (not just close window) and reopen.", "Restart computer if client was open before update.", "Switch to nearest server region.", "Flush DNS via command prompt: ipconfig /flushdns"] },
@@ -786,7 +781,7 @@ const CATEGORIES = [
 ];
 
 let ticketsStore = [];
-let orbitUsersStore = [...DEFAULT_ORBIT_USERS];
+let orbitUsersStore = [];
 let assigneeDirectory = [];
 let currentUser = null;
 let activeDrawerTicketId = null;
@@ -1062,6 +1057,14 @@ function setSession(u, rows, usersListFromSP, rawData = {}) {
   const claims = acc.idTokenClaims || {};
   const msalEmail = (acc.username || claims.preferred_username || claims.email || '').toLowerCase();
   const msalName = acc.name || claims.name || (msalEmail ? msalEmail.split('@')[0] : 'User');
+
+  if(Array.isArray(rawData.assignees)){
+    assigneeDirectory = rawData.assignees.map(a => ({
+        label: a.name,
+        email: a.email,
+        role: a.role
+    }));
+}
 
   if (Array.isArray(usersListFromSP) && usersListFromSP.length) {
     orbitUsersStore = usersListFromSP.map(normalizeOrbitUser);
@@ -1357,9 +1360,14 @@ function renderListView(tickets) {
 /* ==================== 5. DRAWER & MODAL ACTIONS ==================== */
 function fillAssigneeSelect() {
   const sel = $('drwAssigneeSelect');
-  sel.innerHTML = assigneeDirectory.map(item =>
-    `<option value="${esc(item.label)}" data-email="${esc(item.email)}">${esc(item.label)}</option>`
-  ).join('');
+
+  sel.innerHTML =
+    assigneeDirectory.map(a => `
+      <option value="${a.label}"
+              data-email="${a.email || ''}">
+          ${a.label}
+      </option>
+    `).join('');
 }
 
 function buildAuditEntries(t) {

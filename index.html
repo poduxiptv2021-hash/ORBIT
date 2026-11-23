@@ -370,7 +370,7 @@ html { scroll-behavior: smooth; }
 
         <div id="deptFilterArea" class="flex items-center gap-2">
           <label for="deptSelect" class="text-xs font-bold text-[var(--phb-soft)] uppercase tracking-wider">Department:</label>
-          <select id="deptSelect" onchange="filterAndRenderTickets()" class="min-w-[230px] max-w-xs px-3 py-1.5 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-xs font-bold text-[var(--phb-text)] focus:ring-2 focus:ring-[#007A5E] focus:outline-none">
+          <select id="deptSelect" onchange="filterAndRenderTickets()" class="min-w-[240px] max-w-sm px-3 py-1.5 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-xs font-bold text-[var(--phb-text)] focus:ring-2 focus:ring-[#007A5E] focus:outline-none">
             <option value="ALL">All Departments</option>
           </select>
         </div>
@@ -402,11 +402,11 @@ html { scroll-behavior: smooth; }
             <tr class="bg-[var(--phb-bg)] border-b border-[var(--phb-line)] text-[var(--phb-soft)] font-bold uppercase tracking-wider text-[10px]">
               <th class="py-3.5 px-4 whitespace-nowrap">Ticket ID</th>
               <th class="py-3.5 px-4 min-w-[200px]">Subject &amp; Requester</th>
-              <th class="py-3.5 px-4 min-w-[230px]">Department</th>
+              <th class="py-3.5 px-4 min-w-[240px]">Department</th>
               <th class="py-3.5 px-4 whitespace-nowrap">Category</th>
               <th class="py-3.5 px-4 whitespace-nowrap">Priority</th>
               <th class="py-3.5 px-4 whitespace-nowrap">Status</th>
-              <th class="py-3.5 px-4 min-w-[180px]">Assignee</th>
+              <th class="py-3.5 px-4 min-w-[190px]">Assignee</th>
               <th class="py-3.5 px-4 text-right whitespace-nowrap">Action</th>
             </tr>
           </thead>
@@ -686,7 +686,7 @@ html { scroll-behavior: smooth; }
             </select>
           </div>
           <div id="drwAssigneeWrapper">
-            <label class="block font-bold text-[var(--phb-soft)] mb-1">To</label>
+            <label class="block font-bold text-[var(--phb-soft)] mb-1">To (ORBITUsers)</label>
             <select id="drwAssigneeSelect" class="w-full px-2.5 py-1.5 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-card)] font-bold text-[var(--phb-text)]"></select>
           </div>
         </div>
@@ -794,7 +794,7 @@ function extractChoice(val) {
   }
   if (typeof val === 'object') {
     return String(
-      val.Value ?? val.value ?? val.Title ?? val.title ?? val.label ?? val.Name ?? val.name ?? ''
+      val.Value ?? val.value ?? val.Title ?? val.title ?? val.label ?? val.Name ?? val.name ?? val.DisplayName ?? val.displayName ?? ''
     ).trim();
   }
   return String(val).trim();
@@ -856,8 +856,8 @@ function normalizeOrbitUser(item) {
 
   return {
     id: item.ID || item.id || '',
-    name: extractChoice(item.Title || item.Name || item.name || item.displayName),
-    email: extractChoice(item.Email || item.email || item.mail).toLowerCase(),
+    name: extractChoice(item.Title || item.Name || item.name || item.displayName || item.UserName),
+    email: extractChoice(item.Email || item.email || item.mail || item.UserEmail).toLowerCase(),
     role: roleObj.code,
     roleTitle: roleObj.title,
     department: dept,
@@ -867,19 +867,22 @@ function normalizeOrbitUser(item) {
 }
 
 function rebuildAssigneeDirectory() {
-  const itOfficers = orbitUsersStore.filter(u =>
-    u.active && (u.role === 'hod_it' || u.role === 'it_admin')
-  );
+  // Include all active ORBITUsers (or IT/Admin/HOD IT/Staff from ORBITUsers so HOD IT can assign to any ORBIT user)
+  const candidates = orbitUsersStore.filter(u => u.active && (u.name || u.email));
 
-  const mapped = itOfficers
+  const mapped = candidates
     .map(u => {
       const baseName = (u.name || (u.email ? u.email.split('@')[0] : '')).trim();
       if (!baseName) return null;
-      const alreadyTagged = /\((hod\s*it|itd|it\s*admin)\)$/i.test(baseName);
-      const tag = u.role === 'hod_it' ? 'HOD IT' : 'ITD';
-      const label = alreadyTagged ? baseName : `${baseName} (${tag})`;
+      const roleTag =
+        u.role === 'hod_it' ? 'HOD IT' :
+        u.role === 'it_admin' ? 'ITD' :
+        u.role === 'hod_dept' ? 'HOD' : '';
+      const alreadyTagged = /\((hod\s*it|itd|it\s*admin|hod)\)$/i.test(baseName);
+      const label = (!roleTag || alreadyTagged) ? baseName : `${baseName} (${roleTag})`;
       return {
         label,
+        rawName: baseName,
         email: u.email,
         role: u.role
       };
@@ -887,7 +890,7 @@ function rebuildAssigneeDirectory() {
     .filter(Boolean);
 
   assigneeDirectory = [
-    { label: DEFAULT_PENDING_ASSIGNEE, email: '', role: 'pending' },
+    { label: DEFAULT_PENDING_ASSIGNEE, rawName: DEFAULT_PENDING_ASSIGNEE, email: '', role: 'pending' },
     ...mapped
   ];
 }
@@ -1111,9 +1114,10 @@ function setSession(u, rows, usersListFromSP, rawData = {}) {
 
   if (Array.isArray(rawData.assignees) && rawData.assignees.length) {
     assigneeDirectory = [
-      { label: DEFAULT_PENDING_ASSIGNEE, email: '', role: 'pending' },
+      { label: DEFAULT_PENDING_ASSIGNEE, rawName: DEFAULT_PENDING_ASSIGNEE, email: '', role: 'pending' },
       ...rawData.assignees.map(a => ({
         label: extractChoice(a.name || a.label),
+        rawName: extractChoice(a.rawName || a.name || a.label),
         email: extractChoice(a.email).toLowerCase(),
         role: extractChoice(a.role)
       }))
@@ -1172,21 +1176,32 @@ function setSession(u, rows, usersListFromSP, rawData = {}) {
     jobTitle: extractChoice(resolvedJobTitle)
   };
 
-  ticketsStore = (rows || []).map(t => ({
-    ...t,
-    TicketID: extractChoice(t.TicketID || t.Ticket_x0020_ID || t.ID || ''),
-    Subject: extractChoice(t.Subject || t.Title || '(No Subject)'),
-    RequesterName: extractChoice(t.RequesterName || t.Requester_x0020_Name || ''),
-    RequesterEmail: extractChoice(t.RequesterEmail || t.Requester_x0020_Email || '').toLowerCase(),
-    Department: extractChoice(t.Department || t.Dept || ''),
-    Category: extractChoice(t.Category || ''),
-    Priority: extractChoice(t.Priority || '') || 'Medium',
-    Status: extractChoice(t.Status || '') || 'Open',
-    Assignee: normalizeAssignee(t.Assignee),
-    AssigneeEmail: extractChoice(t.AssigneeEmail || t.Assignee_x0020_Email || ''),
-    Submitted: extractChoice(t.Submitted || t.SubmittedAt || t.Created || ''),
-    Detail: t.Detail || t.Details || t.Description || ''
-  }));
+  ticketsStore = (rows || []).map(t => {
+    const rawAssignedTo = t.AssignedTo ?? t.Assigned_x0020_To ?? t.Assignee ?? t.AssignTo ?? '';
+    const rawAssignedBy = t.AssignedBy ?? t.AssignBy ?? t.Assigned_x0020_By ?? t.Assign_x0020_By ?? '';
+    const rawAudit = t.AuditTrail ?? t.Audit_x0020_Trail ?? t.Trail ?? t.History ?? '';
+
+    return {
+      ...t,
+      TicketID: extractChoice(t.TicketID || t.Ticket_x0020_ID || t.ID || ''),
+      Subject: extractChoice(t.Subject || t.Title || '(No Subject)'),
+      RequesterName: extractChoice(t.RequesterName || t.Requester_x0020_Name || t.SubmittedBy || t.Submitted_x0020_By || ''),
+      RequesterEmail: extractChoice(t.RequesterEmail || t.Requester_x0020_Email || t.SubmittedEmail || t.Submitted_x0020_Email || '').toLowerCase(),
+      Department: extractChoice(t.Department || t.Dept || ''),
+      Category: extractChoice(t.Category || ''),
+      Priority: extractChoice(t.Priority || '') || 'Medium',
+      Status: extractChoice(t.Status || '') || 'Open',
+      Assignee: normalizeAssignee(rawAssignedTo),
+      AssignedTo: normalizeAssignee(rawAssignedTo),
+      AssignedBy: extractChoice(rawAssignedBy),
+      AssigneeEmail: extractChoice(t.AssigneeEmail || t.AssignedToEmail || t.Assignee_x0020_Email || '').toLowerCase(),
+      Remarks: extractChoice(t.Remarks || t.Comments || t.ResolutionRemarks || ''),
+      Submitted: extractChoice(t.Submitted || t.SubmittedAt || t.SubmittedDate || t.Created || ''),
+      UpdatedAt: extractChoice(t.UpdatedAt || t.Modified || ''),
+      Detail: t.Detail || t.Details || t.Description || '',
+      AuditTrail: rawAudit
+    };
+  });
 
   populateDepartmentDropdowns();
 
@@ -1215,7 +1230,7 @@ function applyRoleView() {
   const canSeeReports = role === 'hod_it' || role === 'it_admin';
   const canFilterDepts = role === 'hod_it' || role === 'it_admin' || role === 'hod_dept';
   const canSeeDashboard = role === 'hod_it' || role === 'it_admin' || role === 'hod_dept';
-  const canAssign = role === 'hod_it'; // Only HOD IT can assign; IT Admin only adds remarks & changes status
+  const canAssign = role === 'hod_it';
 
   show('sectionExecutiveOverview', canSeeDashboard);
   show('sectionReports', canSeeReports);
@@ -1393,7 +1408,8 @@ function getFilteredTickets() {
       (t.Subject && t.Subject.toLowerCase().includes(query)) ||
       (t.RequesterName && t.RequesterName.toLowerCase().includes(query)) ||
       (t.Category && t.Category.toLowerCase().includes(query)) ||
-      (t.Assignee && t.Assignee.toLowerCase().includes(query))
+      (t.Assignee && t.Assignee.toLowerCase().includes(query)) ||
+      (t.AssignedBy && t.AssignedBy.toLowerCase().includes(query))
     );
   }
 
@@ -1430,14 +1446,21 @@ function renderListView(tickets) {
       t.Status === 'In Progress' ? 'badge-inprogress' :
       t.Status === 'Pending' ? 'badge-pending' : 'badge-resolved';
 
-    const assigneeText = normalizeAssignee(t.Assignee);
+    const assigneeText = normalizeAssignee(t.AssignedTo || t.Assignee);
     const isPendingHOD = assigneeText === DEFAULT_PENDING_ASSIGNEE;
+    const assignedByLine = t.AssignedBy
+      ? `<div class="text-[10px] text-[var(--phb-soft)] font-medium mt-0.5">By: ${esc(t.AssignedBy)}</div>`
+      : '';
+
     const assigneeBadge = isPendingHOD
       ? `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800 whitespace-nowrap">
            <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
            ${esc(assigneeText)}
          </span>`
-      : `<span class="text-[var(--phb-text)] font-bold whitespace-nowrap">${esc(assigneeText)}</span>`;
+      : `<div>
+           <span class="text-[var(--phb-text)] font-bold whitespace-nowrap">${esc(assigneeText)}</span>
+           ${assignedByLine}
+         </div>`;
 
     return `
       <tr onclick="openTicketDrawer('${esc(t.TicketID)}')" class="hover:bg-[var(--phb-bg)] cursor-pointer transition-colors">
@@ -1446,7 +1469,7 @@ function renderListView(tickets) {
           <div class="font-bold text-[var(--phb-text)] line-clamp-1">${esc(t.Subject)}</div>
           <div class="text-[11px] text-[var(--phb-soft)] font-medium">${esc(t.RequesterName)} (${esc(t.RequesterEmail)})</div>
         </td>
-        <td class="py-3.5 px-4 font-semibold text-[var(--phb-soft)] min-w-[230px] whitespace-normal leading-snug">${esc(extractChoice(t.Department))}</td>
+        <td class="py-3.5 px-4 font-semibold text-[var(--phb-soft)] min-w-[240px] whitespace-normal leading-snug">${esc(extractChoice(t.Department))}</td>
         <td class="py-3.5 px-4 font-semibold text-[var(--phb-text)] whitespace-nowrap">${esc(t.Category)}</td>
         <td class="py-3.5 px-4 font-bold whitespace-nowrap ${t.Priority==='Critical'?'text-rose-600':t.Priority==='High'?'text-amber-600':'text-slate-500'}">${esc(t.Priority)}</td>
         <td class="py-3.5 px-4 whitespace-nowrap">
@@ -1464,14 +1487,13 @@ function renderListView(tickets) {
 function fillAssigneeSelect() {
   const sel = $('drwAssigneeSelect');
   sel.innerHTML = assigneeDirectory.map(a => `
-    <option value="${esc(a.label)}" data-email="${esc(a.email || '')}">
+    <option value="${esc(a.label)}" data-raw-name="${esc(a.rawName || a.label)}" data-email="${esc(a.email || '')}">
       ${esc(a.label)}
     </option>
   `).join('');
 }
 
 function buildAuditEntries(t) {
-  // 1. Structured Trail array returned from Power Automate
   if (Array.isArray(t.Trail) && t.Trail.length) {
     return t.Trail.map(entry => ({
       time: extractChoice(entry.ActionDate || entry.time || entry.Timestamp || ''),
@@ -1484,10 +1506,10 @@ function buildAuditEntries(t) {
     }));
   }
 
-  // 2. Stored AuditTrail array or newline/JSON string from SharePoint
   if (Array.isArray(t.AuditTrail) && t.AuditTrail.length) {
     return t.AuditTrail;
   }
+
   if (typeof t.AuditTrail === 'string' && t.AuditTrail.trim()) {
     const trimmed = t.AuditTrail.trim();
     if (trimmed.startsWith('[')) {
@@ -1496,13 +1518,12 @@ function buildAuditEntries(t) {
         if (Array.isArray(parsed)) return parsed;
       } catch (e) {}
     }
-    return trimmed.split('\n').filter(Boolean).map(line => {
+    return trimmed.split(/\r?\n/).filter(Boolean).map(line => {
       const m = line.match(/^\[([^\]]+)\]\s*(.*)$/);
       return m ? { time: m[1], text: m[2] } : { time: '', text: line };
     });
   }
 
-  // 3. Default Submission Audit Trail + current status/assignee timeline
   const submittedTime = extractChoice(t.Submitted || t.SubmittedAt || t.Created || '') || 'Submitted';
   const entries = [
     {
@@ -1515,11 +1536,11 @@ function buildAuditEntries(t) {
     }
   ];
 
-  const currentAssignee = normalizeAssignee(t.Assignee);
+  const currentAssignee = normalizeAssignee(t.AssignedTo || t.Assignee);
   if (currentAssignee !== DEFAULT_PENDING_ASSIGNEE) {
     entries.push({
       time: extractChoice(t.UpdatedAt || t.Modified || '') || 'HOD IT Assignment',
-      text: `Assigned to ${currentAssignee} · Status: ${t.Status || 'In Progress'}`
+      text: `Assigned to ${currentAssignee}${t.AssignedBy ? ` by ${t.AssignedBy}` : ''} · Status: ${t.Status || 'In Progress'}`
     });
   } else if (t.Status && t.Status !== 'Open') {
     entries.push({
@@ -1553,17 +1574,18 @@ function openTicketDrawer(ticketId) {
 
   $('drwStatusSelect').value = t.Status || 'Open';
 
-  const normalized = normalizeAssignee(t.Assignee);
+  const normalized = normalizeAssignee(t.AssignedTo || t.Assignee);
   if (!Array.from($('drwAssigneeSelect').options).some(o => o.value === normalized)) {
     const opt = document.createElement('option');
     opt.value = normalized;
+    opt.dataset.rawName = normalized;
+    opt.dataset.email = t.AssigneeEmail || '';
     opt.textContent = normalized;
     $('drwAssigneeSelect').appendChild(opt);
   }
   $('drwAssigneeSelect').value = normalized;
   $('drwRemarks').value = t.Remarks || '';
 
-  // Render Submission Audit Trail & Progress timeline for Staff, HOD Dept, IT Admin, and HOD IT
   const trailEntries = buildAuditEntries(t);
   $('drwAuditTrail').innerHTML = trailEntries.length
     ? trailEntries.map((entry, idx) => `
@@ -1577,7 +1599,6 @@ function openTicketDrawer(ticketId) {
       `).join('')
     : `<div class="text-[var(--phb-soft)] italic">No audit trail entries recorded yet.</div>`;
 
-  // Role-based drawer controls
   const role = currentUser ? currentUser.role : 'guest';
   const canManageTicket = role === 'hod_it' || role === 'it_admin';
   const canAssign = role === 'hod_it';
@@ -1600,35 +1621,51 @@ async function saveTicketChangesFromDrawer() {
   saveBtn.textContent = 'Saving & Notifying...';
 
   const role = currentUser ? currentUser.role : 'staff';
-  const previousAssignee = normalizeAssignee(t.Assignee);
+  const previousAssignee = normalizeAssignee(t.AssignedTo || t.Assignee);
+  const previousAssignedBy = extractChoice(t.AssignedBy || '');
   const newStatus = $('drwStatusSelect').value;
 
-  // Only HOD IT can change Assignee; IT Admin preserves existing Assignee
   let newAssignee = previousAssignee;
+  let assigneeRawName = previousAssignee;
   let assigneeEmail = extractChoice(t.AssigneeEmail || '');
+  let assignedByName = previousAssignedBy;
+  let assignedByEmail = '';
+
+  const actorName = currentUser ? currentUser.name : 'IT Officer';
+  const actorRole = currentUser ? currentUser.role.toUpperCase().replace('_', ' ') : 'IT';
+  const stamp = nowTimestamp();
+
+  let assigneeChanged = false;
+
   if (role === 'hod_it') {
     const selEl = $('drwAssigneeSelect');
     newAssignee = selEl.value;
     const selectedOption = selEl.options[selEl.selectedIndex];
     const matchedDirEntry = assigneeDirectory.find(a => a.label === newAssignee);
+    assigneeRawName = (selectedOption && selectedOption.dataset.rawName) || (matchedDirEntry && matchedDirEntry.rawName) || newAssignee;
     assigneeEmail = (selectedOption && selectedOption.dataset.email) || (matchedDirEntry && matchedDirEntry.email) || '';
+
+    assigneeChanged = newAssignee !== previousAssignee;
+    if (assigneeChanged) {
+      assignedByName = newAssignee === DEFAULT_PENDING_ASSIGNEE ? '' : actorName;
+      assignedByEmail = newAssignee === DEFAULT_PENDING_ASSIGNEE ? '' : (currentUser ? currentUser.email : '');
+    }
   }
 
   const newRemarks = $('drwRemarks').value.trim();
-  const actorName = currentUser ? currentUser.name : 'IT Officer';
-  const actorRole = currentUser ? currentUser.role.toUpperCase().replace('_', ' ') : 'IT';
-  const stamp = nowTimestamp();
-
-  const isNewlyAssigned =
-    role === 'hod_it' &&
-    newAssignee !== DEFAULT_PENDING_ASSIGNEE &&
-    newAssignee !== previousAssignee;
 
   const trailLog = buildAuditEntries(t);
-  const actionSummary = role === 'hod_it'
-    ? `Updated by ${actorName} (HOD IT) → Status: ${newStatus}, Assigned To: ${newAssignee}${newRemarks ? ` · Remarks: "${newRemarks}"` : ''}`
-    : `Updated by ${actorName} (${actorRole}) → Status: ${newStatus}${newRemarks ? ` · Remarks: "${newRemarks}"` : ''}`;
+  const parts = [`Updated by ${actorName} (${actorRole})`];
+  parts.push(`Status: ${newStatus}`);
+  if (role === 'hod_it') {
+    parts.push(`Assigned To: ${newAssignee}${assigneeEmail ? ` (${assigneeEmail})` : ''}`);
+    if (assignedByName) parts.push(`Assigned By: ${assignedByName}`);
+  }
+  if (newRemarks) {
+    parts.push(`Remarks: "${newRemarks}"`);
+  }
 
+  const actionSummary = parts.join(' · ');
   trailLog.push({
     time: stamp,
     text: actionSummary
@@ -1648,28 +1685,37 @@ async function saveTicketChangesFromDrawer() {
     requesterEmail: t.RequesterEmail,
     status: newStatus,
     assignee: newAssignee,
+    assignedTo: newAssignee,
+    assigneeName: assigneeRawName,
     assigneeEmail: assigneeEmail,
-    notifyAssignee: isNewlyAssigned || Boolean(assigneeEmail),
+    notifyAssignee: Boolean(assigneeEmail) && (assigneeChanged || role === 'hod_it'),
+    assignedBy: assignedByName,
+    assignBy: assignedByName,
     assignedByName: actorName,
-    assignedByEmail: currentUser ? currentUser.email : '',
+    assignedByEmail: assignedByEmail || (currentUser ? currentUser.email : ''),
     remarks: newRemarks,
+    comments: newRemarks,
     updatedBy: currentUser ? currentUser.email : '',
     updatedAt: stamp,
-    auditTrail: serializedTrail
+    auditTrail: serializedTrail,
+    trail: trailLog
   };
 
   try {
+    // Update local state immediately so drawer & table reflect changes even before refresh
     t.Status = payload.status;
     t.Assignee = payload.assignee;
+    t.AssignedTo = payload.assignedTo;
+    t.AssignedBy = payload.assignedBy;
     t.AssigneeEmail = payload.assigneeEmail;
     t.Remarks = payload.remarks;
     t.UpdatedAt = stamp;
-    t.AuditTrail = trailLog;
+    t.AuditTrail = serializedTrail;
+    t.Trail = trailLog;
     filterAndRenderTickets();
 
     if (!DEMO) {
       await callFlow(CONFIG.flows.save, payload);
-      await loadSession();
     }
 
     let notifyStatusText = '';
@@ -1678,9 +1724,23 @@ async function saveTicketChangesFromDrawer() {
         const notifRes = await sendTicketNotification(payload);
         notifyStatusText = notifRes.skipped
           ? ' (Notify flow URL not configured)'
-          : ' Teams & Outlook notifications sent.';
+          : ' Email & notification triggered.';
       } catch (notifErr) {
         notifyStatusText = ` (Saved, but Notify flow failed: ${notifErr.message})`;
+      }
+    }
+
+    if (!DEMO) {
+      await loadSession();
+      // Preserve local auditTrail if SharePoint doesn't have an AuditTrail column yet
+      const refreshedTicket = ticketsStore.find(x => x.TicketID === t.TicketID);
+      if (refreshedTicket && !refreshedTicket.AuditTrail && serializedTrail) {
+        refreshedTicket.AuditTrail = serializedTrail;
+        refreshedTicket.Trail = trailLog;
+        if (!refreshedTicket.AssignedBy && assignedByName) {
+          refreshedTicket.AssignedBy = assignedByName;
+        }
+        filterAndRenderTickets();
       }
     }
 
@@ -1731,9 +1791,13 @@ async function handleNewTicketSubmit(e) {
     detail: $('formDetail').value.trim(),
     status: 'Open',
     assignee: DEFAULT_PENDING_ASSIGNEE,
+    assignedTo: DEFAULT_PENDING_ASSIGNEE,
     assigneeEmail: '',
+    assignedBy: '',
+    assignBy: '',
     submittedAt: submittedAt,
-    auditTrail: serializedTrail
+    auditTrail: serializedTrail,
+    trail: initialTrail
   };
 
   try {
@@ -1750,9 +1814,12 @@ async function handleNewTicketSubmit(e) {
         RequesterName: currentUser.name,
         RequesterEmail: currentUser.email,
         Assignee: DEFAULT_PENDING_ASSIGNEE,
+        AssignedTo: DEFAULT_PENDING_ASSIGNEE,
+        AssignedBy: '',
         Submitted: submittedAt,
         Detail: payload.detail,
-        AuditTrail: initialTrail
+        AuditTrail: serializedTrail,
+        Trail: initialTrail
       });
       filterAndRenderTickets();
     } else {
@@ -1920,10 +1987,18 @@ function exportToPDF() {
   doc.setFontSize(9);
   doc.text(`Generated: ${new Date().toLocaleString()} by ${currentUser ? currentUser.name : 'System'}`, 14, 25);
 
-  const rows = getFilteredTickets().map(t => [t.TicketID, t.Subject, extractChoice(t.Department), t.Priority, t.Status, normalizeAssignee(t.Assignee)]);
+  const rows = getFilteredTickets().map(t => [
+    t.TicketID,
+    t.Subject,
+    extractChoice(t.Department),
+    t.Priority,
+    t.Status,
+    normalizeAssignee(t.AssignedTo || t.Assignee),
+    t.AssignedBy || '-'
+  ]);
   doc.autoTable({
     startY: 30,
-    head: [['ID', 'Subject', 'Department', 'Priority', 'Status', 'Assignee']],
+    head: [['ID', 'Subject', 'Department', 'Priority', 'Status', 'Assignee', 'Assigned By']],
     body: rows,
     headStyles: { fillColor: [0, 122, 94] },
     styles: { fontSize: 8 }

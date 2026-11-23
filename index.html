@@ -566,7 +566,6 @@ html { scroll-behavior: smooth; }
         </div>
       </div>
 
-      <!-- Full-width Department row so long Outlook department names never truncate -->
       <div>
         <label class="block font-bold text-[var(--phb-soft)] uppercase tracking-wider text-[10px] mb-1">Department</label>
         <input id="formDept" type="text" readonly class="w-full px-3 py-2 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-bg)] text-[var(--phb-text)] font-semibold">
@@ -659,12 +658,12 @@ html { scroll-behavior: smooth; }
         </div>
       </div>
 
-      <!-- TICKET PROGRESS & SUBMISSION AUDIT TRAIL -->
+      <!-- TICKET PROGRESS -->
       <div>
         <div class="flex items-center justify-between mb-1.5">
           <span class="font-bold text-[#007A5E] dark:text-emerald-400 uppercase text-[10px] flex items-center gap-1.5">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            Ticket Progress &amp; Audit Trail
+            Ticket Progress
           </span>
         </div>
         <div id="drwAuditTrail" class="p-3.5 rounded-2xl bg-[var(--phb-bg)] border border-[var(--phb-line)] space-y-3 text-[11px]"></div>
@@ -867,7 +866,6 @@ function normalizeOrbitUser(item) {
 }
 
 function rebuildAssigneeDirectory() {
-  // Include all active ORBITUsers (or IT/Admin/HOD IT/Staff from ORBITUsers so HOD IT can assign to any ORBIT user)
   const candidates = orbitUsersStore.filter(u => u.active && (u.name || u.email));
 
   const mapped = candidates
@@ -1493,70 +1491,109 @@ function fillAssigneeSelect() {
   `).join('');
 }
 
+function formatAuditLines(entry) {
+  if (typeof entry === 'string') {
+    const clean = entry.replace(/^\[[^\]]+\]\s*/, '').trim();
+    const match = entry.match(/^\[([^\]]+)\]\s*(.*)$/);
+    const time = match ? match[1] : '';
+    const lines = clean.split(' | ').filter(Boolean);
+    return { lines, time };
+  }
+
+  const time = extractChoice(entry.ActionDate || entry.time || entry.Timestamp || '');
+  if (Array.isArray(entry.lines) && entry.lines.length) {
+    return { lines: entry.lines.map(extractChoice).filter(Boolean), time };
+  }
+
+  const rawText = extractChoice(entry.Action || entry.text || '');
+  if (rawText) {
+    return { lines: rawText.split(' | ').filter(Boolean), time };
+  }
+
+  const lines = [];
+  if (entry.UpdatedBy) lines.push(`Updated by ${extractChoice(entry.UpdatedBy)}`);
+  if (entry.Status) lines.push(`Status: ${extractChoice(entry.Status)}`);
+  if (entry.Assignee) lines.push(`Assigned To: ${extractChoice(entry.Assignee)}`);
+  if (entry.Remarks) lines.push(`Remarks: "${extractChoice(entry.Remarks)}"`);
+  return { lines, time };
+}
+
 function buildAuditEntries(t) {
+  let rawList = [];
+
   if (Array.isArray(t.Trail) && t.Trail.length) {
-    return t.Trail.map(entry => ({
-      time: extractChoice(entry.ActionDate || entry.time || entry.Timestamp || ''),
-      text: [
-        extractChoice(entry.Action || entry.text || ''),
-        entry.Assignee ? `Assigned To: ${extractChoice(entry.Assignee)}` : '',
-        entry.UpdatedBy ? `Updated By: ${extractChoice(entry.UpdatedBy)}` : '',
-        entry.Remarks ? `Remarks: "${extractChoice(entry.Remarks)}"` : ''
-      ].filter(Boolean).join(' · ')
-    }));
-  }
-
-  if (Array.isArray(t.AuditTrail) && t.AuditTrail.length) {
-    return t.AuditTrail;
-  }
-
-  if (typeof t.AuditTrail === 'string' && t.AuditTrail.trim()) {
+    rawList = t.Trail;
+  } else if (Array.isArray(t.AuditTrail) && t.AuditTrail.length) {
+    rawList = t.AuditTrail;
+  } else if (typeof t.AuditTrail === 'string' && t.AuditTrail.trim()) {
     const trimmed = t.AuditTrail.trim();
     if (trimmed.startsWith('[')) {
       try {
         const parsed = JSON.parse(trimmed);
-        if (Array.isArray(parsed)) return parsed;
+        if (Array.isArray(parsed)) rawList = parsed;
       } catch (e) {}
     }
-    return trimmed.split(/\r?\n/).filter(Boolean).map(line => {
-      const m = line.match(/^\[([^\]]+)\]\s*(.*)$/);
-      return m ? { time: m[1], text: m[2] } : { time: '', text: line };
-    });
+    if (!rawList.length) {
+      rawList = trimmed.split(/\r?\n/).filter(Boolean);
+    }
+  }
+
+  if (rawList.length) {
+    return rawList.map(formatAuditLines).filter(item => item.lines.length || item.time);
   }
 
   const submittedTime = extractChoice(t.Submitted || t.SubmittedAt || t.Created || '') || 'Submitted';
   const entries = [
     {
       time: submittedTime,
-      text: `Ticket Created by ${t.RequesterName || 'Requester'} (${extractChoice(t.Department) || 'PHB'}) · ${t.Category || 'IT Support'}`
+      lines: [`Ticket Created by ${t.RequesterName || 'Requester'}`]
     },
     {
       time: submittedTime,
-      text: `Status: Open · Routed to ${DEFAULT_PENDING_ASSIGNEE}`
+      lines: ['Status: Open', DEFAULT_PENDING_ASSIGNEE]
     }
   ];
 
   const currentAssignee = normalizeAssignee(t.AssignedTo || t.Assignee);
   if (currentAssignee !== DEFAULT_PENDING_ASSIGNEE) {
     entries.push({
-      time: extractChoice(t.UpdatedAt || t.Modified || '') || 'HOD IT Assignment',
-      text: `Assigned to ${currentAssignee}${t.AssignedBy ? ` by ${t.AssignedBy}` : ''} · Status: ${t.Status || 'In Progress'}`
+      time: extractChoice(t.UpdatedAt || t.Modified || '') || 'Updated',
+      lines: [
+        `Updated by ${t.AssignedBy || 'HOD IT'} (HOD IT) ·`,
+        `Status: ${t.Status || 'Open'}`,
+        `Assigned To: ${currentAssignee}`
+      ]
     });
   } else if (t.Status && t.Status !== 'Open') {
     entries.push({
-      time: extractChoice(t.UpdatedAt || t.Modified || '') || 'Status Update',
-      text: `Ticket status updated to ${t.Status}`
+      time: extractChoice(t.UpdatedAt || t.Modified || '') || 'Updated',
+      lines: [`Status: ${t.Status}`]
     });
   }
 
   if (t.Remarks) {
     entries.push({
-      time: extractChoice(t.UpdatedAt || t.Modified || '') || 'Remarks',
-      text: `Remarks: "${t.Remarks}"`
+      time: extractChoice(t.UpdatedAt || t.Modified || '') || 'Updated',
+      lines: [`Remarks: "${t.Remarks}"`]
     });
   }
 
   return entries;
+}
+
+function renderAuditTrailInDrawer(t) {
+  const trailEntries = buildAuditEntries(t);
+  $('drwAuditTrail').innerHTML = trailEntries.length
+    ? trailEntries.map((entry, idx) => `
+        <div class="flex items-start gap-2.5">
+          <span class="w-2 h-2 rounded-full ${idx === 0 ? 'bg-emerald-500' : 'bg-[#007A5E]'} mt-1.5 shrink-0"></span>
+          <div class="flex-1 leading-snug">
+            ${entry.lines.map(line => `<div class="font-semibold text-[var(--phb-text)]">${esc(line)}</div>`).join('')}
+            ${entry.time ? `<div class="text-[10px] font-mono text-[var(--phb-soft)] mt-0.5">${esc(entry.time)}</div>` : ''}
+          </div>
+        </div>
+      `).join('')
+    : `<div class="text-[var(--phb-soft)] italic">No audit trail entries recorded yet.</div>`;
 }
 
 function openTicketDrawer(ticketId) {
@@ -1586,18 +1623,7 @@ function openTicketDrawer(ticketId) {
   $('drwAssigneeSelect').value = normalized;
   $('drwRemarks').value = t.Remarks || '';
 
-  const trailEntries = buildAuditEntries(t);
-  $('drwAuditTrail').innerHTML = trailEntries.length
-    ? trailEntries.map((entry, idx) => `
-        <div class="flex items-start gap-2.5">
-          <span class="w-2 h-2 rounded-full ${idx === 0 ? 'bg-emerald-500' : 'bg-[#007A5E]'} mt-1.5 shrink-0"></span>
-          <div class="flex-1">
-            <div class="font-semibold text-[var(--phb-text)] leading-snug">${esc(entry.text)}</div>
-            ${entry.time ? `<div class="text-[10px] font-mono text-[var(--phb-soft)] mt-0.5">${esc(entry.time)}</div>` : ''}
-          </div>
-        </div>
-      `).join('')
-    : `<div class="text-[var(--phb-soft)] italic">No audit trail entries recorded yet.</div>`;
+  renderAuditTrailInDrawer(t);
 
   const role = currentUser ? currentUser.role : 'guest';
   const canManageTicket = role === 'hod_it' || role === 'it_admin';
@@ -1655,23 +1681,23 @@ async function saveTicketChangesFromDrawer() {
   const newRemarks = $('drwRemarks').value.trim();
 
   const trailLog = buildAuditEntries(t);
-  const parts = [`Updated by ${actorName} (${actorRole})`];
-  parts.push(`Status: ${newStatus}`);
+  const lines = [`Updated by ${actorName} (${actorRole})${role === 'hod_it' ? ' ·' : ''}`];
+  lines.push(`Status: ${newStatus}`);
   if (role === 'hod_it') {
-    parts.push(`Assigned To: ${newAssignee}${assigneeEmail ? ` (${assigneeEmail})` : ''}`);
-    if (assignedByName) parts.push(`Assigned By: ${assignedByName}`);
+    lines.push(`Assigned To: ${newAssignee}`);
   }
   if (newRemarks) {
-    parts.push(`Remarks: "${newRemarks}"`);
+    lines.push(`Remarks: "${newRemarks}"`);
   }
 
-  const actionSummary = parts.join(' · ');
   trailLog.push({
     time: stamp,
-    text: actionSummary
+    lines
   });
 
-  const serializedTrail = trailLog.map(x => `${x.time ? `[${x.time}] ` : ''}${x.text}`).join('\n');
+  const serializedTrail = trailLog
+    .map(x => `${x.time ? `[${x.time}] ` : ''}${x.lines.join(' | ')}`)
+    .join('\n');
 
   const payload = {
     action: 'update',
@@ -1702,7 +1728,6 @@ async function saveTicketChangesFromDrawer() {
   };
 
   try {
-    // Update local state immediately so drawer & table reflect changes even before refresh
     t.Status = payload.status;
     t.Assignee = payload.assignee;
     t.AssignedTo = payload.assignedTo;
@@ -1732,7 +1757,6 @@ async function saveTicketChangesFromDrawer() {
 
     if (!DEMO) {
       await loadSession();
-      // Preserve local auditTrail if SharePoint doesn't have an AuditTrail column yet
       const refreshedTicket = ticketsStore.find(x => x.TicketID === t.TicketID);
       if (refreshedTicket && !refreshedTicket.AuditTrail && serializedTrail) {
         refreshedTicket.AuditTrail = serializedTrail;
@@ -1775,10 +1799,12 @@ async function handleNewTicketSubmit(e) {
 
   const submittedAt = nowTimestamp();
   const initialTrail = [
-    { time: submittedAt, text: `Ticket Created by ${$('formReqName').value.trim()} (${$('formDept').value}) · ${$('formCategory').value}` },
-    { time: submittedAt, text: `Status: Open · Routed to ${DEFAULT_PENDING_ASSIGNEE}` }
+    { time: submittedAt, lines: [`Ticket Created by ${$('formReqName').value.trim()}`] },
+    { time: submittedAt, lines: ['Status: Open', DEFAULT_PENDING_ASSIGNEE] }
   ];
-  const serializedTrail = initialTrail.map(x => `[${x.time}] ${x.text}`).join('\n');
+  const serializedTrail = initialTrail
+    .map(x => `[${x.time}] ${x.lines.join(' | ')}`)
+    .join('\n');
 
   const payload = {
     action: 'create',

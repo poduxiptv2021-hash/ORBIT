@@ -1356,10 +1356,13 @@ function renderListView(tickets) {
 
 /* ==================== 5. DRAWER & MODAL ACTIONS ==================== */
 function fillAssigneeSelect() {
-  const sel = $('drwAssigneeSelect');
-  sel.innerHTML = assigneeDirectory.map(item =>
-    `<option value="${esc(item.label)}" data-email="${esc(item.email)}">${esc(item.label)}</option>`
-  ).join('');
+  const sel = $('drwAssigneeSelect').innerHTML =
+   '<option value="">Select Officer</option>' +
+   assignees.map(a =>
+      `<option value="${a.name}">
+         ${a.name}
+       </option>`
+   ).join('');
 }
 
 function buildAuditEntries(t) {

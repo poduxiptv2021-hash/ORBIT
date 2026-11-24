@@ -81,7 +81,7 @@ body {
 }
 
 .phb-grid-bg {
-  background-image: radial-gradient(rgba(0, 122, 94, 0.06) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(0, 122, 94, 0.05) 1px, transparent 1px);
   background-size: 28px 28px;
 }
 
@@ -92,13 +92,19 @@ body {
   transform: translateY(-1px);
 }
 
-.card-interactive {
-  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+.list-row-interactive {
+  transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
 }
-.card-interactive:hover {
-  transform: translateY(-3px);
+.list-row-interactive:hover {
   border-color: #007A5E;
-  box-shadow: 0 12px 24px -10px rgba(0, 122, 94, 0.25);
+  box-shadow: 0 8px 20px -10px rgba(0, 122, 94, 0.22);
+}
+
+.accordion-chevron {
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.accordion-open .accordion-chevron {
+  transform: rotate(180deg);
 }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -117,7 +123,8 @@ body {
 .dark .badge-resolved { background-color: #064E3B; color: #A7F3D0; border-color: #047857; }
 
 .step-list { list-style: none; counter-reset: step; padding: 0; margin: 0; }
-.step-list li { counter-increment: step; position: relative; padding-left: 2.25rem; margin-bottom: 1rem; }
+.step-list li { counter-increment: step; position: relative; padding-left: 2.25rem; margin-bottom: 0.95rem; }
+.step-list li:last-child { margin-bottom: 0; }
 .step-list li::before {
   content: counter(step);
   font-family: 'JetBrains Mono', monospace;
@@ -125,7 +132,7 @@ body {
   font-size: 0.75rem;
   position: absolute;
   left: 0;
-  top: 0.1rem;
+  top: 0.05rem;
   width: 1.5rem;
   height: 1.5rem;
   border-radius: 9999px;
@@ -140,8 +147,8 @@ body {
   content: '';
   position: absolute;
   left: 0.72rem;
-  top: 1.6rem;
-  bottom: -0.75rem;
+  top: 1.55rem;
+  bottom: -0.7rem;
   width: 1px;
   background-color: var(--phb-line);
 }
@@ -155,13 +162,13 @@ html { scroll-behavior: smooth; }
 <!-- Top Gradient Corporate Accent Bar -->
 <div class="h-1.5 w-full bg-gradient-to-r from-[#007A5E] via-[#005A4B] to-[#0B2545]"></div>
 
-<!-- ==================== TOP NAVIGATION HEADER (2 HOME SECTIONS) ==================== -->
+<!-- ==================== TOP NAVIGATION HEADER ==================== -->
 <header class="sticky top-0 z-40 bg-[var(--phb-card)]/95 border-b border-[var(--phb-line)] backdrop-blur-md shadow-xs">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
 
     <!-- Brand Title & PHB Logo -->
     <div class="flex items-center gap-3 sm:gap-4">
-      <a href="#sectionBrowse" class="flex items-center gap-3 group">
+      <a href="#topHero" class="flex items-center gap-3 group">
         <img src="https://www.phb.com.my/clients/asset_E5316276-9983-47F1-A6C2-76D0C7985656/contentms/img/logo/logo-phb.svg"
              alt="Pelaburan Hartanah Berhad Logo" class="h-8 sm:h-9 w-auto object-contain transition-transform group-hover:scale-105"
              onerror="this.src='https://placehold.co/160x40/007A5E/ffffff?text=PHB+Logo'">
@@ -175,7 +182,7 @@ html { scroll-behavior: smooth; }
       </a>
     </div>
 
-    <!-- 2 Home Navigation Links + Role-Scoped Links -->
+    <!-- Navigation Links -->
     <nav class="hidden lg:flex items-center gap-2 text-xs font-extrabold text-[var(--phb-soft)]">
       <a href="#sectionBrowse" class="nav-pill-hover px-3 py-1.5 rounded-xl hover:bg-emerald-50 dark:hover:bg-emerald-950/50 hover:text-[#007A5E] dark:hover:text-emerald-300">
         1. Categories
@@ -191,7 +198,7 @@ html { scroll-behavior: smooth; }
       </a>
     </nav>
 
-    <!-- Controls & User Menu (Single Submit Ticket Button beside Login) -->
+    <!-- Controls & User Menu -->
     <div class="flex items-center gap-2 sm:gap-3">
       <button onclick="toggleDarkMode()" title="Toggle Dark/Light Mode" class="p-2 rounded-xl border border-[var(--phb-line)] hover:border-[#007A5E] hover:bg-[var(--phb-bg)] text-[var(--phb-soft)] hover:text-[var(--phb-text)] transition-all">
         <svg id="sunIcon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
@@ -202,7 +209,7 @@ html { scroll-behavior: smooth; }
         Sign in
       </button>
 
-      <button onclick="openNewTicketModal()" class="px-3.5 py-1.5 rounded-xl bg-[#007A5E] hover:bg-[#005A4B] hover:-translate-y-0.5 text-white text-xs font-extrabold shadow-sm transition-all flex items-center gap-1.5">
+      <button onclick="openNewTicketModal()" class="px-3.5 py-1.5 rounded-xl bg-[#0B2545] hover:bg-[#007A5E] hover:-translate-y-0.5 text-white text-xs font-extrabold shadow-sm transition-all flex items-center gap-1.5">
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
         <span>Submit Ticket</span>
       </button>
@@ -271,57 +278,124 @@ html { scroll-behavior: smooth; }
 </div>
 
 <!-- ==================== MAIN CONTENT CONTAINER ==================== -->
-<main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-10">
+<main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-12">
 
-  <!-- HERO & QUICK FINDING BAR -->
-  <div class="p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-[#007A5E] via-[#005A4B] to-[#0B2545] text-white shadow-lg">
-    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+  <!-- ==================== HERO SECTION (MATCHING REFERENCE SCREENSHOT) ==================== -->
+  <section id="topHero" class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+
+    <!-- Left Column: Pill, Display Headline, Subtitle, CTA Buttons & Quick Finding Chips -->
+    <div class="lg:col-span-7 xl:col-span-8 space-y-6">
+      <!-- Top Portal Badge Pill -->
+      <div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-slate-200/75 dark:bg-slate-800/80 border border-slate-300/70 dark:border-slate-700">
+        <span class="w-2.5 h-2.5 rounded-full bg-slate-400 dark:bg-emerald-400"></span>
+        <span class="text-[11px] font-extrabold tracking-widest uppercase text-[#0B2545] dark:text-slate-200">
+          PHB IT SELF-SERVICE &amp; HELPDESK PORTAL
+        </span>
+      </div>
+
+      <!-- Main Hero Headline -->
       <div>
-        <div class="font-mono text-[11px] text-emerald-300 font-extrabold tracking-widest uppercase">
-          &gt; PHB IT SELF-SERVICE &amp; HELPDESK
+        <h1 id="heroGuestHeading" class="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-extrabold tracking-tight leading-[1.08] text-[#0B2545] dark:text-white">
+          Fix common IT issues
+          <span class="bg-gradient-to-r from-[#1E4E5F] via-[#3A6B5C] to-[#7B6D3B] dark:from-emerald-300 dark:to-amber-300 bg-clip-text text-transparent">
+            your way.
+          </span>
+        </h1>
+        <h1 id="heroWelcomeHeading" class="hidden font-display text-4xl sm:text-5xl font-extrabold tracking-tight leading-[1.1] text-[#0B2545] dark:text-white">
+          Welcome to ORBIT, <span id="staffHeroName" class="text-[#007A5E] dark:text-emerald-300">colleague</span> 👋
+        </h1>
+
+        <p class="text-sm sm:text-base text-[var(--phb-soft)] font-medium leading-relaxed max-w-2xl mt-4">
+          Internal self-service repository built for PHB employees who want fast resolution &mdash; VPN troubleshooting, password resets, hardware support, and instant ticket escalation.
+        </p>
+      </div>
+
+      <!-- Dual Action Buttons -->
+      <div class="flex flex-wrap items-center gap-3 pt-1">
+        <button onclick="openNewTicketModal()" class="px-6 py-3.5 rounded-full bg-[#13315C] hover:bg-[#007A5E] text-white text-xs sm:text-sm font-extrabold shadow-md hover:shadow-lg transition-all flex items-center gap-2 cursor-pointer">
+          <span class="text-base leading-none">+</span>
+          <span>Submit Support Ticket</span>
+        </button>
+
+        <a href="#sectionKB" class="px-6 py-3.5 rounded-full bg-[var(--phb-card)] border border-[var(--phb-line)] hover:border-[#007A5E] text-[var(--phb-text)] text-xs sm:text-sm font-extrabold shadow-xs hover:shadow-md transition-all flex items-center gap-2">
+          <span>Explore 24 Self-Service Guides</span>
+          <span>&rarr;</span>
+        </a>
+      </div>
+
+      <!-- Popular Searches & Quick Finding Pills -->
+      <div class="pt-5 border-t border-[var(--phb-line)] space-y-3">
+        <div class="text-[11px] font-extrabold uppercase tracking-widest text-[#0B2545] dark:text-slate-300">
+          POPULAR SEARCHES &amp; QUICK FINDING:
         </div>
-        <h1 id="heroGuestHeading" class="font-display text-2xl sm:text-4xl font-extrabold tracking-tight mt-1">
-          Fix common IT issues <span class="text-emerald-300">in minutes.</span>
-        </h1>
-        <h1 id="heroWelcomeHeading" class="hidden font-display text-2xl sm:text-4xl font-extrabold tracking-tight mt-1">
-          Welcome to ORBIT, <span id="staffHeroName" class="text-emerald-300">colleague</span> 👋
-        </h1>
-      </div>
 
-      <!-- 2-Section Quick Jump Bar -->
-      <div class="flex flex-wrap items-center gap-2 text-xs font-extrabold">
-        <a href="#sectionBrowse" class="px-3.5 py-2 rounded-xl bg-white/15 hover:bg-white/25 border border-white/20 transition-all">
-          1. Categories
-        </a>
-        <a href="#sectionKB" class="px-3.5 py-2 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-slate-950 transition-all">
-          2. All 24 Guides
-        </a>
+        <div class="flex flex-wrap items-center gap-2.5">
+          <button onclick="applyQuickChip('vpn')" class="px-4 py-2 rounded-full bg-[var(--phb-card)] border border-[var(--phb-line)] hover:border-[#007A5E] hover:shadow-xs text-xs font-bold text-[var(--phb-text)] transition-all flex items-center gap-2 cursor-pointer">
+            <span>🔐</span>
+            <span>VPN Connection</span>
+          </button>
+          <button onclick="applyQuickChip('password reset')" class="px-4 py-2 rounded-full bg-[var(--phb-card)] border border-[var(--phb-line)] hover:border-[#007A5E] hover:shadow-xs text-xs font-bold text-[var(--phb-text)] transition-all flex items-center gap-2 cursor-pointer">
+            <span>🔑</span>
+            <span>Password Reset</span>
+          </button>
+          <button onclick="applyQuickChip('printer')" class="px-4 py-2 rounded-full bg-[var(--phb-card)] border border-[var(--phb-line)] hover:border-[#007A5E] hover:shadow-xs text-xs font-bold text-[var(--phb-text)] transition-all flex items-center gap-2 cursor-pointer">
+            <span>🖨️</span>
+            <span>Printer Offline</span>
+          </button>
+          <button onclick="applyQuickChip('slow')" class="px-4 py-2 rounded-full bg-[var(--phb-card)] border border-[var(--phb-line)] hover:border-[#007A5E] hover:shadow-xs text-xs font-bold text-[var(--phb-text)] transition-all flex items-center gap-2 cursor-pointer">
+            <span>⚡</span>
+            <span>Computer Slow</span>
+          </button>
+          <button onclick="applyQuickChip('phishing')" class="px-4 py-2 rounded-full bg-[var(--phb-card)] border border-[var(--phb-line)] hover:border-[#007A5E] hover:shadow-xs text-xs font-bold text-[var(--phb-text)] transition-all flex items-center gap-2 cursor-pointer">
+            <span>🚨</span>
+            <span>Phishing Report</span>
+          </button>
+          <button onclick="applyQuickChip('')" class="px-4 py-2 rounded-full bg-slate-200/70 dark:bg-slate-800 hover:bg-slate-300/70 dark:hover:bg-slate-700 text-xs font-bold text-[var(--phb-soft)] hover:text-[var(--phb-text)] transition-all cursor-pointer">
+            Reset Filter
+          </button>
+        </div>
       </div>
     </div>
 
-    <!-- Quick Finding Chips -->
-    <div class="flex flex-wrap items-center gap-2 pt-4 mt-4 border-t border-white/15">
-      <span class="text-[11px] text-emerald-200 font-extrabold uppercase tracking-wider mr-1">Quick Finding:</span>
-      <button onclick="applyQuickChip('vpn')" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white hover:text-slate-950 text-white text-xs font-extrabold transition-all cursor-pointer">
-        VPN Connection
-      </button>
-      <button onclick="applyQuickChip('password reset')" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white hover:text-slate-950 text-white text-xs font-extrabold transition-all cursor-pointer">
-        Password Reset
-      </button>
-      <button onclick="applyQuickChip('printer')" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white hover:text-slate-950 text-white text-xs font-extrabold transition-all cursor-pointer">
-        Printer Offline
-      </button>
-      <button onclick="applyQuickChip('slow')" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white hover:text-slate-950 text-white text-xs font-extrabold transition-all cursor-pointer">
-        Computer Slow
-      </button>
-      <button onclick="applyQuickChip('phishing')" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white hover:text-slate-950 text-white text-xs font-extrabold transition-all cursor-pointer">
-        Phishing Report
-      </button>
-      <button onclick="applyQuickChip('')" class="px-3 py-1.5 rounded-xl bg-emerald-950/60 hover:bg-emerald-900 text-emerald-200 text-xs font-bold transition-all cursor-pointer">
-        Reset Filter
-      </button>
+    <!-- Right Column: Dark Navy Feature Card (Matching Right Card in Screenshot) -->
+    <div class="lg:col-span-5 xl:col-span-4">
+      <div class="rounded-[2rem] bg-gradient-to-br from-[#0F2C4C] via-[#0B223C] to-[#07172A] text-white p-7 sm:p-8 shadow-2xl border border-slate-700/60 flex flex-col justify-between space-y-6 relative overflow-hidden">
+        <!-- Subtle Decorative Glow -->
+        <div class="absolute -top-16 -right-16 w-44 h-44 rounded-full bg-emerald-500/10 blur-2xl pointer-events-none"></div>
+
+        <div class="space-y-5 relative z-10">
+          <!-- Rounded Lightning Icon Tile -->
+          <div class="w-12 h-12 rounded-2xl bg-white/10 border border-white/15 flex items-center justify-center text-xl shadow-inner">
+            ⚡
+          </div>
+
+          <div>
+            <span class="inline-block px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[10px] font-extrabold uppercase tracking-widest text-sky-200">
+              INSTANT IT GUIDES
+            </span>
+          </div>
+
+          <h2 class="font-display text-2xl sm:text-3xl font-extrabold tracking-tight leading-snug text-white">
+            Self-help before reaching out.
+          </h2>
+
+          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-medium">
+            Troubleshoot network, hardware, and account issues in sync with 24 verified step-by-step guides organized by severity.
+          </p>
+        </div>
+
+        <div class="pt-5 border-t border-white/15 flex items-center justify-between relative z-10">
+          <a href="#sectionKB" class="text-xs sm:text-sm font-extrabold text-white hover:text-emerald-300 transition-colors flex items-center gap-2">
+            <span>Browse All 24 Guides</span>
+            <span>&rarr;</span>
+          </a>
+          <span class="font-mono text-[11px] font-bold px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+            6 Categories
+          </span>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
 
   <!-- ==================== EXECUTIVE DASHBOARD KPI OVERVIEW ==================== -->
   <section id="sectionExecutiveOverview" class="hidden space-y-4">
@@ -416,23 +490,25 @@ html { scroll-behavior: smooth; }
     </div>
   </section>
 
-  <!-- ==================== HOME SECTION 1: BROWSE BY CATEGORY ==================== -->
+  <!-- ==================== HOME SECTION 1: BROWSE BY CATEGORY (ACCORDION LIST) ==================== -->
   <section id="sectionBrowse" class="space-y-4 scroll-mt-20">
-    <div class="flex items-center justify-between gap-3 border-l-4 border-[#007A5E] pl-4 py-1">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-l-4 border-[#007A5E] pl-4 py-1">
       <div>
         <span class="text-[11px] font-mono font-extrabold uppercase tracking-widest text-[#007A5E] dark:text-emerald-400">Section 01</span>
         <h2 class="font-display text-2xl sm:text-3xl font-extrabold text-[var(--phb-text)] tracking-tight">
           Browse by Category
         </h2>
         <p class="text-xs sm:text-sm font-bold text-[var(--phb-soft)]">
-          Select a category to filter self-service guides immediately
+          Click any category row to open its dropdown list of guides
         </p>
       </div>
     </div>
-    <div id="browseGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
+
+    <!-- Vertical Accordion List -->
+    <div id="browseList" class="space-y-2.5"></div>
   </section>
 
-  <!-- ==================== HOME SECTION 2: ALL 24 ARTICLES ==================== -->
+  <!-- ==================== HOME SECTION 2: ALL 24 ARTICLES (ACCORDION LIST) ==================== -->
   <section id="sectionKB" class="space-y-4 scroll-mt-20">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-l-4 border-[#007A5E] pl-4 py-1">
       <div>
@@ -442,7 +518,7 @@ html { scroll-behavior: smooth; }
           <span id="articleCountBadge" class="text-xs font-mono font-extrabold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">24 Articles</span>
         </h2>
         <p class="text-xs sm:text-sm font-bold text-[var(--phb-soft)]">
-          Verified step-by-step guides maintained by PHB IT Division
+          Click any guide row to expand step-by-step troubleshooting instructions
         </p>
       </div>
 
@@ -451,10 +527,14 @@ html { scroll-behavior: smooth; }
         <button id="kbShowAllBtn" onclick="filterKBByCategory('All')" class="hidden px-3 py-1.5 rounded-xl bg-[#007A5E] text-white text-xs font-extrabold hover:bg-[#005A4B] transition-colors">
           Show all 24 guides
         </button>
+        <button onclick="toggleAllKBAccordions()" id="toggleAllKBBtn" class="px-3 py-1.5 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-card)] hover:border-[#007A5E] text-xs font-extrabold text-[var(--phb-text)] transition-colors">
+          Expand All
+        </button>
       </div>
     </div>
 
-    <div id="kbGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    <!-- Vertical Accordion List for KB Articles -->
+    <div id="kbList" class="space-y-2.5"></div>
   </section>
 
   <!-- ==================== REPORTS & ANALYTICS SECTION (ROLE-GATED) ==================== -->
@@ -508,7 +588,7 @@ html { scroll-behavior: smooth; }
 
 <!-- ==================== MODALS & DRAWERS ==================== -->
 
-<!-- 1. KB ARTICLE READER MODAL -->
+<!-- 1. KB ARTICLE READER MODAL (Optional Full-Screen View) -->
 <div id="modalArticle" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs" onclick="if(event.target===this)closeModal('modalArticle')">
   <div class="max-w-2xl w-full bg-[var(--phb-card)] rounded-3xl shadow-2xl border border-[var(--phb-line)] overflow-hidden max-h-[90vh] flex flex-col">
     <div class="px-6 py-4 border-b border-[var(--phb-line)] bg-[var(--phb-bg)] flex items-center justify-between">
@@ -758,12 +838,12 @@ const KB_ARTICLES = [
 ];
 
 const CATEGORIES = [
-  { key: 'Hardware', desc: 'Laptops, monitors, peripherals & docking stations', count: 5 },
-  { key: 'Software', desc: 'Installs, updates, crashes and software licenses', count: 4 },
-  { key: 'Network & VPN', desc: 'Wi-Fi, FortiClient VPN, remote access & connectivity', count: 4 },
-  { key: 'Account & Access', desc: 'Passwords, MFA, shared drive access & permissions', count: 4 },
-  { key: 'Email & Calendar', desc: 'Outlook desktop, sync issues, shared mailboxes', count: 3 },
-  { key: 'Security', desc: 'Phishing reports, lost laptops & full-disk encryption', count: 4 }
+  { key: 'Hardware', icon: '💻', desc: 'Laptops, monitors, peripherals & docking stations', count: 5 },
+  { key: 'Software', icon: '⚙️', desc: 'Installs, updates, crashes and software licenses', count: 4 },
+  { key: 'Network & VPN', icon: '🌐', desc: 'Wi-Fi, FortiClient VPN, remote access & connectivity', count: 4 },
+  { key: 'Account & Access', icon: '🔐', desc: 'Passwords, MFA, shared drive access & permissions', count: 4 },
+  { key: 'Email & Calendar', icon: '📧', desc: 'Outlook desktop, sync issues, shared mailboxes', count: 3 },
+  { key: 'Security', icon: '🛡️', desc: 'Phishing reports, lost laptops & full-disk encryption', count: 4 }
 ];
 
 let ticketsStore = [];
@@ -773,6 +853,8 @@ let currentUser = null;
 let activeDrawerTicketId = null;
 let kbCategory = 'All';
 let kbQuery = '';
+let openCategoryDropdowns = new Set();
+let openArticleDropdowns = new Set();
 let msalApp = null;
 
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -927,8 +1009,8 @@ window.addEventListener('DOMContentLoaded', async () => {
   rebuildAssigneeDirectory();
   renderSimulateRoleButtons();
   populateDepartmentDropdowns();
-  renderBrowseGrid();
-  renderKBGrid();
+  renderBrowseList();
+  renderKBList();
   renderReportsData();
   applyRoleView();
 
@@ -1872,19 +1954,77 @@ async function handleNewTicketSubmit(e) {
 function closeModal(id) { $(id).classList.add('hidden'); }
 function closeDrawer(id) { $(id).classList.add('hidden'); }
 
-/* ==================== 6. HOME SCREEN (2 SECTIONS) & KB RENDERING ==================== */
-function renderBrowseGrid() {
-  $('browseGrid').innerHTML = CATEGORIES.map(c => `
-    <div onclick="filterKBByCategory('${c.key}')" class="card-interactive group p-5 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] cursor-pointer space-y-2">
-      <div class="flex items-center justify-between gap-2">
-        <h3 class="font-display font-extrabold text-lg text-[var(--phb-text)] group-hover:text-[#007A5E] dark:group-hover:text-emerald-400 transition-colors">${c.key}</h3>
-        <span class="text-xs font-mono font-extrabold px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950 text-[#007A5E] dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">${c.count} guides</span>
-      </div>
-      <p class="text-xs font-semibold text-[var(--phb-soft)] leading-relaxed">${c.desc}</p>
-    </div>`).join('');
+/* ==================== 6. ACCORDION LIST & DROPDOWN RENDERING ==================== */
+function renderBrowseList() {
+  $('browseList').innerHTML = CATEGORIES.map(c => {
+    const isOpen = openCategoryDropdowns.has(c.key);
+    const catArticles = KB_ARTICLES.filter(a => a.cat === c.key);
+
+    return `
+      <div class="list-row-interactive rounded-2xl bg-[var(--phb-card)] border ${isOpen ? 'border-[#007A5E] ring-2 ring-[#007A5E]/15 accordion-open' : 'border-[var(--phb-line)]'} overflow-hidden">
+        <!-- List Row Header -->
+        <button type="button" onclick="toggleCategoryDropdown('${esc(c.key)}')" class="w-full px-5 py-4 flex items-center justify-between gap-4 text-left hover:bg-[var(--phb-bg)]/60 transition-colors cursor-pointer">
+          <div class="flex items-center gap-3.5 min-w-0">
+            <span class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center text-lg shrink-0">
+              ${c.icon}
+            </span>
+            <div class="min-w-0">
+              <div class="flex items-center gap-2.5 flex-wrap">
+                <h3 class="font-display font-extrabold text-base sm:text-lg text-[var(--phb-text)]">${esc(c.key)}</h3>
+                <span class="text-[11px] font-mono font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950 text-[#007A5E] dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                  ${c.count} guides
+                </span>
+              </div>
+              <p class="text-xs font-semibold text-[var(--phb-soft)] truncate mt-0.5">${esc(c.desc)}</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3 shrink-0">
+            <span class="hidden sm:inline-block text-xs font-extrabold text-[#007A5E] dark:text-emerald-400">
+              ${isOpen ? 'Hide guides' : 'View guides'}
+            </span>
+            <span class="w-8 h-8 rounded-full border border-[var(--phb-line)] bg-[var(--phb-bg)] flex items-center justify-center text-[var(--phb-text)]">
+              <svg class="w-4 h-4 accordion-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </span>
+          </div>
+        </button>
+
+        <!-- Expandable Dropdown Content -->
+        <div class="${isOpen ? 'block' : 'hidden'} border-t border-[var(--phb-line)] bg-[var(--phb-bg)]/65 px-5 py-4 space-y-2.5">
+          <div class="flex items-center justify-between text-[11px] font-extrabold uppercase tracking-wider text-[var(--phb-soft)] pb-1">
+            <span>Included Guides in ${esc(c.key)}</span>
+            <button type="button" onclick="filterKBByCategory('${esc(c.key)}')" class="text-[#007A5E] dark:text-emerald-400 hover:underline font-extrabold">
+              Filter Section 02 to ${esc(c.key)} &rarr;
+            </button>
+          </div>
+          <div class="divide-y divide-[var(--phb-line)] rounded-xl bg-[var(--phb-card)] border border-[var(--phb-line)] overflow-hidden">
+            ${catArticles.map(art => `
+              <div onclick="jumpToArticleDropdown('${art.id}')" class="px-4 py-3 flex items-center justify-between gap-3 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/30 cursor-pointer transition-colors">
+                <div class="flex items-center gap-3 min-w-0">
+                  <span class="font-mono text-xs font-extrabold text-[#007A5E] dark:text-emerald-400 shrink-0">${art.id}</span>
+                  <span class="text-xs sm:text-sm font-bold text-[var(--phb-text)] truncate">${esc(art.title)}</span>
+                </div>
+                <span class="text-xs font-extrabold text-[#007A5E] dark:text-emerald-400 shrink-0">Open guide &rarr;</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>`;
+  }).join('');
 }
 
-function renderKBGrid() {
+function toggleCategoryDropdown(catKey) {
+  if (openCategoryDropdowns.has(catKey)) {
+    openCategoryDropdowns.delete(catKey);
+  } else {
+    openCategoryDropdowns.add(catKey);
+  }
+  renderBrowseList();
+}
+
+function renderKBList() {
   const q = kbQuery.toLowerCase().trim();
   const list = KB_ARTICLES.filter(a =>
     (kbCategory === 'All' || a.cat === kbCategory) &&
@@ -1893,32 +2033,94 @@ function renderKBGrid() {
 
   $('articleCountBadge').textContent = list.length + ' Article' + (list.length === 1 ? '' : 's');
 
+  const toggleAllBtn = $('toggleAllKBBtn');
+  if (toggleAllBtn) {
+    const anyClosed = list.some(a => !openArticleDropdowns.has(a.id));
+    toggleAllBtn.textContent = anyClosed ? 'Expand All' : 'Collapse All';
+  }
+
   if (!list.length) {
-    $('kbGrid').innerHTML = `
-      <div class="col-span-full py-12 text-center text-xs font-bold text-[var(--phb-soft)]">
+    $('kbList').innerHTML = `
+      <div class="py-12 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] text-center text-xs font-bold text-[var(--phb-soft)]">
         No articles match this quick filter. <button onclick="applyQuickChip('')" class="text-[#007A5E] underline font-extrabold">Show all 24 guides</button> or <button onclick="openNewTicketModal()" class="text-[#007A5E] underline font-extrabold">submit a ticket</button>.
       </div>`;
     return;
   }
 
-  $('kbGrid').innerHTML = list.map(a => {
+  $('kbList').innerHTML = list.map(a => {
+    const isOpen = openArticleDropdowns.has(a.id);
     const sevBadge = a.sev === 'crit' ? 'text-rose-700 bg-rose-50 border-rose-200 dark:bg-rose-950 dark:text-rose-300 dark:border-rose-900' :
                      a.sev === 'warn' ? 'text-amber-700 bg-amber-50 border-amber-200 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-900' :
                      'text-emerald-700 bg-emerald-50 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-900';
+    const sevLabel = a.sev === 'crit' ? 'CRITICAL' : a.sev === 'warn' ? 'MODERATE' : 'ROUTINE';
 
     return `
-      <div onclick="openKBModal('${a.id}')" class="card-interactive group p-5 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] cursor-pointer space-y-3 flex flex-col justify-between">
-        <div>
-          <div class="flex items-center justify-between mb-2">
-            <span class="font-mono text-xs font-extrabold text-[#007A5E] dark:text-emerald-400">${a.id}</span>
-            <span class="text-[10px] font-extrabold px-2 py-0.5 rounded border uppercase tracking-wider ${sevBadge}">${a.sev === 'crit' ? 'Critical' : a.sev === 'warn' ? 'Moderate' : 'Routine'}</span>
+      <div id="kb-row-${a.id}" class="list-row-interactive rounded-2xl bg-[var(--phb-card)] border ${isOpen ? 'border-[#007A5E] ring-2 ring-[#007A5E]/15 accordion-open' : 'border-[var(--phb-line)]'} overflow-hidden scroll-mt-24">
+        <!-- Accordion Header Row -->
+        <button type="button" onclick="toggleArticleDropdown('${a.id}')" class="w-full px-5 py-4 flex items-center justify-between gap-4 text-left hover:bg-[var(--phb-bg)]/60 transition-colors cursor-pointer">
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 min-w-0 flex-1">
+            <div class="flex items-center gap-2 shrink-0">
+              <span class="font-mono text-xs font-extrabold text-[#007A5E] dark:text-emerald-400 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-200 dark:border-emerald-800">
+                ${a.id}
+              </span>
+              <span class="text-[10px] font-extrabold px-2 py-0.5 rounded border uppercase tracking-wider ${sevBadge}">
+                ${sevLabel}
+              </span>
+            </div>
+
+            <div class="min-w-0 flex-1">
+              <h3 class="font-display font-extrabold text-sm sm:text-base text-[var(--phb-text)] truncate">
+                ${esc(a.title)}
+              </h3>
+              <p class="text-xs font-semibold text-[var(--phb-soft)] truncate mt-0.5">
+                ${esc(a.desc)}
+              </p>
+            </div>
           </div>
-          <h3 class="font-display font-extrabold text-base text-[var(--phb-text)] group-hover:text-[#007A5E] dark:group-hover:text-emerald-400 transition-colors line-clamp-1">${a.title}</h3>
-          <p class="text-xs font-semibold text-[var(--phb-soft)] mt-1 line-clamp-2 leading-relaxed">${a.desc}</p>
-        </div>
-        <div class="pt-2.5 border-t border-[var(--phb-line)] flex items-center justify-between text-xs font-extrabold text-[var(--phb-soft)]">
-          <span>${a.cat}</span>
-          <span class="text-[#007A5E] dark:text-emerald-400 group-hover:translate-x-1 transition-transform">Read &rarr;</span>
+
+          <div class="flex items-center gap-3 shrink-0">
+            <span class="hidden md:inline-block text-xs font-bold px-2.5 py-1 rounded-lg bg-[var(--phb-bg)] border border-[var(--phb-line)] text-[var(--phb-soft)]">
+              ${esc(a.cat)}
+            </span>
+            <span class="w-8 h-8 rounded-full border border-[var(--phb-line)] bg-[var(--phb-bg)] flex items-center justify-center text-[var(--phb-text)]">
+              <svg class="w-4 h-4 accordion-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </span>
+          </div>
+        </button>
+
+        <!-- Expandable Dropdown Panel -->
+        <div class="${isOpen ? 'block' : 'hidden'} border-t border-[var(--phb-line)] bg-[var(--phb-bg)]/70 p-5 sm:p-6 space-y-4">
+          <div class="p-4 sm:p-5 rounded-2xl bg-[var(--phb-card)] border border-[var(--phb-line)] space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <span class="font-extrabold text-[#007A5E] dark:text-emerald-400 uppercase text-[11px] tracking-widest">
+                Step-by-Step Resolution
+              </span>
+              <button type="button" onclick="openKBModal('${a.id}')" class="text-[11px] font-extrabold text-[var(--phb-soft)] hover:text-[#007A5E] underline">
+                Open Popup View
+              </button>
+            </div>
+            <ol class="step-list text-xs sm:text-sm text-[var(--phb-text)] leading-relaxed font-medium">
+              ${a.steps.map(s => `<li>${esc(s)}</li>`).join('')}
+            </ol>
+          </div>
+
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+            <div class="flex flex-wrap items-center gap-1.5">
+              ${a.tags.map(t => `<span class="px-2.5 py-0.5 rounded-full bg-[var(--phb-card)] border border-[var(--phb-line)] text-[10px] font-mono text-[var(--phb-soft)]">#${esc(t)}</span>`).join('')}
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2 text-xs">
+              <span class="font-semibold text-[var(--phb-soft)]">Helpful?</span>
+              <button type="button" onclick="markHelpful(true)" class="px-3 py-1.5 rounded-xl border border-[var(--phb-line)] bg-[var(--phb-card)] hover:border-emerald-500 font-bold text-[var(--phb-text)] transition-colors">
+                Yes 👍
+              </button>
+              <button type="button" onclick="openNewTicketModal()" class="px-3.5 py-1.5 rounded-xl bg-[#007A5E] hover:bg-[#005A4B] text-white font-extrabold transition-colors">
+                Escalate to Ticket
+              </button>
+            </div>
+          </div>
         </div>
       </div>`;
   }).join('');
@@ -1932,17 +2134,62 @@ function renderKBGrid() {
   $('kbShowAllBtn').classList.toggle('hidden', !isFiltered);
 }
 
+function toggleArticleDropdown(id) {
+  if (openArticleDropdowns.has(id)) {
+    openArticleDropdowns.delete(id);
+  } else {
+    openArticleDropdowns.add(id);
+  }
+  renderKBList();
+}
+
+function toggleAllKBAccordions() {
+  const q = kbQuery.toLowerCase().trim();
+  const visible = KB_ARTICLES.filter(a =>
+    (kbCategory === 'All' || a.cat === kbCategory) &&
+    (!q || a.title.toLowerCase().includes(q) || a.desc.toLowerCase().includes(q) || a.cat.toLowerCase().includes(q) || a.tags.some(t => t.includes(q)))
+  );
+  const anyClosed = visible.some(a => !openArticleDropdowns.has(a.id));
+  if (anyClosed) {
+    visible.forEach(a => openArticleDropdowns.add(a.id));
+  } else {
+    visible.forEach(a => openArticleDropdowns.delete(a.id));
+  }
+  renderKBList();
+}
+
+function jumpToArticleDropdown(articleId) {
+  kbCategory = 'All';
+  kbQuery = '';
+  openArticleDropdowns.add(articleId);
+  renderKBList();
+  const el = $('kb-row-' + articleId);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
 function applyQuickChip(term) {
   kbCategory = 'All';
   kbQuery = term || '';
-  renderKBGrid();
+  if (kbQuery) {
+    const matched = KB_ARTICLES.filter(a =>
+      a.title.toLowerCase().includes(kbQuery.toLowerCase()) ||
+      a.desc.toLowerCase().includes(kbQuery.toLowerCase()) ||
+      a.tags.some(t => t.includes(kbQuery.toLowerCase()))
+    );
+    if (matched.length === 1) {
+      openArticleDropdowns.add(matched[0].id);
+    }
+  }
+  renderKBList();
   $('sectionKB').scrollIntoView();
 }
 
 function filterKBByCategory(cat) {
   kbQuery = '';
   kbCategory = cat;
-  renderKBGrid();
+  renderKBList();
   $('sectionKB').scrollIntoView();
 }
 

@@ -61,10 +61,12 @@
   --c-body: #182925;
   --c-soft: #435D56;
   --c-tint: #E6F2EC;
+  --c-cat-section: #E9F2EA;
   --c-blue-tint: #EEF3F8;
   --grad-main: linear-gradient(90deg, #0A6E63 0%, #1B8754 52%, #76B82A 100%);
   --grad-hover: linear-gradient(90deg, #085A51 0%, #157045 52%, #629E20 100%);
   --grad-footer: linear-gradient(90deg, #0A6E63 0%, #1B8754 52%, #76B82A 100%);
+  --grad-cat-card: linear-gradient(135deg, #0A6E63 0%, #1B8754 62%, #76B82A 100%);
   --grad-blue-accent: linear-gradient(135deg, #163A5F 0%, #1B8754 100%);
   --grad-soft: linear-gradient(135deg, rgba(10, 110, 99, 0.05) 0%, rgba(27, 135, 84, 0.09) 55%, rgba(118, 184, 42, 0.12) 100%);
 }
@@ -80,10 +82,12 @@
   --c-body: #EDF6F2;
   --c-soft: #A7C0B8;
   --c-tint: #132620;
+  --c-cat-section: #11211B;
   --c-blue-tint: #132230;
   --grad-main: linear-gradient(90deg, #0A6E63 0%, #1B8754 52%, #76B82A 100%);
   --grad-hover: linear-gradient(90deg, #085A51 0%, #157045 52%, #629E20 100%);
   --grad-footer: linear-gradient(90deg, #0A6E63 0%, #1B8754 52%, #76B82A 100%);
+  --grad-cat-card: linear-gradient(135deg, #0A6E63 0%, #1B8754 62%, #76B82A 100%);
   --grad-blue-accent: linear-gradient(135deg, #1D4D7B 0%, #1B8754 100%);
   --grad-soft: linear-gradient(135deg, rgba(10, 110, 99, 0.14) 0%, rgba(118, 184, 42, 0.14) 100%);
 }
@@ -124,6 +128,20 @@ body {
   background: var(--grad-footer);
 }
 
+.category-section-bg {
+  background-color: var(--c-cat-section);
+}
+
+.category-card-grad {
+  background: var(--grad-cat-card);
+  transition: transform 180ms ease, filter 180ms ease, box-shadow 180ms ease;
+}
+.category-card-grad:hover {
+  filter: brightness(1.04);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -12px rgba(10, 110, 99, 0.45);
+}
+
 .brand-accent-bar {
   background: var(--grad-blue-accent);
 }
@@ -153,14 +171,6 @@ body {
 }
 .nav-pill-hover:hover {
   transform: translateY(-1px);
-}
-
-.list-row-interactive {
-  transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease, transform 180ms ease;
-}
-.list-row-interactive:hover {
-  border-color: var(--c-primary);
-  box-shadow: 0 8px 20px -10px rgba(10, 110, 99, 0.28);
 }
 
 .accordion-chevron {
@@ -220,13 +230,21 @@ html { scroll-behavior: smooth; }
 </head>
 <body class="flex flex-col min-h-screen font-body-consistent">
 
-<!-- ==================== STICKY HEADER (SAME COLOR AS FOOTER) ==================== -->
+<!-- ==================== STICKY HEADER WITH PHB LOGO ==================== -->
 <header class="sticky top-0 z-40 brand-footer-bar text-white border-b border-white/15 shadow-md">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
 
-    <!-- Brand Wordmark -->
+    <!-- Brand Wordmark + PHB Logo -->
     <div class="flex items-center gap-3 sm:gap-4">
       <a href="#sectionHomepage" class="flex items-center gap-2.5 group">
+        <!-- PHB Brand Emblem -->
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white text-[#0A6E63] shadow-xs">
+          <svg class="w-4 h-4 text-[#1B8754]" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M4 20V4h7.5c3.04 0 5.2 1.85 5.2 4.65 0 2.84-2.16 4.65-5.2 4.65H8.5V20H4zm4.5-10.3h2.8c1.16 0 1.85-.52 1.85-1.35 0-.82-.69-1.35-1.85-1.35H8.5v2.7zM18 20v-8h2v8h-2zm0-10V8h2v2h-2z"/>
+          </svg>
+          <span class="font-title-extrabold text-xs tracking-wider uppercase">PHB</span>
+        </span>
+
         <span class="font-title-extrabold text-2xl tracking-tight text-white group-hover:opacity-90 transition-opacity">ORBIT</span>
         <span class="text-xs font-sub-medium px-2.5 py-0.5 rounded-full bg-white/15 text-white border border-white/25 hidden md:inline-block">
           One Repository for IT
@@ -342,15 +360,6 @@ html { scroll-behavior: smooth; }
 
       <!-- Left Column -->
       <div class="lg:col-span-7 xl:col-span-8 space-y-6">
-        <div class="flex flex-wrap items-center gap-2.5">
-          <span class="px-3.5 py-1 rounded-full brand-gradient-bar text-white text-xs font-title-extrabold uppercase tracking-widest">
-            01 · HOMEPAGE
-          </span>
-          <span class="px-3.5 py-1 rounded-full bg-[var(--c-tint)] border border-[var(--c-primary)]/40 text-xs font-sub-medium tracking-wider uppercase text-[var(--c-primary)]">
-            PHB IT SELF-SERVICE &amp; HELPDESK PORTAL
-          </span>
-        </div>
-
         <div>
           <h1 id="heroGuestHeading" class="font-title-extrabold text-4xl sm:text-5xl lg:text-[3.5rem] tracking-tight leading-[1.06] text-[var(--c-body)]">
             Fix common IT issues
@@ -448,12 +457,12 @@ html { scroll-behavior: smooth; }
     </div>
   </section>
 
-  <!-- ==================== EXECUTIVE DASHBOARD KPI OVERVIEW ==================== -->
+  <!-- ==================== EXECUTIVE DASHBOARD KPI OVERVIEW (HOD IT ONLY) ==================== -->
   <section id="sectionExecutiveOverview" class="hidden space-y-4">
     <div class="p-6 rounded-3xl bg-[var(--c-card)] border border-[var(--c-line)] flex flex-col lg:flex-row lg:items-center justify-between gap-6">
       <div>
         <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-[var(--c-blue-tint)] text-[var(--c-accent-blue)] text-xs font-sub-medium border border-[var(--c-accent-blue)]/30 mb-2">
-          <span id="roleOverviewBadge">Dashboard Overview</span>
+          <span id="roleOverviewBadge">HOD IT Executive Dashboard</span>
         </div>
         <h2 class="font-title-extrabold text-2xl sm:text-3xl tracking-tight text-[var(--c-body)]">
           IT Service Queue &amp; SLA Performance
@@ -484,16 +493,16 @@ html { scroll-behavior: smooth; }
     </div>
   </section>
 
-  <!-- ==================== TICKET QUEUE SECTION ==================== -->
+  <!-- ==================== TICKET QUEUE / DASHBOARD SECTION (LOGGED-IN USERS) ==================== -->
   <section id="sectionTicketQueue" class="hidden space-y-4 scroll-mt-20">
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-[var(--c-card)] border border-[var(--c-line)]">
       <div class="flex flex-wrap items-center gap-3">
         <h2 class="font-title-extrabold text-xl text-[var(--c-body)] flex items-center gap-2">
-          <span>Ticket Queue</span>
+          <span>Ticket Dashboard</span>
           <span id="ticketBadgeCount" class="text-xs font-mono px-2.5 py-0.5 rounded-full bg-[var(--c-blue-tint)] text-[var(--c-accent-blue)] border border-[var(--c-accent-blue)]/30">0</span>
         </h2>
 
-        <div id="deptFilterArea" class="flex items-center gap-2">
+        <div id="deptFilterArea" class="hidden flex items-center gap-2">
           <label for="deptSelect" class="text-xs font-sub-medium text-[var(--c-soft)] uppercase tracking-wider">Department:</label>
           <select id="deptSelect" onchange="filterAndRenderTickets()" class="min-w-[240px] max-w-sm px-3 py-1.5 rounded-xl border border-[var(--c-line)] bg-[var(--c-bg)] text-xs font-sub-medium text-[var(--c-body)] focus:ring-2 focus:ring-[var(--c-accent-blue)] focus:outline-none">
             <option value="ALL">All Departments</option>
@@ -616,7 +625,7 @@ html { scroll-behavior: smooth; }
   </section>
 
   <!-- ==================== 3. BROWSE CATEGORIES (WITH POP-UNDER GUIDES) ==================== -->
-  <section id="sectionBrowseCategories" class="section-surface-gradient rounded-[2rem] border border-[var(--c-line)] p-6 sm:p-8 space-y-6 scroll-mt-20">
+  <section id="sectionBrowseCategories" class="category-section-bg rounded-[2rem] border border-[var(--c-line)] p-6 sm:p-8 space-y-6 scroll-mt-20">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-l-4 border-[var(--c-primary)] pl-4 py-1">
       <div>
         <span class="text-xs font-mono uppercase tracking-widest text-[var(--c-primary)] font-semibold">03 · Browse Categories</span>
@@ -633,7 +642,7 @@ html { scroll-behavior: smooth; }
       </div>
     </div>
 
-    <div id="browseRow" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3"></div>
+    <div id="browseRow" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5"></div>
     <div id="categoryDrawerPanel" class="hidden rounded-2xl bg-[var(--c-card)] border border-[var(--c-primary)] p-5 sm:p-6 space-y-3 shadow-xs"></div>
   </section>
 
@@ -645,9 +654,6 @@ html { scroll-behavior: smooth; }
         <h2 class="font-title-extrabold text-2xl sm:text-3xl text-[var(--c-body)] tracking-tight">
           Common IT HelpDesk Questions
         </h2>
-        <p class="font-sub-medium text-sm text-[var(--c-soft)]">
-          Showing top 3 questions &mdash; expand to view the rest
-        </p>
       </div>
       <button type="button" id="toggleMoreFaqBtn" onclick="toggleMoreFAQs()" class="phb-hover-grad self-start sm:self-auto px-4 py-2 rounded-xl bg-[var(--c-tint)] border border-[var(--c-primary)]/35 text-xs font-sub-medium text-[var(--c-primary)] cursor-pointer">
         Show more FAQs
@@ -657,7 +663,7 @@ html { scroll-behavior: smooth; }
     <div id="faqAccordionList" class="space-y-3"></div>
   </section>
 
-  <!-- ==================== ANALYTICS & REPORTS SECTION (ROLE-GATED) ==================== -->
+  <!-- ==================== ANALYTICS & REPORTS SECTION (HOD IT ONLY) ==================== -->
   <section id="sectionReports" class="hidden space-y-6 scroll-mt-20">
     <div class="flex items-center gap-3 border-l-4 border-[var(--c-accent-blue)] pl-3 py-1">
       <div>
@@ -703,7 +709,6 @@ html { scroll-behavior: smooth; }
 
 <!-- ==================== SMALL BOTTOM CHATBOX: GUIDELINE AI ==================== -->
 <div class="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-2.5">
-  <!-- Compact Chat Panel -->
   <div id="bottomAiChatBox" class="hidden w-80 sm:w-96 rounded-2xl bg-[var(--c-card)] border border-[var(--c-primary)] shadow-2xl overflow-hidden flex flex-col max-h-[420px]">
     <div class="px-4 py-3 brand-footer-bar text-white flex items-center justify-between">
       <div class="flex items-center gap-2">
@@ -734,7 +739,6 @@ html { scroll-behavior: smooth; }
     </form>
   </div>
 
-  <!-- Compact Bottom Launcher Pill -->
   <button
     type="button"
     onclick="toggleBottomAiChat()"
@@ -1009,28 +1013,28 @@ const CATEGORIES = [
 const FAQ_ITEMS = [
   {
     id: 'faq-1',
-    q: 'Do I need to sign in with Microsoft 365 to browse category guides?',
+    q: 'Do I need to sign in to read troubleshooting guides?',
     a: 'No. Any PHB staff member can browse categories, pop open troubleshooting guides, use the bottom Guideline AI chatbox, and read FAQs right away. Signing in with Microsoft 365 is only required when submitting or tracking support tickets.'
   },
   {
     id: 'faq-2',
-    q: 'When should I submit a ticket instead of following a self-service guide?',
-    a: 'Submit a support ticket whenever a step fails, you need a shared folder or software permission approved, or you suspect a security incident such as clicking a phishing link or losing a company laptop.'
+    q: 'Who can see support tickets?',
+    a: 'Staff members see their own submitted tickets, Department Heads can view tickets for their department, and IT personnel manage ticket updates and HOD IT oversees all queues.'
   },
   {
     id: 'faq-3',
-    q: 'How are submitted tickets assigned and updated in ORBIT?',
-    a: 'New tickets start as Open and are routed to the IT queue for review and assignment. You can track real-time status changes, assignee updates, and resolution remarks inside your Ticket Queue drawer.'
+    q: 'Which priority level should I choose for a ticket?',
+    a: 'Choose Low for general questions or minor requests, Medium for standard workflow issues, High for urgent work blockers, and Critical for security incidents or complete service outages.'
   },
   {
     id: 'faq-4',
-    q: 'How can I request software that is not listed in Software Center?',
-    a: 'Submit a support ticket under Software Support with the application name, business justification, and your manager’s approval so IT can review licensing and security compliance.'
+    q: 'How will I know when my ticket is updated?',
+    a: 'Status changes, assignee updates, and resolution remarks appear in your Ticket Dashboard drawer and trigger notifications when configured.'
   },
   {
     id: 'faq-5',
-    q: 'What should I do first if I suspect a phishing email or suspicious link?',
-    a: 'Do not enter credentials or download attachments. Disconnect from the network if you already clicked a suspicious link, report the message in Outlook, and submit a ticket under Security immediately.'
+    q: 'What should I do if login fails?',
+    a: 'Check your PHB credentials and MFA prompt first, or follow the Account & Access guides. If your account is locked or access still fails, submit a support ticket.'
   }
 ];
 
@@ -1050,7 +1054,7 @@ let msalApp = null;
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const $ = id => document.getElementById(id);
 
-/* ==================== FAQ ACCORDION (SHOW 3, EXPAND REST, 1 OPEN AT A TIME) ==================== */
+/* ==================== FAQ ACCORDION (CLEAN CARD STYLE, 3 SHOWN, EXPANDABLE) ==================== */
 function renderFAQAccordion() {
   const visibleFaqs = showAllFaqs ? FAQ_ITEMS : FAQ_ITEMS.slice(0, 3);
   const btn = $('toggleMoreFaqBtn');
@@ -1058,22 +1062,15 @@ function renderFAQAccordion() {
     btn.textContent = showAllFaqs ? 'Show top 3 only' : `Show more FAQs (+${FAQ_ITEMS.length - 3})`;
   }
 
-  $('faqAccordionList').innerHTML = visibleFaqs.map((item, index) => {
+  $('faqAccordionList').innerHTML = visibleFaqs.map(item => {
     const isOpen = activeFaqId === item.id;
     return `
-      <div class="rounded-2xl bg-[var(--c-bg)] border ${isOpen ? 'border-[var(--c-primary)] accordion-open' : 'border-[var(--c-line)]'} overflow-hidden transition-colors">
-        <button type="button" onclick="toggleFAQItem('${item.id}')" class="w-full px-5 py-4 flex items-center justify-between gap-4 text-left hover:bg-[var(--c-tint)]/70 transition-colors cursor-pointer">
-          <div class="flex items-center gap-3 min-w-0">
-            <span class="font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-[var(--c-tint)] text-[var(--c-primary)] border border-[var(--c-primary)]/30 shrink-0">
-              0${index + 1}
-            </span>
-            <span class="font-title-extrabold text-sm sm:text-base text-[var(--c-body)]">${esc(item.q)}</span>
-          </div>
-          <span class="w-8 h-8 rounded-full border border-[var(--c-line)] bg-[var(--c-card)] flex items-center justify-center text-[var(--c-primary)] shrink-0">
-            <svg class="w-4 h-4 accordion-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.75" d="M19 9l-7 7-7-7"/></svg>
-          </span>
+      <div class="rounded-2xl bg-[var(--c-card)] border ${isOpen ? 'border-[var(--c-primary)] accordion-open' : 'border-[var(--c-line)]'} overflow-hidden transition-colors">
+        <button type="button" onclick="toggleFAQItem('${item.id}')" class="w-full px-6 py-4 flex items-center justify-between gap-4 text-left hover:bg-[var(--c-tint)]/45 transition-colors cursor-pointer">
+          <span class="font-title-extrabold text-sm sm:text-base text-[var(--c-body)]">${esc(item.q)}</span>
+          <svg class="w-4 h-4 text-[var(--c-soft)] accordion-chevron shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M19 9l-7 7-7-7"/></svg>
         </button>
-        <div class="${isOpen ? 'block' : 'hidden'} px-5 pb-5 pt-1 border-t border-[var(--c-line)] bg-[var(--c-card)] text-xs sm:text-sm text-[var(--c-soft)] leading-relaxed">
+        <div class="${isOpen ? 'block' : 'hidden'} px-6 pb-5 pt-1 border-t border-[var(--c-line)] bg-[var(--c-bg)]/60 text-xs sm:text-sm text-[var(--c-soft)] leading-relaxed">
           ${esc(item.a)}
         </div>
       </div>`;
@@ -1530,17 +1527,17 @@ function applyRoleView() {
   const role = u ? u.role : 'guest';
   const show = (id, on) => $(id) && $(id).classList.toggle('hidden', !on);
 
-  const canSeeReports = role === 'hod_it' || role === 'it_admin';
-  const canFilterDepts = role === 'hod_it' || role === 'it_admin' || role === 'hod_dept';
-  const canSeeDashboard = role === 'hod_it' || role === 'it_admin' || role === 'hod_dept';
-  const canAssign = role === 'hod_it';
+  // STAFF / IT ADMIN login -> only see dashboard (#sectionTicketQueue)
+  // HOD IT login -> see dashboard (#sectionExecutiveOverview + #sectionTicketQueue) and analytics (#sectionReports)
+  const isHodIt = role === 'hod_it';
+  const canFilterDepts = role === 'hod_it' || role === 'hod_dept';
 
-  show('sectionExecutiveOverview', canSeeDashboard);
-  show('sectionReports', canSeeReports);
-  show('navReportsLink', canSeeReports);
-  show('exportBtnArea', canSeeReports);
+  show('sectionExecutiveOverview', isHodIt);
+  show('sectionReports', isHodIt);
+  show('navReportsLink', isHodIt);
+  show('exportBtnArea', isHodIt);
   show('deptFilterArea', canFilterDepts);
-  show('drwAssigneeWrapper', canAssign);
+  show('drwAssigneeWrapper', isHodIt);
   show('sectionTicketQueue', !!u);
   show('navTicketsLink', !!u);
   show('signInBtn', !u);
@@ -1555,15 +1552,8 @@ function applyRoleView() {
       $('roleOverviewDesc').textContent = 'Full enterprise oversight across all PHB departments, SLA metrics, and IT officer assignments.';
       deptSelect.disabled = false;
       deptSelect.value = 'ALL';
-    } else if (role === 'it_admin') {
-      $('roleOverviewBadge').textContent = 'IT Support Admin Dashboard';
-      $('roleOverviewDesc').textContent = 'Operational ticket queue grouped by department. Update ticket status and resolution remarks.';
-      deptSelect.disabled = false;
-      deptSelect.value = 'ALL';
     } else if (role === 'hod_dept') {
       const myDept = extractChoice(u.department) || 'My Department';
-      $('roleOverviewBadge').textContent = `Head of Department (${myDept})`;
-      $('roleOverviewDesc').textContent = `Tracking all tickets submitted by ${myDept} team members and your own requests.`;
       const matchingOption = Array.from(deptSelect.options).find(opt => opt.value.toLowerCase() === myDept.toLowerCase());
       if (matchingOption) deptSelect.value = matchingOption.value;
       else if (myDept) {
@@ -1647,7 +1637,7 @@ function getFilteredTickets() {
 
   if (role === 'staff') list = list.filter(t => (t.RequesterEmail || '').toLowerCase().trim() === userEmail);
   else if (role === 'hod_dept') list = list.filter(t => ((userEmail && (t.RequesterEmail || '').toLowerCase().trim() === userEmail) || (userDept && extractChoice(t.Department).toLowerCase() === userDept)));
-  else if (role === 'hod_it' || role === 'it_admin') {
+  else if (role === 'hod_it') {
     const selectedDept = extractChoice($('deptSelect').value);
     if (selectedDept && selectedDept !== 'ALL') list = list.filter(t => extractChoice(t.Department).toLowerCase() === selectedDept.toLowerCase());
   }
@@ -1935,20 +1925,24 @@ async function handleNewTicketSubmit(e) {
 function closeModal(id) { $(id).classList.add('hidden'); }
 function closeDrawer(id) { $(id).classList.add('hidden'); }
 
-/* ==================== BROWSE CATEGORIES + POP-UNDER GUIDES ==================== */
+/* ==================== BROWSE CATEGORIES (GRADIENT CARD + SOFT BG) ==================== */
 function renderBrowseRow() {
   $('browseRow').innerHTML = CATEGORIES.map(c => {
     const isActive = activeCategoryDrawer === c.key;
     return `
       <button type="button" onclick="toggleCategoryBox('${esc(c.key)}')"
-              class="list-row-interactive group rounded-2xl p-4 text-left flex flex-col justify-between gap-3 cursor-pointer border ${isActive ? 'brand-gradient-bar text-white border-transparent' : 'bg-[var(--c-card)] border-[var(--c-line)] text-[var(--c-body)] hover:bg-[var(--c-tint)]'}">
+              class="category-card-grad group rounded-2xl p-4 text-left flex flex-col justify-between gap-4 cursor-pointer text-white ${isActive ? 'ring-2 ring-white/80' : ''}">
         <div class="flex items-center justify-between gap-2 w-full">
-          <span class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors ${isActive ? 'bg-white/20 text-white' : 'bg-[var(--c-tint)] border border-[var(--c-primary)]/30 text-[var(--c-primary)]'}">${c.svg}</span>
-          <span class="text-[11px] font-mono font-semibold px-2 py-0.5 rounded-full ${isActive ? 'bg-white/20 text-white' : 'bg-[var(--c-tint)] text-[var(--c-primary)] border border-[var(--c-line)]'}">${c.count}</span>
+          <span class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 bg-white/18 text-white">
+            ${c.svg}
+          </span>
+          <span class="text-xs font-mono font-semibold w-7 h-7 rounded-full flex items-center justify-center bg-white/20 text-white">
+            ${c.count}
+          </span>
         </div>
         <div class="min-w-0">
-          <h3 class="font-title-extrabold text-base leading-tight truncate ${isActive ? 'text-white' : 'text-[var(--c-body)]'}">${esc(c.key)}</h3>
-          <p class="text-[11px] truncate mt-0.5 ${isActive ? 'text-white/90' : 'text-[var(--c-soft)]'}">${esc(c.desc)}</p>
+          <h3 class="font-title-extrabold text-base leading-tight truncate text-white">${esc(c.key)}</h3>
+          <p class="text-xs truncate mt-0.5 text-white/90">${esc(c.desc)}</p>
         </div>
       </button>`;
   }).join('');

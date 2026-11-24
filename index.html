@@ -8,7 +8,7 @@
 <!-- Google Fonts (Barlow / Barlow Condensed as high-fidelity web fallback for DIN Alternate 2014) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
@@ -30,7 +30,7 @@
             lime: '#8DC63F',
             bgLight: '#F8FBF9',
             cardLight: '#FFFFFF',
-            lineLight: '#E2ECE8',
+            lineLight: '#DCE8E3',
             bgDark: '#0B1311',
             cardDark: '#121E1B',
             lineDark: '#1E302B'
@@ -48,18 +48,17 @@
 
 <style>
 :root {
-  /* Strict 2-Color Palette: #007A5E (Primary Deep Teal-Green) & #8DC63F (Secondary Lime) */
   --c-primary: #007A5E;
   --c-secondary: #8DC63F;
   --c-bg: #F8FBF9;
   --c-card: #FFFFFF;
-  --c-line: #E2ECE8;
+  --c-line: #DCE8E3;
   --c-text: #007A5E;
-  --c-body: #243833;
-  --c-soft: #4F6861;
+  --c-body: #182925;
+  --c-soft: #435D56;
   --c-tint: #EFF7F2;
   --grad-main: linear-gradient(135deg, #007A5E 0%, #8DC63F 100%);
-  --grad-soft: linear-gradient(135deg, rgba(0, 122, 94, 0.08) 0%, rgba(141, 198, 63, 0.12) 100%);
+  --grad-soft: linear-gradient(135deg, rgba(0, 122, 94, 0.06) 0%, rgba(141, 198, 63, 0.13) 100%);
 }
 
 .dark {
@@ -67,22 +66,19 @@
   --c-card: #121E1B;
   --c-line: #1E302B;
   --c-text: #8DC63F;
-  --c-body: #E7F2EE;
-  --c-soft: #9CB5AE;
+  --c-body: #EDF6F2;
+  --c-soft: #A7C0B8;
   --c-tint: #152621;
   --grad-main: linear-gradient(135deg, #007A5E 0%, #8DC63F 100%);
-  --grad-soft: linear-gradient(135deg, rgba(0, 122, 94, 0.18) 0%, rgba(141, 198, 63, 0.12) 100%);
+  --grad-soft: linear-gradient(135deg, rgba(0, 122, 94, 0.16) 0%, rgba(141, 198, 63, 0.12) 100%);
 }
 
-/* Typography Hierarchy per Template:
-   Title: DIN Alternate 2014 Extra Bold
-   Sub-header: DIN Alternate 2014 Medium
-   Body text: Light/Regular Sans Serif - same font family for consistency */
 body {
   background: linear-gradient(180deg, var(--c-bg) 0%, var(--c-card) 100%);
   color: var(--c-body);
   font-family: 'DIN Alternate 2014', 'DIN Alternate', 'Barlow', sans-serif;
-  font-weight: 400;
+  font-size: 16px;
+  font-weight: 500;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -94,12 +90,12 @@ body {
 
 .font-sub-medium {
   font-family: 'DIN Alternate 2014', 'DIN Alternate', 'Barlow', sans-serif;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .font-body-consistent {
   font-family: 'DIN Alternate 2014', 'DIN Alternate', 'Barlow', sans-serif;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 .brand-gradient-bar {
@@ -129,7 +125,7 @@ body {
 }
 .list-row-interactive:hover {
   border-color: var(--c-primary);
-  box-shadow: 0 8px 20px -10px rgba(0, 122, 94, 0.22);
+  box-shadow: 0 8px 20px -10px rgba(0, 122, 94, 0.24);
 }
 
 .accordion-chevron {
@@ -141,33 +137,34 @@ body {
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(0, 122, 94, 0.3); border-radius: 999px; }
+::-webkit-scrollbar-thumb { background: rgba(0, 122, 94, 0.35); border-radius: 999px; }
 
-.badge-open { background: linear-gradient(90deg, rgba(141, 198, 63, 0.18), rgba(141, 198, 63, 0.08)); color: var(--c-primary); border: 1px solid var(--c-secondary); }
-.badge-inprogress { background: linear-gradient(90deg, rgba(0, 122, 94, 0.16), rgba(141, 198, 63, 0.12)); color: var(--c-primary); border: 1px solid var(--c-primary); }
-.badge-pending { background: rgba(0, 122, 94, 0.08); color: var(--c-body); border: 1px dashed var(--c-primary); }
-.badge-resolved { background: var(--grad-main); color: #FFFFFF; border: none; }
+.badge-open { background: rgba(141, 198, 63, 0.18); color: var(--c-primary); border: 1px solid var(--c-secondary); font-weight: 600; }
+.badge-inprogress { background: var(--c-tint); color: var(--c-primary); border: 1px solid var(--c-primary); font-weight: 600; }
+.badge-pending { background: rgba(0, 122, 94, 0.08); color: var(--c-primary); border: 1px dashed var(--c-primary); font-weight: 600; }
+.badge-resolved { background: var(--grad-main); color: #FFFFFF; border: none; font-weight: 700; }
 
 .dark .badge-open,
-.dark .badge-inprogress { color: var(--c-secondary); }
+.dark .badge-inprogress,
+.dark .badge-pending { color: var(--c-secondary); }
 
 .step-list { list-style: none; counter-reset: step; padding: 0; margin: 0; }
-.step-list li { counter-increment: step; position: relative; padding-left: 2.25rem; margin-bottom: 0.95rem; }
+.step-list li { counter-increment: step; position: relative; padding-left: 2.35rem; margin-bottom: 1rem; font-weight: 500; }
 .step-list li:last-child { margin-bottom: 0; }
 .step-list li::before {
   content: counter(step);
   font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   position: absolute;
   left: 0;
   top: 0.05rem;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1.55rem;
+  height: 1.55rem;
   border-radius: 9999px;
-  background: var(--grad-soft);
+  background: var(--c-tint);
   color: var(--c-primary);
-  border: 1px solid var(--c-secondary);
+  border: 1px solid var(--c-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -175,9 +172,9 @@ body {
 .step-list li::after {
   content: '';
   position: absolute;
-  left: 0.72rem;
-  top: 1.55rem;
-  bottom: -0.7rem;
+  left: 0.76rem;
+  top: 1.6rem;
+  bottom: -0.75rem;
   width: 1px;
   background-color: var(--c-line);
 }
@@ -188,17 +185,27 @@ html { scroll-behavior: smooth; }
 </head>
 <body class="flex flex-col min-h-screen font-body-consistent">
 
-<!-- Top Corporate Gradient Bar (2-Color Gradient) -->
+<!-- Top Corporate Gradient Bar -->
 <div class="h-1.5 w-full brand-gradient-bar"></div>
 
 <!-- ==================== TOP NAVIGATION HEADER ==================== -->
 <header class="sticky top-0 z-40 bg-[var(--c-card)]/95 border-b border-[var(--c-line)] backdrop-blur-md">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
 
-    <!-- Brand Wordmark (Logo Removed) -->
+    <!-- PHB Logo + Brand Wordmark -->
     <div class="flex items-center gap-3 sm:gap-4">
-      <a href="#topHero" class="flex items-center gap-2.5 group">
-        <span class="font-title-extrabold text-2xl tracking-tight text-[var(--c-primary)] group-hover:opacity-85 transition-opacity">ORBIT</span>
+      <a href="#topHero" class="flex items-center gap-3 group">
+        <!-- PHB Crest Emblem -->
+        <div class="flex items-center gap-2 px-2.5 py-1 rounded-xl bg-[var(--c-tint)] border border-[var(--c-secondary)]/60">
+          <svg class="w-6 h-6 shrink-0" viewBox="0 0 32 32" fill="none" aria-label="PHB Logo">
+            <rect width="32" height="32" rx="8" fill="#007A5E"/>
+            <path d="M8 22V10H15.5C18.5 10 20.5 11.7 20.5 14.2C20.5 16.7 18.5 18.4 15.5 18.4H11.4V22H8ZM11.4 15.6H15.2C16.6 15.6 17.4 15 17.4 14.2C17.4 13.4 16.6 12.8 15.2 12.8H11.4V15.6Z" fill="#FFFFFF"/>
+            <path d="M21.5 10H24.5V22H21.5V10Z" fill="#8DC63F"/>
+          </svg>
+          <span class="font-title-extrabold text-xs tracking-wider uppercase text-[var(--c-primary)]">PHB</span>
+        </div>
+
+        <span class="font-title-extrabold text-2xl sm:text-[1.7rem] tracking-tight text-[var(--c-primary)] group-hover:opacity-85 transition-opacity">ORBIT</span>
         <span class="text-xs font-sub-medium px-2.5 py-0.5 rounded-full bg-[var(--c-tint)] text-[var(--c-primary)] border border-[var(--c-secondary)]/60 hidden md:inline-block">
           One Repository for IT
         </span>
@@ -206,14 +213,14 @@ html { scroll-behavior: smooth; }
     </div>
 
     <!-- Cleanly Named Navigation Tabs -->
-    <nav class="hidden lg:flex items-center gap-1.5 text-sm font-sub-medium text-[var(--c-soft)]">
-      <a href="#topHero" class="nav-pill-hover px-3.5 py-2 rounded-xl font-title-extrabold text-[var(--c-primary)] bg-[var(--c-tint)]">
+    <nav class="hidden lg:flex items-center gap-1.5 text-[15px] font-sub-medium text-[var(--c-soft)]">
+      <a id="navHomeLink" href="#topHero" class="nav-pill-hover px-3.5 py-2 rounded-xl font-title-extrabold text-[var(--c-primary)] bg-[var(--c-tint)]">
         Homepage
       </a>
-      <a href="#sectionBrowse" class="nav-pill-hover px-3.5 py-2 rounded-xl hover:bg-[var(--c-tint)] hover:text-[var(--c-primary)]">
+      <a id="navCategoriesLink" href="#sectionBrowse" class="nav-pill-hover px-3.5 py-2 rounded-xl hover:bg-[var(--c-tint)] hover:text-[var(--c-primary)]">
         Categories
       </a>
-      <a href="#sectionKB" class="nav-pill-hover px-3.5 py-2 rounded-xl hover:bg-[var(--c-tint)] hover:text-[var(--c-primary)]">
+      <a id="navKBLink" href="#sectionKB" class="nav-pill-hover px-3.5 py-2 rounded-xl hover:bg-[var(--c-tint)] hover:text-[var(--c-primary)]">
         Knowledge Base
       </a>
       <a id="navTicketsLink" href="#sectionTicketQueue" class="nav-pill-hover hidden px-3.5 py-2 rounded-xl text-[var(--c-primary)] hover:bg-[var(--c-tint)]">
@@ -227,16 +234,16 @@ html { scroll-behavior: smooth; }
     <!-- Controls & User Menu -->
     <div class="flex items-center gap-2 sm:gap-3">
       <button onclick="toggleDarkMode()" title="Toggle Light/Dark Mode" class="p-2 rounded-xl border border-[var(--c-line)] hover:border-[var(--c-primary)] hover:bg-[var(--c-tint)] text-[var(--c-soft)] hover:text-[var(--c-primary)] transition-all">
-        <svg id="sunIcon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-        <svg id="moonIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+        <svg id="sunIcon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        <svg id="moonIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
       </button>
 
-      <button id="signInBtn" onclick="openLoginModal()" class="px-3.5 py-1.5 rounded-xl border border-[var(--c-line)] hover:border-[var(--c-primary)] hover:bg-[var(--c-tint)] text-xs sm:text-sm font-sub-medium text-[var(--c-body)] transition-all bg-[var(--c-card)]">
+      <button id="signInBtn" onclick="openLoginModal()" class="px-4 py-2 rounded-xl border border-[var(--c-line)] hover:border-[var(--c-primary)] hover:bg-[var(--c-tint)] text-sm font-sub-medium text-[var(--c-primary)] transition-all bg-[var(--c-card)]">
         Sign in
       </button>
 
-      <button onclick="openNewTicketModal()" class="px-4 py-1.5 rounded-xl brand-gradient-bar hover:opacity-95 text-white text-xs sm:text-sm font-sub-medium transition-all flex items-center gap-1.5">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+      <button onclick="openNewTicketModal()" class="px-4 py-2 rounded-xl brand-gradient-bar hover:opacity-95 text-white text-sm font-sub-medium transition-all flex items-center gap-1.5 shadow-xs">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.75" d="M12 4v16m8-8H4"/></svg>
         <span>Submit Ticket</span>
       </button>
 
@@ -248,21 +255,21 @@ html { scroll-behavior: smooth; }
           </div>
           <div class="text-left hidden sm:block leading-tight">
             <span id="chipName" class="text-xs font-sub-medium text-[var(--c-body)] block truncate max-w-[110px]">User</span>
-            <span id="chipRoleBadge" class="text-[10px] font-mono text-[var(--c-primary)] uppercase tracking-wider block">STAFF</span>
+            <span id="chipRoleBadge" class="text-[10px] font-mono text-[var(--c-primary)] uppercase tracking-wider block font-semibold">STAFF</span>
           </div>
         </button>
 
         <div id="userDropdown" class="hidden absolute right-0 mt-2 w-72 rounded-2xl bg-[var(--c-card)] border border-[var(--c-line)] shadow-xl py-2 z-50">
           <div class="px-4 py-3 border-b border-[var(--c-line)] bg-[var(--c-tint)]">
-            <p id="menuRoleTitle" class="text-[10px] font-mono uppercase tracking-wider text-[var(--c-primary)]">Staff View</p>
-            <p id="menuName" class="text-xs font-sub-medium text-[var(--c-body)] truncate mt-0.5">User Name</p>
-            <p id="menuJobTitle" class="text-[11px] text-[var(--c-primary)] truncate"></p>
-            <p id="menuEmail" class="text-[11px] text-[var(--c-soft)] truncate font-mono">user@phb.com.my</p>
-            <p id="menuDept" class="text-[11px] text-[var(--c-soft)] mt-1">Dept: General</p>
+            <p id="menuRoleTitle" class="text-[11px] font-mono uppercase tracking-wider text-[var(--c-primary)] font-semibold">Staff View</p>
+            <p id="menuName" class="text-sm font-sub-medium text-[var(--c-body)] truncate mt-0.5">User Name</p>
+            <p id="menuJobTitle" class="text-xs text-[var(--c-primary)] truncate"></p>
+            <p id="menuEmail" class="text-xs text-[var(--c-soft)] truncate font-mono">user@phb.com.my</p>
+            <p id="menuDept" class="text-xs text-[var(--c-soft)] mt-1">Dept: General</p>
           </div>
           <div class="py-1">
-            <button onclick="logout()" class="w-full text-left flex items-center gap-2 px-4 py-2.5 text-xs font-sub-medium text-[var(--c-primary)] hover:bg-[var(--c-tint)] transition-colors">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+            <button onclick="logout()" class="w-full text-left flex items-center gap-2 px-4 py-2.5 text-sm font-sub-medium text-[var(--c-primary)] hover:bg-[var(--c-tint)] transition-colors">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
               Sign Out
             </button>
           </div>
@@ -277,24 +284,24 @@ html { scroll-behavior: smooth; }
   <div class="max-w-md w-full bg-[var(--c-card)] rounded-3xl shadow-2xl border border-[var(--c-line)] overflow-hidden">
     <div class="p-6 brand-gradient-bar text-white relative">
       <button onclick="closeModal('loginScreen')" class="absolute top-4 right-4 text-white/80 hover:text-white p-1">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
-      <p class="text-[11px] font-mono uppercase tracking-widest text-white/85 mb-1">ORBIT PORTAL</p>
-      <h2 class="text-2xl font-title-extrabold tracking-tight">Sign in to ORBIT Portal</h2>
-      <p class="text-xs font-sub-medium text-white/90 mt-1">Authenticate with your PHB Microsoft 365 account to load permissions from <code class="font-mono bg-white/20 px-1 rounded">ORBITUsers</code> &amp; Entra ID.</p>
+      <p class="text-xs font-mono uppercase tracking-widest text-white/90 mb-1">PHB &middot; ORBIT PORTAL</p>
+      <h2 class="text-2xl sm:text-[1.7rem] font-title-extrabold tracking-tight">Sign in to ORBIT Portal</h2>
+      <p class="text-sm font-sub-medium text-white/95 mt-1">Authenticate with your PHB Microsoft 365 account to load permissions from <code class="font-mono bg-white/20 px-1.5 py-0.5 rounded">ORBITUsers</code> &amp; Entra ID.</p>
     </div>
     <div class="p-6 space-y-4">
-      <button onclick="startSSO()" class="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-2xl border border-[var(--c-line)] hover:border-[var(--c-primary)] hover:bg-[var(--c-tint)] font-sub-medium text-sm text-[var(--c-body)] transition-all">
+      <button onclick="startSSO()" class="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-2xl border border-[var(--c-line)] hover:border-[var(--c-primary)] hover:bg-[var(--c-tint)] font-sub-medium text-[15px] text-[var(--c-primary)] transition-all">
         <svg class="w-4 h-4 text-[var(--c-primary)]" viewBox="0 0 21 21" fill="currentColor"><rect x="1" y="1" width="9" height="9" opacity="0.95"/><rect x="11" y="1" width="9" height="9" opacity="0.65"/><rect x="1" y="11" width="9" height="9" opacity="0.65"/><rect x="11" y="11" width="9" height="9" opacity="0.95"/></svg>
         <span>Sign in with Microsoft 365</span>
       </button>
 
       <div id="demoRoleSelectorArea" class="hidden pt-3 border-t border-[var(--c-line)]">
-        <label class="block text-[10px] font-mono uppercase tracking-wider text-[var(--c-soft)] mb-2">Loaded ORBITUsers Accounts</label>
-        <div id="orbitUsersRoleGrid" class="grid grid-cols-2 gap-2 font-mono text-[11px]"></div>
+        <label class="block text-xs font-mono uppercase tracking-wider text-[var(--c-soft)] mb-2">Loaded ORBITUsers Accounts</label>
+        <div id="orbitUsersRoleGrid" class="grid grid-cols-2 gap-2 font-mono text-xs"></div>
       </div>
 
-      <button onclick="closeModal('loginScreen')" class="w-full text-center text-xs font-sub-medium text-[var(--c-soft)] hover:text-[var(--c-primary)] pt-1">
+      <button onclick="closeModal('loginScreen')" class="w-full text-center text-sm font-sub-medium text-[var(--c-soft)] hover:text-[var(--c-primary)] pt-1">
         Continue browsing articles without signing in
       </button>
     </div>
@@ -304,14 +311,14 @@ html { scroll-behavior: smooth; }
 <!-- ==================== MAIN CONTENT CONTAINER ==================== -->
 <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-10">
 
-  <!-- ==================== HOMEPAGE HERO SECTION (BOLD HEADLINE + LIGHT GRADIENT) ==================== -->
+  <!-- ==================== HOMEPAGE HERO SECTION ==================== -->
   <section id="topHero" class="rounded-[2rem] bg-[var(--c-card)] border border-[var(--c-line)] p-6 sm:p-10 shadow-xs scroll-mt-20">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+    <div id="heroGrid" class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
 
-      <!-- Left Column: Bold Homepage Label, Extra Bold Title, Medium Sub-header & Quick Finding Chips -->
-      <div class="lg:col-span-7 xl:col-span-8 space-y-6">
-        <div class="flex flex-wrap items-center gap-2.5">
-          <span class="px-3.5 py-1 rounded-full brand-gradient-bar text-white text-xs font-title-extrabold uppercase tracking-widest">
+      <!-- Left Column -->
+      <div id="heroLeftCol" class="lg:col-span-7 xl:col-span-8 space-y-6">
+        <div id="heroBadgeRow" class="flex flex-wrap items-center gap-2.5">
+          <span class="px-3.5 py-1 rounded-full bg-[var(--c-primary)] text-white text-xs font-title-extrabold uppercase tracking-widest">
             HOMEPAGE
           </span>
           <span class="px-3.5 py-1 rounded-full bg-[var(--c-tint)] border border-[var(--c-secondary)]/60 text-xs font-sub-medium tracking-wider uppercase text-[var(--c-primary)]">
@@ -321,79 +328,78 @@ html { scroll-behavior: smooth; }
 
         <!-- Main Hero Headline -->
         <div>
-          <h1 id="heroGuestHeading" class="font-title-extrabold text-4xl sm:text-5xl lg:text-[3.5rem] tracking-tight leading-[1.06] text-[var(--c-body)]">
+          <h1 id="heroGuestHeading" class="font-title-extrabold text-4xl sm:text-5xl lg:text-[3.75rem] tracking-tight leading-[1.06] text-[var(--c-body)]">
             <span class="block text-xs sm:text-sm uppercase tracking-widest text-[var(--c-primary)] mb-2">Homepage</span>
             Fix common IT issues
             <span class="brand-gradient-text">your way.</span>
           </h1>
-          <h1 id="heroWelcomeHeading" class="hidden font-title-extrabold text-4xl sm:text-5xl tracking-tight leading-[1.1] text-[var(--c-body)]">
-            <span class="block text-xs sm:text-sm uppercase tracking-widest text-[var(--c-primary)] mb-2">Homepage</span>
-            <span>Welcome to ORBIT, <span id="staffHeroName" class="brand-gradient-text">colleague</span></span>
+          <h1 id="heroWelcomeHeading" class="hidden font-title-extrabold text-4xl sm:text-5xl lg:text-[3.5rem] tracking-tight leading-[1.1] text-[var(--c-body)]">
+            <span>Welcome to <span id="staffHeroName" class="brand-gradient-text">ORBIT</span></span>
           </h1>
 
-          <p class="font-sub-medium text-base sm:text-lg text-[var(--c-soft)] leading-relaxed max-w-2xl mt-4">
+          <p id="heroGuestDesc" class="font-sub-medium text-lg sm:text-xl text-[var(--c-soft)] leading-relaxed max-w-2xl mt-4">
             Internal self-service repository built for PHB employees who want fast resolution &mdash; VPN troubleshooting, password resets, hardware support, and instant ticket escalation.
           </p>
         </div>
 
-        <!-- Dual Action Buttons -->
-        <div class="flex flex-wrap items-center gap-3 pt-1">
-          <button onclick="openNewTicketModal()" class="px-6 py-3.5 rounded-full brand-gradient-bar hover:opacity-95 text-white text-sm font-sub-medium transition-all flex items-center gap-2 cursor-pointer">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+        <!-- Guest Dual Action Buttons (Hidden Once Logged In) -->
+        <div id="heroGuestActions" class="flex flex-wrap items-center gap-3 pt-1">
+          <button onclick="openNewTicketModal()" class="px-6 py-3.5 rounded-full brand-gradient-bar hover:opacity-95 text-white text-[15px] font-sub-medium transition-all flex items-center gap-2 cursor-pointer">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.75" d="M12 4v16m8-8H4"/></svg>
             <span>Submit Support Ticket</span>
           </button>
 
-          <a href="#sectionKB" class="px-6 py-3.5 rounded-full bg-[var(--c-card)] border border-[var(--c-line)] hover:border-[var(--c-primary)] text-[var(--c-primary)] text-sm font-sub-medium transition-all flex items-center gap-2">
+          <a href="#sectionKB" class="px-6 py-3.5 rounded-full bg-[var(--c-tint)] border border-[var(--c-primary)]/35 hover:border-[var(--c-primary)] text-[var(--c-primary)] text-[15px] font-sub-medium transition-all flex items-center gap-2">
             <span>Explore Top 5 Self-Service Guides</span>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.75" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
           </a>
         </div>
 
-        <!-- Popular Searches & Quick Finding Pills -->
-        <div class="pt-5 border-t border-[var(--c-line)] space-y-3">
+        <!-- Popular Searches & Quick Finding Pills (Hidden Once Logged In) -->
+        <div id="heroQuickFinding" class="pt-5 border-t border-[var(--c-line)] space-y-3">
           <div class="text-xs font-sub-medium uppercase tracking-widest text-[var(--c-primary)]">
             POPULAR SEARCHES &amp; QUICK FINDING:
           </div>
 
           <div class="flex flex-wrap items-center gap-2.5">
-            <button onclick="applyQuickChip('vpn')" class="px-4 py-2 rounded-full bg-[var(--c-card)] border border-[var(--c-line)] hover:border-[var(--c-primary)] hover:bg-[var(--c-tint)] text-xs sm:text-sm font-sub-medium text-[var(--c-body)] transition-all flex items-center gap-2 cursor-pointer">
-              <svg class="w-3.5 h-3.5 text-[var(--c-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            <button onclick="applyQuickChip('vpn')" class="px-4 py-2 rounded-full bg-[var(--c-card)] border border-[var(--c-line)] hover:border-[var(--c-primary)] hover:bg-[var(--c-tint)] text-sm font-sub-medium text-[var(--c-body)] transition-all flex items-center gap-2 cursor-pointer">
+              <svg class="w-4 h-4 text-[var(--c-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
               <span>VPN Connection</span>
             </button>
-            <button onclick="applyQuickChip('password reset')" class="px-4 py-2 rounded-full bg-[var(--c-card)] border border-[var(--c-line)] hover:border-[var(--c-primary)] hover:bg-[var(--c-tint)] text-xs sm:text-sm font-sub-medium text-[var(--c-body)] transition-all flex items-center gap-2 cursor-pointer">
-              <svg class="w-3.5 h-3.5 text-[var(--c-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+            <button onclick="applyQuickChip('password reset')" class="px-4 py-2 rounded-full bg-[var(--c-card)] border border-[var(--c-line)] hover:border-[var(--c-primary)] hover:bg-[var(--c-tint)] text-sm font-sub-medium text-[var(--c-body)] transition-all flex items-center gap-2 cursor-pointer">
+              <svg class="w-4 h-4 text-[var(--c-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
               <span>Password Reset</span>
             </button>
-            <button onclick="applyQuickChip('printer')" class="px-4 py-2 rounded-full bg-[var(--c-card)] border border-[var(--c-line)] hover:border-[var(--c-primary)] hover:bg-[var(--c-tint)] text-xs sm:text-sm font-sub-medium text-[var(--c-body)] transition-all flex items-center gap-2 cursor-pointer">
-              <svg class="w-3.5 h-3.5 text-[var(--c-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+            <button onclick="applyQuickChip('printer')" class="px-4 py-2 rounded-full bg-[var(--c-card)] border border-[var(--c-line)] hover:border-[var(--c-primary)] hover:bg-[var(--c-tint)] text-sm font-sub-medium text-[var(--c-body)] transition-all flex items-center gap-2 cursor-pointer">
+              <svg class="w-4 h-4 text-[var(--c-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
               <span>Printer Offline</span>
             </button>
-            <button onclick="applyQuickChip('slow')" class="px-4 py-2 rounded-full bg-[var(--c-card)] border border-[var(--c-line)] hover:border-[var(--c-primary)] hover:bg-[var(--c-tint)] text-xs sm:text-sm font-sub-medium text-[var(--c-body)] transition-all flex items-center gap-2 cursor-pointer">
-              <svg class="w-3.5 h-3.5 text-[var(--c-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            <button onclick="applyQuickChip('slow')" class="px-4 py-2 rounded-full bg-[var(--c-card)] border border-[var(--c-line)] hover:border-[var(--c-primary)] hover:bg-[var(--c-tint)] text-sm font-sub-medium text-[var(--c-body)] transition-all flex items-center gap-2 cursor-pointer">
+              <svg class="w-4 h-4 text-[var(--c-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
               <span>Computer Slow</span>
             </button>
-            <button onclick="applyQuickChip('phishing')" class="px-4 py-2 rounded-full bg-[var(--c-card)] border border-[var(--c-line)] hover:border-[var(--c-primary)] hover:bg-[var(--c-tint)] text-xs sm:text-sm font-sub-medium text-[var(--c-body)] transition-all flex items-center gap-2 cursor-pointer">
-              <svg class="w-3.5 h-3.5 text-[var(--c-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            <button onclick="applyQuickChip('phishing')" class="px-4 py-2 rounded-full bg-[var(--c-card)] border border-[var(--c-line)] hover:border-[var(--c-primary)] hover:bg-[var(--c-tint)] text-sm font-sub-medium text-[var(--c-body)] transition-all flex items-center gap-2 cursor-pointer">
+              <svg class="w-4 h-4 text-[var(--c-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
               <span>Phishing Report</span>
             </button>
-            <button onclick="applyQuickChip('')" class="px-4 py-2 rounded-full bg-[var(--c-tint)] border border-[var(--c-secondary)]/60 text-xs sm:text-sm font-sub-medium text-[var(--c-primary)] transition-all cursor-pointer">
+            <button onclick="applyQuickChip('')" class="px-4 py-2 rounded-full bg-[var(--c-tint)] border border-[var(--c-secondary)]/60 text-sm font-sub-medium text-[var(--c-primary)] transition-all cursor-pointer">
               Reset Filter
             </button>
           </div>
         </div>
       </div>
 
-      <!-- Right Column: Light Corporate Gradient Feature Card -->
-      <div class="lg:col-span-5 xl:col-span-4">
+      <!-- Right Column: Two-Color Gradient Feature Card (Hidden Once Logged In) -->
+      <div id="heroRightCard" class="lg:col-span-5 xl:col-span-4">
         <div class="rounded-[1.75rem] section-surface-gradient p-7 sm:p-8 border border-[var(--c-secondary)]/50 flex flex-col justify-between space-y-6">
           <div class="space-y-4">
             <div class="w-12 h-12 rounded-2xl brand-gradient-bar flex items-center justify-center text-white">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" d="M13 10V3L4 14h7v7l9-11h-7z"/>
               </svg>
             </div>
 
-            <span class="inline-block px-3 py-1 rounded-full bg-[var(--c-card)] border border-[var(--c-line)] text-[11px] font-sub-medium uppercase tracking-widest text-[var(--c-primary)]">
+            <span class="inline-block px-3 py-1 rounded-full bg-[var(--c-card)] border border-[var(--c-line)] text-xs font-sub-medium uppercase tracking-widest text-[var(--c-primary)]">
               INSTANT IT GUIDES
             </span>
 
@@ -401,17 +407,17 @@ html { scroll-behavior: smooth; }
               Self-help before reaching out.
             </h2>
 
-            <p class="font-sub-medium text-sm text-[var(--c-soft)] leading-relaxed">
+            <p class="font-sub-medium text-[15px] text-[var(--c-soft)] leading-relaxed">
               Troubleshoot network, hardware, and account issues in sync with verified step-by-step guides organized by severity.
             </p>
           </div>
 
           <div class="pt-5 border-t border-[var(--c-line)] flex items-center justify-between">
-            <a href="#sectionKB" class="text-sm font-sub-medium text-[var(--c-primary)] hover:underline flex items-center gap-2">
+            <a href="#sectionKB" class="text-[15px] font-sub-medium text-[var(--c-primary)] hover:underline flex items-center gap-2">
               <span>Browse Top 5 Guides</span>
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.75" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
             </a>
-            <span class="font-mono text-xs px-2.5 py-1 rounded-lg bg-[var(--c-card)] text-[var(--c-primary)] border border-[var(--c-line)]">
+            <span class="font-mono text-xs font-semibold px-2.5 py-1 rounded-lg bg-[var(--c-card)] text-[var(--c-primary)] border border-[var(--c-line)]">
               6 Categories
             </span>
           </div>
@@ -430,27 +436,27 @@ html { scroll-behavior: smooth; }
         <h2 class="font-title-extrabold text-2xl sm:text-3xl tracking-tight text-[var(--c-body)]">
           IT Service Queue &amp; SLA Performance
         </h2>
-        <p id="roleOverviewDesc" class="font-sub-medium text-sm text-[var(--c-soft)] mt-1">
+        <p id="roleOverviewDesc" class="font-sub-medium text-[15px] text-[var(--c-soft)] mt-1">
           Real-time oversight of PHB IT support requests, response SLAs, and departmental ticket scoping.
         </p>
       </div>
 
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 min-w-[320px]">
         <div class="p-3.5 rounded-2xl section-surface-gradient border border-[var(--c-line)] text-center">
-          <div id="kpiTotal" class="font-title-extrabold text-2xl text-[var(--c-primary)]">0</div>
-          <div class="text-[11px] text-[var(--c-soft)] uppercase tracking-wider">Total Tickets</div>
+          <div id="kpiTotal" class="font-title-extrabold text-3xl text-[var(--c-primary)]">0</div>
+          <div class="text-xs font-sub-medium text-[var(--c-soft)] uppercase tracking-wider">Total Tickets</div>
         </div>
         <div class="p-3.5 rounded-2xl section-surface-gradient border border-[var(--c-line)] text-center">
-          <div id="kpiOpen" class="font-title-extrabold text-2xl text-[var(--c-primary)]">0</div>
-          <div class="text-[11px] text-[var(--c-soft)] uppercase tracking-wider">Open / Active</div>
+          <div id="kpiOpen" class="font-title-extrabold text-3xl text-[var(--c-primary)]">0</div>
+          <div class="text-xs font-sub-medium text-[var(--c-soft)] uppercase tracking-wider">Open / Active</div>
         </div>
         <div class="p-3.5 rounded-2xl section-surface-gradient border border-[var(--c-line)] text-center">
-          <div id="kpiPending" class="font-title-extrabold text-2xl text-[var(--c-primary)]">0</div>
-          <div class="text-[11px] text-[var(--c-soft)] uppercase tracking-wider">Pending Review</div>
+          <div id="kpiPending" class="font-title-extrabold text-3xl text-[var(--c-primary)]">0</div>
+          <div class="text-xs font-sub-medium text-[var(--c-soft)] uppercase tracking-wider">Pending Review</div>
         </div>
         <div class="p-3.5 rounded-2xl section-surface-gradient border border-[var(--c-line)] text-center">
-          <div id="kpiResolved" class="font-title-extrabold text-2xl text-[var(--c-primary)]">0</div>
-          <div class="text-[11px] text-[var(--c-soft)] uppercase tracking-wider">Resolved</div>
+          <div id="kpiResolved" class="font-title-extrabold text-3xl text-[var(--c-primary)]">0</div>
+          <div class="text-xs font-sub-medium text-[var(--c-soft)] uppercase tracking-wider">Resolved</div>
         </div>
       </div>
     </div>
@@ -460,14 +466,14 @@ html { scroll-behavior: smooth; }
   <section id="sectionTicketQueue" class="hidden space-y-4 scroll-mt-20">
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-[var(--c-card)] border border-[var(--c-line)]">
       <div class="flex flex-wrap items-center gap-3">
-        <h2 class="font-title-extrabold text-xl text-[var(--c-body)] flex items-center gap-2">
+        <h2 class="font-title-extrabold text-2xl text-[var(--c-body)] flex items-center gap-2">
           <span>Ticket Queue</span>
           <span id="ticketBadgeCount" class="text-xs font-mono px-2.5 py-0.5 rounded-full bg-[var(--c-tint)] text-[var(--c-primary)] border border-[var(--c-secondary)]/60">0</span>
         </h2>
 
         <div id="deptFilterArea" class="flex items-center gap-2">
           <label for="deptSelect" class="text-xs font-sub-medium text-[var(--c-soft)] uppercase tracking-wider">Department:</label>
-          <select id="deptSelect" onchange="filterAndRenderTickets()" class="min-w-[240px] max-w-sm px-3 py-1.5 rounded-xl border border-[var(--c-line)] bg-[var(--c-bg)] text-xs font-sub-medium text-[var(--c-body)] focus:ring-2 focus:ring-[var(--c-primary)] focus:outline-none">
+          <select id="deptSelect" onchange="filterAndRenderTickets()" class="min-w-[240px] max-w-sm px-3 py-1.5 rounded-xl border border-[var(--c-line)] bg-[var(--c-bg)] text-sm font-sub-medium text-[var(--c-body)] focus:ring-2 focus:ring-[var(--c-primary)] focus:outline-none">
             <option value="ALL">All Departments</option>
           </select>
         </div>
@@ -476,27 +482,27 @@ html { scroll-behavior: smooth; }
       <div class="flex flex-wrap items-center gap-2">
         <div class="relative">
           <input id="ticketSearchInput" type="text" oninput="filterAndRenderTickets()" placeholder="Filter queue..."
-                 class="w-40 sm:w-52 pl-8 pr-3 py-1.5 rounded-xl border border-[var(--c-line)] bg-[var(--c-bg)] text-xs text-[var(--c-body)] focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)]">
-          <svg class="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-[var(--c-soft)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                 class="w-44 sm:w-56 pl-8 pr-3 py-1.5 rounded-xl border border-[var(--c-line)] bg-[var(--c-bg)] text-sm font-sub-medium text-[var(--c-body)] focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)]">
+          <svg class="w-4 h-4 absolute left-2.5 top-2.5 text-[var(--c-soft)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
         </div>
 
-        <button onclick="loadSession(true)" title="Refresh Tickets from SharePoint" class="px-3 py-1.5 rounded-xl border border-[var(--c-line)] bg-[var(--c-bg)] text-xs font-sub-medium hover:border-[var(--c-primary)] transition-colors flex items-center gap-1">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+        <button onclick="loadSession(true)" title="Refresh Tickets from SharePoint" class="px-3.5 py-1.5 rounded-xl border border-[var(--c-line)] bg-[var(--c-bg)] text-sm font-sub-medium hover:border-[var(--c-primary)] transition-colors flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
           <span>Refresh</span>
         </button>
 
         <div id="exportBtnArea" class="hidden flex items-center gap-1.5">
-          <button onclick="exportToPDF()" title="Export PDF Report" class="px-3 py-1.5 rounded-xl border border-[var(--c-line)] bg-[var(--c-tint)] text-[var(--c-primary)] text-xs font-sub-medium hover:border-[var(--c-primary)] transition-colors">PDF</button>
-          <button onclick="exportToExcel()" title="Export Excel Sheet" class="px-3 py-1.5 rounded-xl border border-[var(--c-line)] bg-[var(--c-tint)] text-[var(--c-primary)] text-xs font-sub-medium hover:border-[var(--c-primary)] transition-colors">Excel</button>
+          <button onclick="exportToPDF()" title="Export PDF Report" class="px-3.5 py-1.5 rounded-xl border border-[var(--c-secondary)]/60 bg-[var(--c-tint)] text-[var(--c-primary)] text-sm font-sub-medium hover:border-[var(--c-primary)] transition-colors">PDF</button>
+          <button onclick="exportToExcel()" title="Export Excel Sheet" class="px-3.5 py-1.5 rounded-xl border border-[var(--c-secondary)]/60 bg-[var(--c-tint)] text-[var(--c-primary)] text-sm font-sub-medium hover:border-[var(--c-primary)] transition-colors">Excel</button>
         </div>
       </div>
     </div>
 
     <div id="ticketViewList" class="rounded-2xl bg-[var(--c-card)] border border-[var(--c-line)] overflow-hidden">
       <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse text-xs">
+        <table class="w-full text-left border-collapse text-sm">
           <thead>
-            <tr class="bg-[var(--c-tint)] border-b border-[var(--c-line)] text-[var(--c-soft)] font-sub-medium uppercase tracking-wider text-[10px]">
+            <tr class="bg-[var(--c-tint)] border-b border-[var(--c-line)] text-[var(--c-primary)] font-sub-medium uppercase tracking-wider text-xs">
               <th class="py-3.5 px-4 whitespace-nowrap">Ticket ID</th>
               <th class="py-3.5 px-4 min-w-[200px]">Subject &amp; Requester</th>
               <th class="py-3.5 px-4 min-w-[240px]">Department</th>
@@ -517,11 +523,11 @@ html { scroll-behavior: smooth; }
   <section id="sectionBrowse" class="section-surface-gradient rounded-[2rem] border border-[var(--c-line)] p-6 sm:p-8 space-y-6 scroll-mt-20">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-l-4 border-[var(--c-primary)] pl-4 py-1">
       <div>
-        <span class="text-xs font-mono uppercase tracking-widest text-[var(--c-primary)]">Categories</span>
+        <span class="text-xs font-mono uppercase tracking-widest text-[var(--c-primary)] font-semibold">Categories</span>
         <h2 class="font-title-extrabold text-2xl sm:text-3xl text-[var(--c-body)] tracking-tight">
           Browse by Category
         </h2>
-        <p class="font-sub-medium text-sm text-[var(--c-soft)]">
+        <p class="font-sub-medium text-[15px] text-[var(--c-soft)]">
           Click any category box in the row below to view its included guides
         </p>
       </div>
@@ -531,10 +537,7 @@ html { scroll-behavior: smooth; }
       </div>
     </div>
 
-    <!-- Single-Line (1 Row on Desktop) Category Boxes -->
     <div id="browseRow" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3"></div>
-
-    <!-- Inline Dropdown Drawer for Selected Category -->
     <div id="categoryDrawerPanel" class="hidden rounded-2xl bg-[var(--c-card)] border border-[var(--c-primary)] p-5 space-y-3"></div>
   </section>
 
@@ -542,42 +545,41 @@ html { scroll-behavior: smooth; }
   <section id="sectionKB" class="rounded-[2rem] bg-[var(--c-card)] border border-[var(--c-line)] p-6 sm:p-8 space-y-5 scroll-mt-20">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-l-4 border-[var(--c-secondary)] pl-4 py-1">
       <div>
-        <span class="text-xs font-mono uppercase tracking-widest text-[var(--c-primary)]">Knowledge Base</span>
+        <span class="text-xs font-mono uppercase tracking-widest text-[var(--c-primary)] font-semibold">Knowledge Base</span>
         <h2 class="font-title-extrabold text-2xl sm:text-3xl text-[var(--c-body)] tracking-tight flex items-center gap-3 flex-wrap">
           <span>Self-Service Knowledge Base</span>
           <span id="articleCountBadge" class="text-xs font-mono px-3 py-1 rounded-full bg-[var(--c-tint)] text-[var(--c-primary)] border border-[var(--c-secondary)]/60">Top 5 Guides</span>
         </h2>
-        <p class="font-sub-medium text-sm text-[var(--c-soft)]">
+        <p class="font-sub-medium text-[15px] text-[var(--c-soft)]">
           Click any guide row to expand step-by-step troubleshooting instructions
         </p>
       </div>
 
       <div class="flex flex-wrap items-center gap-2">
-        <span id="kbFilterBadge" class="hidden text-xs font-sub-medium px-3 py-1.5 rounded-full bg-[var(--c-tint)] text-[var(--c-primary)] border border-[var(--c-secondary)]"></span>
+        <span id="kbFilterBadge" class="hidden text-xs font-sub-medium px-3 py-1.5 rounded-full bg-[var(--c-tint)] text-[var(--c-primary)] border border-[var(--c-secondary)]/60"></span>
         <button id="kbShowAllBtn" onclick="filterKBByCategory('All')" class="hidden px-3.5 py-1.5 rounded-xl brand-gradient-bar text-white text-xs font-sub-medium transition-opacity hover:opacity-95">
           Back to Top 5
         </button>
         <button onclick="toggleShowAll24()" id="toggleShow24Btn" class="px-3.5 py-1.5 rounded-xl border border-[var(--c-secondary)] bg-[var(--c-tint)] hover:opacity-90 text-xs font-sub-medium text-[var(--c-primary)] transition-all">
           Show all 24
         </button>
-        <button onclick="toggleAllKBAccordions()" id="toggleAllKBBtn" class="px-3.5 py-1.5 rounded-xl border border-[var(--c-line)] bg-[var(--c-card)] hover:border-[var(--c-primary)] text-xs font-sub-medium text-[var(--c-body)] transition-colors">
+        <button onclick="toggleAllKBAccordions()" id="toggleAllKBBtn" class="px-3.5 py-1.5 rounded-xl border border-[var(--c-line)] bg-[var(--c-card)] hover:border-[var(--c-primary)] text-xs font-sub-medium text-[var(--c-primary)] transition-colors">
           Expand All
         </button>
       </div>
     </div>
 
-    <!-- Vertical Accordion List for KB Articles (Top 5 by Default) -->
     <div id="kbList" class="space-y-2.5"></div>
   </section>
 
-  <!-- ==================== ANALYTICS & REPORTS SECTION (ROLE-GATED) ==================== -->
+  <!-- ==================== ANALYTICS & REPORTS SECTION (ROLE-GATED: HOD IT ONLY) ==================== -->
   <section id="sectionReports" class="hidden space-y-6 scroll-mt-20">
     <div class="flex items-center gap-3 border-l-4 border-[var(--c-primary)] pl-3 py-1">
       <div>
         <h2 class="font-title-extrabold text-2xl sm:text-3xl text-[var(--c-body)] tracking-tight">
           Analytics &amp; Reports Overview
         </h2>
-        <p class="font-sub-medium text-sm text-[var(--c-soft)]">
+        <p class="font-sub-medium text-[15px] text-[var(--c-soft)]">
           Operational metrics, category ratios, and resolution trends
         </p>
       </div>
@@ -586,16 +588,16 @@ html { scroll-behavior: smooth; }
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <div class="p-5 rounded-3xl bg-[var(--c-card)] border border-[var(--c-line)] space-y-4">
         <div class="flex items-center justify-between pb-3 border-b border-[var(--c-line)]">
-          <h3 class="font-title-extrabold text-base text-[var(--c-body)]">Ticket Volume &mdash; Monthly Trend</h3>
-          <span class="text-[10px] font-mono text-[var(--c-primary)]">REAL-TIME</span>
+          <h3 class="font-title-extrabold text-lg text-[var(--c-body)]">Ticket Volume &mdash; Monthly Trend</h3>
+          <span class="text-xs font-mono font-semibold text-[var(--c-primary)]">REAL-TIME</span>
         </div>
         <div id="barChart" class="flex items-end justify-between gap-3 h-44 pt-4"></div>
       </div>
 
       <div class="p-5 rounded-3xl bg-[var(--c-card)] border border-[var(--c-line)] space-y-4">
         <div class="flex items-center justify-between pb-3 border-b border-[var(--c-line)]">
-          <h3 class="font-title-extrabold text-base text-[var(--c-body)]">Category Ratio Breakdown</h3>
-          <span class="text-[10px] font-mono text-[var(--c-soft)]">24 TOTAL GUIDES</span>
+          <h3 class="font-title-extrabold text-lg text-[var(--c-body)]">Category Ratio Breakdown</h3>
+          <span class="text-xs font-mono font-semibold text-[var(--c-soft)]">24 TOTAL GUIDES</span>
         </div>
         <div id="catDistributionList" class="space-y-3 pt-1"></div>
       </div>
@@ -604,8 +606,8 @@ html { scroll-behavior: smooth; }
 
 </main>
 
-<!-- ==================== CORPORATE FOOTER (LOGO REMOVED) ==================== -->
-<footer class="mt-auto bg-[var(--c-card)] border-t border-[var(--c-line)] py-6 text-xs text-[var(--c-soft)]">
+<!-- ==================== CORPORATE FOOTER ==================== -->
+<footer class="mt-auto bg-[var(--c-card)] border-t border-[var(--c-line)] py-6 text-sm text-[var(--c-soft)]">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
     <span class="font-sub-medium">Pelaburan Hartanah Berhad &middot; Controlled via ORBITUsers</span>
     <span class="font-title-extrabold tracking-wider uppercase text-xs text-[var(--c-primary)]">
@@ -621,15 +623,15 @@ html { scroll-behavior: smooth; }
   <div class="max-w-2xl w-full bg-[var(--c-card)] rounded-3xl shadow-2xl border border-[var(--c-line)] overflow-hidden max-h-[90vh] flex flex-col">
     <div class="px-6 py-4 border-b border-[var(--c-line)] bg-[var(--c-tint)] flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <span id="artId" class="font-mono text-xs text-[var(--c-primary)] px-2.5 py-1 rounded-md bg-[var(--c-card)] border border-[var(--c-secondary)]/60">KB-0000</span>
+        <span id="artId" class="font-mono text-xs font-semibold text-[var(--c-primary)] px-2.5 py-1 rounded-md bg-[var(--c-card)] border border-[var(--c-secondary)]/60">KB-0000</span>
         <span id="artCat" class="text-xs font-sub-medium text-[var(--c-soft)] uppercase tracking-wider">Category</span>
       </div>
       <button onclick="closeModal('modalArticle')" class="text-[var(--c-soft)] hover:text-[var(--c-primary)] p-1">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
 
-    <div class="p-6 overflow-y-auto space-y-5 text-sm flex-1">
+    <div class="p-6 overflow-y-auto space-y-5 text-[15px] flex-1">
       <h3 id="artTitle" class="font-title-extrabold text-2xl text-[var(--c-body)] leading-snug">Article Title</h3>
       <p id="artDesc" class="font-sub-medium text-[var(--c-soft)] leading-relaxed"></p>
 
@@ -645,7 +647,7 @@ html { scroll-behavior: smooth; }
       <div class="flex items-center gap-2">
         <span class="font-sub-medium text-[var(--c-soft)]">Was this guide helpful?</span>
         <button onclick="markHelpful(true)" class="px-3 py-1.5 rounded-lg border border-[var(--c-line)] bg-[var(--c-card)] hover:border-[var(--c-primary)] font-sub-medium text-[var(--c-body)] transition-colors flex items-center gap-1.5">
-          <svg class="w-3.5 h-3.5 text-[var(--c-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/></svg>
+          <svg class="w-3.5 h-3.5 text-[var(--c-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/></svg>
           <span>Yes</span>
         </button>
         <button onclick="markHelpful(false)" class="px-3 py-1.5 rounded-lg border border-[var(--c-line)] bg-[var(--c-card)] hover:border-[var(--c-primary)] font-sub-medium text-[var(--c-body)] transition-colors">No, escalate</button>
@@ -659,32 +661,32 @@ html { scroll-behavior: smooth; }
 <div id="modalNewTicket" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/45 backdrop-blur-xs" onclick="if(event.target===this)closeModal('modalNewTicket')">
   <div class="max-w-xl w-full bg-[var(--c-card)] rounded-3xl shadow-2xl border border-[var(--c-line)] overflow-hidden max-h-[92vh] flex flex-col">
     <div class="px-6 py-4 border-b border-[var(--c-line)] bg-[var(--c-tint)] flex items-center justify-between">
-      <h3 class="font-title-extrabold text-lg text-[var(--c-body)]">Submit IT Support Request</h3>
+      <h3 class="font-title-extrabold text-xl text-[var(--c-primary)]">Submit IT Support Request</h3>
       <button onclick="closeModal('modalNewTicket')" class="text-[var(--c-soft)] hover:text-[var(--c-primary)]">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
 
-    <form onsubmit="handleNewTicketSubmit(event)" class="p-6 space-y-4 text-xs overflow-y-auto">
+    <form onsubmit="handleNewTicketSubmit(event)" class="p-6 space-y-4 text-sm overflow-y-auto">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label class="block font-sub-medium text-[var(--c-soft)] uppercase tracking-wider text-[10px] mb-1">Requester Name</label>
+          <label class="block font-sub-medium text-[var(--c-soft)] uppercase tracking-wider text-xs mb-1">Requester Name</label>
           <input id="formReqName" type="text" readonly required class="w-full px-3 py-2 rounded-xl border border-[var(--c-line)] bg-[var(--c-bg)] text-[var(--c-body)]">
         </div>
         <div>
-          <label class="block font-sub-medium text-[var(--c-soft)] uppercase tracking-wider text-[10px] mb-1">Requester Email</label>
+          <label class="block font-sub-medium text-[var(--c-soft)] uppercase tracking-wider text-xs mb-1">Requester Email</label>
           <input id="formReqEmail" type="email" readonly required class="w-full px-3 py-2 rounded-xl border border-[var(--c-line)] bg-[var(--c-bg)] text-[var(--c-body)] font-mono">
         </div>
       </div>
 
       <div>
-        <label class="block font-sub-medium text-[var(--c-soft)] uppercase tracking-wider text-[10px] mb-1">Department</label>
+        <label class="block font-sub-medium text-[var(--c-soft)] uppercase tracking-wider text-xs mb-1">Department</label>
         <input id="formDept" type="text" readonly class="w-full px-3 py-2 rounded-xl border border-[var(--c-line)] bg-[var(--c-bg)] text-[var(--c-body)]">
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label class="block font-sub-medium text-[var(--c-soft)] uppercase tracking-wider text-[10px] mb-1">Category</label>
+          <label class="block font-sub-medium text-[var(--c-soft)] uppercase tracking-wider text-xs mb-1">Category</label>
           <select id="formCategory" required class="w-full px-3 py-2 rounded-xl border border-[var(--c-line)] bg-[var(--c-bg)] text-[var(--c-body)]">
             <option value="User Management">User Management</option>
             <option value="Device Management">Device Management</option>
@@ -699,7 +701,7 @@ html { scroll-behavior: smooth; }
           </select>
         </div>
         <div>
-          <label class="block font-sub-medium text-[var(--c-soft)] uppercase tracking-wider text-[10px] mb-1">Priority</label>
+          <label class="block font-sub-medium text-[var(--c-soft)] uppercase tracking-wider text-xs mb-1">Priority</label>
           <select id="formPriority" required class="w-full px-3 py-2 rounded-xl border border-[var(--c-line)] bg-[var(--c-bg)] text-[var(--c-body)]">
             <option value="Low">Low</option>
             <option value="Medium" selected>Medium</option>
@@ -710,12 +712,12 @@ html { scroll-behavior: smooth; }
       </div>
 
       <div>
-        <label class="block font-sub-medium text-[var(--c-soft)] uppercase tracking-wider text-[10px] mb-1">Subject</label>
+        <label class="block font-sub-medium text-[var(--c-soft)] uppercase tracking-wider text-xs mb-1">Subject</label>
         <input id="formSubject" type="text" required placeholder="Short description of the problem" class="w-full px-3 py-2 rounded-xl border border-[var(--c-line)] bg-[var(--c-bg)] text-[var(--c-body)]">
       </div>
 
       <div>
-        <label class="block font-sub-medium text-[var(--c-soft)] uppercase tracking-wider text-[10px] mb-1">Details &amp; error messages</label>
+        <label class="block font-sub-medium text-[var(--c-soft)] uppercase tracking-wider text-xs mb-1">Details &amp; error messages</label>
         <textarea id="formDetail" rows="3" required placeholder="Describe error messages or steps taken..." class="w-full px-3 py-2 rounded-xl border border-[var(--c-line)] bg-[var(--c-bg)] text-[var(--c-body)]"></textarea>
       </div>
 
@@ -734,36 +736,36 @@ html { scroll-behavior: smooth; }
 
     <div class="p-5 border-b border-[var(--c-line)] bg-[var(--c-tint)] flex items-center justify-between">
       <div>
-        <span id="drwTicketID" class="text-xs font-mono px-2.5 py-0.5 rounded bg-[var(--c-card)] text-[var(--c-primary)] border border-[var(--c-secondary)]/60">TK-0000</span>
-        <h3 id="drwSubject" class="font-title-extrabold text-base text-[var(--c-body)] mt-1">Ticket Subject</h3>
+        <span id="drwTicketID" class="text-xs font-mono font-semibold px-2.5 py-0.5 rounded bg-[var(--c-card)] text-[var(--c-primary)] border border-[var(--c-secondary)]/60">TK-0000</span>
+        <h3 id="drwSubject" class="font-title-extrabold text-lg text-[var(--c-body)] mt-1">Ticket Subject</h3>
       </div>
       <button onclick="closeDrawer('drawerTicket')" class="text-[var(--c-soft)] hover:text-[var(--c-primary)] p-1">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
 
-    <div class="p-5 overflow-y-auto flex-1 space-y-4 text-xs">
+    <div class="p-5 overflow-y-auto flex-1 space-y-4 text-sm">
       <div class="grid grid-cols-2 gap-3 p-3.5 rounded-2xl bg-[var(--c-bg)] border border-[var(--c-line)]">
         <div>
-          <span class="text-[var(--c-soft)] block uppercase text-[9px]">Requester</span>
+          <span class="text-[var(--c-soft)] block uppercase text-[10px]">Requester</span>
           <span id="drwRequester" class="font-sub-medium text-[var(--c-body)]">Name</span>
         </div>
         <div>
-          <span class="text-[var(--c-soft)] block uppercase text-[9px]">Department</span>
+          <span class="text-[var(--c-soft)] block uppercase text-[10px]">Department</span>
           <span id="drwDepartment" class="font-sub-medium text-[var(--c-body)]">Dept</span>
         </div>
         <div>
-          <span class="text-[var(--c-soft)] block uppercase text-[9px]">Category</span>
+          <span class="text-[var(--c-soft)] block uppercase text-[10px]">Category</span>
           <span id="drwCategory" class="font-sub-medium text-[var(--c-body)]">Cat</span>
         </div>
         <div>
-          <span class="text-[var(--c-soft)] block uppercase text-[9px]">Priority</span>
+          <span class="text-[var(--c-soft)] block uppercase text-[10px]">Priority</span>
           <span id="drwPriority" class="font-sub-medium text-[var(--c-body)]">Priority</span>
         </div>
       </div>
 
       <div>
-        <span class="font-sub-medium text-[var(--c-soft)] uppercase text-[10px] block mb-1">Issue Details</span>
+        <span class="font-sub-medium text-[var(--c-soft)] uppercase text-xs block mb-1">Issue Details</span>
         <div id="drwDetails" class="p-3.5 rounded-2xl bg-[var(--c-bg)] border border-[var(--c-line)] text-[var(--c-body)] whitespace-pre-wrap leading-relaxed">
           Details content...
         </div>
@@ -772,12 +774,12 @@ html { scroll-behavior: smooth; }
       <!-- TICKET PROGRESS -->
       <div>
         <div class="flex items-center justify-between mb-1.5">
-          <span class="font-sub-medium text-[var(--c-primary)] uppercase text-[10px] flex items-center gap-1.5">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span class="font-sub-medium text-[var(--c-primary)] uppercase text-xs flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             Ticket Progress
           </span>
         </div>
-        <div id="drwAuditTrail" class="p-3.5 rounded-2xl bg-[var(--c-bg)] border border-[var(--c-line)] space-y-3 text-[11px]"></div>
+        <div id="drwAuditTrail" class="p-3.5 rounded-2xl bg-[var(--c-bg)] border border-[var(--c-line)] space-y-3 text-xs"></div>
       </div>
 
       <div id="drwActionPanel" class="p-4 rounded-2xl border border-[var(--c-secondary)]/60 section-surface-gradient space-y-3">
@@ -806,7 +808,7 @@ html { scroll-behavior: smooth; }
           <textarea id="drwRemarks" rows="2" placeholder="Add resolution details..." class="w-full px-2.5 py-1.5 rounded-xl border border-[var(--c-line)] bg-[var(--c-card)] text-[var(--c-body)]"></textarea>
         </div>
 
-        <button id="drwSaveBtn" onclick="saveTicketChangesFromDrawer()" class="w-full py-2.5 rounded-xl brand-gradient-bar text-white font-sub-medium text-xs transition-opacity hover:opacity-95">
+        <button id="drwSaveBtn" onclick="saveTicketChangesFromDrawer()" class="w-full py-2.5 rounded-xl brand-gradient-bar text-white font-sub-medium text-sm transition-opacity hover:opacity-95">
           Send Update
         </button>
       </div>
@@ -871,37 +873,37 @@ const KB_ARTICLES = [
 const CATEGORIES = [
   {
     key: 'Hardware',
-    svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>',
+    svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>',
     desc: 'Laptops, monitors & docks',
     count: 5
   },
   {
     key: 'Software',
-    svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>',
+    svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>',
     desc: 'Installs, updates & crashes',
     count: 4
   },
   {
     key: 'Network & VPN',
-    svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>',
+    svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>',
     desc: 'Wi-Fi, VPN & connectivity',
     count: 4
   },
   {
     key: 'Account & Access',
-    svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>',
+    svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>',
     desc: 'Passwords, MFA & folders',
     count: 4
   },
   {
     key: 'Email & Calendar',
-    svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>',
+    svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>',
     desc: 'Outlook & shared mailboxes',
     count: 3
   },
   {
     key: 'Security',
-    svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>',
+    svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>',
     desc: 'Phishing, encryption & loss',
     count: 4
   }
@@ -1053,8 +1055,8 @@ function renderSimulateRoleButtons() {
   grid.innerHTML = activeUsers.map((u, idx) => `
     <button onclick="simulateRoleLogin('${esc(u.email)}')" class="p-2.5 rounded-xl border border-[var(--c-line)] bg-[var(--c-tint)] text-[var(--c-primary)] text-left hover:border-[var(--c-primary)]">
       ${idx + 1}. ${esc(u.role.toUpperCase().replace('_', ' '))}
-      <span class="block text-[10px] font-sub-medium mt-0.5 truncate text-[var(--c-body)]">${esc(u.name)}</span>
-      <span class="block text-[9px] opacity-80 truncate text-[var(--c-soft)]">${esc(u.department || 'PHB')}</span>
+      <span class="block text-xs font-sub-medium mt-0.5 truncate text-[var(--c-body)]">${esc(u.name)}</span>
+      <span class="block text-[10px] opacity-80 truncate text-[var(--c-soft)]">${esc(u.department || 'PHB')}</span>
     </button>
   `).join('');
 }
@@ -1362,11 +1364,35 @@ function applyRoleView() {
   const role = u ? u.role : 'guest';
   const show = (id, on) => $(id) && $(id).classList.toggle('hidden', !on);
 
-  const canSeeReports = role === 'hod_it' || role === 'it_admin';
+  const isLoggedIn = !!u;
+  // Once logged in, hide Categories & Knowledge Base so Staff & Admin IT see only Ticket Dashboard/Queue,
+  // and HOD IT sees Ticket Dashboard/Queue + Analytics & Reports (no guidelines).
+  const showPublicGuides = !isLoggedIn;
+  const canSeeReports = role === 'hod_it';
   const canFilterDepts = role === 'hod_it' || role === 'it_admin' || role === 'hod_dept';
   const canSeeDashboard = role === 'hod_it' || role === 'it_admin' || role === 'hod_dept';
   const canAssign = role === 'hod_it';
 
+  // Public guideline sections & nav links
+  show('sectionBrowse', showPublicGuides);
+  show('sectionKB', showPublicGuides);
+  show('navCategoriesLink', showPublicGuides);
+  show('navKBLink', showPublicGuides);
+
+  // Hero elements: once signed in, show ONLY "Welcome to [Name]"
+  show('heroBadgeRow', !isLoggedIn);
+  show('heroGuestHeading', !isLoggedIn);
+  show('heroWelcomeHeading', isLoggedIn);
+  show('heroGuestDesc', !isLoggedIn);
+  show('heroGuestActions', !isLoggedIn);
+  show('heroQuickFinding', !isLoggedIn);
+  show('heroRightCard', !isLoggedIn);
+
+  if ($('heroLeftCol')) {
+    $('heroLeftCol').className = isLoggedIn ? 'lg:col-span-12 space-y-2' : 'lg:col-span-7 xl:col-span-8 space-y-6';
+  }
+
+  // Logged-in sections
   show('sectionExecutiveOverview', canSeeDashboard);
   show('sectionReports', canSeeReports);
   show('navReportsLink', canSeeReports);
@@ -1374,14 +1400,11 @@ function applyRoleView() {
   show('deptFilterArea', canFilterDepts);
   show('drwAssigneeWrapper', canAssign);
 
-  show('sectionTicketQueue', !!u);
-  show('navTicketsLink', !!u);
+  show('sectionTicketQueue', isLoggedIn);
+  show('navTicketsLink', isLoggedIn);
 
-  show('signInBtn', !u);
-  show('userChipArea', !!u);
-
-  show('heroGuestHeading', !u);
-  show('heroWelcomeHeading', !!u);
+  show('signInBtn', !isLoggedIn);
+  show('userChipArea', isLoggedIn);
 
   if (u) {
     const deptSelect = $('deptSelect');
@@ -1584,12 +1607,12 @@ function renderListView(tickets) {
     const assigneeText = normalizeAssignee(t.AssignedTo || t.Assignee);
     const isPendingHOD = assigneeText === DEFAULT_PENDING_ASSIGNEE;
     const assignedByLine = t.AssignedBy
-      ? `<div class="text-[10px] text-[var(--c-soft)] mt-0.5">By: ${esc(t.AssignedBy)}</div>`
+      ? `<div class="text-xs text-[var(--c-soft)] mt-0.5">By: ${esc(t.AssignedBy)}</div>`
       : '';
 
     const assigneeBadge = isPendingHOD
-      ? `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-sub-medium bg-[var(--c-tint)] text-[var(--c-primary)] border border-[var(--c-secondary)]/60 whitespace-nowrap">
-           <span class="w-1.5 h-1.5 rounded-full bg-[var(--c-secondary)]"></span>
+      ? `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-sub-medium bg-[var(--c-tint)] text-[var(--c-primary)] border border-[var(--c-secondary)]/60 whitespace-nowrap">
+           <span class="w-1.5 h-1.5 rounded-full bg-[var(--c-primary)]"></span>
            ${esc(assigneeText)}
          </span>`
       : `<div>
@@ -1598,21 +1621,21 @@ function renderListView(tickets) {
          </div>`;
 
     return `
-      <tr onclick="openTicketDrawer('${esc(t.TicketID)}')" class="hover:bg-[var(--c-tint)] cursor-pointer transition-colors">
-        <td class="py-3.5 px-4 font-mono text-[var(--c-primary)] whitespace-nowrap">${esc(t.TicketID)}</td>
+      <tr onclick="openTicketDrawer('${esc(t.TicketID)}')" class="hover:bg-[var(--c-tint)]/70 cursor-pointer transition-colors">
+        <td class="py-3.5 px-4 font-mono font-semibold text-[var(--c-primary)] whitespace-nowrap">${esc(t.TicketID)}</td>
         <td class="py-3.5 px-4">
           <div class="font-sub-medium text-[var(--c-body)] line-clamp-1">${esc(t.Subject)}</div>
-          <div class="text-[11px] text-[var(--c-soft)]">${esc(t.RequesterName)} (${esc(t.RequesterEmail)})</div>
+          <div class="text-xs text-[var(--c-soft)]">${esc(t.RequesterName)} (${esc(t.RequesterEmail)})</div>
         </td>
         <td class="py-3.5 px-4 text-[var(--c-soft)] min-w-[240px] whitespace-normal leading-snug">${esc(extractChoice(t.Department))}</td>
         <td class="py-3.5 px-4 text-[var(--c-body)] whitespace-nowrap">${esc(t.Category)}</td>
-        <td class="py-3.5 px-4 whitespace-nowrap ${t.Priority==='Critical' || t.Priority==='High' ? 'font-sub-medium text-[var(--c-primary)]' : 'text-[var(--c-soft)]'}">${esc(t.Priority)}</td>
+        <td class="py-3.5 px-4 whitespace-nowrap ${t.Priority==='Critical' || t.Priority==='High' ? 'font-semibold text-[var(--c-primary)]' : 'text-[var(--c-soft)]'}">${esc(t.Priority)}</td>
         <td class="py-3.5 px-4 whitespace-nowrap">
-          <span class="px-2.5 py-1 rounded-full text-[10px] uppercase tracking-wider ${statusClass}">${esc(t.Status)}</span>
+          <span class="px-2.5 py-1 rounded-full text-xs uppercase tracking-wider ${statusClass}">${esc(t.Status)}</span>
         </td>
         <td class="py-3.5 px-4">${assigneeBadge}</td>
         <td class="py-3.5 px-4 text-right whitespace-nowrap">
-          <button class="px-2.5 py-1 rounded-lg border border-[var(--c-line)] hover:border-[var(--c-primary)] bg-[var(--c-card)] text-[var(--c-primary)] font-sub-medium text-[11px]">View</button>
+          <button class="px-3 py-1 rounded-lg border border-[var(--c-line)] hover:border-[var(--c-primary)] bg-[var(--c-card)] text-[var(--c-primary)] font-sub-medium text-xs">View</button>
         </td>
       </tr>`;
   }).join('');
@@ -1696,7 +1719,7 @@ function buildAuditEntries(t) {
     entries.push({
       time: extractChoice(t.UpdatedAt || t.Modified || '') || 'Updated',
       lines: [
-        `Updated by ${t.AssignedBy}) ·`,
+        `Updated by ${t.AssignedBy || 'IT'}`,
         `Status: ${t.Status || 'Open'}`,
         `Assigned To: ${currentAssignee}`
       ]
@@ -1726,7 +1749,7 @@ function renderAuditTrailInDrawer(t) {
           <span class="w-2 h-2 rounded-full ${idx === 0 ? 'bg-[var(--c-secondary)]' : 'bg-[var(--c-primary)]'} mt-1.5 shrink-0"></span>
           <div class="flex-1 leading-snug">
             ${entry.lines.map(line => `<div class="font-sub-medium text-[var(--c-body)]">${esc(line)}</div>`).join('')}
-            ${entry.time ? `<div class="text-[10px] font-mono text-[var(--c-soft)] mt-0.5">${esc(entry.time)}</div>` : ''}
+            ${entry.time ? `<div class="text-xs font-mono text-[var(--c-soft)] mt-0.5">${esc(entry.time)}</div>` : ''}
           </div>
         </div>
       `).join('')
@@ -1818,7 +1841,7 @@ async function saveTicketChangesFromDrawer() {
   const newRemarks = $('drwRemarks').value.trim();
 
   const trailLog = buildAuditEntries(t);
-  const lines = [`Updated by ${actorName} (${actorRole})${role === 'hod_it' ? ' ·' : ''}`];
+  const lines = [`Updated by ${actorName} (${actorRole})`];
   lines.push(`Status: ${newStatus}`);
   if (role === 'hod_it') {
     lines.push(`Assigned To: ${newAssignee}`);
@@ -2021,7 +2044,7 @@ function renderBrowseRow() {
           <span class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors ${isActive ? 'bg-white/20 text-white' : 'bg-[var(--c-tint)] border border-[var(--c-secondary)]/50 text-[var(--c-primary)]'}">
             ${c.svg}
           </span>
-          <span class="text-[11px] font-mono px-2 py-0.5 rounded-full ${isActive ? 'bg-white/20 text-white' : 'bg-[var(--c-tint)] text-[var(--c-primary)] border border-[var(--c-line)]'}">
+          <span class="text-xs font-mono font-semibold px-2 py-0.5 rounded-full ${isActive ? 'bg-white/20 text-white' : 'bg-[var(--c-tint)] text-[var(--c-primary)] border border-[var(--c-line)]'}">
             ${c.count}
           </span>
         </div>
@@ -2030,7 +2053,7 @@ function renderBrowseRow() {
           <h3 class="font-title-extrabold text-base leading-tight truncate ${isActive ? 'text-white' : 'text-[var(--c-body)]'}">
             ${esc(c.key)}
           </h3>
-          <p class="text-[11px] truncate mt-0.5 ${isActive ? 'text-white/90' : 'text-[var(--c-soft)]'}">
+          <p class="text-xs truncate mt-0.5 ${isActive ? 'text-white/90' : 'text-[var(--c-soft)]'}">
             ${esc(c.desc)}
           </p>
         </div>
@@ -2051,7 +2074,7 @@ function renderBrowseRow() {
   drawerPanel.innerHTML = `
     <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[var(--c-line)]">
       <div class="flex items-center gap-2">
-        <span class="w-2.5 h-2.5 rounded-full bg-[var(--c-secondary)]"></span>
+        <span class="w-2.5 h-2.5 rounded-full bg-[var(--c-primary)]"></span>
         <span class="font-title-extrabold text-base text-[var(--c-body)]">
           ${esc(catObj.key)} &mdash; Included Self-Service Guides (${catArticles.length})
         </span>
@@ -2059,7 +2082,7 @@ function renderBrowseRow() {
       <div class="flex items-center gap-3">
         <button type="button" onclick="filterKBByCategory('${esc(catObj.key)}')" class="text-xs font-sub-medium text-[var(--c-primary)] hover:underline flex items-center gap-1">
           <span>Show only in Knowledge Base</span>
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.75" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
         </button>
         <button type="button" onclick="toggleCategoryBox('${esc(catObj.key)}')" class="text-xs font-sub-medium text-[var(--c-soft)] hover:text-[var(--c-primary)]">
           Close
@@ -2071,10 +2094,10 @@ function renderBrowseRow() {
       ${catArticles.map(art => `
         <div onclick="jumpToArticleDropdown('${art.id}')" class="px-4 py-3 rounded-xl bg-[var(--c-bg)] hover:bg-[var(--c-tint)] border border-[var(--c-line)] hover:border-[var(--c-primary)] flex items-center justify-between gap-3 cursor-pointer transition-all">
           <div class="flex items-center gap-2.5 min-w-0">
-            <span class="font-mono text-xs text-[var(--c-primary)] shrink-0">${art.id}</span>
-            <span class="text-xs sm:text-sm font-sub-medium text-[var(--c-body)] truncate">${esc(art.title)}</span>
+            <span class="font-mono text-xs font-semibold text-[var(--c-primary)] shrink-0">${art.id}</span>
+            <span class="text-sm font-sub-medium text-[var(--c-body)] truncate">${esc(art.title)}</span>
           </div>
-          <svg class="w-4 h-4 text-[var(--c-primary)] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+          <svg class="w-4 h-4 text-[var(--c-primary)] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.75" d="M9 5l7 7-7 7"/></svg>
         </div>
       `).join('')}
     </div>
@@ -2125,7 +2148,7 @@ function renderKBList() {
 
   if (!list.length) {
     $('kbList').innerHTML = `
-      <div class="py-12 rounded-2xl bg-[var(--c-bg)] border border-[var(--c-line)] text-center text-sm font-sub-medium text-[var(--c-soft)]">
+      <div class="py-12 rounded-2xl bg-[var(--c-bg)] border border-[var(--c-line)] text-center text-[15px] font-sub-medium text-[var(--c-soft)]">
         No articles match this quick filter. <button onclick="applyQuickChip('')" class="text-[var(--c-primary)] underline">Show Top 5 guides</button> or <button onclick="openNewTicketModal()" class="text-[var(--c-primary)] underline">submit a ticket</button>.
       </div>`;
     return;
@@ -2134,30 +2157,30 @@ function renderKBList() {
   $('kbList').innerHTML = list.map(a => {
     const isOpen = openArticleDropdowns.has(a.id);
     const sevBadge = a.sev === 'crit'
-      ? 'text-white brand-gradient-bar border-transparent'
+      ? 'text-white brand-gradient-bar border-transparent font-semibold'
       : a.sev === 'warn'
-      ? 'text-[var(--c-primary)] bg-[var(--c-tint)] border-[var(--c-secondary)]'
-      : 'text-[var(--c-primary)] bg-[var(--c-bg)] border-[var(--c-line)]';
+      ? 'text-[var(--c-primary)] bg-[var(--c-tint)] border-[var(--c-primary)]/40 font-semibold'
+      : 'text-[var(--c-primary)] bg-[var(--c-tint)] border-[var(--c-secondary)]/60 font-semibold';
     const sevLabel = a.sev === 'crit' ? 'CRITICAL' : a.sev === 'warn' ? 'MODERATE' : 'ROUTINE';
 
     return `
       <div id="kb-row-${a.id}" class="list-row-interactive rounded-2xl bg-[var(--c-card)] border ${isOpen ? 'border-[var(--c-primary)] accordion-open' : 'border-[var(--c-line)]'} overflow-hidden scroll-mt-24">
-        <button type="button" onclick="toggleArticleDropdown('${a.id}')" class="w-full px-5 py-4 flex items-center justify-between gap-4 text-left hover:bg-[var(--c-tint)]/60 transition-colors cursor-pointer">
+        <button type="button" onclick="toggleArticleDropdown('${a.id}')" class="w-full px-5 py-4 flex items-center justify-between gap-4 text-left hover:bg-[var(--c-tint)]/55 transition-colors cursor-pointer">
           <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 min-w-0 flex-1">
             <div class="flex items-center gap-2 shrink-0">
-              <span class="font-mono text-xs text-[var(--c-primary)] px-2.5 py-1 rounded-lg bg-[var(--c-tint)] border border-[var(--c-secondary)]/50">
+              <span class="font-mono text-xs font-semibold text-[var(--c-primary)] px-2.5 py-1 rounded-lg bg-[var(--c-tint)] border border-[var(--c-secondary)]/50">
                 ${a.id}
               </span>
-              <span class="text-[10px] font-mono px-2 py-0.5 rounded border uppercase tracking-wider ${sevBadge}">
+              <span class="text-[11px] font-mono px-2 py-0.5 rounded border uppercase tracking-wider ${sevBadge}">
                 ${sevLabel}
               </span>
             </div>
 
             <div class="min-w-0 flex-1">
-              <h3 class="font-title-extrabold text-base sm:text-lg text-[var(--c-body)] truncate">
+              <h3 class="font-title-extrabold text-lg sm:text-xl text-[var(--c-body)] truncate">
                 ${esc(a.title)}
               </h3>
-              <p class="text-xs sm:text-sm text-[var(--c-soft)] truncate mt-0.5">
+              <p class="text-sm text-[var(--c-soft)] truncate mt-0.5">
                 ${esc(a.desc)}
               </p>
             </div>
@@ -2169,7 +2192,7 @@ function renderKBList() {
             </span>
             <span class="w-8 h-8 rounded-full border border-[var(--c-line)] bg-[var(--c-bg)] flex items-center justify-center text-[var(--c-primary)]">
               <svg class="w-4 h-4 accordion-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.75" d="M19 9l-7 7-7-7"/>
               </svg>
             </span>
           </div>
@@ -2185,20 +2208,20 @@ function renderKBList() {
                 Open Popup View
               </button>
             </div>
-            <ol class="step-list text-sm text-[var(--c-body)] leading-relaxed">
+            <ol class="step-list text-[15px] text-[var(--c-body)] leading-relaxed">
               ${a.steps.map(s => `<li>${esc(s)}</li>`).join('')}
             </ol>
           </div>
 
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
             <div class="flex flex-wrap items-center gap-1.5">
-              ${a.tags.map(t => `<span class="px-2.5 py-0.5 rounded-full bg-[var(--c-card)] border border-[var(--c-line)] text-[11px] font-mono text-[var(--c-soft)]">#${esc(t)}</span>`).join('')}
+              ${a.tags.map(t => `<span class="px-2.5 py-0.5 rounded-full bg-[var(--c-card)] border border-[var(--c-line)] text-xs font-mono text-[var(--c-soft)]">#${esc(t)}</span>`).join('')}
             </div>
 
             <div class="flex flex-wrap items-center gap-2 text-xs">
               <span class="text-[var(--c-soft)]">Helpful?</span>
               <button type="button" onclick="markHelpful(true)" class="px-3 py-1.5 rounded-xl border border-[var(--c-line)] bg-[var(--c-card)] hover:border-[var(--c-primary)] font-sub-medium text-[var(--c-body)] transition-colors flex items-center gap-1.5">
-                <svg class="w-3.5 h-3.5 text-[var(--c-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/></svg>
+                <svg class="w-3.5 h-3.5 text-[var(--c-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/></svg>
                 <span>Yes</span>
               </button>
               <button type="button" onclick="openNewTicketModal()" class="px-3.5 py-1.5 rounded-xl brand-gradient-bar text-white font-sub-medium transition-opacity hover:opacity-95">
@@ -2296,7 +2319,7 @@ function openKBModal(id) {
   $('artDesc').textContent = art.desc;
 
   $('artSteps').innerHTML = art.steps.map(s => `<li>${esc(s)}</li>`).join('');
-  $('artTags').innerHTML = art.tags.map(t => `<span class="px-2.5 py-0.5 rounded-full bg-[var(--c-bg)] border border-[var(--c-line)] text-[10px] font-mono text-[var(--c-soft)]">#${esc(t)}</span>`).join('');
+  $('artTags').innerHTML = art.tags.map(t => `<span class="px-2.5 py-0.5 rounded-full bg-[var(--c-bg)] border border-[var(--c-line)] text-xs font-mono text-[var(--c-soft)]">#${esc(t)}</span>`).join('');
 
   $('modalArticle').classList.remove('hidden');
 }
@@ -2320,19 +2343,19 @@ function renderReportsData() {
     const h = Math.round((data[i] / max) * 100);
     return `
       <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
-        <span class="text-[10px] font-mono text-[var(--c-soft)]">${data[i]}</span>
+        <span class="text-xs font-mono font-semibold text-[var(--c-primary)]">${data[i]}</span>
         <div class="w-full brand-gradient-bar rounded-t-lg transition-all" style="height: ${h}%;"></div>
-        <span class="text-[10px] font-sub-medium text-[var(--c-soft)] uppercase">${m}</span>
+        <span class="text-xs font-sub-medium text-[var(--c-soft)] uppercase">${m}</span>
       </div>`;
   }).join('');
 
   $('catDistributionList').innerHTML = CATEGORIES.map(c => `
     <div class="space-y-1">
-      <div class="flex items-center justify-between text-xs font-sub-medium">
+      <div class="flex items-center justify-between text-sm font-sub-medium">
         <span class="text-[var(--c-body)]">${c.key}</span>
-        <span class="font-mono text-[var(--c-primary)]">${c.count} guides</span>
+        <span class="font-mono font-semibold text-[var(--c-primary)]">${c.count} guides</span>
       </div>
-      <div class="h-2 w-full bg-[var(--c-bg)] rounded-full overflow-hidden border border-[var(--c-line)]">
+      <div class="h-2.5 w-full bg-[var(--c-bg)] rounded-full overflow-hidden border border-[var(--c-line)]">
         <div class="h-full brand-gradient-bar" style="width: ${(c.count / 24) * 100}%;"></div>
       </div>
     </div>`).join('');
@@ -2395,7 +2418,7 @@ function toggleDarkMode() {
 function showToast(msg, type) {
   const container = $('toastContainer');
   const toast = document.createElement('div');
-  toast.className = 'px-4 py-2.5 rounded-2xl bg-[var(--c-card)] text-[var(--c-body)] text-xs font-sub-medium shadow-xl border border-[var(--c-primary)] flex items-center gap-2 pointer-events-auto transition-all transform translate-y-2';
+  toast.className = 'px-4 py-2.5 rounded-2xl bg-[var(--c-card)] text-[var(--c-body)] text-sm font-sub-medium shadow-xl border border-[var(--c-primary)] flex items-center gap-2 pointer-events-auto transition-all transform translate-y-2';
   toast.innerHTML = `<span class="w-2.5 h-2.5 rounded-full ${type === 'error' ? 'bg-[var(--c-primary)]' : 'bg-[var(--c-secondary)]'}"></span><span>${esc(msg)}</span>`;
   container.appendChild(toast);
   setTimeout(() => toast.remove(), 4000);

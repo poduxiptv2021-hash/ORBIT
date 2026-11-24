@@ -27,15 +27,15 @@
         colors: {
           phb: {
             green: '#1B8754',
-            teal: '#0A6E63',
-            lime: '#76B82A',
-            blue: '#163A5F',
-            bgLight: '#F2F7EE',
+            greenDeep: '#0A6E63',
+            navy: '#0B2240',
+            navyMid: '#163A5F',
+            bgLight: '#F7F9FA',
             cardLight: '#FFFFFF',
-            lineLight: '#D5E5DF',
-            bgDark: '#0B1311',
-            cardDark: '#121E1B',
-            lineDark: '#1E302B'
+            lineLight: '#D8E2E8',
+            bgDark: '#09131D',
+            cardDark: '#101E2C',
+            lineDark: '#1E3347'
           }
         },
         fontFamily: {
@@ -49,47 +49,48 @@
 </script>
 
 <style>
+/* Two-Color PHB Brand System: PHB Green (#1B8754 / #0A6E63) + PHB Deep Navy (#0B2240 / #163A5F) */
 :root {
   --c-primary: #1B8754;
   --c-primary-deep: #0A6E63;
-  --c-accent-blue: #163A5F;
-  --c-accent-blue-soft: #234E78;
-  --c-bg: #F2F7EE;
+  --c-accent-blue: #0B2240;
+  --c-accent-blue-soft: #163A5F;
+  --c-bg: #F7F9FA;
   --c-card: #FFFFFF;
-  --c-line: #D5E5DF;
+  --c-line: #D8E2E8;
   --c-text: #1B8754;
-  --c-body: #182925;
-  --c-soft: #435D56;
-  --c-tint: #E6F2EC;
-  --c-cat-section: #E9F2EA;
-  --c-blue-tint: #EEF3F8;
-  --grad-main: linear-gradient(90deg, #0A6E63 0%, #1B8754 52%, #76B82A 100%);
-  --grad-hover: linear-gradient(90deg, #085A51 0%, #157045 52%, #629E20 100%);
-  --grad-footer: linear-gradient(90deg, #0A6E63 0%, #1B8754 52%, #76B82A 100%);
-  --grad-cat-card: linear-gradient(135deg, #0A6E63 0%, #1B8754 62%, #76B82A 100%);
-  --grad-blue-accent: linear-gradient(135deg, #163A5F 0%, #1B8754 100%);
-  --grad-soft: linear-gradient(135deg, rgba(10, 110, 99, 0.05) 0%, rgba(27, 135, 84, 0.09) 55%, rgba(118, 184, 42, 0.12) 100%);
+  --c-body: #0B2240;
+  --c-soft: #3B526B;
+  --c-tint: #E8F5EE;
+  --c-cat-section: #EBF4EF;
+  --c-blue-tint: #EBF1F7;
+  --grad-main: linear-gradient(90deg, #1B8754 0%, #0A6E63 55%, #0B2240 100%);
+  --grad-hover: linear-gradient(90deg, #156F44 0%, #085A51 55%, #081A30 100%);
+  --grad-footer: linear-gradient(90deg, #0A6E63 0%, #1B8754 45%, #0B2240 100%);
+  --grad-cat-card: linear-gradient(135deg, #1B8754 0%, #0A6E63 58%, #0B2240 100%);
+  --grad-blue-accent: linear-gradient(135deg, #0B2240 0%, #163A5F 55%, #1B8754 100%);
+  --grad-soft: linear-gradient(135deg, rgba(27, 135, 84, 0.06) 0%, rgba(11, 34, 64, 0.06) 100%);
 }
 
 .dark {
-  --c-bg: #0B1311;
-  --c-card: #121E1B;
-  --c-line: #1E302B;
+  --c-bg: #09131D;
+  --c-card: #101E2C;
+  --c-line: #1E3347;
   --c-text: #4CC88A;
   --c-primary-deep: #0A6E63;
-  --c-accent-blue: #6FA3D6;
-  --c-accent-blue-soft: #8CBBE8;
-  --c-body: #EDF6F2;
-  --c-soft: #A7C0B8;
-  --c-tint: #132620;
-  --c-cat-section: #11211B;
-  --c-blue-tint: #132230;
-  --grad-main: linear-gradient(90deg, #0A6E63 0%, #1B8754 52%, #76B82A 100%);
-  --grad-hover: linear-gradient(90deg, #085A51 0%, #157045 52%, #629E20 100%);
-  --grad-footer: linear-gradient(90deg, #0A6E63 0%, #1B8754 52%, #76B82A 100%);
-  --grad-cat-card: linear-gradient(135deg, #0A6E63 0%, #1B8754 62%, #76B82A 100%);
-  --grad-blue-accent: linear-gradient(135deg, #1D4D7B 0%, #1B8754 100%);
-  --grad-soft: linear-gradient(135deg, rgba(10, 110, 99, 0.14) 0%, rgba(118, 184, 42, 0.14) 100%);
+  --c-accent-blue: #79AEE6;
+  --c-accent-blue-soft: #9BC4F0;
+  --c-body: #EFF5FA;
+  --c-soft: #A7BDD1;
+  --c-tint: #102820;
+  --c-cat-section: #0E221C;
+  --c-blue-tint: #102336;
+  --grad-main: linear-gradient(90deg, #1B8754 0%, #0A6E63 55%, #163A5F 100%);
+  --grad-hover: linear-gradient(90deg, #156F44 0%, #085A51 55%, #102B47 100%);
+  --grad-footer: linear-gradient(90deg, #0A6E63 0%, #1B8754 45%, #0B2240 100%);
+  --grad-cat-card: linear-gradient(135deg, #1B8754 0%, #0A6E63 58%, #163A5F 100%);
+  --grad-blue-accent: linear-gradient(135deg, #163A5F 0%, #1B8754 100%);
+  --grad-soft: linear-gradient(135deg, rgba(27, 135, 84, 0.14) 0%, rgba(22, 58, 95, 0.18) 100%);
 }
 
 body {
@@ -137,9 +138,9 @@ body {
   transition: transform 180ms ease, filter 180ms ease, box-shadow 180ms ease;
 }
 .category-card-grad:hover {
-  filter: brightness(1.04);
+  filter: brightness(1.05);
   transform: translateY(-2px);
-  box-shadow: 0 12px 24px -12px rgba(10, 110, 99, 0.45);
+  box-shadow: 0 12px 24px -12px rgba(11, 34, 64, 0.45);
 }
 
 .brand-accent-bar {
@@ -182,16 +183,22 @@ body {
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(27, 135, 84, 0.38); border-radius: 999px; }
+::-webkit-scrollbar-thumb { background: rgba(11, 34, 64, 0.32); border-radius: 999px; }
 
 .badge-open { background: var(--c-tint); color: var(--c-primary); border: 1px solid var(--c-primary); font-weight: 600; }
 .badge-inprogress { background: var(--c-blue-tint); color: var(--c-accent-blue); border: 1px solid var(--c-accent-blue); font-weight: 600; }
-.badge-pending { background: rgba(22, 58, 95, 0.07); color: var(--c-accent-blue); border: 1px dashed var(--c-accent-blue); font-weight: 600; }
+.badge-pending { background: rgba(11, 34, 64, 0.08); color: var(--c-accent-blue); border: 1px dashed var(--c-accent-blue); font-weight: 600; }
 .badge-resolved { background: var(--grad-main); color: #FFFFFF; border: none; font-weight: 700; }
 
-.dark .badge-open { color: #4CC88A; }
+.sev-crit { background: var(--grad-main); color: #FFFFFF; font-weight: 700; }
+.sev-warn { background: var(--c-tint); color: var(--c-primary); border: 1px solid rgba(27, 135, 84, 0.3); font-weight: 700; }
+.sev-ok { background: var(--c-blue-tint); color: var(--c-accent-blue); border: 1px solid rgba(11, 34, 64, 0.2); font-weight: 700; }
+
+.dark .badge-open,
+.dark .sev-warn { color: #4CC88A; }
 .dark .badge-inprogress,
-.dark .badge-pending { color: var(--c-accent-blue-soft); }
+.dark .badge-pending,
+.dark .sev-ok { color: var(--c-accent-blue-soft); }
 
 .step-list { list-style: none; counter-reset: step; padding: 0; margin: 0; }
 .step-list li { counter-increment: step; position: relative; padding-left: 2.25rem; margin-bottom: 0.95rem; font-weight: 500; }
@@ -237,8 +244,7 @@ html { scroll-behavior: smooth; }
     <!-- Brand Wordmark + PHB Logo -->
     <div class="flex items-center gap-3 sm:gap-4">
       <a href="#sectionHomepage" class="flex items-center gap-2.5 group">
-        <!-- PHB Brand Emblem -->
-        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white text-[#0A6E63] shadow-xs">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white text-[#0B2240] shadow-xs">
           <svg class="w-4 h-4 text-[#1B8754]" viewBox="0 0 24 24" fill="currentColor">
             <path d="M4 20V4h7.5c3.04 0 5.2 1.85 5.2 4.65 0 2.84-2.16 4.65-5.2 4.65H8.5V20H4zm4.5-10.3h2.8c1.16 0 1.85-.52 1.85-1.35 0-.82-.69-1.35-1.85-1.35H8.5v2.7zM18 20v-8h2v8h-2zm0-10V8h2v2h-2z"/>
           </svg>
@@ -285,15 +291,15 @@ html { scroll-behavior: smooth; }
         Sign in
       </button>
 
-      <button onclick="openNewTicketModal()" class="px-4 py-1.5 rounded-xl bg-white hover:bg-white/95 text-[#1B8754] text-xs sm:text-sm font-title-extrabold transition-all flex items-center gap-1.5 shadow-sm cursor-pointer">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.75" d="M12 4v16m8-8H4"/></svg>
+      <button onclick="openNewTicketModal()" class="px-4 py-1.5 rounded-xl bg-white hover:bg-white/95 text-[#0B2240] text-xs sm:text-sm font-title-extrabold transition-all flex items-center gap-1.5 shadow-sm cursor-pointer">
+        <svg class="w-3.5 h-3.5 text-[#1B8754]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.75" d="M12 4v16m8-8H4"/></svg>
         <span>Submit Ticket</span>
       </button>
 
       <!-- User Profile Chip -->
       <div id="userChipArea" class="hidden relative">
         <button onclick="toggleUserDropdown()" class="flex items-center gap-2 p-1 pr-3 rounded-full border border-white/30 hover:bg-white/15 transition-all bg-white/10 text-white cursor-pointer">
-          <div id="chipAvatar" class="w-7 h-7 rounded-full bg-white text-[#1B8754] font-bold text-xs flex items-center justify-center font-mono">
+          <div id="chipAvatar" class="w-7 h-7 rounded-full bg-white text-[#0B2240] font-bold text-xs flex items-center justify-center font-mono">
             PH
           </div>
           <div class="text-left hidden sm:block leading-tight">
@@ -356,18 +362,37 @@ html { scroll-behavior: smooth; }
 
   <!-- ==================== 1. HOMEPAGE SECTION ==================== -->
   <section id="sectionHomepage" class="rounded-[2rem] bg-[var(--c-card)] border border-[var(--c-line)] p-6 sm:p-10 shadow-xs scroll-mt-20">
+    <!-- Logged-in Welcome Banner -->
+    <div id="heroWelcomeBanner" class="hidden mb-7 rounded-2xl brand-footer-bar text-white px-6 py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
+      <div class="space-y-1">
+        <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white/15 border border-white/25 text-[11px] font-mono uppercase tracking-wider">
+          <span class="w-2 h-2 rounded-full bg-white"></span>
+          <span id="welcomeRoleTag">PHB PORTAL SESSION</span>
+        </div>
+        <h1 class="font-title-extrabold text-2xl sm:text-4xl tracking-tight text-white">
+          Welcome to ORBIT, <span id="staffHeroName">colleague</span> 👋
+        </h1>
+        <p id="welcomeSubtext" class="text-xs sm:text-sm text-white/90 font-sub-medium">
+          Your IT self-service workspace and queue are ready.
+        </p>
+      </div>
+      <div id="welcomeDeptPill" class="self-start sm:self-center px-3.5 py-1.5 rounded-xl bg-white/15 border border-white/25 text-xs font-mono text-white shrink-0">
+        PHB
+      </div>
+    </div>
+
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
 
       <!-- Left Column -->
       <div class="lg:col-span-7 xl:col-span-8 space-y-6">
         <div>
-          <h1 id="heroGuestHeading" class="font-title-extrabold text-4xl sm:text-5xl lg:text-[3.5rem] tracking-tight leading-[1.06] text-[var(--c-body)]">
+          <h2 id="heroGuestHeading" class="font-title-extrabold text-4xl sm:text-5xl lg:text-[3.5rem] tracking-tight leading-[1.06] text-[var(--c-body)]">
             Fix common IT issues
             <span class="brand-gradient-text">your way.</span>
-          </h1>
-          <h1 id="heroWelcomeHeading" class="hidden font-title-extrabold text-4xl sm:text-5xl tracking-tight leading-[1.1] text-[var(--c-body)]">
-            <span>Welcome to ORBIT, <span id="staffHeroName" class="brand-gradient-text">colleague</span></span>
-          </h1>
+          </h2>
+          <h2 id="heroLoggedInHeading" class="hidden font-title-extrabold text-3xl sm:text-4xl tracking-tight leading-[1.1] text-[var(--c-body)]">
+            Fix common IT issues <span class="brand-gradient-text">your way.</span>
+          </h2>
 
           <p class="font-sub-medium text-base sm:text-lg text-[var(--c-soft)] leading-relaxed max-w-2xl mt-4">
             Internal self-service repository built for PHB employees who want fast resolution &mdash; VPN troubleshooting, password resets, hardware support, and instant ticket escalation.
@@ -434,12 +459,12 @@ html { scroll-behavior: smooth; }
               INSTANT IT GUIDES
             </span>
 
-            <h2 class="font-title-extrabold text-3xl tracking-tight leading-tight text-[var(--c-body)]">
+            <h3 class="font-title-extrabold text-3xl tracking-tight leading-tight text-[var(--c-body)]">
               Self-help before reaching out.
-            </h2>
+            </h3>
 
             <p class="font-sub-medium text-sm text-[var(--c-soft)] leading-relaxed">
-              Pick any category below to pop open matching troubleshooting guides with clear step-by-step instructions.
+              Pick any category below to pop open guides grouped by department with step-by-step instructions.
             </p>
           </div>
 
@@ -448,7 +473,7 @@ html { scroll-behavior: smooth; }
               <span>Open Categories</span>
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.75" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
             </a>
-            <span class="font-mono text-xs font-semibold px-2.5 py-1 rounded-lg bg-[var(--c-card)] text-[var(--c-primary)] border border-[var(--c-line)]">
+            <span id="guideSummaryBadge" class="font-mono text-xs font-semibold px-2.5 py-1 rounded-lg bg-[var(--c-card)] text-[var(--c-primary)] border border-[var(--c-line)]">
               6 Categories · 24 Guides
             </span>
           </div>
@@ -457,12 +482,12 @@ html { scroll-behavior: smooth; }
     </div>
   </section>
 
-  <!-- ==================== EXECUTIVE DASHBOARD KPI OVERVIEW (HOD IT ONLY) ==================== -->
+  <!-- ==================== EXECUTIVE DASHBOARD KPI OVERVIEW (HOD IT & IT ADMIN ONLY) ==================== -->
   <section id="sectionExecutiveOverview" class="hidden space-y-4">
     <div class="p-6 rounded-3xl bg-[var(--c-card)] border border-[var(--c-line)] flex flex-col lg:flex-row lg:items-center justify-between gap-6">
       <div>
         <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-[var(--c-blue-tint)] text-[var(--c-accent-blue)] text-xs font-sub-medium border border-[var(--c-accent-blue)]/30 mb-2">
-          <span id="roleOverviewBadge">HOD IT Executive Dashboard</span>
+          <span id="roleOverviewBadge">IT Service Dashboard</span>
         </div>
         <h2 class="font-title-extrabold text-2xl sm:text-3xl tracking-tight text-[var(--c-body)]">
           IT Service Queue &amp; SLA Performance
@@ -497,8 +522,8 @@ html { scroll-behavior: smooth; }
   <section id="sectionTicketQueue" class="hidden space-y-4 scroll-mt-20">
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-[var(--c-card)] border border-[var(--c-line)]">
       <div class="flex flex-wrap items-center gap-3">
-        <h2 class="font-title-extrabold text-xl text-[var(--c-body)] flex items-center gap-2">
-          <span>Ticket Dashboard</span>
+        <h2 id="ticketQueueHeading" class="font-title-extrabold text-xl text-[var(--c-body)] flex items-center gap-2">
+          <span>Ticket Queue</span>
           <span id="ticketBadgeCount" class="text-xs font-mono px-2.5 py-0.5 rounded-full bg-[var(--c-blue-tint)] text-[var(--c-accent-blue)] border border-[var(--c-accent-blue)]/30">0</span>
         </h2>
 
@@ -576,7 +601,7 @@ html { scroll-behavior: smooth; }
           <div class="text-[11px] font-mono font-bold uppercase tracking-widest text-[var(--c-primary)]">STEP 01</div>
           <h3 class="font-title-extrabold text-base text-[var(--c-body)]">Search or browse</h3>
           <p class="text-xs sm:text-sm text-[var(--c-soft)] leading-relaxed">
-            Use Guideline AI in the bottom chatbox, or click a category to pop open related guides.
+            Use Guideline AI in the bottom chatbox, or click a category to pop open guides grouped by department.
           </p>
         </div>
 
@@ -624,7 +649,7 @@ html { scroll-behavior: smooth; }
     </div>
   </section>
 
-  <!-- ==================== 3. BROWSE CATEGORIES (WITH POP-UNDER GUIDES) ==================== -->
+  <!-- ==================== 3. BROWSE CATEGORIES (GROUPED BY DEPARTMENT) ==================== -->
   <section id="sectionBrowseCategories" class="category-section-bg rounded-[2rem] border border-[var(--c-line)] p-6 sm:p-8 space-y-6 scroll-mt-20">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-l-4 border-[var(--c-primary)] pl-4 py-1">
       <div>
@@ -633,17 +658,17 @@ html { scroll-behavior: smooth; }
           Browse by Category
         </h2>
         <p class="font-sub-medium text-sm text-[var(--c-soft)]">
-          Click any category below to pop open its guides right underneath
+          Click any category below to pop open its guides grouped by department
         </p>
       </div>
-      <div class="hidden sm:flex items-center gap-2 text-xs font-sub-medium text-[var(--c-primary)] bg-[var(--c-card)] px-3.5 py-1.5 rounded-full border border-[var(--c-primary)]/30">
+      <div id="categoryHeaderPill" class="hidden sm:flex items-center gap-2 text-xs font-sub-medium text-[var(--c-primary)] bg-[var(--c-card)] px-3.5 py-1.5 rounded-full border border-[var(--c-primary)]/30">
         <span class="w-2 h-2 rounded-full bg-[var(--c-primary)]"></span>
-        <span>6 IT Domains · 24 Guides</span>
+        <span>6 IT Domains · 24 Guides · By Department</span>
       </div>
     </div>
 
     <div id="browseRow" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5"></div>
-    <div id="categoryDrawerPanel" class="hidden rounded-2xl bg-[var(--c-card)] border border-[var(--c-primary)] p-5 sm:p-6 space-y-3 shadow-xs"></div>
+    <div id="categoryDrawerPanel" class="hidden rounded-2xl bg-[var(--c-card)] border border-[var(--c-primary)] p-5 sm:p-6 space-y-4 shadow-xs"></div>
   </section>
 
   <!-- ==================== 4. FREQUENTLY ASKED QUESTIONS (SHOW 3, REST EXPANDABLE) ==================== -->
@@ -663,7 +688,7 @@ html { scroll-behavior: smooth; }
     <div id="faqAccordionList" class="space-y-3"></div>
   </section>
 
-  <!-- ==================== ANALYTICS & REPORTS SECTION (HOD IT ONLY) ==================== -->
+  <!-- ==================== ANALYTICS & REPORTS SECTION (HOD IT & IT ADMIN ONLY) ==================== -->
   <section id="sectionReports" class="hidden space-y-6 scroll-mt-20">
     <div class="flex items-center gap-3 border-l-4 border-[var(--c-accent-blue)] pl-3 py-1">
       <div>
@@ -688,7 +713,7 @@ html { scroll-behavior: smooth; }
       <div class="p-5 rounded-3xl bg-[var(--c-card)] border border-[var(--c-line)] space-y-4">
         <div class="flex items-center justify-between pb-3 border-b border-[var(--c-line)]">
           <h3 class="font-title-extrabold text-base text-[var(--c-body)]">Category Ratio Breakdown</h3>
-          <span class="text-[10px] font-mono font-semibold text-[var(--c-soft)]">24 TOTAL GUIDES</span>
+          <span id="analyticsGuideTotalLabel" class="text-[10px] font-mono font-semibold text-[var(--c-soft)]">24 TOTAL GUIDES</span>
         </div>
         <div id="catDistributionList" class="space-y-3 pt-1"></div>
       </div>
@@ -754,9 +779,10 @@ html { scroll-behavior: smooth; }
 <div id="modalArticle" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/45 backdrop-blur-xs" onclick="if(event.target===this)closeModal('modalArticle')">
   <div class="max-w-2xl w-full bg-[var(--c-card)] rounded-3xl shadow-2xl border border-[var(--c-line)] overflow-hidden max-h-[90vh] flex flex-col">
     <div class="px-6 py-4 border-b border-[var(--c-line)] bg-[var(--c-tint)] flex items-center justify-between">
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2.5 flex-wrap">
         <span id="artId" class="font-mono text-xs font-semibold text-[var(--c-primary)] px-2.5 py-1 rounded-md bg-[var(--c-card)] border border-[var(--c-primary)]/40">KB-0000</span>
         <span id="artCat" class="text-xs font-sub-medium text-[var(--c-soft)] uppercase tracking-wider">Category</span>
+        <span id="artDept" class="text-xs font-mono text-[var(--c-accent-blue)] px-2 py-0.5 rounded bg-[var(--c-blue-tint)]">Department</span>
       </div>
       <button onclick="closeModal('modalArticle')" class="text-[var(--c-soft)] hover:text-[var(--c-primary)] p-1">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -829,7 +855,6 @@ html { scroll-behavior: smooth; }
             <option value="Content Management">Content Management</option>
             <option value="System Administrator">System Administrator</option>
             <option value="Training">Training</option>
-            <option value="Other">Other</option>
           </select>
         </div>
         <div>
@@ -969,57 +994,65 @@ const CONFIG = {
 const DEFAULT_PENDING_ASSIGNEE = 'Pending HOD IT To Assign';
 const DEMO = !CONFIG.flows.load || (!CONFIG.flows.create && !CONFIG.flows.save);
 
-const KB_ARTICLES = [
-  { id: 'KB-0101', cat: 'Network & VPN', sev: 'crit', title: "VPN won't connect or keeps dropping", desc: "Fix the most common VPN client errors and dropped tunnels.", tags: ['vpn', 'remote access', 'connection'], steps: ["Confirm you have an active internet connection.", "Fully quit the VPN client (not just close window) and reopen.", "Restart computer if client was open before update.", "Switch to nearest server region.", "Flush DNS via command prompt: ipconfig /flushdns"] },
-  { id: 'KB-0102', cat: 'Network & VPN', sev: 'warn', title: "Wi-Fi keeps disconnecting", desc: "Stabilize a flaky office or home Wi-Fi connection.", tags: ['wifi', 'wireless', 'connectivity'], steps: ["Move closer to access point — office Wi-Fi range drops past 2 walls.", "Forget the network and rejoin with fresh password.", "Toggle Wi-Fi off and back on; or toggle Airplane mode for 5s.", "Update network adapter driver via Device Manager."] },
-  { id: 'KB-0103', cat: 'Network & VPN', sev: 'ok', title: "How to set up VPN on a new device", desc: "First-time VPN client install and configuration.", tags: ['vpn', 'setup', 'onboarding'], steps: ["Download approved client from Software Center.", "Install and launch client, sign in with PHB email.", "Complete MFA approval on mobile phone.", "Select primary server region and click Connect."] },
-  { id: 'KB-0104', cat: 'Network & VPN', sev: 'warn', title: "Slow internet on company network", desc: "Diagnose and resolve sluggish browsing or downloads.", tags: ['speed', 'bandwidth', 'wifi'], steps: ["Run speed test and note baseline result.", "Close bandwidth-heavy apps (video calls, large background syncs).", "Disconnect from VPN briefly to check if speed improves.", "Switch from Wi-Fi to ethernet cable if available."] },
+/* KB Guides (excluding any 'other' category guides) with Department assignment */
+const RAW_KB_ARTICLES = [
+  { id: 'KB-0101', cat: 'Network & VPN', dept: 'Information Technology', sev: 'crit', title: "VPN won't connect or keeps dropping", desc: "Fix the most common VPN client errors and dropped tunnels.", tags: ['vpn', 'remote access', 'connection'], steps: ["Confirm you have an active internet connection.", "Fully quit the VPN client (not just close window) and reopen.", "Restart computer if client was open before update.", "Switch to nearest server region.", "Flush DNS via command prompt: ipconfig /flushdns"] },
+  { id: 'KB-0102', cat: 'Network & VPN', dept: 'Information Technology', sev: 'warn', title: "Wi-Fi keeps disconnecting", desc: "Stabilize a flaky office or home Wi-Fi connection.", tags: ['wifi', 'wireless', 'connectivity'], steps: ["Move closer to access point — office Wi-Fi range drops past 2 walls.", "Forget the network and rejoin with fresh password.", "Toggle Wi-Fi off and back on; or toggle Airplane mode for 5s.", "Update network adapter driver via Device Manager."] },
+  { id: 'KB-0103', cat: 'Network & VPN', dept: 'Corporate Services & HR', sev: 'ok', title: "How to set up VPN on a new device", desc: "First-time VPN client install and configuration during onboarding.", tags: ['vpn', 'setup', 'onboarding'], steps: ["Download approved client from Software Center.", "Install and launch client, sign in with PHB email.", "Complete MFA approval on mobile phone.", "Select primary server region and click Connect."] },
+  { id: 'KB-0104', cat: 'Network & VPN', dept: 'Information Technology', sev: 'warn', title: "Slow internet on company network", desc: "Diagnose and resolve sluggish browsing or downloads.", tags: ['speed', 'bandwidth', 'wifi'], steps: ["Run speed test and note baseline result.", "Close bandwidth-heavy apps (video calls, large background syncs).", "Disconnect from VPN briefly to check if speed improves.", "Switch from Wi-Fi to ethernet cable if available."] },
 
-  { id: 'KB-0201', cat: 'Hardware', sev: 'crit', title: "Laptop won't turn on", desc: "Troubleshoot a completely unresponsive laptop.", tags: ['laptop', 'power', 'boot'], steps: ["Plug directly into wall outlet (not power strip) and check charging light.", "Hold power button for 15 seconds to force hard reset.", "Try a different charging cable or adapter.", "Remove battery (if removable), wait 30s, reinsert."] },
-  { id: 'KB-0202', cat: 'Hardware', sev: 'warn', title: "External monitor not detected", desc: "Fix dual or external display connection issues.", tags: ['monitor', 'display', 'dock'], steps: ["Confirm cable is firmly seated at both ends.", "Press Win + P and select Extend or Duplicate.", "On Mac: System Settings > Displays > Detect Displays.", "Unplug and replug docking station USB-C cable."] },
-  { id: 'KB-0203', cat: 'Hardware', sev: 'ok', title: "Connecting to a docking station", desc: "Set up a single-cable docking station correctly.", tags: ['dock', 'setup', 'monitors'], steps: ["Connect dock to wall power first.", "Connect USB-C cable to laptop.", "Wait 10s for monitors and peripherals to initialize.", "If peripheral fails, reinsert its specific cable into dock."] },
-  { id: 'KB-0204', cat: 'Hardware', sev: 'warn', title: "Printer shows offline or won't print", desc: "Get a networked office printer working again.", tags: ['printer', 'offline', 'spooler'], steps: ["Confirm printer screen shows Ready and has paper/toner.", "Remove printer in Printers & Scanners, then re-add.", "Restart print spooler: Services > Print Spooler > Restart."] },
-  { id: 'KB-0205', cat: 'Hardware', sev: 'ok', title: "Requesting a loaner laptop", desc: "Process for getting temporary hardware during repairs.", tags: ['loaner', 'replacement', 'equipment'], steps: ["Submit ticket with manager approval.", "Back up local files to OneDrive.", "Collect loaner from ITD desk within 1 business day."] },
+  { id: 'KB-0201', cat: 'Hardware', dept: 'Information Technology', sev: 'crit', title: "Laptop won't turn on", desc: "Troubleshoot a completely unresponsive laptop.", tags: ['laptop', 'power', 'boot'], steps: ["Plug directly into wall outlet (not power strip) and check charging light.", "Hold power button for 15 seconds to force hard reset.", "Try a different charging cable or adapter.", "Remove battery (if removable), wait 30s, reinsert."] },
+  { id: 'KB-0202', cat: 'Hardware', dept: 'Finance & Asset Management', sev: 'warn', title: "External monitor not detected", desc: "Fix dual or external display connection issues.", tags: ['monitor', 'display', 'dock'], steps: ["Confirm cable is firmly seated at both ends.", "Press Win + P and select Extend or Duplicate.", "On Mac: System Settings > Displays > Detect Displays.", "Unplug and replug docking station USB-C cable."] },
+  { id: 'KB-0203', cat: 'Hardware', dept: 'Information Technology', sev: 'ok', title: "Connecting to a docking station", desc: "Set up a single-cable docking station correctly.", tags: ['dock', 'setup', 'monitors'], steps: ["Connect dock to wall power first.", "Connect USB-C cable to laptop.", "Wait 10s for monitors and peripherals to initialize.", "If peripheral fails, reinsert its specific cable into dock."] },
+  { id: 'KB-0204', cat: 'Hardware', dept: 'Corporate Services & HR', sev: 'warn', title: "Printer shows offline or won't print", desc: "Get a networked office printer working again.", tags: ['printer', 'offline', 'spooler'], steps: ["Confirm printer screen shows Ready and has paper/toner.", "Remove printer in Printers & Scanners, then re-add.", "Restart print spooler: Services > Print Spooler > Restart."] },
+  { id: 'KB-0205', cat: 'Hardware', dept: 'Finance & Asset Management', sev: 'ok', title: "Requesting a loaner laptop", desc: "Process for getting temporary hardware during repairs.", tags: ['loaner', 'replacement', 'equipment'], steps: ["Submit ticket with manager approval.", "Back up local files to OneDrive.", "Collect loaner from ITD desk within 1 business day."] },
 
-  { id: 'KB-0301', cat: 'Software', sev: 'warn', title: "Computer running slow", desc: "Speed up a sluggish Windows or Mac machine.", tags: ['performance', 'slow', 'ram'], steps: ["Restart computer to clear memory buildup.", "Open Task Manager and close high-CPU background apps.", "Ensure at least 10% disk space is free.", "Pause OneDrive cloud sync temporarily."] },
-  { id: 'KB-0302', cat: 'Software', sev: 'crit', title: "Application keeps crashing", desc: "Resolve repeated crashes in a specific application.", tags: ['crash', 'app', 'error'], steps: ["Force close app via Task Manager.", "Check Software Center for pending app update.", "Restart computer to clear corrupted state.", "Reinstall app via Software Center."] },
-  { id: 'KB-0303', cat: 'Software', sev: 'ok', title: "Installing approved software", desc: "How to install applications without admin rights.", tags: ['install', 'software center', 'request'], steps: ["Open Start > Software Center.", "Browse pre-approved catalog.", "Click Install on required application."] },
-  { id: 'KB-0304', cat: 'Software', sev: 'ok', title: "Update is stuck or won't install", desc: "Unstick a frozen Windows or macOS update.", tags: ['update', 'windows update', 'patch'], steps: ["Leave laptop plugged in and connected for 30 min.", "Restart machine to resume update.", "Run Windows Update Troubleshooter.", "Ensure at least 15GB free disk space."] },
+  { id: 'KB-0301', cat: 'Software', dept: 'Information Technology', sev: 'warn', title: "Computer running slow", desc: "Speed up a sluggish Windows or Mac machine.", tags: ['performance', 'slow', 'ram'], steps: ["Restart computer to clear memory buildup.", "Open Task Manager and close high-CPU background apps.", "Ensure at least 10% disk space is free.", "Pause OneDrive cloud sync temporarily."] },
+  { id: 'KB-0302', cat: 'Software', dept: 'Project & Development', sev: 'crit', title: "Application keeps crashing", desc: "Resolve repeated crashes in a specific application.", tags: ['crash', 'app', 'error'], steps: ["Force close app via Task Manager.", "Check Software Center for pending app update.", "Restart computer to clear corrupted state.", "Reinstall app via Software Center."] },
+  { id: 'KB-0303', cat: 'Software', dept: 'Information Technology', sev: 'ok', title: "Installing approved software", desc: "How to install applications without admin rights.", tags: ['install', 'software center', 'request'], steps: ["Open Start > Software Center.", "Browse pre-approved catalog.", "Click Install on required application."] },
+  { id: 'KB-0304', cat: 'Software', dept: 'Information Technology', sev: 'ok', title: "Update is stuck or won't install", desc: "Unstick a frozen Windows or macOS update.", tags: ['update', 'windows update', 'patch'], steps: ["Leave laptop plugged in and connected for 30 min.", "Restart machine to resume update.", "Run Windows Update Troubleshooter.", "Ensure at least 15GB free disk space."] },
 
-  { id: 'KB-0401', cat: 'Account & Access', sev: 'crit', title: "Locked out of your account", desc: "Regain access after failed login attempts.", tags: ['lockout', 'login', 'password'], steps: ["Wait 15 minutes for automatic lockout cooldown.", "Use Forgot Password link on login screen.", "Verify identity via Authenticator app.", "If recovery fails, call IT HelpDesk with photo ID."] },
-  { id: 'KB-0402', cat: 'Account & Access', sev: 'ok', title: "How to reset your password", desc: "Self-service password reset walkthrough.", tags: ['password', 'reset', '2fa'], steps: ["Visit password.phb.com.my", "Verify 2FA via Authenticator.", "Create new 12+ char password with numbers/symbols.", "Update saved password on mobile devices."] },
-  { id: 'KB-0403', cat: 'Account & Access', sev: 'warn', title: "Setting up multi-factor authentication (MFA)", desc: "Configure or change your MFA method.", tags: ['mfa', '2fa', 'authenticator'], steps: ["Install Microsoft Authenticator on mobile phone.", "Go to Account Settings > Security.", "Scan displayed QR code with phone camera.", "Enter 6-digit confirmation code."] },
-  { id: 'KB-0404', cat: 'Account & Access', sev: 'warn', title: "Requesting access to shared drive", desc: "Get permission to a restricted team folder.", tags: ['access', 'permission', 'folder'], steps: ["Copy exact network folder path.", "Submit Access Request ticket naming manager.", "Wait for manager email approval flag."] },
+  { id: 'KB-0401', cat: 'Account & Access', dept: 'Information Technology', sev: 'crit', title: "Locked out of your account", desc: "Regain access after failed login attempts.", tags: ['lockout', 'login', 'password'], steps: ["Wait 15 minutes for automatic lockout cooldown.", "Use Forgot Password link on login screen.", "Verify identity via Authenticator app.", "If recovery fails, call IT HelpDesk with photo ID."] },
+  { id: 'KB-0402', cat: 'Account & Access', dept: 'Information Technology', sev: 'ok', title: "How to reset your password", desc: "Self-service password reset walkthrough.", tags: ['password', 'reset', '2fa'], steps: ["Visit password.phb.com.my", "Verify 2FA via Authenticator.", "Create new 12+ char password with numbers/symbols.", "Update saved password on mobile devices."] },
+  { id: 'KB-0403', cat: 'Account & Access', dept: 'Corporate Services & HR', sev: 'warn', title: "Setting up multi-factor authentication (MFA)", desc: "Configure or change your MFA method.", tags: ['mfa', '2fa', 'authenticator'], steps: ["Install Microsoft Authenticator on mobile phone.", "Go to Account Settings > Security.", "Scan displayed QR code with phone camera.", "Enter 6-digit confirmation code."] },
+  { id: 'KB-0404', cat: 'Account & Access', dept: 'Finance & Asset Management', sev: 'warn', title: "Requesting access to shared drive", desc: "Get permission to a restricted team folder.", tags: ['access', 'permission', 'folder'], steps: ["Copy exact network folder path.", "Submit Access Request ticket naming manager.", "Wait for manager email approval flag."] },
 
-  { id: 'KB-0501', cat: 'Email & Calendar', sev: 'warn', title: "Email not syncing or sending", desc: "Fix Outlook sync and send failures.", tags: ['outlook', 'email', 'sync'], steps: ["Check internet connection.", "Confirm mailbox quota is not full.", "Restart Outlook client completely.", "Remove and re-add email profile."] },
-  { id: 'KB-0502', cat: 'Email & Calendar', sev: 'ok', title: "Setting up a shared mailbox", desc: "Add team mailbox to Microsoft Outlook.", tags: ['shared mailbox', 'outlook', 'team'], steps: ["Confirm access is granted by IT.", "In Outlook: File > Account Settings > Account Settings.", "Select account > More Settings > Advanced > Add.", "Type shared mailbox name and click OK."] },
-  { id: 'KB-0503', cat: 'Email & Calendar', sev: 'ok', title: "Calendar invites not showing up", desc: "Resolve missing or delayed meeting invites.", tags: ['calendar', 'invite', 'outlook'], steps: ["Check Junk/Clutter folder.", "Confirm sender used exact PHB address.", "Toggle calendar sync off and on in settings."] },
+  { id: 'KB-0501', cat: 'Email & Calendar', dept: 'Information Technology', sev: 'warn', title: "Email not syncing or sending", desc: "Fix Outlook sync and send failures.", tags: ['outlook', 'email', 'sync'], steps: ["Check internet connection.", "Confirm mailbox quota is not full.", "Restart Outlook client completely.", "Remove and re-add email profile."] },
+  { id: 'KB-0502', cat: 'Email & Calendar', dept: 'Corporate Services & HR', sev: 'ok', title: "Setting up a shared mailbox", desc: "Add team mailbox to Microsoft Outlook.", tags: ['shared mailbox', 'outlook', 'team'], steps: ["Confirm access is granted by IT.", "In Outlook: File > Account Settings > Account Settings.", "Select account > More Settings > Advanced > Add.", "Type shared mailbox name and click OK."] },
+  { id: 'KB-0503', cat: 'Email & Calendar', dept: 'Project & Development', sev: 'ok', title: "Calendar invites not showing up", desc: "Resolve missing or delayed meeting invites.", tags: ['calendar', 'invite', 'outlook'], steps: ["Check Junk/Clutter folder.", "Confirm sender used exact PHB address.", "Toggle calendar sync off and on in settings."] },
 
-  { id: 'KB-0601', cat: 'Security', sev: 'crit', title: "I clicked a suspicious link or attachment", desc: "Immediate steps after potential phishing click.", tags: ['phishing', 'security', 'incident'], steps: ["Disconnect Wi-Fi immediately or unplug ethernet cable.", "Do NOT enter credentials on any prompt.", "Change password from a separate trusted device.", "Submit Critical Security Incident ticket."] },
-  { id: 'KB-0602', cat: 'Security', sev: 'warn', title: "How to spot a phishing email", desc: "Common red flags in suspicious emails.", tags: ['phishing', 'security', 'email'], steps: ["Check sender email domain carefully.", "Look for urgent threats or wire transfer requests.", "Hover over links to verify destination URL.", "Use Outlook Report Phishing button."] },
-  { id: 'KB-0603', cat: 'Security', sev: 'ok', title: "Enabling full-disk encryption", desc: "Confirm BitLocker or FileVault protection.", tags: ['encryption', 'bitlocker', 'filevault'], steps: ["Windows: Settings > Privacy & Security > Device Encryption.", "Mac: System Settings > Privacy & Security > FileVault.", "Confirm status shows On."] },
-  { id: 'KB-0604', cat: 'Security', sev: 'warn', title: "Reporting a lost or stolen device", desc: "Steps to take if a PHB laptop goes missing.", tags: ['lost', 'stolen', 'device'], steps: ["Call IT HelpDesk immediately.", "Provide asset tag or serial number.", "IT will remotely lock and wipe device.", "File police report for insurance."] }
+  { id: 'KB-0601', cat: 'Security', dept: 'Information Technology', sev: 'crit', title: "I clicked a suspicious link or attachment", desc: "Immediate steps after potential phishing click.", tags: ['phishing', 'security', 'incident'], steps: ["Disconnect Wi-Fi immediately or unplug ethernet cable.", "Do NOT enter credentials on any prompt.", "Change password from a separate trusted device.", "Submit Critical Security Incident ticket."] },
+  { id: 'KB-0602', cat: 'Security', dept: 'Corporate Services & HR', sev: 'warn', title: "How to spot a phishing email", desc: "Common red flags in suspicious emails.", tags: ['phishing', 'security', 'email'], steps: ["Check sender email domain carefully.", "Look for urgent threats or wire transfer requests.", "Hover over links to verify destination URL.", "Use Outlook Report Phishing button."] },
+  { id: 'KB-0603', cat: 'Security', dept: 'Information Technology', sev: 'ok', title: "Enabling full-disk encryption", desc: "Confirm BitLocker or FileVault protection.", tags: ['encryption', 'bitlocker', 'filevault'], steps: ["Windows: Settings > Privacy & Security > Device Encryption.", "Mac: System Settings > Privacy & Security > FileVault.", "Confirm status shows On."] },
+  { id: 'KB-0604', cat: 'Security', dept: 'Finance & Asset Management', sev: 'warn', title: "Reporting a lost or stolen device", desc: "Steps to take if a PHB laptop goes missing.", tags: ['lost', 'stolen', 'device'], steps: ["Call IT HelpDesk immediately.", "Provide asset tag or serial number.", "IT will remotely lock and wipe device.", "File police report for insurance."] }
 ];
 
-const CATEGORIES = [
-  { key: 'Hardware', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>', desc: 'Laptops, monitors & docks', count: 5 },
-  { key: 'Software', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>', desc: 'Installs, updates & crashes', count: 4 },
-  { key: 'Network & VPN', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>', desc: 'Wi-Fi, VPN & connectivity', count: 4 },
-  { key: 'Account & Access', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>', desc: 'Passwords, MFA & folders', count: 4 },
-  { key: 'Email & Calendar', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>', desc: 'Outlook & shared mailboxes', count: 3 },
-  { key: 'Security', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>', desc: 'Phishing, encryption & loss', count: 4 }
+const KB_ARTICLES = RAW_KB_ARTICLES.filter(a => a.cat.toLowerCase() !== 'other');
+
+const CATEGORY_META = [
+  { key: 'Hardware', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>', desc: 'Laptops, monitors & docks' },
+  { key: 'Software', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>', desc: 'Installs, updates & crashes' },
+  { key: 'Network & VPN', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>', desc: 'Wi-Fi, VPN & connectivity' },
+  { key: 'Account & Access', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>', desc: 'Passwords, MFA & folders' },
+  { key: 'Email & Calendar', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>', desc: 'Outlook & shared mailboxes' },
+  { key: 'Security', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>', desc: 'Phishing, encryption & loss' }
 ];
+
+const CATEGORIES = CATEGORY_META.map(c => ({
+  ...c,
+  count: KB_ARTICLES.filter(a => a.cat === c.key).length
+}));
 
 const FAQ_ITEMS = [
   {
     id: 'faq-1',
     q: 'Do I need to sign in to read troubleshooting guides?',
-    a: 'No. Any PHB staff member can browse categories, pop open troubleshooting guides, use the bottom Guideline AI chatbox, and read FAQs right away. Signing in with Microsoft 365 is only required when submitting or tracking support tickets.'
+    a: 'No. Any PHB staff member can browse categories grouped by department, pop open troubleshooting guides, use the bottom Guideline AI chatbox, and read FAQs right away. Signing in with Microsoft 365 is only required when submitting or tracking support tickets.'
   },
   {
     id: 'faq-2',
     q: 'Who can see support tickets?',
-    a: 'Staff members see their own submitted tickets, Department Heads can view tickets for their department, and IT personnel manage ticket updates and HOD IT oversees all queues.'
+    a: 'Staff members see their own submitted tickets in the Ticket Queue, HOD Dept sees all tickets in their department plus their own tickets, and HOD IT / IT Admin manages the IT Service Dashboard and Analytics.'
   },
   {
     id: 'faq-3',
@@ -1029,7 +1062,7 @@ const FAQ_ITEMS = [
   {
     id: 'faq-4',
     q: 'How will I know when my ticket is updated?',
-    a: 'Status changes, assignee updates, and resolution remarks appear in your Ticket Dashboard drawer and trigger notifications when configured.'
+    a: 'Status changes, assignee updates, and resolution remarks appear in your Ticket Queue drawer and trigger notifications when configured.'
   },
   {
     id: 'faq-5',
@@ -1053,6 +1086,12 @@ let msalApp = null;
 
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const $ = id => document.getElementById(id);
+
+function sevLabel(sev) {
+  if (sev === 'crit') return { text: 'CRITICAL', cls: 'sev-crit' };
+  if (sev === 'warn') return { text: 'MODERATE', cls: 'sev-warn' };
+  return { text: 'ROUTINE', cls: 'sev-ok' };
+}
 
 /* ==================== FAQ ACCORDION (CLEAN CARD STYLE, 3 SHOWN, EXPANDABLE) ==================== */
 function renderFAQAccordion() {
@@ -1107,6 +1146,7 @@ function scoreArticleForQuery(article, rawQuery) {
   const hayTitle = article.title.toLowerCase();
   const hayDesc = article.desc.toLowerCase();
   const hayCat = article.cat.toLowerCase();
+  const hayDept = article.dept.toLowerCase();
   const hayTags = article.tags.join(' ').toLowerCase();
   const haySteps = article.steps.join(' ').toLowerCase();
 
@@ -1120,6 +1160,7 @@ function scoreArticleForQuery(article, rawQuery) {
     if (hayTitle.includes(w)) score += 5;
     if (hayTags.includes(w)) score += 4;
     if (hayCat.includes(w)) score += 3;
+    if (hayDept.includes(w)) score += 3;
     if (hayDesc.includes(w)) score += 2;
     if (haySteps.includes(w)) score += 1;
   }
@@ -1170,7 +1211,7 @@ function sendGuidelineChat(queryText) {
     const top = ranked[0].art;
     aiChatHistory.push({
       sender: 'bot',
-      text: `${top.id} (${top.cat}) — ${top.title}`,
+      text: `${top.id} (${top.cat} · ${top.dept}) — ${top.title}`,
       article: top
     });
   } else {
@@ -1382,6 +1423,7 @@ function populateDepartmentDropdowns() {
   const deptSelect = $('deptSelect');
   const formDept = $('formDept');
   const deptSet = new Set(Array.isArray(CONFIG.departments) ? CONFIG.departments.map(extractChoice) : []);
+  KB_ARTICLES.forEach(a => { if (a.dept) deptSet.add(extractChoice(a.dept)); });
   orbitUsersStore.forEach(u => { if (u.department) deptSet.add(extractChoice(u.department)); });
   ticketsStore.forEach(t => { if (t.Department) deptSet.add(extractChoice(t.Department)); });
   if (currentUser && currentUser.department) deptSet.add(extractChoice(currentUser.department));
@@ -1516,6 +1558,16 @@ function setSession(u, rows, usersListFromSP, rawData = {}) {
   $('menuEmail').textContent = currentUser.email || 'No email returned';
   $('menuDept').textContent = 'Dept: ' + (currentUser.department || 'General');
   $('staffHeroName').textContent = firstName;
+  $('welcomeRoleTag').textContent = currentUser.roleTitle;
+  $('welcomeDeptPill').textContent = currentUser.department || 'PHB';
+
+  if (currentUser.role === 'staff') {
+    $('welcomeSubtext').textContent = 'Staff View: Showing your personal IT support Ticket Queue.';
+  } else if (currentUser.role === 'hod_dept') {
+    $('welcomeSubtext').textContent = `HOD Dept View: Showing all tickets for ${currentUser.department || 'your department'} and your own tickets.`;
+  } else {
+    $('welcomeSubtext').textContent = `${currentUser.roleTitle}: Full access to Dashboard, Ticket Queue, and Analytics & Reports.`;
+  }
 
   closeModal('loginScreen');
   applyRoleView();
@@ -1527,31 +1579,35 @@ function applyRoleView() {
   const role = u ? u.role : 'guest';
   const show = (id, on) => $(id) && $(id).classList.toggle('hidden', !on);
 
-  // STAFF / IT ADMIN login -> only see dashboard (#sectionTicketQueue)
-  // HOD IT login -> see dashboard (#sectionExecutiveOverview + #sectionTicketQueue) and analytics (#sectionReports)
-  const isHodIt = role === 'hod_it';
-  const canFilterDepts = role === 'hod_it' || role === 'hod_dept';
+  // STAFF -> only Ticket Queue (#sectionTicketQueue)
+  // HOD DEPT -> only Ticket Queue (#sectionTicketQueue) for all their dept + their own ticket
+  // HOD IT / IT ADMIN -> Dashboard (#sectionExecutiveOverview + #sectionTicketQueue) and Analytics (#sectionReports)
+  const isItLeadership = role === 'hod_it' || role === 'it_admin';
+  const canAssign = role === 'hod_it';
+  const canFilterDepts = role === 'hod_it' || role === 'it_admin' || role === 'hod_dept';
 
-  show('sectionExecutiveOverview', isHodIt);
-  show('sectionReports', isHodIt);
-  show('navReportsLink', isHodIt);
-  show('exportBtnArea', isHodIt);
+  show('sectionExecutiveOverview', isItLeadership);
+  show('sectionReports', isItLeadership);
+  show('navReportsLink', isItLeadership);
+  show('exportBtnArea', isItLeadership);
   show('deptFilterArea', canFilterDepts);
-  show('drwAssigneeWrapper', isHodIt);
+  show('drwAssigneeWrapper', canAssign);
   show('sectionTicketQueue', !!u);
   show('navTicketsLink', !!u);
   show('signInBtn', !u);
   show('userChipArea', !!u);
+  show('heroWelcomeBanner', !!u);
   show('heroGuestHeading', !u);
-  show('heroWelcomeHeading', !!u);
+  show('heroLoggedInHeading', !!u);
 
   if (u) {
     const deptSelect = $('deptSelect');
-    if (role === 'hod_it') {
-      $('roleOverviewBadge').textContent = 'HOD IT Executive Dashboard';
-      $('roleOverviewDesc').textContent = 'Full enterprise oversight across all PHB departments, SLA metrics, and IT officer assignments.';
+    if (isItLeadership) {
+      $('roleOverviewBadge').textContent = u.roleTitle;
+      $('roleOverviewDesc').textContent = 'Real-time oversight of PHB IT support requests, SLA metrics, and departmental queue scoping.';
       deptSelect.disabled = false;
       deptSelect.value = 'ALL';
+      $('ticketQueueHeading').firstElementChild.textContent = 'Ticket Dashboard & Queue';
     } else if (role === 'hod_dept') {
       const myDept = extractChoice(u.department) || 'My Department';
       const matchingOption = Array.from(deptSelect.options).find(opt => opt.value.toLowerCase() === myDept.toLowerCase());
@@ -1562,6 +1618,9 @@ function applyRoleView() {
         deptSelect.appendChild(opt); deptSelect.value = myDept;
       }
       deptSelect.disabled = true;
+      $('ticketQueueHeading').firstElementChild.textContent = `Department & My Ticket Queue (${myDept})`;
+    } else {
+      $('ticketQueueHeading').firstElementChild.textContent = 'My Ticket Queue';
     }
     fillAssigneeSelect();
   }
@@ -1635,11 +1694,18 @@ function getFilteredTickets() {
   const userEmail = (currentUser.email || '').toLowerCase().trim();
   const userDept = extractChoice(currentUser.department).toLowerCase();
 
-  if (role === 'staff') list = list.filter(t => (t.RequesterEmail || '').toLowerCase().trim() === userEmail);
-  else if (role === 'hod_dept') list = list.filter(t => ((userEmail && (t.RequesterEmail || '').toLowerCase().trim() === userEmail) || (userDept && extractChoice(t.Department).toLowerCase() === userDept)));
-  else if (role === 'hod_it') {
+  if (role === 'staff') {
+    list = list.filter(t => (t.RequesterEmail || '').toLowerCase().trim() === userEmail);
+  } else if (role === 'hod_dept') {
+    list = list.filter(t =>
+      (userEmail && (t.RequesterEmail || '').toLowerCase().trim() === userEmail) ||
+      (userDept && extractChoice(t.Department).toLowerCase() === userDept)
+    );
+  } else if (role === 'hod_it' || role === 'it_admin') {
     const selectedDept = extractChoice($('deptSelect').value);
-    if (selectedDept && selectedDept !== 'ALL') list = list.filter(t => extractChoice(t.Department).toLowerCase() === selectedDept.toLowerCase());
+    if (selectedDept && selectedDept !== 'ALL') {
+      list = list.filter(t => extractChoice(t.Department).toLowerCase() === selectedDept.toLowerCase());
+    }
   }
 
   const query = $('ticketSearchInput').value.toLowerCase().trim();
@@ -1925,8 +1991,13 @@ async function handleNewTicketSubmit(e) {
 function closeModal(id) { $(id).classList.add('hidden'); }
 function closeDrawer(id) { $(id).classList.add('hidden'); }
 
-/* ==================== BROWSE CATEGORIES (GRADIENT CARD + SOFT BG) ==================== */
+/* ==================== BROWSE CATEGORIES (GROUPED BY DEPARTMENT) ==================== */
 function renderBrowseRow() {
+  const totalGuides = KB_ARTICLES.length;
+  if ($('guideSummaryBadge')) $('guideSummaryBadge').textContent = `${CATEGORIES.length} Categories · ${totalGuides} Guides`;
+  if ($('categoryHeaderPill')) $('categoryHeaderPill').lastElementChild.textContent = `${CATEGORIES.length} IT Domains · ${totalGuides} Guides · By Department`;
+  if ($('analyticsGuideTotalLabel')) $('analyticsGuideTotalLabel').textContent = `${totalGuides} TOTAL GUIDES`;
+
   $('browseRow').innerHTML = CATEGORIES.map(c => {
     const isActive = activeCategoryDrawer === c.key;
     return `
@@ -1956,49 +2027,76 @@ function renderBrowseRow() {
 
   const catObj = CATEGORIES.find(x => x.key === activeCategoryDrawer);
   const catArticles = KB_ARTICLES.filter(a => a.cat === activeCategoryDrawer);
+  const groupedByDept = {};
+  catArticles.forEach(art => {
+    const d = art.dept || 'General';
+    if (!groupedByDept[d]) groupedByDept[d] = [];
+    groupedByDept[d].push(art);
+  });
+
   drawerPanel.classList.remove('hidden');
 
   drawerPanel.innerHTML = `
     <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-[var(--c-line)]">
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2.5 flex-wrap">
         <span class="w-2.5 h-2.5 rounded-full bg-[var(--c-primary)]"></span>
         <span class="font-title-extrabold text-base sm:text-lg text-[var(--c-body)]">${esc(catObj.key)} Guides (${catArticles.length})</span>
+        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-[var(--c-blue-tint)] text-[var(--c-accent-blue)] border border-[var(--c-accent-blue)]/25">
+          By Department (${Object.keys(groupedByDept).length})
+        </span>
       </div>
       <button type="button" onclick="toggleCategoryBox('${esc(catObj.key)}')" class="text-xs font-sub-medium text-[var(--c-primary)] hover:underline cursor-pointer">
         Close Guides
       </button>
     </div>
 
-    <div class="space-y-2.5 pt-1">
-      ${catArticles.map(art => {
-        const isPopOpen = openPopGuideId === art.id;
-        return `
-          <div class="rounded-xl bg-[var(--c-bg)] border ${isPopOpen ? 'border-[var(--c-primary)]' : 'border-[var(--c-line)]'} overflow-hidden">
-            <button type="button" onclick="togglePopGuide('${art.id}')" class="w-full px-4 py-3 flex items-center justify-between gap-3 text-left hover:bg-[var(--c-tint)] transition-all cursor-pointer">
-              <div class="flex items-center gap-2.5 min-w-0">
-                <span class="font-mono text-xs font-semibold text-[var(--c-primary)] shrink-0">${art.id}</span>
-                <span class="text-xs sm:text-sm font-sub-medium text-[var(--c-body)] truncate">${esc(art.title)}</span>
-              </div>
-              <span class="text-xs font-sub-medium text-[var(--c-primary)] shrink-0">${isPopOpen ? 'Hide Steps' : 'Pop Steps'}</span>
-            </button>
-            ${isPopOpen ? `
-              <div class="px-4 pb-4 pt-3 border-t border-[var(--c-line)] bg-[var(--c-card)] space-y-3">
-                <p class="text-xs text-[var(--c-soft)]">${esc(art.desc)}</p>
-                <ol class="step-list text-xs sm:text-sm text-[var(--c-body)]">
-                  ${art.steps.map(s => `<li>${esc(s)}</li>`).join('')}
-                </ol>
-                <div class="pt-2 flex flex-wrap items-center justify-between gap-2 border-t border-[var(--c-line)] text-xs">
-                  <button type="button" onclick="openKBModal('${art.id}')" class="font-sub-medium text-[var(--c-primary)] hover:underline cursor-pointer">
-                    Open Full Modal
+    <div class="space-y-5 pt-1">
+      ${Object.entries(groupedByDept).map(([deptName, deptArticles]) => `
+        <div class="space-y-2.5">
+          <div class="flex items-center justify-between px-3 py-1.5 rounded-xl bg-[var(--c-blue-tint)] border border-[var(--c-accent-blue)]/20">
+            <span class="font-title-extrabold text-xs uppercase tracking-wider text-[var(--c-accent-blue)]">
+              Department: ${esc(deptName)}
+            </span>
+            <span class="font-mono text-[11px] font-semibold text-[var(--c-accent-blue)]">
+              ${deptArticles.length} ${deptArticles.length === 1 ? 'Guide' : 'Guides'}
+            </span>
+          </div>
+
+          <div class="space-y-2">
+            ${deptArticles.map(art => {
+              const isPopOpen = openPopGuideId === art.id;
+              const sev = sevLabel(art.sev);
+              return `
+                <div class="rounded-xl bg-[var(--c-bg)] border ${isPopOpen ? 'border-[var(--c-primary)]' : 'border-[var(--c-line)]'} overflow-hidden">
+                  <button type="button" onclick="togglePopGuide('${art.id}')" class="w-full px-4 py-3 flex items-center justify-between gap-3 text-left hover:bg-[var(--c-tint)] transition-all cursor-pointer">
+                    <div class="flex items-center gap-2.5 min-w-0 flex-wrap">
+                      <span class="font-mono text-xs font-semibold text-[var(--c-primary)] shrink-0">${art.id}</span>
+                      <span class="px-2 py-0.5 rounded-full text-[10px] font-mono tracking-wider shrink-0 ${sev.cls}">${sev.text}</span>
+                      <span class="text-xs sm:text-sm font-sub-medium text-[var(--c-body)] truncate">${esc(art.title)}</span>
+                    </div>
+                    <span class="text-xs font-sub-medium text-[var(--c-primary)] shrink-0">${isPopOpen ? 'Hide Steps' : 'Pop Steps'}</span>
                   </button>
-                  <button type="button" onclick="openNewTicketModal()" class="px-3 py-1.5 rounded-lg brand-gradient-bar text-white font-sub-medium cursor-pointer">
-                    Submit Ticket
-                  </button>
-                </div>
-              </div>
-            ` : ''}
-          </div>`;
-      }).join('')}
+                  ${isPopOpen ? `
+                    <div class="px-4 pb-4 pt-3 border-t border-[var(--c-line)] bg-[var(--c-card)] space-y-3">
+                      <p class="text-xs text-[var(--c-soft)]">${esc(art.desc)}</p>
+                      <ol class="step-list text-xs sm:text-sm text-[var(--c-body)]">
+                        ${art.steps.map(s => `<li>${esc(s)}</li>`).join('')}
+                      </ol>
+                      <div class="pt-2 flex flex-wrap items-center justify-between gap-2 border-t border-[var(--c-line)] text-xs">
+                        <button type="button" onclick="openKBModal('${art.id}')" class="font-sub-medium text-[var(--c-primary)] hover:underline cursor-pointer">
+                          Open Full Modal
+                        </button>
+                        <button type="button" onclick="openNewTicketModal()" class="px-3 py-1.5 rounded-lg brand-gradient-bar text-white font-sub-medium cursor-pointer">
+                          Submit Ticket
+                        </button>
+                      </div>
+                    </div>
+                  ` : ''}
+                </div>`;
+            }).join('')}
+          </div>
+        </div>
+      `).join('')}
     </div>`;
 }
 
@@ -2045,7 +2143,11 @@ function applyQuickChip(term) {
 function openKBModal(id) {
   const art = KB_ARTICLES.find(x => x.id === id);
   if (!art) return;
-  $('artId').textContent = art.id; $('artCat').textContent = art.cat; $('artTitle').textContent = art.title; $('artDesc').textContent = art.desc;
+  $('artId').textContent = art.id;
+  $('artCat').textContent = art.cat;
+  $('artDept').textContent = art.dept || 'General';
+  $('artTitle').textContent = art.title;
+  $('artDesc').textContent = art.desc;
   $('artSteps').innerHTML = art.steps.map(s => `<li>${esc(s)}</li>`).join('');
   $('artTags').innerHTML = art.tags.map(t => `<span class="px-2.5 py-0.5 rounded-full bg-[var(--c-bg)] border border-[var(--c-line)] text-[10px] font-mono text-[var(--c-soft)]">#${esc(t)}</span>`).join('');
   $('modalArticle').classList.remove('hidden');
@@ -2060,6 +2162,8 @@ function renderReportsData() {
   const months = ['Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'];
   const data = [12, 19, 14, 25, 22, 30];
   const max = Math.max(...data);
+  const totalGuides = Math.max(KB_ARTICLES.length, 1);
+
   $('barChart').innerHTML = months.map((m, i) => `
     <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
       <span class="text-[10px] font-mono font-semibold text-[var(--c-accent-blue)]">${data[i]}</span>
@@ -2074,7 +2178,7 @@ function renderReportsData() {
         <span class="font-mono font-semibold text-[var(--c-accent-blue)]">${c.count} guides</span>
       </div>
       <div class="h-2 w-full bg-[var(--c-bg)] rounded-full overflow-hidden border border-[var(--c-line)]">
-        <div class="h-full brand-accent-bar" style="width: ${(c.count / 24) * 100}%;"></div>
+        <div class="h-full brand-accent-bar" style="width: ${(c.count / totalGuides) * 100}%;"></div>
       </div>
     </div>`).join('');
 }
@@ -2083,13 +2187,13 @@ function exportToPDF() {
   if (!window.jspdf) return;
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
-  doc.setFillColor(22, 58, 95); doc.rect(0, 0, 210, 18, 'F');
+  doc.setFillColor(11, 34, 64); doc.rect(0, 0, 210, 18, 'F');
   doc.setTextColor(255, 255, 255); doc.setFontSize(12); doc.setFont('helvetica', 'bold');
   doc.text('Pelaburan Hartanah Berhad — ORBIT IT Queue Report', 14, 12);
-  doc.setTextColor(30, 41, 59); doc.setFontSize(9);
+  doc.setTextColor(11, 34, 64); doc.setFontSize(9);
   doc.text(`Generated: ${new Date().toLocaleString()} by ${currentUser ? currentUser.name : 'System'}`, 14, 25);
   const rows = getFilteredTickets().map(t => [t.TicketID, t.Subject, extractChoice(t.Department), t.Priority, t.Status, normalizeAssignee(t.AssignedTo || t.Assignee), t.AssignedBy || '-']);
-  doc.autoTable({ startY: 30, head: [['ID', 'Subject', 'Department', 'Priority', 'Status', 'Assignee', 'Assigned By']], body: rows, headStyles: { fillColor: [22, 58, 95] }, styles: { fontSize: 8 } });
+  doc.autoTable({ startY: 30, head: [['ID', 'Subject', 'Department', 'Priority', 'Status', 'Assignee', 'Assigned By']], body: rows, headStyles: { fillColor: [27, 135, 84] }, styles: { fontSize: 8 } });
   doc.save(`PHB_ORBIT_Report_${new Date().toISOString().slice(0, 10)}.pdf`);
   showToast('PDF Export generated.');
 }

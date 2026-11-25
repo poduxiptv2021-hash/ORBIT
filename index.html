@@ -667,7 +667,7 @@ footer.brand-footer-bar::before {
           Dashboard &amp; Ticket Overview (By Department)
         </h2>
         <p id="roleOverviewDesc" class="font-sub-medium text-sm text-[var(--c-soft)] mt-1">
-          Department-scoped IT ticket oversight sourced from Outlook profile &amp; SharePoint directory.
+          Department-scoped IT ticket oversight.
         </p>
       </div>
 
@@ -747,7 +747,7 @@ footer.brand-footer-bar::before {
             <tr class="bg-[var(--c-blue-tint)] border-b border-[var(--c-line)] text-[var(--c-accent-blue)] font-sub-medium uppercase tracking-wider text-[10px]">
               <th class="py-3.5 px-4 whitespace-nowrap">Ticket ID</th>
               <th class="py-3.5 px-4 min-w-[200px]">Subject &amp; Requester</th>
-              <th class="py-3.5 px-4 min-w-[240px]">Department (Outlook)</th>
+              <th class="py-3.5 px-4 min-w-[240px]">Department</th>
               <th class="py-3.5 px-4 whitespace-nowrap">Category</th>
               <th class="py-3.5 px-4 whitespace-nowrap">Priority</th>
               <th class="py-3.5 px-4 whitespace-nowrap">Status</th>
@@ -882,7 +882,7 @@ footer.brand-footer-bar::before {
           Analytics &amp; Reports Overview
         </h2>
         <p class="font-sub-medium text-sm text-[var(--c-soft)]">
-          Departmental ticket breakdown (Outlook), monthly volume, and category ratios
+          Departmental ticket breakdown , monthly volume, and category ratios
         </p>
       </div>
     </div>
@@ -890,8 +890,8 @@ footer.brand-footer-bar::before {
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div class="p-5 rounded-3xl bg-[var(--c-card)] border border-[var(--c-line)] space-y-4">
         <div class="flex items-center justify-between pb-3 border-b border-[var(--c-line)]">
-          <h3 class="font-title-extrabold text-base text-[var(--c-body)]">Tickets By Department (Outlook)</h3>
-          <span class="text-[10px] font-mono font-semibold text-[var(--c-accent-blue)]">OUTLOOK DEPT</span>
+          <h3 class="font-title-extrabold text-base text-[var(--c-body)]">Tickets By Department</h3>
+          <span class="text-[10px] font-mono font-semibold text-[var(--c-accent-blue)]">DEPARTMENT</span>
         </div>
         <div id="deptDistributionList" class="space-y-3 pt-1"></div>
       </div>
@@ -1032,7 +1032,7 @@ footer.brand-footer-bar::before {
       </div>
 
       <div>
-        <label class="block font-sub-medium text-[var(--c-soft)] uppercase tracking-wider text-[10px] mb-1">Department (Outlook)</label>
+        <label class="block font-sub-medium text-[var(--c-soft)] uppercase tracking-wider text-[10px] mb-1">Department</label>
         <input id="formDept" type="text" readonly class="w-full px-3 py-2 rounded-xl border border-[var(--c-line)] bg-[var(--c-bg)] text-[var(--c-body)]">
       </div>
 
@@ -1102,7 +1102,7 @@ footer.brand-footer-bar::before {
           <span id="drwRequester" class="font-sub-medium text-[var(--c-body)]">Name</span>
         </div>
         <div>
-          <span class="text-[var(--c-soft)] block uppercase text-[9px]">Department (Outlook)</span>
+          <span class="text-[var(--c-soft)] block uppercase text-[9px]">Department</span>
           <span id="drwDepartment" class="font-sub-medium text-[var(--c-body)]">Dept</span>
         </div>
         <div>
@@ -1624,7 +1624,7 @@ function populateDepartmentDropdowns() {
   const optionsHTML = sortedDepts.map(d => `<option value="${esc(d)}">${esc(d)}</option>`).join('');
   if (deptSelect) {
     const prevVal = deptSelect.value;
-    deptSelect.innerHTML = '<option value="ALL">All Departments (Outlook)</option>' + optionsHTML;
+    deptSelect.innerHTML = '<option value="ALL">All Departments </option>' + optionsHTML;
     if (prevVal && (prevVal === 'ALL' || sortedDepts.includes(prevVal))) deptSelect.value = prevVal;
   }
   if (formDept) formDept.value = (currentUser && currentUser.department) ? extractChoice(currentUser.department) : '';
@@ -1749,7 +1749,7 @@ function setSession(u, rows, usersListFromSP, rawData = {}) {
   $('menuName').textContent = currentUser.name;
   $('menuJobTitle').textContent = currentUser.jobTitle ? `Title: ${currentUser.jobTitle}` : '';
   $('menuEmail').textContent = currentUser.email || 'No email returned';
-  $('menuDept').textContent = 'Dept (Outlook): ' + (currentUser.department || 'General');
+  $('menuDept').textContent = 'Department: ' + (currentUser.department || 'General');
 
   $('compactUserName').textContent = firstName;
   $('compactRoleTag').textContent = currentUser.roleTitle;
@@ -1819,7 +1819,7 @@ function applyRoleView() {
     const deptSelect = $('deptSelect');
     if (isItLeadership) {
       $('roleOverviewBadge').textContent = u.roleTitle;
-      $('roleOverviewDesc').textContent = 'Dashboard & Analytics by department (sourced from Outlook & ORBITUsers).';
+      $('roleOverviewDesc').textContent = 'Dashboard & Analytics by department.';
       deptSelect.disabled = false;
       deptSelect.value = 'ALL';
       $('ticketQueueHeading').firstElementChild.textContent = 'Ticket Queue (By Department)';
@@ -1983,7 +1983,7 @@ function renderListView(tickets) {
       rowsHtml.push(`
         <tr class="bg-[var(--c-tint)]/75">
           <td colspan="8" class="py-2 px-4 font-title-extrabold text-[11px] uppercase tracking-wider text-[var(--c-primary)]">
-            Department (Outlook): ${esc(deptLabel)} <span class="font-mono text-[var(--c-accent-blue)] ml-1">(${deptCount})</span>
+            Department: ${esc(deptLabel)} <span class="font-mono text-[var(--c-accent-blue)] ml-1">(${deptCount})</span>
           </td>
         </tr>`);
     }
@@ -2480,7 +2480,7 @@ function exportToPDF() {
   doc.setTextColor(11, 34, 64); doc.setFontSize(9);
   doc.text(`Generated: ${new Date().toLocaleString()} by ${currentUser ? currentUser.name : 'System'}`, 14, 25);
   const rows = getFilteredTickets().map(t => [t.TicketID, t.Subject, extractChoice(t.Department), t.Priority, t.Status, normalizeAssignee(t.AssignedTo || t.Assignee), t.AssignedBy || '-']);
-  doc.autoTable({ startY: 30, head: [['ID', 'Subject', 'Department (Outlook)', 'Priority', 'Status', 'Assignee', 'Assigned By']], body: rows, headStyles: { fillColor: [27, 135, 84] }, styles: { fontSize: 8 } });
+  doc.autoTable({ startY: 30, head: [['ID', 'Subject', 'Department', 'Priority', 'Status', 'Assignee', 'Assigned By']], body: rows, headStyles: { fillColor: [27, 135, 84] }, styles: { fontSize: 8 } });
   doc.save(`PHB_ORBIT_Report_${new Date().toISOString().slice(0, 10)}.pdf`);
   showToast('PDF Export generated.');
 }

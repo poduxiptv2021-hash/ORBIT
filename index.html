@@ -49,48 +49,74 @@
 </script>
 
 <style>
-/* Two-Color PHB Brand System: PHB Green (#1B8754 / #0A6E63) + PHB Deep Navy (#0B2240 / #163A5F) */
+/* PHB Corporate Palette — Primary: PHB Green #1B8754 + Deep Navy #113756
+   Secondary accents (limited use): Lime #CAD400, Olive #ACAA00, Yellow #FFE41D, Amber #E2BF10,
+   Gold #D19722, Orange #CE7024, Rust #964E18, Sage #83B292, Teal #1C876A, Forest #10594F,
+   Cyan #00BFD3, Slate #829AAF, Royal #1C4684, Navy #113756 */
 :root {
   --c-primary: #1B8754;
-  --c-primary-deep: #0A6E63;
-  --c-accent-blue: #0B2240;
-  --c-accent-blue-soft: #163A5F;
-  --c-bg: #F7F9FA;
+  --c-primary-deep: #10594F;
+  --c-accent-blue: #1C4684;
+  --c-accent-blue-soft: #113756;
+  --c-lime: #CAD400;
+  --c-olive: #ACAA00;
+  --c-yellow: #FFE41D;
+  --c-amber: #E2BF10;
+  --c-gold: #D19722;
+  --c-orange: #CE7024;
+  --c-rust: #964E18;
+  --c-sage: #83B292;
+  --c-teal: #1C876A;
+  --c-forest: #10594F;
+  --c-cyan: #00BFD3;
+  --c-slate: #829AAF;
+  --c-royal: #1C4684;
+  --c-navy: #113756;
+  --c-bg: #F3F8F4;
   --c-card: #FFFFFF;
-  --c-line: #D8E2E8;
+  --c-line: #D5E4DA;
   --c-text: #1B8754;
-  --c-body: #0B2240;
-  --c-soft: #3B526B;
-  --c-tint: #E8F5EE;
-  --c-cat-section: #EBF4EF;
-  --c-blue-tint: #EBF1F7;
-  --grad-main: linear-gradient(90deg, #1B8754 0%, #0A6E63 55%, #0B2240 100%);
-  --grad-hover: linear-gradient(90deg, #156F44 0%, #085A51 55%, #081A30 100%);
-  --grad-footer: linear-gradient(90deg, #0A6E63 0%, #1B8754 45%, #0B2240 100%);
-  --grad-cat-card: linear-gradient(135deg, #1B8754 0%, #0A6E63 58%, #0B2240 100%);
-  --grad-blue-accent: linear-gradient(135deg, #0B2240 0%, #163A5F 55%, #1B8754 100%);
-  --grad-soft: linear-gradient(135deg, rgba(27, 135, 84, 0.06) 0%, rgba(11, 34, 64, 0.06) 100%);
+  --c-body: #0F2A3D;
+  --c-soft: #4A6274;
+  --c-tint: #E8F6EC;
+  --c-cat-section: #EEF6E4;
+  --c-blue-tint: #E7EFF8;
+  --grad-main: linear-gradient(100deg, #3A9E3C 0%, #1B8754 45%, #10594F 100%);
+  --grad-hover: linear-gradient(100deg, #2F8A31 0%, #156F46 45%, #0B4740 100%);
+  --grad-footer:
+    radial-gradient(110% 190% at 100% 0%, rgba(202, 212, 0, 0.50) 0%, rgba(202, 212, 0, 0) 40%),
+    radial-gradient(80% 170% at 0% 100%, rgba(0, 191, 211, 0.32) 0%, rgba(0, 191, 211, 0) 45%),
+    linear-gradient(100deg, #113756 0%, #10594F 38%, #1B8754 75%, #3A9E3C 100%);
+  --grad-cat-card: linear-gradient(140deg, #5FAF3A 0%, #1B8754 50%, #10594F 100%);
+  --grad-blue-accent: linear-gradient(180deg, #CAD400 0%, #6DB33F 30%, #1B8754 68%, #10594F 100%);
+  --grad-bar-h: linear-gradient(90deg, #10594F 0%, #1B8754 45%, #6DB33F 80%, #CAD400 100%);
+  --grad-text: linear-gradient(95deg, #5BA632 0%, #1B8754 50%, #0094A6 100%);
+  --grad-soft: linear-gradient(135deg, rgba(202, 212, 0, 0.16) 0%, rgba(27, 135, 84, 0.10) 50%, rgba(0, 191, 211, 0.12) 100%);
+  --grad-stripe: linear-gradient(90deg, #CAD400 0%, #FFE41D 25%, #6DB33F 50%, #1C876A 75%, #00BFD3 100%);
 }
 
 .dark {
-  --c-bg: #09131D;
-  --c-card: #101E2C;
-  --c-line: #1E3347;
-  --c-text: #4CC88A;
-  --c-primary-deep: #0A6E63;
-  --c-accent-blue: #79AEE6;
-  --c-accent-blue-soft: #9BC4F0;
-  --c-body: #EFF5FA;
-  --c-soft: #A7BDD1;
-  --c-tint: #102820;
-  --c-cat-section: #0E221C;
-  --c-blue-tint: #102336;
-  --grad-main: linear-gradient(90deg, #1B8754 0%, #0A6E63 55%, #163A5F 100%);
-  --grad-hover: linear-gradient(90deg, #156F44 0%, #085A51 55%, #102B47 100%);
-  --grad-footer: linear-gradient(90deg, #0A6E63 0%, #1B8754 45%, #0B2240 100%);
-  --grad-cat-card: linear-gradient(135deg, #1B8754 0%, #0A6E63 58%, #163A5F 100%);
-  --grad-blue-accent: linear-gradient(135deg, #163A5F 0%, #1B8754 100%);
-  --grad-soft: linear-gradient(135deg, rgba(27, 135, 84, 0.14) 0%, rgba(22, 58, 95, 0.18) 100%);
+  --c-primary: #4CC88A;
+  --c-bg: #07141B;
+  --c-card: #0E1F29;
+  --c-line: #1C3644;
+  --c-text: #6FD39A;
+  --c-primary-deep: #10594F;
+  --c-accent-blue: #7FB4EA;
+  --c-accent-blue-soft: #A6CBF2;
+  --c-body: #EAF3F0;
+  --c-soft: #9FB8C4;
+  --c-tint: #0E2A1F;
+  --c-cat-section: #0B1F18;
+  --c-blue-tint: #0F2234;
+  --grad-main: linear-gradient(100deg, #3A9E3C 0%, #1B8754 45%, #10594F 100%);
+  --grad-hover: linear-gradient(100deg, #46B048 0%, #1F9A60 45%, #137064 100%);
+  --grad-footer:
+    radial-gradient(110% 190% at 100% 0%, rgba(202, 212, 0, 0.30) 0%, rgba(202, 212, 0, 0) 40%),
+    radial-gradient(80% 170% at 0% 100%, rgba(0, 191, 211, 0.22) 0%, rgba(0, 191, 211, 0) 45%),
+    linear-gradient(100deg, #0A2236 0%, #0C4840 40%, #156F46 78%, #2E8A33 100%);
+  --grad-text: linear-gradient(95deg, #CAD400 0%, #6FD39A 50%, #00BFD3 100%);
+  --grad-soft: linear-gradient(135deg, rgba(202, 212, 0, 0.10) 0%, rgba(27, 135, 84, 0.16) 50%, rgba(0, 191, 211, 0.12) 100%);
 }
 
 body {
@@ -233,6 +259,155 @@ body {
 .step-list li:last-child::after { display: none; }
 
 html { scroll-behavior: smooth; }
+
+/* ==================== PHB CORPORATE REFRESH LAYER ==================== */
+::selection { background: #CAD400; color: #113756; }
+
+body {
+  background-color: var(--c-bg);
+  background-image:
+    radial-gradient(900px 500px at 100% 0%, rgba(202, 212, 0, 0.10), transparent 60%),
+    radial-gradient(800px 500px at 0% 100%, rgba(0, 191, 211, 0.07), transparent 60%);
+  background-attachment: fixed;
+}
+
+::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #6DB33F, #1B8754); }
+
+.brand-gradient-text { background: var(--grad-text); -webkit-background-clip: text; background-clip: text; }
+
+/* Header: gradient mesh + halftone dots + multi-hue stripe */
+header.brand-footer-bar { isolation: isolate; }
+header.brand-footer-bar::before {
+  content: ''; position: absolute; z-index: -1; top: 0; right: 0; bottom: 0; width: 45%;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.22) 1px, transparent 1.6px);
+  background-size: 9px 9px; pointer-events: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 75%);
+          mask-image: linear-gradient(90deg, transparent, #000 75%);
+}
+header.brand-footer-bar::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 3px;
+  background: var(--grad-stripe); pointer-events: none;
+}
+footer.brand-footer-bar { position: relative; }
+footer.brand-footer-bar::before {
+  content: ''; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: var(--grad-stripe);
+}
+
+/* Nav hover underline in lime */
+.nav-pill-hover { position: relative; }
+.nav-pill-hover::after {
+  content: ''; position: absolute; left: 14px; right: 14px; bottom: 4px; height: 2px; border-radius: 2px;
+  background: #CAD400; transform: scaleX(0); transition: transform 200ms ease;
+}
+.nav-pill-hover:hover::after { transform: scaleX(1); }
+
+/* Header CTA in brand yellow-lime */
+.cta-accent {
+  background: linear-gradient(135deg, #FFE41D 0%, #CAD400 100%);
+  box-shadow: 0 6px 16px -8px rgba(202, 212, 0, 0.9);
+  transition: transform 160ms ease, filter 160ms ease;
+}
+.cta-accent:hover { filter: brightness(1.05); transform: translateY(-1px); }
+
+/* Buttons get a soft lift */
+.brand-gradient-bar { box-shadow: 0 8px 20px -10px rgba(27, 135, 84, 0.75); }
+
+/* Section heading accent bars use the green gradient */
+[class*="border-l-4"] { border-image: linear-gradient(180deg, #CAD400 0%, #1B8754 55%, #10594F 100%) 1; }
+
+/* Hero surface glows */
+.hero-surface { position: relative; overflow: hidden; isolation: isolate; }
+.hero-surface::before {
+  content: ''; position: absolute; z-index: -1; right: -140px; top: -180px; width: 560px; height: 560px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(202, 212, 0, 0.30) 0%, rgba(109, 179, 63, 0.14) 40%, transparent 70%);
+}
+.hero-surface::after {
+  content: ''; position: absolute; z-index: -1; left: -100px; bottom: -160px; width: 420px; height: 420px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 191, 211, 0.16) 0%, transparent 70%);
+}
+.section-surface-gradient { position: relative; }
+
+/* Category section: soft mesh */
+.category-section-bg {
+  background:
+    radial-gradient(ellipse at 0% 0%, rgba(202, 212, 0, 0.20), transparent 50%),
+    radial-gradient(ellipse at 100% 100%, rgba(0, 191, 211, 0.14), transparent 55%),
+    var(--c-cat-section);
+}
+
+/* Category cards: each domain gets its own green-gradient hue */
+#browseRow > button { position: relative; overflow: hidden; isolation: isolate; }
+#browseRow > button::before {
+  content: ''; position: absolute; z-index: -1; inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.20) 1px, transparent 1.6px);
+  background-size: 8px 8px;
+  -webkit-mask-image: linear-gradient(225deg, #000 0%, transparent 55%);
+          mask-image: linear-gradient(225deg, #000 0%, transparent 55%);
+}
+#browseRow > button::after {
+  content: ''; position: absolute; z-index: -1; right: -40px; top: -40px; width: 120px; height: 120px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(202, 212, 0, 0.45), transparent 70%);
+}
+#browseRow > button:nth-child(6n+1) { background: linear-gradient(140deg, #5FAF3A 0%, #2E8B3A 50%, #10594F 100%); }
+#browseRow > button:nth-child(6n+2) { background: linear-gradient(140deg, #1C876A 0%, #10594F 60%, #113756 100%); }
+#browseRow > button:nth-child(6n+3) { background: linear-gradient(140deg, #00A3B4 0%, #1C6E8A 50%, #1C4684 100%); }
+#browseRow > button:nth-child(6n+4) { background: linear-gradient(140deg, #8FB322 0%, #4E9A2F 45%, #1B6B3A 100%); }
+#browseRow > button:nth-child(6n+5) { background: linear-gradient(140deg, #1C4684 0%, #113756 60%, #10594F 100%); }
+#browseRow > button:nth-child(6n+6) { background: linear-gradient(140deg, #10594F 0%, #0E4A48 45%, #113756 100%); }
+#browseRow > button .font-mono { background: #FFE41D; color: #113756; }
+#browseRow h3, #browseRow p { text-shadow: 0 1px 2px rgba(0, 0, 0, 0.18); }
+
+/* How It Works step icons */
+.step-icon { color: #FFFFFF; box-shadow: 0 8px 18px -10px rgba(16, 89, 79, 0.8); }
+#howSteps > div:nth-child(1) .step-icon { background: linear-gradient(135deg, #6DB33F, #1B8754); }
+#howSteps > div:nth-child(2) .step-icon { background: linear-gradient(135deg, #1C876A, #10594F); }
+#howSteps > div:nth-child(3) .step-icon { background: linear-gradient(135deg, #E2BF10, #D19722); }
+#howSteps > div:nth-child(4) .step-icon { background: linear-gradient(135deg, #00BFD3, #1C4684); }
+
+/* Numbered steps */
+.step-list li::before { background: var(--grad-main); color: #FFFFFF; border: none; }
+
+/* Status badges */
+.badge-open { background: #E8F6EC; color: #1B8754; border: 1px solid #1B8754; }
+.badge-inprogress { background: #E0F7FA; color: #00707E; border: 1px solid #00BFD3; }
+.badge-pending { background: #FFF8D1; color: #7A5C00; border: 1px dashed #E2BF10; }
+.badge-resolved { background: var(--grad-main); color: #FFFFFF; border: none; }
+.dark .badge-open { background: rgba(76, 200, 138, 0.12); color: #6FD39A; border-color: #4CC88A; }
+.dark .badge-inprogress { background: rgba(0, 191, 211, 0.12); color: #5FE0EE; border-color: #00BFD3; }
+.dark .badge-pending { background: rgba(226, 191, 16, 0.12); color: #FFE41D; border-color: #E2BF10; }
+
+/* Guide severity pills */
+.sev-crit { background: linear-gradient(90deg, #CE7024, #964E18); color: #FFFFFF; }
+.sev-warn { background: #FFF5C7; color: #7A5C00; border: 1px solid #E2BF10; }
+.sev-ok { background: #E5F1EA; color: #10594F; border: 1px solid #83B292; }
+.dark .sev-warn { background: rgba(226, 191, 16, 0.14); color: #FFE41D; }
+.dark .sev-ok { background: rgba(131, 178, 146, 0.14); color: #A9D3B6; }
+
+/* Priority text in the queue */
+.prio-crit { color: #CE7024; font-weight: 700; }
+.prio-high { color: #B07C0E; font-weight: 700; }
+.dark .prio-high { color: #E2BF10; }
+
+/* KPI tiles */
+.kpi-tile { position: relative; overflow: hidden; background: var(--c-card); }
+.kpi-tile::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 4px; background: var(--kpi); }
+.kpi-tile > div:first-child { color: var(--kpi-text, var(--kpi)); }
+.kpi-total { --kpi: linear-gradient(90deg, #00BFD3, #1C4684); --kpi-text: #1C4684; }
+.kpi-open { --kpi: linear-gradient(90deg, #6DB33F, #1B8754); --kpi-text: #1B8754; }
+.kpi-pending { --kpi: linear-gradient(90deg, #FFE41D, #D19722); --kpi-text: #B07C0E; }
+.kpi-resolved { --kpi: linear-gradient(90deg, #1C876A, #10594F); --kpi-text: #10594F; }
+.dark .kpi-total { --kpi-text: #7FB4EA; }
+.dark .kpi-open { --kpi-text: #6FD39A; }
+.dark .kpi-pending { --kpi-text: #FFE41D; }
+.dark .kpi-resolved { --kpi-text: #83B292; }
+
+/* Ticket table header */
+#ticketViewList thead tr { background: linear-gradient(90deg, var(--c-tint), var(--c-blue-tint)); }
+
+/* Horizontal distribution bars */
+#deptDistributionList .brand-accent-bar,
+#catDistributionList .brand-accent-bar { background: var(--grad-bar-h); }
+#deptDistributionList .brand-accent-bar { background: linear-gradient(90deg, #1C4684 0%, #1C876A 60%, #00BFD3 100%); }
 </style>
 </head>
 <body class="flex flex-col min-h-screen font-body-consistent">
@@ -294,8 +469,8 @@ html { scroll-behavior: smooth; }
         Sign in
       </button>
 
-      <button onclick="openNewTicketModal()" class="px-4 py-1.5 rounded-xl bg-white hover:bg-white/95 text-[#0B2240] text-xs sm:text-sm font-title-extrabold transition-all flex items-center gap-1.5 shadow-sm cursor-pointer">
-        <svg class="w-3.5 h-3.5 text-[#1B8754]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.75" d="M12 4v16m8-8H4"/></svg>
+      <button onclick="openNewTicketModal()" class="px-4 py-1.5 rounded-xl cta-accent text-[#113756] text-xs sm:text-sm font-title-extrabold transition-all flex items-center gap-1.5 shadow-sm cursor-pointer">
+        <svg class="w-3.5 h-3.5 text-[#10594F]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.75" d="M12 4v16m8-8H4"/></svg>
         <span>Submit Ticket</span>
       </button>
 
@@ -383,7 +558,7 @@ html { scroll-behavior: smooth; }
   </div>
 
   <!-- ==================== 1. HOMEPAGE SECTION (GUEST / PRE-LOGIN ONLY) ==================== -->
-  <section id="sectionHomepage" class="rounded-[2rem] bg-[var(--c-card)] border border-[var(--c-line)] p-6 sm:p-10 shadow-xs scroll-mt-20">
+  <section id="sectionHomepage" class="hero-surface rounded-[2rem] bg-[var(--c-card)] border border-[var(--c-line)] p-6 sm:p-10 shadow-xs scroll-mt-20">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
 
       <!-- Left Column -->
@@ -498,19 +673,19 @@ html { scroll-behavior: smooth; }
       </div>
 
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 min-w-[320px]">
-        <div class="p-3.5 rounded-2xl section-surface-gradient border border-[var(--c-line)] text-center">
+        <div class="kpi-tile kpi-total p-3.5 pt-4 rounded-2xl border border-[var(--c-line)] text-center">
           <div id="kpiTotal" class="font-title-extrabold text-2xl text-[var(--c-accent-blue)]">0</div>
           <div class="text-[11px] font-sub-medium text-[var(--c-soft)] uppercase tracking-wider">Total Tickets</div>
         </div>
-        <div class="p-3.5 rounded-2xl section-surface-gradient border border-[var(--c-line)] text-center">
+        <div class="kpi-tile kpi-open p-3.5 pt-4 rounded-2xl border border-[var(--c-line)] text-center">
           <div id="kpiOpen" class="font-title-extrabold text-2xl text-[var(--c-primary)]">0</div>
           <div class="text-[11px] font-sub-medium text-[var(--c-soft)] uppercase tracking-wider">Open / Active</div>
         </div>
-        <div class="p-3.5 rounded-2xl section-surface-gradient border border-[var(--c-line)] text-center">
+        <div class="kpi-tile kpi-pending p-3.5 pt-4 rounded-2xl border border-[var(--c-line)] text-center">
           <div id="kpiPending" class="font-title-extrabold text-2xl text-[var(--c-accent-blue)]">0</div>
           <div class="text-[11px] font-sub-medium text-[var(--c-soft)] uppercase tracking-wider">Pending Review</div>
         </div>
-        <div class="p-3.5 rounded-2xl section-surface-gradient border border-[var(--c-line)] text-center">
+        <div class="kpi-tile kpi-resolved p-3.5 pt-4 rounded-2xl border border-[var(--c-line)] text-center">
           <div id="kpiResolved" class="font-title-extrabold text-2xl text-[var(--c-primary)]">0</div>
           <div class="text-[11px] font-sub-medium text-[var(--c-soft)] uppercase tracking-wider">Resolved</div>
         </div>
@@ -590,10 +765,10 @@ html { scroll-behavior: smooth; }
     </div>
 
     <div class="rounded-2xl bg-[var(--c-bg)] border border-[var(--c-line)] p-5 sm:p-7">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div id="howSteps" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <div class="relative space-y-2.5">
           <div class="flex items-center gap-3">
-            <div class="w-11 h-11 rounded-2xl bg-[var(--c-tint)] border border-[var(--c-primary)]/40 text-[var(--c-primary)] flex items-center justify-center shrink-0">
+            <div class="w-11 h-11 rounded-2xl step-icon flex items-center justify-center shrink-0">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
             </div>
             <div class="hidden lg:block flex-1 border-t border-dashed border-[var(--c-primary)]/35"></div>
@@ -607,7 +782,7 @@ html { scroll-behavior: smooth; }
 
         <div class="relative space-y-2.5">
           <div class="flex items-center gap-3">
-            <div class="w-11 h-11 rounded-2xl bg-[var(--c-tint)] border border-[var(--c-primary)]/40 text-[var(--c-primary)] flex items-center justify-center shrink-0">
+            <div class="w-11 h-11 rounded-2xl step-icon flex items-center justify-center shrink-0">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
             </div>
             <div class="hidden lg:block flex-1 border-t border-dashed border-[var(--c-primary)]/35"></div>
@@ -621,7 +796,7 @@ html { scroll-behavior: smooth; }
 
         <div class="relative space-y-2.5">
           <div class="flex items-center gap-3">
-            <div class="w-11 h-11 rounded-2xl bg-[var(--c-tint)] border border-[var(--c-primary)]/40 text-[var(--c-primary)] flex items-center justify-center shrink-0">
+            <div class="w-11 h-11 rounded-2xl step-icon flex items-center justify-center shrink-0">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/></svg>
             </div>
             <div class="hidden lg:block flex-1 border-t border-dashed border-[var(--c-primary)]/35"></div>
@@ -635,7 +810,7 @@ html { scroll-behavior: smooth; }
 
         <div class="relative space-y-2.5">
           <div class="flex items-center gap-3">
-            <div class="w-11 h-11 rounded-2xl bg-[var(--c-tint)] border border-[var(--c-primary)]/40 text-[var(--c-primary)] flex items-center justify-center shrink-0">
+            <div class="w-11 h-11 rounded-2xl step-icon flex items-center justify-center shrink-0">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
             </div>
           </div>
@@ -1797,7 +1972,7 @@ function renderListView(tickets) {
         <td class="py-3.5 px-4"><div class="font-sub-medium text-[var(--c-body)] line-clamp-1">${esc(t.Subject)}</div><div class="text-[11px] text-[var(--c-soft)]">${esc(t.RequesterName)} (${esc(t.RequesterEmail)})</div></td>
         <td class="py-3.5 px-4 text-[var(--c-soft)] min-w-[240px] whitespace-normal leading-snug">${esc(deptLabel)}</td>
         <td class="py-3.5 px-4 text-[var(--c-body)] whitespace-nowrap">${esc(t.Category)}</td>
-        <td class="py-3.5 px-4 whitespace-nowrap ${t.Priority==='Critical' || t.Priority==='High' ? 'font-semibold text-[var(--c-accent-blue)]' : 'text-[var(--c-soft)]'}">${esc(t.Priority)}</td>
+        <td class="py-3.5 px-4 whitespace-nowrap ${t.Priority==='Critical' ? 'prio-crit' : t.Priority==='High' ? 'prio-high' : 'text-[var(--c-soft)]'}">${esc(t.Priority)}</td>
         <td class="py-3.5 px-4 whitespace-nowrap"><span class="px-2.5 py-1 rounded-full text-[10px] uppercase tracking-wider ${statusClass}">${esc(t.Status)}</span></td>
         <td class="py-3.5 px-4">${assigneeBadge}</td>
         <td class="py-3.5 px-4 text-right whitespace-nowrap"><button class="px-2.5 py-1 rounded-lg border border-[var(--c-line)] hover:border-[var(--c-accent-blue)] bg-[var(--c-card)] text-[var(--c-accent-blue)] font-sub-medium text-[11px]">View</button></td>
@@ -2300,7 +2475,7 @@ function showToast(msg, type) {
   const container = $('toastContainer');
   const toast = document.createElement('div');
   toast.className = 'px-4 py-2.5 rounded-2xl bg-[var(--c-card)] text-[var(--c-body)] text-xs font-sub-medium shadow-xl border border-[var(--c-primary)] flex items-center gap-2 pointer-events-auto transition-all transform translate-y-2';
-  toast.innerHTML = `<span class="w-2.5 h-2.5 rounded-full ${type === 'error' ? 'bg-[var(--c-accent-blue)]' : 'bg-[var(--c-primary)]'}"></span><span>${esc(msg)}</span>`;
+  toast.innerHTML = `<span class="w-2.5 h-2.5 rounded-full ${type === 'error' ? 'bg-[var(--c-orange)]' : 'bg-[var(--c-primary)]'}"></span><span>${esc(msg)}</span>`;
   container.appendChild(toast);
   setTimeout(() => toast.remove(), 4000);
 }

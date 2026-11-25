@@ -408,6 +408,34 @@ footer.brand-footer-bar::before {
 #deptDistributionList .brand-accent-bar,
 #catDistributionList .brand-accent-bar { background: var(--grad-bar-h); }
 #deptDistributionList .brand-accent-bar { background: linear-gradient(90deg, #1C4684 0%, #1C876A 60%, #00BFD3 100%); }
+
+/* ===== Cleaner Browse by Category section (PHB green + navy only) ===== */
+.category-section-bg { background: var(--c-card) !important; box-shadow: 0 10px 30px -22px rgba(17, 55, 86, 0.35); }
+#sectionBrowseCategories [class*="border-l-4"] { border-image: none; border-left-color: var(--c-primary); }
+#categoryHeaderPill { background: var(--c-tint); border-color: transparent; }
+
+#browseRow > button,
+#browseRow > button:nth-child(n) {
+  background: linear-gradient(110deg, #1B8755 0%, #0A9498 100%) !important;
+  color: #FFFFFF;
+  border: 1px solid transparent;
+  box-shadow: none;
+  filter: none;
+  transition: background 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+#browseRow > button::before,
+#browseRow > button::after { display: none; }
+#browseRow > button:hover { transform: translateY(-2px); background: linear-gradient(110deg, #167548 0%, #08828A 100%) !important; box-shadow: 0 14px 26px -16px rgba(10, 148, 152, 0.85); filter: none; }
+#browseRow > button.ring-2 { --tw-ring-color: #0F3D4A; background: linear-gradient(110deg, #167548 0%, #08828A 100%) !important; }
+#browseRow > button > div:first-child > span:first-child { background: rgba(255, 255, 255, 0.14); color: #FFFFFF; }
+#browseRow h3 { color: #FFFFFF !important; text-shadow: none; }
+#browseRow p { color: rgba(255, 255, 255, 0.92) !important; text-shadow: none; }
+
+#categoryDrawerPanel { border-color: var(--c-line); box-shadow: none; background: var(--c-card); }
+#categoryDrawerPanel .sev-warn { background: #FFF9E6; color: #7A5C00; border: 1px solid #EBD79A; }
+#categoryDrawerPanel .sev-ok { background: var(--c-tint); color: var(--c-primary-deep); border: 1px solid transparent; }
+.dark #categoryDrawerPanel .sev-warn { background: rgba(226, 191, 16, 0.14); color: #FFE41D; border-color: transparent; }
+.dark #categoryDrawerPanel .sev-ok { color: var(--c-text); }
 </style>
 </head>
 <body class="flex flex-col min-h-screen font-body-consistent">
@@ -638,7 +666,7 @@ footer.brand-footer-bar::before {
             </h3>
 
             <p class="font-sub-medium text-sm text-[var(--c-soft)] leading-relaxed">
-              Pick any category below to pop open guides grouped by department with step-by-step instructions.
+              Pick any category below to open its guides with step-by-step instructions.
             </p>
           </div>
 
@@ -787,7 +815,7 @@ footer.brand-footer-bar::before {
           <div class="text-[11px] font-mono font-bold uppercase tracking-widest text-[var(--c-primary)]">STEP 01</div>
           <h3 class="font-title-extrabold text-base text-[var(--c-body)]">Search or browse</h3>
           <p class="text-xs sm:text-sm text-[var(--c-soft)] leading-relaxed">
-            Use Guideline AI in the bottom chatbox, or click a category to pop open guides grouped by department.
+            Use Guideline AI in the bottom chatbox, or click a category to open its guides.
           </p>
         </div>
 
@@ -844,12 +872,12 @@ footer.brand-footer-bar::before {
           Browse by Category
         </h2>
         <p class="font-sub-medium text-sm text-[var(--c-soft)]">
-          Click any category below to pop open its guides grouped by department
+          Click any category below to open its guides
         </p>
       </div>
       <div id="categoryHeaderPill" class="hidden sm:flex items-center gap-2 text-xs font-sub-medium text-[var(--c-primary)] bg-[var(--c-card)] px-3.5 py-1.5 rounded-full border border-[var(--c-primary)]/30">
         <span class="w-2 h-2 rounded-full bg-[var(--c-primary)]"></span>
-        <span>6 IT Domains · 24 Guides · By Department</span>
+        <span>6 IT Domains · 24 Guides</span>
       </div>
     </div>
 
@@ -1240,7 +1268,7 @@ const FAQ_ITEMS = [
   {
     id: 'faq-1',
     q: 'Do I need to sign in to read troubleshooting guides?',
-    a: 'No. Any PHB staff member can browse categories grouped by department, pop open troubleshooting guides, use the bottom Guideline AI chatbox, and read FAQs right away. Signing in with Microsoft 365 is only required when submitting or tracking support tickets.'
+    a: 'No. Any PHB staff member can browse categories, open troubleshooting guides, use the bottom Guideline AI chatbox, and read FAQs right away. Signing in with Microsoft 365 is only required when submitting or tracking support tickets.'
   },
   {
     id: 'faq-2',
@@ -2242,11 +2270,11 @@ async function handleNewTicketSubmit(e) {
 function closeModal(id) { $(id).classList.add('hidden'); }
 function closeDrawer(id) { $(id).classList.add('hidden'); }
 
-/* ==================== BROWSE CATEGORIES (GROUPED BY DEPARTMENT) ==================== */
+/* ==================== BROWSE CATEGORIES ==================== */
 function renderBrowseRow() {
   const totalGuides = KB_ARTICLES.length;
   if ($('guideSummaryBadge')) $('guideSummaryBadge').textContent = `${CATEGORIES.length} Categories · ${totalGuides} Guides`;
-  if ($('categoryHeaderPill')) $('categoryHeaderPill').lastElementChild.textContent = `${CATEGORIES.length} IT Domains · ${totalGuides} Guides · By Department`;
+  if ($('categoryHeaderPill')) $('categoryHeaderPill').lastElementChild.textContent = `${CATEGORIES.length} IT Domains · ${totalGuides} Guides`;
 
   $('browseRow').innerHTML = CATEGORIES.map(c => {
     const isActive = activeCategoryDrawer === c.key;
@@ -2256,9 +2284,6 @@ function renderBrowseRow() {
         <div class="flex items-center justify-between gap-2 w-full">
           <span class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 bg-white/18 text-white">
             ${c.svg}
-          </span>
-          <span class="text-xs font-mono font-semibold w-7 h-7 rounded-full flex items-center justify-center bg-white/20 text-white">
-            ${c.count}
           </span>
         </div>
         <div class="min-w-0">
@@ -2277,13 +2302,6 @@ function renderBrowseRow() {
 
   const catObj = CATEGORIES.find(x => x.key === activeCategoryDrawer);
   const catArticles = KB_ARTICLES.filter(a => a.cat === activeCategoryDrawer);
-  const groupedByDept = {};
-  catArticles.forEach(art => {
-    const d = art.dept || 'General';
-    if (!groupedByDept[d]) groupedByDept[d] = [];
-    groupedByDept[d].push(art);
-  });
-
   drawerPanel.classList.remove('hidden');
 
   drawerPanel.innerHTML = `
@@ -2291,29 +2309,14 @@ function renderBrowseRow() {
       <div class="flex items-center gap-2.5 flex-wrap">
         <span class="w-2.5 h-2.5 rounded-full bg-[var(--c-primary)]"></span>
         <span class="font-title-extrabold text-base sm:text-lg text-[var(--c-body)]">${esc(catObj.key)} Guides (${catArticles.length})</span>
-        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-[var(--c-blue-tint)] text-[var(--c-accent-blue)] border border-[var(--c-accent-blue)]/25">
-          By Department (${Object.keys(groupedByDept).length})
-        </span>
       </div>
       <button type="button" onclick="toggleCategoryBox('${esc(catObj.key)}')" class="text-xs font-sub-medium text-[var(--c-primary)] hover:underline cursor-pointer">
         Close Guides
       </button>
     </div>
 
-    <div class="space-y-5 pt-1">
-      ${Object.entries(groupedByDept).map(([deptName, deptArticles]) => `
-        <div class="space-y-2.5">
-          <div class="flex items-center justify-between px-3 py-1.5 rounded-xl bg-[var(--c-blue-tint)] border border-[var(--c-accent-blue)]/20">
-            <span class="font-title-extrabold text-xs uppercase tracking-wider text-[var(--c-accent-blue)]">
-              Department: ${esc(deptName)}
-            </span>
-            <span class="font-mono text-[11px] font-semibold text-[var(--c-accent-blue)]">
-              ${deptArticles.length} ${deptArticles.length === 1 ? 'Guide' : 'Guides'}
-            </span>
-          </div>
-
-          <div class="space-y-2">
-            ${deptArticles.map(art => {
+    <div class="space-y-2 pt-1">
+            ${catArticles.map(art => {
               const isPopOpen = openPopGuideId === art.id;
               const sev = sevLabel(art.sev);
               return `
@@ -2344,9 +2347,6 @@ function renderBrowseRow() {
                   ` : ''}
                 </div>`;
             }).join('')}
-          </div>
-        </div>
-      `).join('')}
     </div>`;
 }
 
